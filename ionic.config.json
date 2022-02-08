@@ -1,0 +1,7 @@
+{
+  "name": "Portal Markkar",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
