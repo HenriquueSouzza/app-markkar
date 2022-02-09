@@ -12,7 +12,7 @@ export class LoginEmpresaPage implements OnInit {
   ngOnInit() {
   }
 
-  goToUrl(){
+  redirect(){
     document.location.href = '/login';
   }
 }
