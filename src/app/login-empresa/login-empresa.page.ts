@@ -1,4 +1,6 @@
+import { LoginService } from './../servico/login.service';
 import { Component, OnInit } from '@angular/core';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-login-empresa',
@@ -7,12 +9,20 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LoginEmpresaPage implements OnInit {
 
-  constructor() { }
+  constructor(private service: LoginService) { }
 
   ngOnInit() {
   }
 
-  redirect(){
-    document.location.href = '/login';
+  enviarLogin(form: NgForm){
+    const login = form.value;
+    if(login.cnpj.length - 14){
+      console.log('cnpj incorreto');
+    }
+    else{
+      this.service.firstlogin(login).subscribe(response =>{
+        console.log(response);
+      });
+    }
   }
 }

@@ -4,10 +4,10 @@
       <img src="assets/img/logoMarkkar.png" alt="MarkkarLogo">
       <h1>Portal Markkar</h1>
     </div>
-    <form>
-      <input type="text" placeholder="Digite o CNPJ...">
-      <input type="password" placeholder="Digite a Senha...">
-      <button type="submit" (click)="redirect()">Buscar</button>
+    <form #f="ngForm" (ngSubmit)="enviarLogin(f)">
+      <input ngModel name="cnpj" minlength="14" maxlength="14" type="text" placeholder="Digite o CNPJ...">
+      <input ngModel name="senha" type="password" placeholder="Digite a Senha...">
+      <button type="submit">Buscar</button>
     </form>
   </section>
 </ion-content>
