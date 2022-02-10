@@ -34,11 +34,11 @@ export class LoginPage implements OnInit {
         console.log("conectado");
         this.errLogin = null;
       }
-      if(response["status"] === 'failed'){
+      else if(response["status"] === 'failed'){
         console.log("usuario não encontrado");
         this.errLogin = "Login ou Senha não encontrados";
       }
-      if(response["status"] === 'errDB'){
+      else if(response["status"] === 'errDB'){
         console.log("Erro ao conectar com o banco de dados");
         this.errLogin = "Não foi possivel conectar com a empresa";
       }
