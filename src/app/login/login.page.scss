@@ -17,7 +17,7 @@
     margin-bottom: 45px;
 
     img{
-      width: 30%;
+      max-width: 30%;
     }
 
     h1{
@@ -39,13 +39,13 @@
       border-radius: 10px;
       padding: 5px;
       width: 80%;
-      height: 30px;
+      min-height: 30px;
       margin-bottom: 10px;
     }
     button{
       border-radius: 10px;
       padding: 5px;
-      height: 30px;
+      min-height: 30px;
       width: 80%;
     }
   }
