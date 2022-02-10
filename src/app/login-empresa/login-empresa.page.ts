@@ -3,6 +3,7 @@
 import { LoginService } from './../servico/login.service';
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login-empresa',
@@ -14,7 +15,7 @@ export class LoginEmpresaPage implements OnInit {
   cnpjErr: string;
   err: string;
 
-  constructor(private service: LoginService) { }
+  constructor(private service: LoginService, private router: Router) { }
 
 
   ngOnInit() {
@@ -39,6 +40,7 @@ export class LoginEmpresaPage implements OnInit {
         else{
           this.err = null;
           console.log("Banco de dados =",response["dataBase"]);
+          this.router.navigate(['/login']);
         }
       });
     }
