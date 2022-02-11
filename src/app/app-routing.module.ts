@@ -8,12 +8,20 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'login-empresa',
+    redirectTo: 'validate-login',
     pathMatch: 'full'
   },
   {
     path: 'login-empresa',
     loadChildren: () => import('./login-empresa/login-empresa.module').then( m => m.LoginEmpresaPageModule)
+  },
+  {
+    path: 'home',
+    loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)
+  },
+  {
+    path: 'validate-login',
+    loadChildren: () => import('./validate-login/validate-login.module').then( m => m.ValidateLoginPageModule)
   },
 ];
 

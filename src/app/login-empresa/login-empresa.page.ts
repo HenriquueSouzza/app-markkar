@@ -1,10 +1,12 @@
 /* eslint-disable @typescript-eslint/dot-notation */
 /* eslint-disable @typescript-eslint/quotes */
+import { StorageService } from './../servico/storage.service';
 import { LoginService } from './../servico/login.service';
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular';
+import { Storage } from '@ionic/storage-angular';
 
 @Component({
   selector: 'app-login-empresa',
@@ -16,14 +18,11 @@ export class LoginEmpresaPage implements OnInit {
   cnpjErr: string;
   err: string;
 
-  constructor(private service: LoginService, private router: Router, public loadingController: LoadingController) { }
+  // eslint-disable-next-line max-len
+  constructor(private service: LoginService, private router: Router, public loadingController: LoadingController, private storageService: StorageService, private storage: Storage) { }
 
 
-  ngOnInit() {
-    const teste = "conectado";
-    if(teste === "conectado"){
-      console.log("conectado");
-    }
+  async ngOnInit() {
   }
 
   async enviarLogin(form: NgForm){
@@ -32,12 +31,10 @@ export class LoginEmpresaPage implements OnInit {
     });
     const login = form.value;
     if(login.cnpj.length !== 14){
-      console.log('cnpj incorreto');
       this.cnpjErr = "Digite um CNPJ valido";
     }
     else if(login.senha.length === 0){
       this.cnpjErr = null;
-      console.log('Campo de senha vazio');
       this.err = "Digite uma senha";
     }
     else{
@@ -50,9 +47,9 @@ export class LoginEmpresaPage implements OnInit {
         }
         else{
           this.err = null;
-          console.log("Banco de dados =",response["dataBase"]);
-          this.router.navigateByUrl('/login', { replaceUrl: true });
+          await this.storageService.set("bd", response["dataBase"]);
           await loading.dismiss();
+          this.router.navigateByUrl('/login', { replaceUrl: true });
         }
       });
     }

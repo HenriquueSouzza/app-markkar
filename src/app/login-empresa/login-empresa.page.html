@@ -5,7 +5,7 @@
       <h1>Portal Markkar</h1>
     </div>
     <form #f="ngForm" (ngSubmit)="enviarLogin(f)">
-      <input ngModel name="cnpj" autocomplete="off" minlength="14" maxlength="14" type="text" placeholder="Digite o CNPJ...">
+      <input ngModel name="cnpj" minlength="14" maxlength="14" type="text" placeholder="Digite o CNPJ...">
       <span>{{ cnpjErr }}</span>
       <input ngModel name="senha" type="password" placeholder="Digite a Senha...">
       <span>{{ err }}</span>
