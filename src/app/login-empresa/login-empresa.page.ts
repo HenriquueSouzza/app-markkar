@@ -23,6 +23,11 @@ export class LoginEmpresaPage implements OnInit {
 
 
   async ngOnInit() {
+    const valFCNPJ = await this.storage.get('fCNPJ');
+    const valFSenha = await this.storage.get('fSenha');
+    if(valFCNPJ !== null && valFSenha !== null){
+      this.router.navigateByUrl('/home', { replaceUrl: true });
+    }
   }
 
   async enviarLogin(form: NgForm){
@@ -47,9 +52,11 @@ export class LoginEmpresaPage implements OnInit {
         }
         else{
           this.err = null;
-          await this.storageService.set("bd", response["dataBase"]);
+          await this.storageService.set("dataBase", response["dataBase"]);
+          await this.storageService.set("fCNPJ", login.cnpj);
+          await this.storageService.set("fSenha", login.senha);
           await loading.dismiss();
-          this.router.navigateByUrl('/login', { replaceUrl: true });
+          //this.router.navigateByUrl('/login', { replaceUrl: true });
         }
       });
     }

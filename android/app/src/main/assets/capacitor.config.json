@@ -1,0 +1,6 @@
+{
+	"appId": "io.ionic.starter",
+	"appName": "Portal Markkar",
+	"webDir": "www",
+	"bundledWebRuntime": false
+}

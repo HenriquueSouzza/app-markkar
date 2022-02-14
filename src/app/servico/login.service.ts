@@ -9,6 +9,7 @@ export interface fLogin{
 export interface Login{
   login: string;
   senha: string;
+  bd: string;
 }
 
 @Injectable({
