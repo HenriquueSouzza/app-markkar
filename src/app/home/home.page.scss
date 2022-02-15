@@ -1,0 +1,32 @@
+
+h1, h2, h3, h4, h5, h6, p {
+  line-height: 1;
+  margin: 0;
+}
+
+.data{
+  background-color: red;
+
+  .unidades{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .unidade{
+      width: 90%;
+      border-radius: 12px;
+      border: blue solid 1px;
+      margin:0 0 15px 0;
+      padding: 8px;
+
+      .dados{
+        display: flex;
+        align-items: center;
+
+        #cmv{
+          text-transform: uppercase;
+        }
+      }
+    }
+  }
+}
