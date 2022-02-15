@@ -45,6 +45,7 @@ export class LoginEmpresaPage implements OnInit {
     else{
       await loading.present();
       this.cnpjErr = null;
+      //this.service.doPost(login);
       this.service.firstlogin(login).subscribe(async response =>{
         if(response["dataBase"] == null){
           this.err = "CNPJ ou Senha não encontrados";

@@ -16,10 +16,15 @@ import { IonicStorageModule } from '@ionic/storage-angular';
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule, FormsModule,  IonicStorageModule.forRoot(),
-    IonicStorageModule.forRoot({
-    driverOrder: [Drivers.IndexedDB, Drivers.LocalStorage]
-  })],
+  imports: [
+    BrowserModule,
+    IonicModule.forRoot(),
+    AppRoutingModule,
+    HttpClientModule,
+    FormsModule,
+    IonicStorageModule.forRoot(),
+    IonicStorageModule.forRoot({driverOrder: [Drivers.IndexedDB, Drivers.LocalStorage]})
+  ],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],
 })
