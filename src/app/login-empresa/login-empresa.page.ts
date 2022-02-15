@@ -56,7 +56,7 @@ export class LoginEmpresaPage implements OnInit {
           await this.storageService.set("fCNPJ", login.cnpj);
           await this.storageService.set("fSenha", login.senha);
           await loading.dismiss();
-          //this.router.navigateByUrl('/login', { replaceUrl: true });
+          this.router.navigateByUrl('/login', { replaceUrl: true });
         }
       });
     }
