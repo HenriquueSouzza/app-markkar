@@ -21,8 +21,8 @@ export interface Login{
   providedIn: 'root'
 })
 export class LoginService {
-  private flurl = 'https://192.168.1.93/Flogin';
-  private lurl = 'https://192.168.1.93/Login';
+  private flurl = 'http://192.168.1.93/Flogin';
+  private lurl = 'http://192.168.1.93/Login';
 
   constructor(private http: HttpClient) { }
 

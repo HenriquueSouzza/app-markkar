@@ -1,32 +1,65 @@
-
+/*@font-face {
+  font-family: 'Varela Round';
+  src: url('https://fonts.googleapis.com/css2?family=Varela+Round&display=swap');
+}*/
+/*var(--ion-color-primary)*/
 h1, h2, h3, h4, h5, h6, p {
   line-height: 1;
   margin: 0;
+  color: white;
+}
+ion-content {
+  --background: var(--ion-color-dark2);
+}
+.toolbar{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--ion-color-dark);
+
+  h1{
+    color: white;
+  }
+
+  .userIcon{
+    padding: 0 8px;
+    font-size: 20px;
+  }
 }
 
-.data{
-  background-color: red;
+.informacoes{
+  background-color: var(--ion-color-dark);
+  padding: 30px 10px;
+  margin-bottom: 20px;
+  border-radius:0 0 30px 30px;
 
-  .unidades{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+}
+.unidades{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-    .unidade{
-      width: 90%;
+  .unidade{
+    width: 90%;
+    margin:0 0 15px 0;
+    h2{
+      margin-bottom: 5px;
+      color: rgb(187, 187, 187);
+    }
+    .dados{
       border-radius: 12px;
-      border: blue solid 1px;
-      margin:0 0 15px 0;
+      border: #ff9e19 solid 1px;
       padding: 8px;
 
-      .dados{
+      .dado{
+        padding: 5px;
         display: flex;
         align-items: center;
 
         #cmv{
           text-transform: uppercase;
         }
-      }
+    }
     }
   }
 }

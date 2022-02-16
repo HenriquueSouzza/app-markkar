@@ -7,6 +7,7 @@ import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular';
 import { Storage } from '@ionic/storage-angular';
+import { MenuController } from '@ionic/angular';
 
 @Component({
   selector: 'app-login-empresa',
@@ -19,10 +20,11 @@ export class LoginEmpresaPage implements OnInit {
   err: string;
 
   // eslint-disable-next-line max-len
-  constructor(private service: LoginService, private router: Router, public loadingController: LoadingController, private storageService: StorageService, private storage: Storage) { }
+  constructor(private menu: MenuController, private service: LoginService, private router: Router, public loadingController: LoadingController, private storageService: StorageService, private storage: Storage) { }
 
 
   async ngOnInit() {
+    this.menu.enable(false, 'homeMenu');
     const valFCNPJ = await this.storage.get('fCNPJ');
     const valFSenha = await this.storage.get('fSenha');
     if(valFCNPJ !== null && valFSenha !== null){
@@ -35,7 +37,7 @@ export class LoginEmpresaPage implements OnInit {
       message: 'autenticando...'
     });
     const login = form.value;
-    if(login.cnpj.length !== 14){
+    if(login.cnpj.length === 14){
       this.cnpjErr = "Digite um CNPJ valido";
     }
     else if(login.senha.length === 0){
@@ -47,6 +49,7 @@ export class LoginEmpresaPage implements OnInit {
       this.cnpjErr = null;
       //this.service.doPost(login);
       this.service.firstlogin(login).subscribe(async response =>{
+        console.log("response: ",response);
         if(response["dataBase"] == null){
           this.err = "CNPJ ou Senha não encontrados";
           await loading.dismiss();
@@ -59,6 +62,9 @@ export class LoginEmpresaPage implements OnInit {
           await loading.dismiss();
           this.router.navigateByUrl('/login', { replaceUrl: true });
         }
+      },error => {
+        console.log(error);
+        console.log("Error:" + error.error + " \n" + error.message + " \n" + error.names);
       });
     }
   }

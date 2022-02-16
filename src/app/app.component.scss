@@ -1,0 +1,12 @@
+ion-content {
+  --background: var(--ion-color-dark2);
+}
+ion-list{
+  --background: var(--ion-color-dark2);
+
+  ion-item{
+    color: white;
+    --border-color: var(--ion-color-primary);
+    --background: var(--ion-color-dark2);
+  }
+}

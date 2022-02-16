@@ -8,6 +8,7 @@ import { NgForm } from '@angular/forms';
 import { LoadingController } from '@ionic/angular';
 import { Storage } from '@ionic/storage-angular';
 import { Router } from '@angular/router';
+import { MenuController } from '@ionic/angular';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export interface login{
@@ -25,9 +26,10 @@ export class LoginPage implements OnInit {
   //strings html span
   errLogin: string;
 
-  constructor(private service: LoginService, public loadingController: LoadingController, private storage: Storage, private storageService: StorageService, private router: Router) {  }
+  constructor(private menu: MenuController, private service: LoginService, public loadingController: LoadingController, private storage: Storage, private storageService: StorageService, private router: Router) {  }
 
   async ngOnInit() {
+    this.menu.enable(false, 'homeMenu');
     const valDataBase = await this.storage.get('dataBase');
     const valLogin = await this.storage.get('login');
     const valSenhaLogin = await this.storage.get('senhaLogin');
