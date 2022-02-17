@@ -1,16 +1,22 @@
-/*@font-face {
-  font-family: 'Varela Round';
-  src: url('https://fonts.googleapis.com/css2?family=Varela+Round&display=swap');
-}*/
-/*var(--ion-color-primary)*/
+//SCSS Home-Page
+
+// Geral
 h1, h2, h3, h4, h5, h6, p {
   line-height: 1;
   margin: 0;
   color: white;
 }
+ion-header{
+  background-color: var(--ion-color-dark2);
+}
 ion-content {
   --background: var(--ion-color-dark2);
 }
+ion-list{
+  padding: 0;
+}
+
+//header
 .toolbar{
   display: flex;
   align-items: center;
@@ -19,20 +25,95 @@ ion-content {
 
   h1{
     color: white;
+    padding-left: 3px;
+    text-transform: uppercase;
+    font-family: 'robotoBold';
+    font-size: 0.9rem;
   }
 
   .userIcon{
     padding: 0 8px;
+    margin-bottom: 3px;
     font-size: 20px;
+  }
+  ion-button{
+    width: 48px;
+    height: 48px;
+    --padding-start: 0;
+    --padding-end: 0;
+  }
+}
+.headerSection{
+  background-color: var(--ion-color-dark);
+  padding: 20px 10px;
+  border-radius:0 0 30px 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  #totalLiquido{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+    h2{
+      margin-bottom: 5px;
+      font-family: 'robotoBold';
+    }
+    p{
+      color: var(--ion-color-primary);
+      font-size: 0.7rem;
+    }
+  }
+  #total{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+
+    div{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      h3{
+        margin-bottom: 3px;
+        font-size: 1.1rem;
+
+      }
+      p{
+        text-transform: uppercase;
+        color: var(--ion-color-primary);
+        font-size: 0.6rem;
+      }
+    }
   }
 }
 
+//section
 .informacoes{
-  background-color: var(--ion-color-dark);
-  padding: 30px 10px;
-  margin-bottom: 20px;
-  border-radius:0 0 30px 30px;
+  width: 90%;
+  margin: 10px 0 20px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
+  h2{
+    display: flex;
+    align-items: center;
+    color: var(--ion-color-primary);
+    font-family: 'robotoBold';
+    text-transform: uppercase;
+    font-size: 1.2rem;
+  }
+
+  ion-icon{
+    color: var(--ion-color-primary);
+  }
 }
 .unidades{
   display: flex;
@@ -42,9 +123,12 @@ ion-content {
   .unidade{
     width: 90%;
     margin:0 0 15px 0;
+
     h2{
       margin-bottom: 5px;
+      font-size: 1.2rem;
       color: rgb(187, 187, 187);
+      font-family: 'robotoBold';
     }
     .dados{
       border-radius: 12px;
@@ -54,12 +138,47 @@ ion-content {
       .dado{
         padding: 5px;
         display: flex;
-        align-items: center;
+        align-items: baseline;
+        justify-content: space-between;
 
+        h3{
+          text-transform: capitalize;
+          font-family: 'robotoBold';
+        }
         #cmv{
           text-transform: uppercase;
         }
+      }
     }
+  }
+
+  #totalUnid{
+    width: 90%;
+    margin:0 0 15px 0;
+
+    h2{
+      text-transform: uppercase;
+      margin-bottom: 5px;
+      font-size: 1.2rem;
+      color: var(--ion-color-primary);
+      font-family: 'robotoBold';
+    }
+    #dadosTotal{
+      border-radius: 12px;
+      background-color: var(--ion-color-dark);
+      padding: 8px;
+
+      .dadoTotal{
+        padding: 5px;
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+
+        h3{
+          text-transform: capitalize;
+          font-family: 'robotoBold';
+        }
+      }
     }
   }
 }

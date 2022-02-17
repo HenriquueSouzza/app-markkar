@@ -1,1 +1,6 @@
-{}
+{
+	"appId": "br.com.markkar.portal",
+	"appName": "Portal Markkar",
+	"webDir": "www",
+	"bundledWebRuntime": false
+}

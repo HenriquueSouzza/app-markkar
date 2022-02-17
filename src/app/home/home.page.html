@@ -1,17 +1,51 @@
 <ion-header>
     <div class="toolbar">
       <ion-menu-button color="primary"><ion-icon name="menu-outline"></ion-icon></ion-menu-button>
-      <h1>Markkar</h1>
-      <ion-icon class="userIcon" color="primary" name="person-outline"></ion-icon>
+      <h1>markkar</h1>
+      <ion-button id="userIconBTN" size="small" expand="block" fill="clear" shape="round"><ion-icon class="userIcon" color="primary" name="person-outline"></ion-icon></ion-button>
     </div>
+    <ion-popover trigger="userIconBTN">
+      <ng-template>
+        <ion-content>
+          <ion-list >
+            <ion-item color="secondary" [button]="true">
+              <ion-label>Opções</ion-label>
+            </ion-item >
+            <ion-item color="secondary" [button]="true">
+              <ion-label>Desconectar</ion-label>
+            </ion-item>
+          </ion-list>
+        </ion-content>
+      </ng-template>
+    </ion-popover>
+    <header class="headerSection">
+      <div id="totalLiquido">
+        <h2>R$ 6.300,00</h2>
+        <p>total líquido</p>
+      </div>
+      <div id="total">
+        <div>
+          <h3>R$ 9.000,00</h3>
+          <p>faturamento</p>
+        </div>
+        <div>
+          <h3>30%</h3>
+          <p>cmv</p>
+        </div>
+        <div>
+          <h3>R$ 2.700,00</h3>
+          <p>margem</p>
+        </div>
+      </div>
+    </header>
 </ion-header>
 <ion-content>
   <section class="section">
-    <div class="informacoes">
-      <h2>Data 11/02/2022</h2>
-      <h2>Unidades</h2>
-    </div>
     <div class="unidades">
+      <div class="informacoes">
+        <h2>unidades</h2>
+        <ion-icon name="calendar"></ion-icon>
+      </div>
       <div class="unidade">
         <h2>Loja: Madureira</h2>
         <div class="dados">
@@ -60,6 +94,23 @@
           <div class="dado">
             <h3>margem:</h3>
             <p>R$ 900,00</p>
+          </div>
+        </div>
+      </div>
+      <div id="totalUnid">
+        <h2>total</h2>
+        <div id="dadosTotal">
+          <div class="dadoTotal">
+            <h3>faturamento:</h3>
+            <p>R$ 6.000,00</p>
+          </div>
+          <div class="dadoTotal">
+            <h3>CMV:</h3>
+            <p>30%</p>
+          </div>
+          <div class="dadoTotal">
+            <h3>margem:</h3>
+            <p>R$ 1.800,00</p>
           </div>
         </div>
       </div>
