@@ -36,6 +36,7 @@
 ion-content{
   font-family:robotoLight !important;
   --background: var(--ion-color-dark2);
+  --keyboard-offset: 0 !important;
 }
 html{
   background: yellow;

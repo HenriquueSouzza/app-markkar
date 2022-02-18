@@ -1,18 +1,55 @@
 <ion-content>
-  <ion-slides [options]="slideOpts" #slider>
-    <ion-slide>
-      <img class="imgSlide" src="../../assets/img/backgW/1.png" alt="">
-      <ion-button expand="block" fill="clear" shape="round" (click)="slideNext()">Próximo</ion-button>
-    </ion-slide>
-    <ion-slide>
-      <img class="imgSlide" src="../../assets/img/backgW/2.png" alt="">
-      <ion-button expand="block" fill="clear" shape="round" (click)="slideNext()">Próximo</ion-button>
-      <ion-button expand="block" fill="clear" shape="round" (click)="slidePrev()">Anterior</ion-button>
-    </ion-slide>
-    <ion-slide>
-      <img class="imgSlide" src="../../assets/img/backgW/3.png" alt="">
-      <ion-button expand="block" fill="clear" shape="round">Confirmar</ion-button>
-      <ion-button expand="block" fill="clear" shape="round" (click)="slidePrev()">Anterior</ion-button>
-    </ion-slide>
-  </ion-slides>
+  <form>
+    <ion-slides [options]="slideOpts" #slider>
+      <ion-slide>
+        <img class="imgSlide" src="../../assets/img/backgW/1.png" alt="">
+        <div class="utilitsSlide">
+          <div class="headerSlideLogo">
+            <img src="../../assets/img/logoMarkkar.png" alt="">
+            <h1>bem-vindo</h1>
+            <p>Seja bem-vindo ao portal markkar, para começarmos precisamos de algumas informações.</p>
+          </div>
+          <ion-button expand="block" fill="clear" shape="round" (click)="slideNext()">Próximo</ion-button>
+        </div>
+      </ion-slide>
+      <ion-slide>
+        <img class="imgSlide" src="../../assets/img/backgW/2.png" alt="">
+        <div class="utilitsSlide">
+          <div class="headerSlide">
+            <h1>Vamos lá,</h1>
+            <p>Primeiramente precisamos que digite seu CNPJ para localizarmos sua empresa.</p>
+          </div>
+          <div class="contentSlide">
+            <ion-item>
+              <ion-label position="floating">Digite seu CNPJ</ion-label>
+              <ion-input></ion-input>
+            </ion-item>
+            <div class="btnW">
+              <ion-button expand="block" fill="clear" shape="round" (click)="slidePrev()">Anterior</ion-button>
+              <ion-button expand="block" fill="clear" shape="round" (click)="slideNext()">Próximo</ion-button>
+            </div>
+          </div>
+        </div>
+      </ion-slide>
+      <ion-slide>
+        <img class="imgSlide" src="../../assets/img/backgW/3.png" alt="">
+        <div class="utilitsSlide">
+          <div class="headerSlide">
+            <h1>Sengunda parte,</h1>
+            <p>Agora precisamos que digite seu ID para validarmos sua empresa.</p>
+          </div>
+          <div class="contentSlide">
+            <ion-item>
+              <ion-label position="floating">Digite seu ID</ion-label>
+              <ion-input></ion-input>
+            </ion-item>
+            <div class="btnW">
+              <ion-button expand="block" fill="clear" shape="round" (click)="slidePrev()">Anterior</ion-button>
+              <ion-button expand="block" fill="clear" shape="round" (click)="check()">Confirmar</ion-button>
+            </div>
+          </div>
+        </div>
+      </ion-slide>
+    </ion-slides>
+  </form>
 </ion-content>

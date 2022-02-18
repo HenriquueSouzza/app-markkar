@@ -2,6 +2,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MenuController } from '@ionic/angular';
 import { IonSlides } from '@ionic/angular';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-welcome',
@@ -16,7 +17,7 @@ export class WelcomePage implements OnInit {
     allowTouchMove: false
   };
 
-  constructor(private menu: MenuController) { }
+  constructor(private menu: MenuController, private router: Router) { }
 
   @ViewChild('slider')  slides: IonSlides;
 
@@ -26,6 +27,10 @@ export class WelcomePage implements OnInit {
 
     slidePrev(){
       this.slides.slidePrev();
+    }
+
+    check(){
+      this.router.navigateByUrl('/home', { replaceUrl: true });
     }
 
   ngOnInit() {
