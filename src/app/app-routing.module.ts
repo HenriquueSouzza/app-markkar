@@ -22,7 +22,11 @@ const routes: Routes = [
   {
     path: 'validate-login',
     loadChildren: () => import('./validate-login/validate-login.module').then( m => m.ValidateLoginPageModule)
+  },  {
+    path: 'welcome',
+    loadChildren: () => import('./welcome/welcome.module').then( m => m.WelcomePageModule)
   },
+
 ];
 
 @NgModule({
