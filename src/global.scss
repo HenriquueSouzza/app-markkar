@@ -37,3 +37,9 @@ ion-content{
   font-family:robotoLight !important;
   --background: var(--ion-color-dark2);
 }
+html{
+  background: yellow;
+}
+html.md{
+  background: red;
+}

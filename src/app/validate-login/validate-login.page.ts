@@ -21,6 +21,7 @@ export class ValidateLoginPage implements OnInit {
     const loading = await this.loadingController.create({
     message: 'carregando...'
     });
+    await loading.present();
     const valFCNPJ = await this.storage.get('fCNPJ');
     const valFSenha = await this.storage.get('fSenha');
     const valDataBase = await this.storage.get('dataBase');
@@ -30,7 +31,6 @@ export class ValidateLoginPage implements OnInit {
     const validatefLogin = {cnpj: valFCNPJ, senha: valFSenha};
     if(valDataBase !== null && valLogin !== null && valSenhaLogin !== null){
       this.service.login(validateLogin).subscribe(async response =>{
-        await loading.present();
         if(response["status"] === 'success'){
           await loading.dismiss();
           this.router.navigateByUrl('/home', { replaceUrl: true });
@@ -59,7 +59,7 @@ export class ValidateLoginPage implements OnInit {
     }
     else{
       await loading.dismiss();
-      this.router.navigateByUrl('/login-empresa', { replaceUrl: true });
+      this.router.navigateByUrl('/welcome', { replaceUrl: true });
     }
   }
 }

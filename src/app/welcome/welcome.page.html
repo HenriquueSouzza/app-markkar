@@ -1,9 +1,18 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>welcome</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content>
-
+  <ion-slides [options]="slideOpts" #slider>
+    <ion-slide>
+      <img class="imgSlide" src="../../assets/img/backgW/1.png" alt="">
+      <ion-button expand="block" fill="clear" shape="round" (click)="slideNext()">Próximo</ion-button>
+    </ion-slide>
+    <ion-slide>
+      <img class="imgSlide" src="../../assets/img/backgW/2.png" alt="">
+      <ion-button expand="block" fill="clear" shape="round" (click)="slideNext()">Próximo</ion-button>
+      <ion-button expand="block" fill="clear" shape="round" (click)="slidePrev()">Anterior</ion-button>
+    </ion-slide>
+    <ion-slide>
+      <img class="imgSlide" src="../../assets/img/backgW/3.png" alt="">
+      <ion-button expand="block" fill="clear" shape="round">Confirmar</ion-button>
+      <ion-button expand="block" fill="clear" shape="round" (click)="slidePrev()">Anterior</ion-button>
+    </ion-slide>
+  </ion-slides>
 </ion-content>
