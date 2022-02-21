@@ -1,5 +1,5 @@
 <ion-content>
-  <form>
+  <form #f="ngForm" (ngSubmit)="enviarLogin(f)">
     <ion-slides [options]="slideOpts" #slider>
       <ion-slide>
         <img class="imgSlide" src="../../assets/img/backgW/1.png" alt="">
@@ -22,8 +22,9 @@
           <div class="contentSlide">
             <ion-item mode="md">
               <ion-label position="floating">Digite seu CNPJ</ion-label>
-              <ion-input></ion-input>
+              <ion-input ngModel name="cnpj" (click)="resetColor()" color="{{colorCnpj}}"></ion-input>
             </ion-item>
+            <span>{{ cnpjErr }}</span>
             <div class="btnW">
               <ion-button expand="block" fill="clear" shape="round" (click)="slidePrev()">Anterior</ion-button>
               <ion-button expand="block" fill="clear" shape="round" (click)="slideNext()">Próximo</ion-button>
@@ -41,11 +42,12 @@
           <div class="contentSlide">
             <ion-item mode="md">
               <ion-label position="floating">Digite seu ID</ion-label>
-              <ion-input></ion-input>
+              <ion-input ngModel name="senha" (click)="resetColor()" color="{{colorID}}"></ion-input>
             </ion-item>
+            <span>{{ err }}</span>
             <div class="btnW">
               <ion-button expand="block" fill="clear" shape="round" (click)="slidePrev()">Anterior</ion-button>
-              <ion-button expand="block" fill="clear" shape="round" (click)="check()">Confirmar</ion-button>
+              <ion-button expand="block" fill="clear" shape="round" type="submit">Confirmar</ion-button>
             </div>
           </div>
         </div>

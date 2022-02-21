@@ -28,7 +28,7 @@ export class LoginEmpresaPage implements OnInit {
     const valFCNPJ = await this.storage.get('fCNPJ');
     const valFSenha = await this.storage.get('fSenha');
     if(valFCNPJ !== null && valFSenha !== null){
-      this.router.navigateByUrl('/home', { replaceUrl: true });
+      this.router.navigateByUrl('/login', { replaceUrl: true });
     }
   }
 

@@ -5,6 +5,7 @@ import { Component, OnInit } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
 import { Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular';
+import { MenuController } from '@ionic/angular';
 import { StorageService } from './../servico/storage.service';
 import { LoginService } from './../servico/login.service';
 
@@ -15,13 +16,15 @@ import { LoginService } from './../servico/login.service';
 })
 export class ValidateLoginPage implements OnInit {
 
-  constructor(private router: Router, private storage: Storage, private storageService: StorageService, private service: LoginService, public loadingController: LoadingController) { }
+  constructor(private menu: MenuController, private router: Router, private storage: Storage, private storageService: StorageService, private service: LoginService, public loadingController: LoadingController) { }
 
   async ngOnInit() {
+    this.menu.enable(false, 'homeMenu');
     const loading = await this.loadingController.create({
     message: 'carregando...'
     });
     await loading.present();
+    const valFLogin = await this.storage.get('fOpen');
     const valFCNPJ = await this.storage.get('fCNPJ');
     const valFSenha = await this.storage.get('fSenha');
     const valDataBase = await this.storage.get('dataBase');
@@ -29,7 +32,11 @@ export class ValidateLoginPage implements OnInit {
     const valSenhaLogin = await this.storage.get('senhaLogin');
     const validateLogin = {login: valLogin, senha: valSenhaLogin, bd: valDataBase};
     const validatefLogin = {cnpj: valFCNPJ, senha: valFSenha};
-    if(valDataBase !== null && valLogin !== null && valSenhaLogin !== null){
+    if(valFLogin !== false){
+      await loading.dismiss();
+      this.router.navigateByUrl('/welcome', { replaceUrl: true });
+    }
+    else if(valDataBase !== null && valLogin !== null && valSenhaLogin !== null){
       this.service.login(validateLogin).subscribe(async response =>{
         if(response["status"] === 'success'){
           await loading.dismiss();
