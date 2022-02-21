@@ -34,7 +34,7 @@
   src: url('assets/fonts/roboto/Roboto-Bold.ttf');
 }
 ion-app{
-  min-height: 100vh;
+  min-height: 100vh !important;
 }
 ion-content{
   font-family:robotoLight !important;
@@ -42,14 +42,16 @@ ion-content{
   --keyboard-offset: 0 !important;
 }
 .ion-page{
-  height: 100vh;
+  min-height: 100vh !important;
 }
 .scroll-content {
   padding-bottom: 0 !important;
 }
 html{
   background: yellow;
+  min-height: 100vh !important
 }
 html.md{
   background: red;
+  min-height: 100vh !important
 }
