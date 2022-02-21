@@ -41,6 +41,9 @@ ion-content{
   --background: var(--ion-color-dark2);
   --keyboard-offset: 0 !important;
 }
+.ion-page{
+  height: 100vh;
+}
 .scroll-content {
   padding-bottom: 0 !important;
 }
