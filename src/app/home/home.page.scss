@@ -96,24 +96,26 @@ ion-list{
 
 //section
 .informacoes{
-  width: 90%;
-  margin: 10px 0 20px 0;
+  width: 95%;
+  margin: 3px 0 15px 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
 
-  h2{
+  ion-button{
     display: flex;
     align-items: center;
     color: var(--ion-color-primary);
     font-family: 'robotoBold';
     text-transform: uppercase;
     font-size: 1.2rem;
+
+    ion-icon{
+      font-size: 1.5rem;
+      color: var(--ion-color-primary);
+    }
   }
 
-  ion-icon{
-    color: var(--ion-color-primary);
-  }
 }
 .unidades{
   display: flex;

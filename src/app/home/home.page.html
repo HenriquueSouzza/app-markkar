@@ -4,14 +4,14 @@
       <h1>markkar</h1>
       <ion-button id="userIconBTN" size="small" expand="block" fill="clear" shape="round"><ion-icon class="userIcon" color="primary" name="person-outline"></ion-icon></ion-button>
     </div>
-    <ion-popover trigger="userIconBTN">
+    <ion-popover [dismissOnSelect]="true" trigger="userIconBTN">
       <ng-template>
         <ion-content>
-          <ion-list >
+          <ion-list>
             <ion-item color="secondary" [button]="true">
               <ion-label>Opções</ion-label>
             </ion-item >
-            <ion-item color="secondary" [button]="true">
+            <ion-item color="secondary" (click)="presentAlertConfirm()" [button]="true">
               <ion-label>Desconectar</ion-label>
             </ion-item>
           </ion-list>
@@ -43,8 +43,8 @@
   <section class="section">
     <div class="unidades">
       <div class="informacoes">
-        <h2>unidades</h2>
-        <ion-icon name="calendar"></ion-icon>
+        <ion-button expand="block" fill="clear" shape="round">unidades</ion-button>
+        <ion-button expand="block" fill="clear" shape="round"><ion-icon name="calendar"></ion-icon></ion-button>
       </div>
       <div class="unidade">
         <h2>Loja: Madureira</h2>
