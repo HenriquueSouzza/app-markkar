@@ -30,7 +30,7 @@ export class HomePage implements OnInit {
     const alert = await this.alertController.create({
       cssClass: 'my-custom-class',
       header: 'Desconectar',
-      message: 'Você realmente deseja se desconectar da sua conta ?',
+      message: 'Você realmente deseja desconectar da sua conta ?',
       buttons: [
         {
           text: 'NÃO',
