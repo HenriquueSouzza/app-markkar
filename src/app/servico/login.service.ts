@@ -12,8 +12,9 @@ export interface fLogin{
   token: string;
 }
 export interface Login{
-  login: string;
+  user: string;
   senha: string;
+  id_token: string;
 }
 
 @Injectable({

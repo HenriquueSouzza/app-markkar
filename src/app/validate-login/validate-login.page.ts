@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/dot-notation */
 /* eslint-disable @typescript-eslint/quotes */
 /* eslint-disable max-len */
@@ -30,9 +31,10 @@ export class ValidateLoginPage implements OnInit {
     const valFLogin = await this.storage.get('fOpen');
     const valCnpj = await this.storage.get('cnpj');
     const valToken = await this.storage.get('token');
+    const valIdToken = await this.storage.get('idToken');
     const valLogin = await this.storage.get('login');
     const valSenhaLogin = await this.storage.get('senha');
-    const validateLogin = {login: valLogin, senha: valSenhaLogin};
+    const validateLogin = {user: valLogin, senha: valSenhaLogin, id_token: valIdToken};
     const validatefLogin = {cnpj: valCnpj, token: valToken};
     if(valFLogin !== false){
       await loading.dismiss();

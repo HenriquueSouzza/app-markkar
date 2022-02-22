@@ -98,6 +98,7 @@ export class WelcomePage implements OnInit {
           await this.storageService.set("fOpen", false);
           await this.storageService.set("cnpj", login.cnpj);
           await this.storageService.set("token", login.token);
+          await this.storageService.set("idToken", response["id_token"]);
           await loading.dismiss();
           this.router.navigateByUrl('/login', { replaceUrl: true });
         }

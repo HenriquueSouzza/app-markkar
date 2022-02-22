@@ -30,10 +30,10 @@ export class LoginPage implements OnInit {
 
   async ngOnInit() {
     this.menu.enable(false, 'homeMenu');
-    const valDataBase = await this.storage.get('dataBase');
+    const valIdToken = await this.storage.get('idToken');
     const valLogin = await this.storage.get('login');
-    const valSenhaLogin = await this.storage.get('senhaLogin');
-    if(valDataBase !== null && valLogin !== null && valSenhaLogin !== null){
+    const valSenhaLogin = await this.storage.get('senha');
+    if(valIdToken !== null && valLogin !== null && valSenhaLogin !== null){
       this.router.navigateByUrl('/home', { replaceUrl: true });
     }
   }
@@ -43,34 +43,35 @@ export class LoginPage implements OnInit {
       message: 'autenticando...'
     });
     const login = form.value;
-    if(login.login.length === 0){
-      this.errLogin = "Digite um login";
+    if(login.user.length === 0){
+      this.errLogin = "Digite um usuario";
     }
     else if(login.senha.length === 0){
       this.errLogin = "Digite uma senha";
     }
     else{
-      login.bd = await this.storage.get('dataBase');
+      login.id_token = await this.storage.get('idToken');
       this.service.login(login).subscribe(async response =>{
         await loading.present();
         if(response["status"] === 'success'){
           this.errLogin = null;
-          await this.storageService.set("login", login.login);
-          await this.storageService.set("senhaLogin", login.senha);
+          await this.storageService.set("login", login.user);
+          await this.storageService.set("senha", login.senha);
           await loading.dismiss();
           this.router.navigateByUrl('/home', { replaceUrl: true });
 
         }
         else if(response["status"] === 'failed'){
           this.errLogin = "Login ou Senha não encontrados";
-          await this.storage.remove("login");
-          await this.storage.remove("pass");
           await loading.dismiss();
         }
         else if(response["status"] === 'errDB'){
-          this.errLogin = "Não foi possivel conectar com a empresa";
+          this.errLogin = "Não foi possivel conectar com o servidor de dados";
           await loading.dismiss();
         }
+      }, async error => {
+        await loading.dismiss();
+        this.errLogin ="falha ao conectar com o servidor";
       });
     }
   }

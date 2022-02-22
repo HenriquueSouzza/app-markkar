@@ -5,7 +5,7 @@
       <h1>Portal Markkar</h1>
     </div>
     <form  #f="ngForm" (ngSubmit)="enviarLogin(f)" >
-      <input ngModel name="login" autocomplete="off" type="text" placeholder="Digite o seu Login...">
+      <input ngModel name="user" autocomplete="off" type="text" placeholder="Digite o seu usuario...">
       <input ngModel name="senha" type="password" placeholder="Digite a sua Senha...">
       <span>{{ errLogin }}</span>
       <button type="submit">Entrar</button>
