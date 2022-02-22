@@ -18,6 +18,8 @@ export class LoginEmpresaPage implements OnInit {
   //strings html span
   cnpjErr: string;
   err: string;
+  colorCnpj: string;
+  colorTOKEN: string;
 
   // eslint-disable-next-line max-len
   constructor(private menu: MenuController, private service: LoginService, private router: Router, public loadingController: LoadingController, private storageService: StorageService, private storage: Storage) { }
@@ -25,10 +27,26 @@ export class LoginEmpresaPage implements OnInit {
 
   async ngOnInit() {
     this.menu.enable(false, 'homeMenu');
-    const valFCNPJ = await this.storage.get('fCNPJ');
-    const valFSenha = await this.storage.get('fSenha');
-    if(valFCNPJ !== null && valFSenha !== null){
-      this.router.navigateByUrl('/login', { replaceUrl: true });
+    const valCnpj = await this.storage.get('cnpj');
+    const valToken = await this.storage.get('token');
+    const validatefLogin = {cnpj: valCnpj, token: valToken};
+    if(valCnpj !== null && valToken !== null){
+      this.service.firstlogin(validatefLogin).subscribe(async response =>{
+        if(response["status"] === "failed"){
+          this.router.navigateByUrl('/login-empresa', { replaceUrl: true });
+        }
+        else if(response["status"] === "blocked"){
+          alert("Token bloqueado");
+        }
+        else if(response["status"] === "success"){
+          this.router.navigateByUrl('/login', { replaceUrl: true });
+        }
+        else if(response["status"] === 'errDB'){
+          alert("falha ao conectar com o servidor de dados");
+        }
+      }, async error => {
+        alert("falha ao conectar com o servidor");
+      });
     }
   }
 
@@ -36,35 +54,49 @@ export class LoginEmpresaPage implements OnInit {
     const loading = await this.loadingController.create({
       message: 'autenticando...'
     });
+    await loading.present();
     const login = form.value;
-    if(login.cnpj.length === 14){
+    if(login.cnpj.length !== 14){
+      await loading.dismiss();
       this.cnpjErr = "Digite um CNPJ valido";
+      this.colorCnpj = "danger";
     }
-    else if(login.senha.length === 0){
+    else if(login.token.length === 0){
+      await loading.dismiss();
       this.cnpjErr = null;
+      this.colorCnpj = null;
+      this.colorTOKEN = "danger";
       this.err = "Digite uma senha";
     }
     else{
-      await loading.present();
       this.cnpjErr = null;
-      //this.service.doPost(login);
+      this.colorTOKEN = null;
+      this.colorCnpj = null;
       this.service.firstlogin(login).subscribe(async response =>{
-        console.log("response: ",response);
-        if(response["dataBase"] == null){
-          this.err = "CNPJ ou Senha não encontrados";
+        if(response["status"] === "failed"){
+          this.colorTOKEN = "danger";
+          this.colorCnpj = "danger";
+          this.err = "CNPJ ou TOKEN invalido";
           await loading.dismiss();
         }
-        else{
+        else if(response["status"] === "blocked"){
+          this.colorTOKEN = "danger";
+          this.err = "TOKEN bloqueado";
+          await loading.dismiss();
+        }
+        else if(response["status"] === "success"){
           this.err = null;
-          await this.storageService.set("dataBase", response["dataBase"]);
-          await this.storageService.set("fCNPJ", login.cnpj);
-          await this.storageService.set("fSenha", login.senha);
+          this.colorTOKEN = null;
+          this.colorCnpj = null;
+          await this.storageService.set("fOpen", false);
+          await this.storageService.set("cnpj", login.cnpj);
+          await this.storageService.set("token", login.token);
           await loading.dismiss();
           this.router.navigateByUrl('/login', { replaceUrl: true });
         }
-      },error => {
-        console.log(error);
-        console.log("Error:" + error.error + " \n" + error.message + " \n" + error.names);
+      }, async error => {
+        await loading.dismiss();
+        this.err = "falha ao conectar com o servidor";
       });
     }
   }

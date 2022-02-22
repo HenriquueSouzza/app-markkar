@@ -22,7 +22,7 @@ export class WelcomePage implements OnInit {
   cnpjErr: string;
   err: string;
   colorCnpj: string;
-  colorID: string;
+  colorTOKEN: string;
 
   slideOpts = {
     initialSlide: 0,
@@ -44,15 +44,15 @@ export class WelcomePage implements OnInit {
 
   async ngOnInit() {
     this.menu.enable(false, 'homeMenu');
-    const valFCNPJ = await this.storage.get('fCNPJ');
-    const valFSenha = await this.storage.get('fSenha');
-    if(valFCNPJ !== null && valFSenha !== null){
+    const valCnpj = await this.storage.get('cnpj');
+    const valToken = await this.storage.get('token');
+    if(valCnpj !== null && valToken !== null){
       this.router.navigateByUrl('/login', { replaceUrl: true });
     }
   }
 
   resetColor(){
-    this.colorID = null;
+    this.colorTOKEN = null;
     this.colorCnpj = null;
   }
 
@@ -62,39 +62,42 @@ export class WelcomePage implements OnInit {
     });
     await loading.present();
     const login = form.value;
-    if(login.cnpj.length === 14){
+    if(login.cnpj.length !== 14){
       await loading.dismiss();
       this.slides.slidePrev();
       this.cnpjErr = "Digite um CNPJ valido";
       this.colorCnpj = "danger";
     }
-    else if(login.senha.length === 0){
+    else if(login.token.length === 0){
       await loading.dismiss();
       this.cnpjErr = null;
       this.colorCnpj = null;
-      this.colorID = "danger";
+      this.colorTOKEN = "danger";
       this.err = "Digite uma senha";
     }
     else{
       this.cnpjErr = null;
-      this.colorID = null;
+      this.colorTOKEN = null;
       this.colorCnpj = null;
       this.service.firstlogin(login).subscribe(async response =>{
-        console.log("response: ",response);
-        if(response["dataBase"] == null){
-          this.err = "CNPJ ou Senha não encontrados";
-          this.colorID = "danger";
+        if(response["status"] === "failed"){
+          this.colorTOKEN = "danger";
           this.colorCnpj = "danger";
+          this.err = "CNPJ ou TOKEN invalido";
           await loading.dismiss();
         }
-        else{
+        else if(response["status"] === "blocked"){
+          this.colorTOKEN = "danger";
+          this.err = "TOKEN bloqueado";
+          await loading.dismiss();
+        }
+        else if(response["status"] === "success"){
           this.err = null;
-          this.colorID = null;
+          this.colorTOKEN = null;
           this.colorCnpj = null;
-          await this.storageService.set("dataBase", response["dataBase"]);
-          await this.storageService.set("fCNPJ", login.cnpj);
-          await this.storageService.set("fSenha", login.senha);
           await this.storageService.set("fOpen", false);
+          await this.storageService.set("cnpj", login.cnpj);
+          await this.storageService.set("token", login.token);
           await loading.dismiss();
           this.router.navigateByUrl('/login', { replaceUrl: true });
         }

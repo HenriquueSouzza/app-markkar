@@ -9,12 +9,11 @@ import { Http, HttpOptions, HttpResponse } from '@capacitor-community/http';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export interface fLogin{
   cnpj: string;
-  senha: string;
+  token: string;
 }
 export interface Login{
   login: string;
   senha: string;
-  bd: string;
 }
 
 @Injectable({

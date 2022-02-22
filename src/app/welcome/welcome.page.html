@@ -22,7 +22,7 @@
           <div class="contentSlide">
             <ion-item mode="md">
               <ion-label position="floating">Digite seu CNPJ</ion-label>
-              <ion-input ngModel name="cnpj" (click)="resetColor()" color="{{colorCnpj}}"></ion-input>
+              <ion-input ngModel name="cnpj" maxlength="14" (click)="resetColor()" color="{{colorCnpj}}"></ion-input>
             </ion-item>
             <span>{{ cnpjErr }}</span>
             <div class="btnW">
@@ -37,12 +37,12 @@
         <div class="utilitsSlide">
           <div class="headerSlide">
             <h1>Muito bom,</h1>
-            <p>Agora precisamos que digite seu ID para validarmos sua empresa.</p>
+            <p>Agora precisamos que digite seu TOKEN para validarmos sua empresa.</p>
           </div>
           <div class="contentSlide">
             <ion-item mode="md">
-              <ion-label position="floating">Digite seu ID</ion-label>
-              <ion-input ngModel name="senha" (click)="resetColor()" color="{{colorID}}"></ion-input>
+              <ion-label position="floating">Digite seu TOKEN</ion-label>
+              <ion-input ngModel name="token" (click)="resetColor()" color="{{colorTOKEN}}"></ion-input>
             </ion-item>
             <span>{{ err }}</span>
             <div class="btnW">

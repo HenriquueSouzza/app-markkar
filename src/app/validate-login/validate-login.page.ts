@@ -28,18 +28,17 @@ export class ValidateLoginPage implements OnInit {
     });
     await loading.present();
     const valFLogin = await this.storage.get('fOpen');
-    const valFCNPJ = await this.storage.get('fCNPJ');
-    const valFSenha = await this.storage.get('fSenha');
-    const valDataBase = await this.storage.get('dataBase');
+    const valCnpj = await this.storage.get('cnpj');
+    const valToken = await this.storage.get('token');
     const valLogin = await this.storage.get('login');
-    const valSenhaLogin = await this.storage.get('senhaLogin');
-    const validateLogin = {login: valLogin, senha: valSenhaLogin, bd: valDataBase};
-    const validatefLogin = {cnpj: valFCNPJ, senha: valFSenha};
+    const valSenhaLogin = await this.storage.get('senha');
+    const validateLogin = {login: valLogin, senha: valSenhaLogin};
+    const validatefLogin = {cnpj: valCnpj, token: valToken};
     if(valFLogin !== false){
       await loading.dismiss();
       this.router.navigateByUrl('/welcome', { replaceUrl: true });
     }
-    else if(valDataBase !== null && valLogin !== null && valSenhaLogin !== null){
+    else if(valLogin !== null && valSenhaLogin !== null){
       this.service.login(validateLogin).subscribe(async response =>{
         if(response["status"] === 'success'){
           await loading.dismiss();
@@ -50,8 +49,9 @@ export class ValidateLoginPage implements OnInit {
           this.router.navigateByUrl('/login', { replaceUrl: true });
         }
         else if(response["status"] === 'errDB'){
-          this.router.navigateByUrl('/login-empresa', { replaceUrl: true });
           await loading.dismiss();
+          this.btn = 'block';
+          alert("falha ao conectar com o servidor de dados");
         }
       }, async error => {
         await loading.dismiss();
@@ -59,16 +59,29 @@ export class ValidateLoginPage implements OnInit {
         alert("falha ao conectar com o servidor");
       });
     }
-    else if(valFCNPJ !== null && valFSenha !== null){
+    else if(valCnpj !== null && valToken !== null){
       this.service.firstlogin(validatefLogin).subscribe(async response =>{
-        if(response["dataBase"] == null){
+        if(response["status"] === "failed"){
           await loading.dismiss();
           this.router.navigateByUrl('/login-empresa', { replaceUrl: true });
         }
-        else{
+        else if(response["status"] === "blocked"){
+          await loading.dismiss();
+          this.router.navigateByUrl('/login-empresa', { replaceUrl: true });
+        }
+        else if(response["status"] === "success"){
           await loading.dismiss();
           this.router.navigateByUrl('/login', { replaceUrl: true });
         }
+        else if(response["status"] === 'errDB'){
+          await loading.dismiss();
+          this.btn = 'block';
+          alert("falha ao conectar com o servidor de dados");
+        }
+      }, async error => {
+        await loading.dismiss();
+        this.btn = 'block';
+        alert("falha ao conectar com o servidor");
       });
     }
     else{
