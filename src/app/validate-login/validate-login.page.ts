@@ -16,10 +16,13 @@ import { LoginService } from './../servico/login.service';
 })
 export class ValidateLoginPage implements OnInit {
 
+  btn: string;
+
   constructor(private menu: MenuController, private router: Router, private storage: Storage, private storageService: StorageService, private service: LoginService, public loadingController: LoadingController) { }
 
   async ngOnInit() {
     this.menu.enable(false, 'homeMenu');
+    this.btn = "none";
     const loading = await this.loadingController.create({
     message: 'carregando...'
     });
@@ -50,6 +53,10 @@ export class ValidateLoginPage implements OnInit {
           this.router.navigateByUrl('/login-empresa', { replaceUrl: true });
           await loading.dismiss();
         }
+      }, async error => {
+        await loading.dismiss();
+        this.btn = 'block';
+        alert("falha ao conectar com o servidor");
       });
     }
     else if(valFCNPJ !== null && valFSenha !== null){

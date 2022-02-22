@@ -1,3 +1,10 @@
+ion-item{
+  text-transform: capitalize;
+}
+ion-title{
+  font-family: 'robotoBold';
+  text-transform: uppercase;
+}
 ion-content {
   --background: var(--ion-color-dark2);
 }
