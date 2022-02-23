@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/quotes */
@@ -7,9 +8,9 @@ import { Storage } from '@ionic/storage-angular';
 import { Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular';
 import { MenuController } from '@ionic/angular';
+import { AlertController } from '@ionic/angular';
 import { StorageService } from './../servico/storage.service';
 import { LoginService } from './../servico/login.service';
-import { AlertController } from '@ionic/angular';
 
 
 @Component({
@@ -34,41 +35,29 @@ export class HomePage implements OnInit {
     if(valFLogin !== false){
       this.router.navigateByUrl('/welcome', { replaceUrl: true });
     }
-    else if(valLogin !== null && valSenhaLogin !== null){
-      this.service.login(validateLogin).subscribe(async response =>{
-        if(response["status"] === 'success'){
-          this.router.navigateByUrl('/home', { replaceUrl: true });
-        }
-        else if(response["status"] === 'failed'){
-          this.router.navigateByUrl('/login', { replaceUrl: true });
-        }
-        else if(response["status"] === 'errDB'){
-          this.errorLogin("falha ao conectar com o servidor de dados");
-        }
-      }, async error => {
-        this.errorLogin("falha ao conectar com o servidor");
-      });
-    }
-    else if(valCnpj !== null && valToken !== null){
+    else if(valLogin !== null && valSenhaLogin !== null && valCnpj !== null && valToken !== null && valIdToken !== null){
       this.service.firstlogin(validatefLogin).subscribe(async response =>{
-        if(response["status"] === "failed"){
-          this.router.navigateByUrl('/login-empresa', { replaceUrl: true });
-        }
-        else if(response["status"] === "blocked"){
-          this.router.navigateByUrl('/login-empresa', { replaceUrl: true });
+        if(response["status"] === "failed" || response["status"] === "blocked"){
+          this.error("errLogEmp");
         }
         else if(response["status"] === "success"){
-          this.router.navigateByUrl('/login', { replaceUrl: true });
+          this.service.login(validateLogin).subscribe(async response =>{
+            if(response["status"] === 'failed'){
+              this.error("errLog");
+            }
+            else if(response["status"] === 'errDB'){
+              this.error("serverdb");
+            }
+          }, async error => {
+            this.error("server");
+          });
         }
         else if(response["status"] === 'errDB'){
-          this.errorLogin("falha ao conectar com o servidor de dados");
+          this.error("serverdb");
         }
       }, async error => {
-        this.errorLogin("falha ao conectar com o servidor");
+        this.error("server");
       });
-    }
-    else{
-      this.router.navigateByUrl('/welcome', { replaceUrl: true });
     }
   }
   async logOut(): Promise<void>{
@@ -77,27 +66,91 @@ export class HomePage implements OnInit {
     this.router.navigateByUrl('/login', { replaceUrl: true });
   }
 
-  async errorLogin(err) {
-    const alert = await this.alertController.create({
-      cssClass: 'my-custom-class',
-      header: err,
-      message: 'Deseja tentar novamente ?',
-      buttons: [
-        {
-          text: 'NÃO',
-          role: 'cancel',
-          cssClass: 'secondary',
-          id: 'cancel-button'
-        }, {
-          text: 'SIM',
-          id: 'confirm-button',
-          handler: () => {
-            this.ngOnInit();
+  async error(err) {
+    if(err === "server"){
+      const alert = await this.alertController.create({
+        cssClass: 'my-custom-class',
+        header: "Falha ao conectar com o servidor",
+        message: 'Deseja tentar novamente ?',
+        buttons: [
+           {
+            text: 'SAIR',
+            role: 'cancel',
+            cssClass: 'secondary',
+            id: 'cancel-button',
+            handler: () => {
+             // navigator['app'].exitApp();
+            }
+          },
+          {
+            text: 'SIM',
+            id: 'confirm-button',
+            handler: () => {
+              this.ngOnInit();
+            }
           }
-        }
-      ]
-    });
-    await alert.present();
+        ]
+      });
+      await alert.present();
+    }
+    else if(err === "serverdb"){
+      const alert = await this.alertController.create({
+        cssClass: 'my-custom-class',
+        header: "Falha ao conectar com o servidor de dados",
+        message: 'Deseja tentar novamente ?',
+        buttons: [
+          {
+            text: 'SAIR',
+            role: 'cancel',
+            cssClass: 'secondary',
+            id: 'cancel-button',
+            handler: () => {
+            // navigator['app'].exitApp();
+            }
+          },
+          {
+            text: 'SIM',
+            id: 'confirm-button',
+            handler: () => {
+              this.ngOnInit();
+            }
+          }
+        ]
+      });
+      await alert.present();
+    }
+    else if(err === "errLogEmp"){
+      const alert = await this.alertController.create({
+        cssClass: 'my-custom-class',
+        header: "Falha ao logar na empresa",
+        buttons: [
+          {
+            text: 'OK',
+            id: 'confirm-button',
+            handler: () => {
+              this.router.navigateByUrl('/login-empresa', { replaceUrl: true });
+            }
+          }
+        ]
+      });
+      await alert.present();
+    }
+    else if(err === "errLog"){
+      const alert = await this.alertController.create({
+        cssClass: 'my-custom-class',
+        header: "Falha ao logar",
+        buttons: [
+          {
+            text: 'OK',
+            id: 'confirm-button',
+            handler: () => {
+              this.router.navigateByUrl('/login', { replaceUrl: true });
+            }
+          }
+        ]
+      });
+      await alert.present();
+    }
   }
 
   async presentAlertConfirm() {
@@ -123,9 +176,8 @@ export class HomePage implements OnInit {
     await alert.present();
   }
   doRefresh(event) {
-    //func
+    this.ngOnInit();
     setTimeout(() => {
-      //returm
       event.target.complete();
     }, 2000);
   }
