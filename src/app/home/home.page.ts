@@ -11,6 +11,7 @@ import { MenuController } from '@ionic/angular';
 import { AlertController } from '@ionic/angular';
 import { StorageService } from './../servico/storage.service';
 import { LoginService } from './../servico/login.service';
+import { LojasService } from '../servico/lojas.service';
 
 
 @Component({
@@ -20,7 +21,9 @@ import { LoginService } from './../servico/login.service';
 })
 export class HomePage implements OnInit {
 
-  constructor(private service: LoginService, public loadingController: LoadingController, private menu: MenuController, private storage: Storage, private storageService: StorageService, private router: Router, public alertController: AlertController) { }
+  lojas: string[];
+
+  constructor(private Lojas: LojasService, private service: LoginService, public loadingController: LoadingController, private menu: MenuController, private storage: Storage, private storageService: StorageService, private router: Router, public alertController: AlertController) { }
 
   async ngOnInit() {
     this.menu.enable(true, 'homeMenu');
@@ -59,6 +62,11 @@ export class HomePage implements OnInit {
         this.error("server");
       });
     }
+
+    const idToken = {id_token: valIdToken};
+    this.Lojas.all(idToken).subscribe(response => {
+      this.lojas = Object.values(response);
+    });
   }
   async logOut(): Promise<void>{
     await this.storage.remove("login");
