@@ -20,12 +20,12 @@
     </ion-popover>
     <header class="headerSection">
       <div id="totalLiquido">
-        <h2>R$ 6.300,00</h2>
+        <h2>{{totalLiquido}}</h2>
         <p>total líquido</p>
       </div>
       <div id="total">
         <div>
-          <h3>R$ 9.000,00</h3>
+          <h3>{{ somaFatTotal }}</h3>
           <p>faturamento</p>
         </div>
         <div>
@@ -33,7 +33,7 @@
           <p>cmv</p>
         </div>
         <div>
-          <h3>R$ 2.700,00</h3>
+          <h3>{{ somaMargemTotal }}</h3>
           <p>margem</p>
         </div>
       </div>
@@ -56,20 +56,20 @@
             </ng-template>
           </ion-popover>
         </div>
-        <div *ngFor="let loja of lojas" class="unidade">
-          <h2>{{loja.nome_cc}}</h2>
+        <div *ngFor="let unidade of unidades" class="unidade">
+          <h2>{{unidade["nome_cc"]}}</h2>
           <div class="dados">
             <div class="dado">
               <h3>faturamento:</h3>
-              <p>R$ 3.000,00</p>
+              <p>R$ {{ unidade["somaFat"] }}</p>
             </div>
             <div class="dado">
               <h3 id="cmv">cmv:</h3>
-              <p>30%</p>
+              <p>{{unidade["cmv_vlr"]}}%</p>
             </div>
             <div class="dado">
               <h3>margem:</h3>
-              <p>R$ 900,00</p>
+              <p>R$ {{unidade["somaMargem"]}}</p>
             </div>
           </div>
         </div>
@@ -78,15 +78,15 @@
           <div id="dadosTotal">
             <div class="dadoTotal">
               <h3>faturamento:</h3>
-              <p>R$ 6.000,00</p>
+              <p>{{ somaFatTotal }}</p>
             </div>
             <div class="dadoTotal">
               <h3>CMV:</h3>
-              <p>30%</p>
+              <p>teste</p>
             </div>
             <div class="dadoTotal">
               <h3>margem:</h3>
-              <p>R$ 1.800,00</p>
+              <p>{{ somaMargemTotal }}</p>
             </div>
           </div>
         </div>

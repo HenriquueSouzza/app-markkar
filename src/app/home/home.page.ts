@@ -1,3 +1,6 @@
+/* eslint-disable prefer-const */
+/* eslint-disable no-var */
+/* eslint-disable prefer-arrow/prefer-arrow-functions */
 /* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable max-len */
@@ -21,8 +24,10 @@ import { LojasService } from '../servico/lojas.service';
 })
 export class HomePage implements OnInit {
 
-  lojas: string[];
-
+  unidades: string[];
+  somaFatTotal: string;
+  somaMargemTotal: string;
+  totalLiquido: string;
   constructor(private Lojas: LojasService, private service: LoginService, public loadingController: LoadingController, private menu: MenuController, private storage: Storage, private storageService: StorageService, private router: Router, public alertController: AlertController) { }
 
   async ngOnInit() {
@@ -34,18 +39,39 @@ export class HomePage implements OnInit {
     const valLogin = await this.storage.get('login');
     const valSenhaLogin = await this.storage.get('senha');
     const validateLogin = {user: valLogin, senha: valSenhaLogin, id_token: valIdToken};
-    const validatefLogin = {cnpj: valCnpj, token: valToken};
+    const validateLoginEmp = {cnpj: valCnpj, token: valToken};
     if(valFLogin !== false){
       this.router.navigateByUrl('/welcome', { replaceUrl: true });
     }
     else if(valLogin !== null && valSenhaLogin !== null && valCnpj !== null && valToken !== null && valIdToken !== null){
-      this.service.firstlogin(validatefLogin).subscribe(async response =>{
+      this.service.firstlogin(validateLoginEmp).subscribe(async response =>{
         if(response["status"] === "failed" || response["status"] === "blocked"){
           this.error("errLogEmp");
         }
         else if(response["status"] === "success"){
           this.service.login(validateLogin).subscribe(async response =>{
-            if(response["status"] === 'failed'){
+            if(response["status"] === 'success'){
+              this.Lojas.all(validateLoginEmp).subscribe(response => {
+                this.unidades = Object.values(response);
+                let unidades = this.unidades;
+                var somaFatArray = [];
+                var somaMargemArray = [];
+                for(var all of unidades){
+                  somaFatArray.push(parseFloat((all["somaFat"])));
+                  somaMargemArray.push(parseFloat((all["somaMargem"])));
+                }
+                var prepareRealFat = somaFatArray.reduce(somaArray, 0);
+                var prepareRealMargem = somaMargemArray.reduce(somaArray, 0);
+                var prepareRealLiquido =  prepareRealFat - prepareRealMargem;
+                function somaArray(total, numero){
+                  return total + numero;
+                }
+                this.somaFatTotal = prepareRealFat.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
+                this.somaMargemTotal = prepareRealMargem.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
+                this.totalLiquido = prepareRealLiquido.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
+              });
+            }
+            else if(response["status"] === 'failed'){
               this.error("errLog");
             }
             else if(response["status"] === 'errDB'){
@@ -62,11 +88,6 @@ export class HomePage implements OnInit {
         this.error("server");
       });
     }
-
-    const idToken = {id_token: valIdToken};
-    this.Lojas.all(idToken).subscribe(response => {
-      this.lojas = Object.values(response);
-    });
   }
   async logOut(): Promise<void>{
     await this.storage.remove("login");
@@ -187,6 +208,6 @@ export class HomePage implements OnInit {
     this.ngOnInit();
     setTimeout(() => {
       event.target.complete();
-    }, 2000);
+    }, 1000);
   }
 }

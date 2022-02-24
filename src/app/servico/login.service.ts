@@ -7,7 +7,7 @@ import { Injectable } from '@angular/core';
 import { Http, HttpOptions, HttpResponse } from '@capacitor-community/http';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export interface fLogin{
+export interface loginEmpresarial{
   cnpj: string;
   token: string;
 }
@@ -21,13 +21,13 @@ export interface Login{
   providedIn: 'root'
 })
 export class LoginService {
-  private flurl = 'http://192.168.1.93/Flogin';
+  private flurl = 'http://192.168.1.93/Login-Empresarial';
   private lurl = 'http://192.168.1.93/Login';
 
   constructor(private http: HttpClient) { }
 
-  firstlogin(flogin: fLogin){
-    return this.http.post(this.flurl, flogin);
+  firstlogin(loginEmp: loginEmpresarial){
+    return this.http.post(this.flurl, loginEmp);
   }
   login(login: Login){
     return this.http.post(this.lurl, login);
