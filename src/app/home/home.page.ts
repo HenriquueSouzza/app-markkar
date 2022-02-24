@@ -28,9 +28,12 @@ export class HomePage implements OnInit {
   somaFatTotal: string;
   somaMargemTotal: string;
   totalLiquido: string;
+  teste: number;
   constructor(private Lojas: LojasService, private service: LoginService, public loadingController: LoadingController, private menu: MenuController, private storage: Storage, private storageService: StorageService, private router: Router, public alertController: AlertController) { }
 
   async ngOnInit() {
+    var testee = 9000.00;
+    this.teste =  9000.01;
     this.menu.enable(true, 'homeMenu');
     const valFLogin = await this.storage.get('fOpen');
     const valCnpj = await this.storage.get('cnpj');
@@ -89,6 +92,11 @@ export class HomePage implements OnInit {
       });
     }
   }
+
+  convertInReal(num){
+    return parseFloat(num).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
+  }
+
   async logOut(): Promise<void>{
     await this.storage.remove("login");
     await this.storage.remove("senhaLogin");

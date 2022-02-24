@@ -29,7 +29,7 @@
           <p>faturamento</p>
         </div>
         <div>
-          <h3>30%</h3>
+          <h3>none%</h3>
           <p>cmv</p>
         </div>
         <div>
@@ -61,7 +61,7 @@
           <div class="dados">
             <div class="dado">
               <h3>faturamento:</h3>
-              <p>R$ {{ unidade["somaFat"] }}</p>
+              <p>{{ convertInReal(unidade["somaFat"]) }}</p>
             </div>
             <div class="dado">
               <h3 id="cmv">cmv:</h3>
@@ -69,7 +69,7 @@
             </div>
             <div class="dado">
               <h3>margem:</h3>
-              <p>R$ {{unidade["somaMargem"]}}</p>
+              <p>{{convertInReal(unidade["somaMargem"])}}</p>
             </div>
           </div>
         </div>
@@ -82,7 +82,7 @@
             </div>
             <div class="dadoTotal">
               <h3>CMV:</h3>
-              <p>teste</p>
+              <p>none%</p>
             </div>
             <div class="dadoTotal">
               <h3>margem:</h3>
