@@ -15,6 +15,11 @@ ion-content {
 ion-list{
   padding: 0;
 }
+ion-datetime{
+  --background: var(--ion-color-dark2);
+  --title-color: var(--ion-color-primary);
+  color: white;
+}
 #date{
   --width: 300px;
 }

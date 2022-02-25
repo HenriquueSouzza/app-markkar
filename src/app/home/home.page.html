@@ -25,7 +25,7 @@
       </div>
       <div id="total">
         <div>
-          <h3>{{ somaFatTotal }}</h3>
+          <h3>{{ somaAllFatTotal }}</h3>
           <p>faturamento</p>
         </div>
         <div>
@@ -33,7 +33,7 @@
           <p>cmv</p>
         </div>
         <div>
-          <h3>{{ somaMargemTotal }}</h3>
+          <h3>{{ somaAllMargemTotal }}</h3>
           <p>margem</p>
         </div>
       </div>
@@ -51,7 +51,7 @@
           <ion-popover id="date" trigger="dateModal">
             <ng-template>
               <ion-content>
-                <ion-datetime monthValues="6,7,8" yearValues="2021,2022" dayValues="01,02,03,04,05,06,08,09,10,11,12,13,14"></ion-datetime>
+                <ion-datetime value="{{dateValue}}" showDefaultButtons="true" locale="pt-BR" #dateTime (ionChange)="dateChange(dateTime.value)" max="{{ maxDate }}" presentation="date"></ion-datetime>
               </ion-content>
             </ng-template>
           </ion-popover>
@@ -69,7 +69,7 @@
             </div>
             <div class="dado">
               <h3>margem:</h3>
-              <p>{{convertInReal(unidade["somaMargem"])}}</p>
+              <p>{{ convertInReal(unidade["somaMargem"])}}</p>
             </div>
           </div>
         </div>

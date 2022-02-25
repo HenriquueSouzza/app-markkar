@@ -15,6 +15,7 @@ import { AlertController } from '@ionic/angular';
 import { StorageService } from './../servico/storage.service';
 import { LoginService } from './../servico/login.service';
 import { LojasService } from '../servico/lojas.service';
+import { format, parseISO } from 'date-fns';
 
 
 @Component({
@@ -25,28 +26,39 @@ import { LojasService } from '../servico/lojas.service';
 export class HomePage implements OnInit {
 
   unidades: string[];
+  somaAllFatTotal: string;
+  somaAllMargemTotal: string;
+  totalLiquido: string;
   somaFatTotal: string;
   somaMargemTotal: string;
-  totalLiquido: string;
-  teste: number;
+  maxDate: any = format(parseISO(new Date().toISOString()),"yyyy-MM-dd");
+  dateValue: any;
+  valFLogin: boolean;
+  valCnpj: string;
+  valToken: string;
+  valIdToken: string;
+  valLogin: string;
+  valSenhaLogin: string;
+
   constructor(private Lojas: LojasService, private service: LoginService, public loadingController: LoadingController, private menu: MenuController, private storage: Storage, private storageService: StorageService, private router: Router, public alertController: AlertController) { }
 
   async ngOnInit() {
-    var testee = 9000.00;
-    this.teste =  9000.01;
     this.menu.enable(true, 'homeMenu');
-    const valFLogin = await this.storage.get('fOpen');
-    const valCnpj = await this.storage.get('cnpj');
-    const valToken = await this.storage.get('token');
-    const valIdToken = await this.storage.get('idToken');
-    const valLogin = await this.storage.get('login');
-    const valSenhaLogin = await this.storage.get('senha');
-    const validateLogin = {user: valLogin, senha: valSenhaLogin, id_token: valIdToken};
-    const validateLoginEmp = {cnpj: valCnpj, token: valToken};
-    if(valFLogin !== false){
+    await this.storage.set("date", this.maxDate);
+    this.dateValue = await this.storage.get("date");
+    this.valFLogin = await this.storage.get('fOpen');
+    this.valCnpj = await this.storage.get('cnpj');
+    this.valToken = await this.storage.get('token');
+    this.valIdToken = await this.storage.get('idToken');
+    this.valLogin = await this.storage.get('login');
+    this.valSenhaLogin = await this.storage.get('senha');
+    const validateLogin = {user: this.valLogin, senha: this.valSenhaLogin, id_token: this.valIdToken};
+    const validateLoginEmp = {cnpj: this.valCnpj, token: this.valToken};
+    const allFat = {cnpj: this.valCnpj, token: this.valToken, date: "all"};
+    if(this.valFLogin !== false){
       this.router.navigateByUrl('/welcome', { replaceUrl: true });
     }
-    else if(valLogin !== null && valSenhaLogin !== null && valCnpj !== null && valToken !== null && valIdToken !== null){
+    else if(this.valLogin !== null && this.valSenhaLogin !== null && this.valCnpj !== null && this.valToken !== null && this.valIdToken !== null){
       this.service.firstlogin(validateLoginEmp).subscribe(async response =>{
         if(response["status"] === "failed" || response["status"] === "blocked"){
           this.error("errLogEmp");
@@ -54,14 +66,16 @@ export class HomePage implements OnInit {
         else if(response["status"] === "success"){
           this.service.login(validateLogin).subscribe(async response =>{
             if(response["status"] === 'success'){
-              this.Lojas.all(validateLoginEmp).subscribe(response => {
+              this.Lojas.allFat(allFat).subscribe(response => {
                 this.unidades = Object.values(response);
                 let unidades = this.unidades;
                 var somaFatArray = [];
                 var somaMargemArray = [];
+                var mesMinArray = [];
                 for(var all of unidades){
-                  somaFatArray.push(parseFloat((all["somaFat"])));
-                  somaMargemArray.push(parseFloat((all["somaMargem"])));
+                  somaFatArray.push(parseFloat(all["somaFat"]));
+                  somaMargemArray.push(parseFloat(all["somaMargem"]));
+                  mesMinArray.push(all["mesMin"]);
                 }
                 var prepareRealFat = somaFatArray.reduce(somaArray, 0);
                 var prepareRealMargem = somaMargemArray.reduce(somaArray, 0);
@@ -69,9 +83,11 @@ export class HomePage implements OnInit {
                 function somaArray(total, numero){
                   return total + numero;
                 }
-                this.somaFatTotal = prepareRealFat.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
-                this.somaMargemTotal = prepareRealMargem.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
+                this.somaAllFatTotal = prepareRealFat.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
+                this.somaAllMargemTotal = prepareRealMargem.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
                 this.totalLiquido = prepareRealLiquido.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
+                console.log(mesMinArray);
+                this.dayFat();
               });
             }
             else if(response["status"] === 'failed'){
@@ -97,9 +113,30 @@ export class HomePage implements OnInit {
     return parseFloat(num).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
   }
 
+  dayFat(){
+    const dayFat = {cnpj: this.valCnpj, token: this.valToken, date: this.dateValue};
+    this.Lojas.allFat(dayFat).subscribe(response => {
+      this.unidades = Object.values(response);
+      let unidades = this.unidades;
+      var somaFatArray = [];
+      var somaMargemArray = [];
+      for(var all of unidades){
+        somaFatArray.push(parseFloat((all["somaFat"])));
+        somaMargemArray.push(parseFloat((all["somaMargem"])));
+      }
+      var prepareRealFat = somaFatArray.reduce(somaArray, 0);
+      var prepareRealMargem = somaMargemArray.reduce(somaArray, 0);
+      function somaArray(total, numero){
+        return total + numero;
+      }
+      this.somaFatTotal = prepareRealFat.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
+      this.somaMargemTotal = prepareRealMargem.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
+    });
+  }
+
   async logOut(): Promise<void>{
     await this.storage.remove("login");
-    await this.storage.remove("senhaLogin");
+    await this.storage.remove("senha");
     this.router.navigateByUrl('/login', { replaceUrl: true });
   }
 
@@ -214,8 +251,16 @@ export class HomePage implements OnInit {
   }
   doRefresh(event) {
     this.ngOnInit();
+    /*if(this.unidades !== null){
+      event.target.complete();
+    }*/
     setTimeout(() => {
       event.target.complete();
-    }, 1000);
+    }, 500);
+  }
+  async dateChange(value){
+    await this.storage.set("date", format(parseISO(value),"yyyy-MM-dd"));
+    this.dateValue = await this.storage.get("date");
+    this.dayFat();
   }
 }
