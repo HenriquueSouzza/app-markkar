@@ -96,7 +96,7 @@ export class HomePage implements OnInit {
   }
 
   allFat(){
-    const allFat = {cnpj: this.valCnpj, token: this.valToken, date: "all"};
+    const allFat = {cnpj: this.valCnpj, token: this.valToken, interval: "all", date:""};
     this.Lojas.allFat(allFat).subscribe(response => {
       this.unidadesHeader = Object.values(response);
       let unidades = this.unidadesHeader;
@@ -120,7 +120,7 @@ export class HomePage implements OnInit {
   }
 
   dayFat(){
-    const dayFat = {cnpj: this.valCnpj, token: this.valToken, date: this.dateValue};
+    const dayFat = {cnpj: this.valCnpj, token: this.valToken, interval: "day", date: this.dateValue};
     this.Lojas.allFat(dayFat).subscribe(response => {
       this.unidades = Object.values(response);
       let unidades = this.unidades;

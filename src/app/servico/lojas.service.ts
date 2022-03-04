@@ -9,7 +9,8 @@ import { HttpClient } from '@angular/common/http';
 export interface allFat{
   cnpj: string;
   token: string;
-  date: string;
+  interval: string;
+  date: string ;
 }
 
 @Injectable({
