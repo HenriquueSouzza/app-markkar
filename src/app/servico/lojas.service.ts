@@ -16,7 +16,7 @@ export interface allFat{
   providedIn: 'root'
 })
 export class LojasService {
-  private url = 'http://192.168.1.93/Unidades';
+  private url = 'http://portal-markkar.herokuapp.com/Unidades';
 
   constructor(private http: HttpClient) { }
 

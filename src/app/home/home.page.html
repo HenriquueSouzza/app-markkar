@@ -20,20 +20,24 @@
     </ion-popover>
     <header class="headerSection">
       <div id="totalLiquido">
-        <h2>{{totalLiquido}}</h2>
+        <h2 *ngIf="contentLoader">{{totalLiquido}}</h2>
+        <ion-skeleton-text *ngIf="!contentLoader" animated style="width: 140px; height: 24px;"></ion-skeleton-text>
         <p>total líquido</p>
       </div>
       <div id="total">
         <div>
-          <h3>{{ somaAllFatTotal }}</h3>
+          <h3 *ngIf="contentLoader">{{ somaAllFatTotal }}</h3>
+          <ion-skeleton-text *ngIf="!contentLoader" animated style="width: 115px; height: 17px;"></ion-skeleton-text>
           <p>faturamento</p>
         </div>
         <div>
-          <h3>none%</h3>
+          <h3 *ngIf="contentLoader">none%</h3>
+          <ion-skeleton-text *ngIf="!contentLoader" animated style="width: 80px; height: 17px;"></ion-skeleton-text>
           <p>cmv</p>
         </div>
         <div>
-          <h3>{{ somaAllMargemTotal }}</h3>
+          <h3 *ngIf="contentLoader">{{ somaAllMargemTotal }}</h3>
+          <ion-skeleton-text *ngIf="!contentLoader" animated style="width: 115px; height: 17px;"></ion-skeleton-text>
           <p>margem</p>
         </div>
       </div>
@@ -61,32 +65,72 @@
           <div class="dados">
             <div class="dado">
               <h3>faturamento:</h3>
-              <p>{{ convertInReal(unidade["somaFat"]) }}</p>
+              <p *ngIf="dateLoader">{{ convertInReal(unidade["somaFat"]) }}</p>
+              <ion-skeleton-text *ngIf="!dateLoader" animated style="width: 30%"></ion-skeleton-text>
             </div>
             <div class="dado">
               <h3 id="cmv">cmv:</h3>
-              <p>{{unidade["cmv_vlr"]}}%</p>
+              <p *ngIf="dateLoader">{{unidade["cmv_vlr"]}}%</p>
+              <ion-skeleton-text *ngIf="!dateLoader" animated style="width: 30%"></ion-skeleton-text>
             </div>
             <div class="dado">
               <h3>margem:</h3>
-              <p>{{ convertInReal(unidade["somaMargem"])}}</p>
+              <p *ngIf="dateLoader">{{ convertInReal(unidade["somaMargem"])}}</p>
+              <ion-skeleton-text *ngIf="!dateLoader" animated style="width: 30%"></ion-skeleton-text>
             </div>
           </div>
         </div>
-        <div id="totalUnid">
+        <div *ngIf="!contentLoader" class="unidade">
+          <ion-skeleton-text color="dark" animated style="width: 70%; height: 19px;"></ion-skeleton-text>
+          <div class="dados">
+            <div class="dado">
+              <h3>faturamento:</h3>
+              <ion-skeleton-text animated style="width: 30%;"></ion-skeleton-text>
+            </div>
+            <div class="dado">
+              <h3 id="cmv">cmv:</h3>
+              <ion-skeleton-text animated style="width: 30%"></ion-skeleton-text>
+            </div>
+            <div class="dado">
+              <h3>margem:</h3>
+              <ion-skeleton-text animated style="width: 30%"></ion-skeleton-text>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="contentLoader" id="totalUnid">
           <h2>total</h2>
           <div id="dadosTotal">
             <div class="dadoTotal">
               <h3>faturamento:</h3>
-              <p>{{ somaFatTotal }}</p>
+              <p *ngIf="dateLoader">{{ somaFatTotal }}</p>
+              <ion-skeleton-text *ngIf="!dateLoader" animated style="width: 30%"></ion-skeleton-text>
             </div>
             <div class="dadoTotal">
               <h3>CMV:</h3>
-              <p>none%</p>
+              <p *ngIf="dateLoader">none%</p>
+              <ion-skeleton-text *ngIf="!dateLoader" animated style="width: 30%"></ion-skeleton-text>
             </div>
             <div class="dadoTotal">
               <h3>margem:</h3>
-              <p>{{ somaMargemTotal }}</p>
+              <p *ngIf="dateLoader">{{ somaMargemTotal }}</p>
+              <ion-skeleton-text *ngIf="!dateLoader" animated style="width: 30%"></ion-skeleton-text>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="!contentLoader" id="totalUnid">
+          <h2>total</h2>
+          <div id="dadosTotal">
+            <div class="dadoTotal">
+              <h3>faturamento:</h3>
+              <ion-skeleton-text animated style="width: 30%"></ion-skeleton-text>
+            </div>
+            <div class="dadoTotal">
+              <h3>CMV:</h3>
+              <ion-skeleton-text animated style="width: 30%"></ion-skeleton-text>
+            </div>
+            <div class="dadoTotal">
+              <h3>margem:</h3>
+              <ion-skeleton-text animated style="width: 30%"></ion-skeleton-text>
             </div>
           </div>
         </div>
