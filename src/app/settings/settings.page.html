@@ -9,13 +9,13 @@
 
 <ion-content>
   <ion-list>
-    <ion-item lines="full" color="secondary">
-      <ion-avatar slot="start">
+    <ion-item style="padding: 5px 0;background-color: var(--ion-color-dark2);" lines="full" color="secondary">
+      <ion-avatar style="width: 50px;height: 50px;" slot="start">
         <img src="../../assets/img/avatar.png">
       </ion-avatar>
       <ion-label id="labelAvatar">Olá <p id="pLabelAvatar">, {{name}}</p></ion-label>
     </ion-item>
-    <ion-item lines="none" style="padding-top: 20px;background-color: var(--ion-color-dark2);" color="secondary" [button]="true">
+    <ion-item (click)="redirect()" lines="none" color="secondary" [button]="true">
       <ion-icon name="person-outline"></ion-icon>
       <ion-label>Preferências <p class="p">Idioma, Moeda, tela inicial ...</p></ion-label>
     </ion-item>

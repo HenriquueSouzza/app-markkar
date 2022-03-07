@@ -5,28 +5,16 @@ import { Router } from '@angular/router';
 import { StorageService } from '../servico/storage.service';
 
 @Component({
-  selector: 'app-settings',
-  templateUrl: './settings.page.html',
-  styleUrls: ['./settings.page.scss'],
+  selector: 'app-preferences',
+  templateUrl: './preferences.page.html',
+  styleUrls: ['./preferences.page.scss'],
 })
-
-
-
-export class SettingsPage implements OnInit {
-  name: string;
+export class PreferencesPage implements OnInit {
 
   constructor(private menu: MenuController, private router: Router, private storage: Storage, private storageService: StorageService,) { }
 
-  async ngOnInit() {
-    setTimeout(() => {this.menu.enable(false, 'homeMenu');}, 300);
-    this.name = await this.storage.get('login');
+  ngOnInit() {
+    this.menu.enable(false, 'homeMenu');
   }
 
-  enableMenu(){
-    this.menu.enable(true, 'homeMenu');
-  }
-
-  redirect(){
-    this.router.navigateByUrl('/preferences');
-  }
 }
