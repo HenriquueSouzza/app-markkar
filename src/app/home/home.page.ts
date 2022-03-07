@@ -9,9 +9,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
 import { Router } from '@angular/router';
-import { LoadingController } from '@ionic/angular';
-import { MenuController } from '@ionic/angular';
-import { AlertController } from '@ionic/angular';
+import { LoadingController, MenuController, AlertController } from '@ionic/angular';
 import { StorageService } from './../servico/storage.service';
 import { LoginService } from './../servico/login.service';
 import { LojasService } from '../servico/lojas.service';
@@ -46,9 +44,10 @@ export class HomePage implements OnInit {
 
   async ngOnInit() {
     this.menu.enable(true, 'homeMenu');
-    this.dateLoader = true
+    this.dateLoader = true;
     this.contentLoader = false;
     await this.storage.set("date", this.maxDate);
+    if(await this.storage.get("interval") === null){await this.storage.set("interval", "");}
     this.dateValue = await this.storage.get("date");
     this.valFLogin = await this.storage.get('fOpen');
     this.valCnpj = await this.storage.get('cnpj');
@@ -69,7 +68,7 @@ export class HomePage implements OnInit {
         else if(response["status"] === "success"){
           this.service.login(validateLogin).subscribe(async response =>{
             if(response["status"] === 'success'){
-              this.allFat();
+              this.allFat(await this.storage.get("interval"));
               this.dayFat();
             }
             else if(response["status"] === 'failed'){
@@ -95,8 +94,9 @@ export class HomePage implements OnInit {
     return parseFloat(num).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
   }
 
-  allFat(){
-    const allFat = {cnpj: this.valCnpj, token: this.valToken, interval: "all", date:""};
+  allFat(interval){
+    if(interval === ""){interval = "all";}
+    const allFat = {cnpj: this.valCnpj, token: this.valToken, interval, date:""};
     this.Lojas.allFat(allFat).subscribe(response => {
       this.unidadesHeader = Object.values(response);
       let unidades = this.unidadesHeader;
@@ -146,6 +146,10 @@ export class HomePage implements OnInit {
     await this.storage.remove("login");
     await this.storage.remove("senha");
     this.router.navigateByUrl('/login', { replaceUrl: true });
+  }
+
+  redirect(){
+    this.router.navigateByUrl('/settings');
   }
 
   async error(err) {
@@ -257,7 +261,7 @@ export class HomePage implements OnInit {
     });
     await alert.present();
   }
-  doRefresh(event) {
+  async doRefresh(event) {
     this.unidades = [];
     this.unidadesHeader = [];
     this.somaAllFatTotal = "";
@@ -266,7 +270,7 @@ export class HomePage implements OnInit {
     this.somaFatTotal = "";
     this.somaMargemTotal = "";
     this.contentLoader = false;
-    this.allFat();
+    this.allFat(await this.storage.get("interval"));
     this.dayFat();
     const verfyComplete = setInterval(() => {
       if (this.unidades !== [] && this.unidadesHeader !== [] && this.totalLiquido !== "" && this.somaMargemTotal !== ""){
