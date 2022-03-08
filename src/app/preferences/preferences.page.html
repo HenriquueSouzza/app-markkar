@@ -1,12 +1,57 @@
 <ion-header color="dark">
   <ion-toolbar color="dark">
     <ion-buttons slot="start">
-      <ion-back-button></ion-back-button>
+      <ion-back-button defaultHref="settings"></ion-back-button>
     </ion-buttons>
     <ion-title mode="ios">preferências</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <!--<ion-accordion-group>
+    <ion-accordion value="interval">
+      <ion-item slot="header">
+        <ion-label>intervalo do faturamento</ion-label>
+      </ion-item>
+      <ion-list slot="content">
+        <ion-item>
+          <ion-label>intervalo de datas</ion-label>
+          <ion-toggle [checked]="true" (ionChange)="setInterval($event)"></ion-toggle>
+        </ion-item>
 
+        <ion-item>
+          <ion-label>intervalo</ion-label>
+          <ion-select placeholder="Select One">
+            <ion-select-option value="f">Female</ion-select-option>
+            <ion-select-option value="m">Male</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-list>
+    </ion-accordion>
+  </ion-accordion-group>-->
+  <ion-list>
+    <ion-item lines="none" color="secondary">
+      <ion-label style="text-transform: none;">Idioma</ion-label>
+      <ion-select cancel-text="cancelar" value="Portugues" ok-text="confirmar" interface="popover" (ionChange)="blank()" placeholder="Selecione">
+        <ion-select-option value="Portugues">Português</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item lines="none" color="secondary">
+      <ion-label style="text-transform: none;">Intervalo de Faturamento</ion-label>
+      <ion-select cancel-text="cancelar" value="{{valueInterval}}" ok-text="confirmar" interface="popover" (ionChange)="setInterval($event)" placeholder="Selecione">
+        <ion-select-option value="all">Todos</ion-select-option>
+        <ion-select-option value="year">Anual</ion-select-option>
+        <ion-select-option value="month">Mensal</ion-select-option>
+        <ion-select-option value="day">Diario</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item lines="none" color="secondary">
+      <ion-label style="text-transform: none;">Exibir Mascara Monetaria <p class="p">Os valores exibirão uma mascara. Ex: R$, US$...</p></ion-label>
+      <ion-toggle #setMaskToggle checked="{{ mask }}" (ionChange)="setMask($event)"></ion-toggle>
+    </ion-item>
+    <ion-item lines="none" color="secondary">
+      <ion-label style="text-transform: none;">CMV Porcentual<p class="p">Os valores de CMV serão convertidos para porcentegem.</p></ion-label>
+      <ion-toggle #setMaskToggle checked="{{ cmvPerc }}" (ionChange)="setCMV($event)"></ion-toggle>
+    </ion-item>
+  </ion-list>
 </ion-content>

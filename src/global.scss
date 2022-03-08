@@ -33,13 +33,59 @@
   font-family: 'robotoBold';
   src: url('assets/fonts/roboto/Roboto-Bold.ttf');
 }
+ion-skeleton-text{
+  --background-rgb: 255,255,255 !important;
+}
+ion-popover {
+  --background: var(--ion-color-dark2) !important;
+}
+ion-select-popover{
+  --background: var(--ion-color-dark2) !important;
+}
+ion-header{
+  background-color: var(--ion-color-dark2) !important;
+}
+ion-content {
+  --background: var(--ion-color-dark2) !important;
+}
+ion-list{
+  padding: 0;
+  --background: var(--ion-color-dark2) !important;
+}
+ion-item{
+  text-transform: capitalize !important;
+}
+ion-title{
+  font-family: 'robotoBold' !important;
+  text-transform: uppercase !important;
+}
+ion-label{
+  margin-left: 10px !important;
+  padding: 8px 0 !important;
+  .p{
+    font-size: 0.7rem !important;
+    font-family: 'robotoLight' !important;
+    color: rgb(141, 141, 141) !important;
+    margin-top: 5px !important;
+  }
+}
+ion-datetime{
+  --background: var(--ion-color-dark2) !important;
+  --title-color: var(--ion-color-primary) !important;
+  color: white !important;
+}
 ion-app{
   min-height: 100vh !important;
 }
 ion-content{
   font-family:robotoLight !important;
-  --background: var(--ion-color-dark2);
+  --background: var(--ion-color-dark2) !important;
   --keyboard-offset: 0 !important;
+}
+ion-toggle{
+  --background-checked: rgb(177, 115, 0) !important;
+  --background: rgb(128, 128, 128) !important;
+  --handle-background: rgb(184, 184, 184) !important;
 }
 .ion-page{
   min-height: 100vh !important;

@@ -39,6 +39,8 @@ export class HomePage implements OnInit {
   valIdToken: string;
   valLogin: string;
   valSenhaLogin: string;
+  mask: boolean;
+  cmvPerc: string;
 
   constructor(private Lojas: LojasService, private service: LoginService, public loadingController: LoadingController, private menu: MenuController, private storage: Storage, private storageService: StorageService, private router: Router, public alertController: AlertController) { }
 
@@ -47,7 +49,9 @@ export class HomePage implements OnInit {
     this.dateLoader = true;
     this.contentLoader = false;
     await this.storage.set("date", this.maxDate);
-    if(await this.storage.get("interval") === null){await this.storage.set("interval", "");}
+    if(await this.storage.get("interval") === null || await this.storage.get("interval") === "" || await this.storage.get("interval") === "on"){await this.storage.set("interval", "month");}
+    this.mask = await this.storage.get("mask");
+    this.cmvPerc = await this.storage.get("cmvPerc");
     this.dateValue = await this.storage.get("date");
     this.valFLogin = await this.storage.get('fOpen');
     this.valCnpj = await this.storage.get('cnpj');
@@ -91,12 +95,16 @@ export class HomePage implements OnInit {
   }
 
   convertInReal(num){
-    return parseFloat(num).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
+    if(this.mask === true){
+      return parseFloat(num).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
+    }else{
+      return num;
+    }
   }
 
   allFat(interval){
-    if(interval === ""){interval = "all";}
-    const allFat = {cnpj: this.valCnpj, token: this.valToken, interval, date:""};
+    if(interval === "" || interval === "on" || interval === null){interval = "month";}
+    const allFat = {cnpj: this.valCnpj, token: this.valToken, interval, date:"", cmvPercentage: this.cmvPerc.toString()};
     this.Lojas.allFat(allFat).subscribe(response => {
       this.unidadesHeader = Object.values(response);
       let unidades = this.unidadesHeader;
@@ -112,15 +120,22 @@ export class HomePage implements OnInit {
       function somaArray(total, numero){
         return total + numero;
       }
-      this.somaAllFatTotal = prepareRealFat.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
-      this.somaAllMargemTotal = prepareRealMargem.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
-      this.totalLiquido = prepareRealLiquido.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
-      this.contentLoader = true;
+      if(this.mask === true){
+        this.somaAllFatTotal = prepareRealFat.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
+        this.somaAllMargemTotal = prepareRealMargem.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
+        this.totalLiquido = prepareRealLiquido.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
+        this.contentLoader = true;
+      }else{
+        this.somaAllFatTotal = prepareRealFat;
+        this.somaAllMargemTotal = prepareRealMargem;
+        this.totalLiquido = prepareRealLiquido.toString();
+        this.contentLoader = true;
+      }
     });
   }
 
   dayFat(){
-    const dayFat = {cnpj: this.valCnpj, token: this.valToken, interval: "day", date: this.dateValue};
+    const dayFat = {cnpj: this.valCnpj, token: this.valToken, interval: "day", date: this.dateValue, cmvPercentage: this.cmvPerc.toString()};
     this.Lojas.allFat(dayFat).subscribe(response => {
       this.unidades = Object.values(response);
       let unidades = this.unidades;
@@ -270,8 +285,7 @@ export class HomePage implements OnInit {
     this.somaFatTotal = "";
     this.somaMargemTotal = "";
     this.contentLoader = false;
-    this.allFat(await this.storage.get("interval"));
-    this.dayFat();
+    this.ngOnInit();
     const verfyComplete = setInterval(() => {
       if (this.unidades !== [] && this.unidadesHeader !== [] && this.totalLiquido !== "" && this.somaMargemTotal !== ""){
         this.contentLoader = true;

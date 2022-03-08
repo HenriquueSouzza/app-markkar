@@ -10,7 +10,8 @@ export interface allFat{
   cnpj: string;
   token: string;
   interval: string;
-  date: string ;
+  date: string;
+  cmvPercentage: string;
 }
 
 @Injectable({
