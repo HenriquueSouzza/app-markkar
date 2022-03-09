@@ -26,11 +26,12 @@ export class HomePage implements OnInit {
   dateLoader: boolean;
   unidades: string[];
   unidadesHeader: string[];
-  somaAllFatTotal: string;
-  somaAllMargemTotal: string;
-  totalLiquido: string;
+  somaFatHeader: string;
+  somaMargemHeader: string;
+  somaCMVHeader: string;
   somaFatTotal: string;
   somaMargemTotal: string;
+  somaCMVTotal: string;
   maxDate: any = format(parseISO(new Date().toISOString()),"yyyy-MM-dd");
   dateValue: any;
   valFLogin: boolean;
@@ -40,7 +41,8 @@ export class HomePage implements OnInit {
   valLogin: string;
   valSenhaLogin: string;
   mask: boolean;
-  cmvPerc: string;
+  cmvPerc: boolean;
+  perc: string;
 
   constructor(private Lojas: LojasService, private service: LoginService, public loadingController: LoadingController, private menu: MenuController, private storage: Storage, private storageService: StorageService, private router: Router, public alertController: AlertController) { }
 
@@ -52,6 +54,8 @@ export class HomePage implements OnInit {
     if(await this.storage.get("interval") === null || await this.storage.get("interval") === "" || await this.storage.get("interval") === "on"){await this.storage.set("interval", "month");}
     this.mask = await this.storage.get("mask");
     this.cmvPerc = await this.storage.get("cmvPerc");
+    if(this.cmvPerc === true){this.perc = "%";}
+    if(this.cmvPerc === false){this.perc = "";}
     this.dateValue = await this.storage.get("date");
     this.valFLogin = await this.storage.get('fOpen');
     this.valCnpj = await this.storage.get('cnpj');
@@ -72,8 +76,8 @@ export class HomePage implements OnInit {
         else if(response["status"] === "success"){
           this.service.login(validateLogin).subscribe(async response =>{
             if(response["status"] === 'success'){
-              this.allFat(await this.storage.get("interval"));
-              this.dayFat();
+              this.headerFat(await this.storage.get("interval"));
+              this.unidadeFatTotal();
             }
             else if(response["status"] === 'failed'){
               this.error("errLog");
@@ -94,6 +98,94 @@ export class HomePage implements OnInit {
     }
   }
 
+  //Faturamento
+  headerFat(interval){
+    if(interval === "" || interval === "on" || interval === null){interval = "month";}
+    const interfaceHFat = {cnpj: this.valCnpj, token: this.valToken, interval, date:"", cmvPercentage: this.cmvPerc.toString()};
+    this.Lojas.faturamento(interfaceHFat).subscribe(response => {
+      this.unidadesHeader = Object.values(response);
+      let unidades = this.unidadesHeader;
+      var somaFatArray = [];
+      var somaMargemArray = [];
+      var somaCMVrray = [];
+      var rows = 0;
+      for(var all of unidades){
+        somaFatArray.push(parseFloat(all["somaFat"]));
+        somaMargemArray.push(parseFloat(all["somaMargem"]));
+        somaCMVrray.push(parseFloat(all["cmv_vlr"]));
+        rows = rows + 1;
+      }
+      var prepareRealFat = somaFatArray.reduce(somaArray, 0);
+      var prepareRealMargem = somaMargemArray.reduce(somaArray, 0);
+      var prepareRealCMV = somaCMVrray.reduce(somaArray, 0) / rows;
+      function somaArray(total, numero){
+        return total + numero;
+      }
+      if(this.mask === true){
+        this.somaFatHeader = prepareRealFat.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
+        this.somaMargemHeader = prepareRealMargem.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
+        if(this.cmvPerc === true){
+          this.somaCMVHeader = prepareRealCMV.toString();
+        }
+        else if(this.cmvPerc === false){
+          this.somaCMVHeader = prepareRealCMV.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
+        }
+        this.contentLoader = true;
+      }else{
+        this.somaFatHeader = prepareRealFat;
+        this.somaMargemHeader = prepareRealMargem;
+        this.somaCMVHeader = prepareRealCMV.toString();
+        this.contentLoader = true;
+      }
+    });
+  }
+  unidadeFatTotal(){
+    const dayFat = {cnpj: this.valCnpj, token: this.valToken, interval: "day", date: this.dateValue, cmvPercentage: this.cmvPerc.toString()};
+    this.Lojas.faturamento(dayFat).subscribe(response => {
+      this.unidades = Object.values(response);
+      let unidades = this.unidades;
+      var somaFatArray = [];
+      var somaMargemArray = [];
+      var somaCMVrray = [];
+      var rows = 0;
+      for(var all of unidades){
+        somaFatArray.push(parseFloat((all["somaFat"])));
+        somaMargemArray.push(parseFloat((all["somaMargem"])));
+        somaCMVrray.push(parseFloat(all["cmv_vlr"]));
+        rows = rows + 1;
+      }
+      var prepareRealFat = somaFatArray.reduce(somaArray, 0);
+      var prepareRealMargem = somaMargemArray.reduce(somaArray, 0);
+      var prepareRealCMV = somaCMVrray.reduce(somaArray, 0) / rows;
+      function somaArray(total, numero){
+        return total + numero;
+      }
+      if(this.mask === true){
+        this.somaFatTotal = prepareRealFat.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
+        this.somaMargemTotal = prepareRealMargem.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
+        if(this.cmvPerc === true){
+          this.somaCMVTotal = prepareRealCMV.toString();
+        }
+        else if(this.cmvPerc === false){
+          this.somaCMVTotal = prepareRealCMV.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
+        }
+        this.contentLoader = true;
+        this.dateLoader = true;
+      }else{
+        this.somaFatTotal = prepareRealFat;
+        this.somaMargemTotal = prepareRealMargem;
+        this.somaCMVTotal = prepareRealCMV.toString();
+        this.contentLoader = true;
+        this.dateLoader = true;
+      }
+    });
+  }
+  async dateChange(value){
+    await this.storage.set("date", format(parseISO(value),"yyyy-MM-dd"));
+    this.dateValue = await this.storage.get("date");
+    this.dateLoader = false;
+    this.unidadeFatTotal();
+  }
   convertInReal(num){
     if(this.mask === true){
       return parseFloat(num).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
@@ -102,71 +194,17 @@ export class HomePage implements OnInit {
     }
   }
 
-  allFat(interval){
-    if(interval === "" || interval === "on" || interval === null){interval = "month";}
-    const allFat = {cnpj: this.valCnpj, token: this.valToken, interval, date:"", cmvPercentage: this.cmvPerc.toString()};
-    this.Lojas.allFat(allFat).subscribe(response => {
-      this.unidadesHeader = Object.values(response);
-      let unidades = this.unidadesHeader;
-      var somaFatArray = [];
-      var somaMargemArray = [];
-      for(var all of unidades){
-        somaFatArray.push(parseFloat(all["somaFat"]));
-        somaMargemArray.push(parseFloat(all["somaMargem"]));
-      }
-      var prepareRealFat = somaFatArray.reduce(somaArray, 0);
-      var prepareRealMargem = somaMargemArray.reduce(somaArray, 0);
-      var prepareRealLiquido =  prepareRealFat - prepareRealMargem;
-      function somaArray(total, numero){
-        return total + numero;
-      }
-      if(this.mask === true){
-        this.somaAllFatTotal = prepareRealFat.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
-        this.somaAllMargemTotal = prepareRealMargem.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
-        this.totalLiquido = prepareRealLiquido.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
-        this.contentLoader = true;
-      }else{
-        this.somaAllFatTotal = prepareRealFat;
-        this.somaAllMargemTotal = prepareRealMargem;
-        this.totalLiquido = prepareRealLiquido.toString();
-        this.contentLoader = true;
-      }
-    });
-  }
-
-  dayFat(){
-    const dayFat = {cnpj: this.valCnpj, token: this.valToken, interval: "day", date: this.dateValue, cmvPercentage: this.cmvPerc.toString()};
-    this.Lojas.allFat(dayFat).subscribe(response => {
-      this.unidades = Object.values(response);
-      let unidades = this.unidades;
-      var somaFatArray = [];
-      var somaMargemArray = [];
-      for(var all of unidades){
-        somaFatArray.push(parseFloat((all["somaFat"])));
-        somaMargemArray.push(parseFloat((all["somaMargem"])));
-      }
-      var prepareRealFat = somaFatArray.reduce(somaArray, 0);
-      var prepareRealMargem = somaMargemArray.reduce(somaArray, 0);
-      function somaArray(total, numero){
-        return total + numero;
-      }
-      this.somaFatTotal = prepareRealFat.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
-      this.somaMargemTotal = prepareRealMargem.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
-      this.contentLoader = true;
-      this.dateLoader = true;
-    });
-  }
-
+  //Usuario
   async logOut(): Promise<void>{
     await this.storage.remove("login");
     await this.storage.remove("senha");
     this.router.navigateByUrl('/login', { replaceUrl: true });
   }
-
   redirect(){
     this.router.navigateByUrl('/settings');
   }
 
+  //Tratamento de Erros
   async error(err) {
     if(err === "server"){
       const alert = await this.alertController.create({
@@ -254,6 +292,7 @@ export class HomePage implements OnInit {
     }
   }
 
+  //Outras Funcoes
   async presentAlertConfirm() {
     const alert = await this.alertController.create({
       cssClass: 'my-custom-class',
@@ -279,25 +318,18 @@ export class HomePage implements OnInit {
   async doRefresh(event) {
     this.unidades = [];
     this.unidadesHeader = [];
-    this.somaAllFatTotal = "";
-    this.somaAllMargemTotal = "";
-    this.totalLiquido = "";
+    this.somaFatHeader = "";
+    this.somaMargemHeader = "";
     this.somaFatTotal = "";
     this.somaMargemTotal = "";
     this.contentLoader = false;
     this.ngOnInit();
     const verfyComplete = setInterval(() => {
-      if (this.unidades !== [] && this.unidadesHeader !== [] && this.totalLiquido !== "" && this.somaMargemTotal !== ""){
+      if (this.unidades !== [] && this.unidadesHeader !== [] && this.somaMargemTotal !== ""){
         this.contentLoader = true;
         event.target.complete();
         clearInterval(verfyComplete);
       }
     }, 300);
-  }
-  async dateChange(value){
-    await this.storage.set("date", format(parseISO(value),"yyyy-MM-dd"));
-    this.dateValue = await this.storage.get("date");
-    this.dateLoader = false;
-    this.dayFat();
   }
 }

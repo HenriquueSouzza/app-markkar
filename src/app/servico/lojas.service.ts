@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 
-export interface allFat{
+export interface interfaceFaturamento{
   cnpj: string;
   token: string;
   interval: string;
@@ -22,7 +22,7 @@ export class LojasService {
 
   constructor(private http: HttpClient) { }
 
-  allFat(allFat: allFat){
-    return this.http.post(this.url, allFat);
+  faturamento(intFat: interfaceFaturamento){
+    return this.http.post(this.url, intFat);
   }
 }
