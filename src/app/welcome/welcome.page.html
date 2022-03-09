@@ -22,7 +22,7 @@
           <div class="contentSlide">
             <ion-item mode="md">
               <ion-label position="floating">Digite seu CNPJ</ion-label>
-              <ion-input inputmode="number" (keyup.enter)="slideNext()" ngModel name="cnpj" maxlength="14" (click)="resetColor()" color="{{colorCnpj}}"></ion-input>
+              <ion-input type="number" (keyup.enter)="slideNext()" ngModel name="cnpj" maxlength="14" (click)="resetColor()" color="{{colorCnpj}}"></ion-input>
             </ion-item>
             <span>{{ cnpjErr }}</span>
             <div class="btnW">

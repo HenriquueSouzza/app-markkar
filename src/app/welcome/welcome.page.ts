@@ -62,7 +62,7 @@ export class WelcomePage implements OnInit {
     });
     await loading.present();
     const login = form.value;
-    if(login.cnpj.length !== 14){
+    if(login.cnpj.toString().length !== 14){
       await loading.dismiss();
       this.slides.slidePrev();
       this.cnpjErr = "Digite um CNPJ valido";
