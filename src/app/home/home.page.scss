@@ -16,6 +16,12 @@ ion-skeleton-text{
 }
 ion-popover{
   --background: var(--ion-color-dark2);
+  .list-md{
+    background: var(--ion-color-dark2) !important;
+  }
+  ion-accordion{
+    background: var(--ion-color-dark2) !important;
+  }
 }
 ion-header{
   background-color: var(--ion-color-dark2);

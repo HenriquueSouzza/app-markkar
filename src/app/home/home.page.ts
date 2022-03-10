@@ -35,6 +35,7 @@ export class HomePage implements OnInit {
   maxDate: any = format(parseISO(new Date().toISOString()),"yyyy-MM-dd");
   dateValueInit: string;
   dateValueFinish: string;
+  dateValueDay: string;
   interval: string;
   valFLogin: boolean;
   valCnpj: string;
@@ -45,7 +46,8 @@ export class HomePage implements OnInit {
   mask: boolean;
   cmvPerc: boolean;
   perc: string;
-  displayAcodeon: string;
+  displayInterval: string;
+  displayDay: string;
 
   constructor(private popoverController: PopoverController, private Lojas: LojasService, private service: LoginService, public loadingController: LoadingController, private menu: MenuController, private storage: Storage, private storageService: StorageService, private router: Router, public alertController: AlertController) { }
 
@@ -59,11 +61,13 @@ export class HomePage implements OnInit {
     this.mask = await this.storage.get("mask");
     this.cmvPerc = await this.storage.get("cmvPerc");
     this.interval = "day";
-    this.displayAcodeon = "none";
+    this.displayInterval = "none";
+    this.displayDay = "block";
     if(this.cmvPerc === true){this.perc = "%";}
     if(this.cmvPerc === false){this.perc = "";}
     this.dateValueInit = this.maxDate;
     this.dateValueFinish = this.maxDate;
+    this.dateValueDay = this.maxDate;
     this.valFLogin = await this.storage.get('fOpen');
     this.valCnpj = await this.storage.get('cnpj');
     this.valToken = await this.storage.get('token');
@@ -147,7 +151,7 @@ export class HomePage implements OnInit {
     });
   }
   unidadeFatTotal(){
-    const dayFat = {cnpj: this.valCnpj, token: this.valToken, interval: this.interval, date: "", cmvPercentage: this.cmvPerc.toString(), dateInit: this.dateValueInit, dateFinish: this.dateValueFinish};
+    const dayFat = {cnpj: this.valCnpj, token: this.valToken, interval: this.interval, date: this.dateValueDay, cmvPercentage: this.cmvPerc.toString(), dateInit: this.dateValueInit, dateFinish: this.dateValueFinish};
     this.Lojas.faturamento(dayFat).subscribe(response => {
       this.unidades = Object.values(response);
       let unidades = this.unidades;
@@ -189,12 +193,13 @@ export class HomePage implements OnInit {
   }
 
   async dateChangeInit(value){
-    await this.storage.set("dateInit", format(parseISO(value),"yyyy-MM-dd"));
-    this.dateValueInit = await this.storage.get("dateInit");
+    this.dateValueInit = value;
   }
   async dateChangeFinish(value){
-    await this.storage.set("dateFinish", format(parseISO(value),"yyyy-MM-dd"));
-    this.dateValueFinish = await this.storage.get("dateFinish");
+    this.dateValueFinish = value;
+  }
+  async dateChangeDay(value){
+    this.dateValueDay = value;
   }
   applyDateChanger(){
     this.dateLoader = false;
@@ -211,10 +216,16 @@ export class HomePage implements OnInit {
     await this.storage.set("interval", event.detail.value);
     this.interval = await this.storage.get("interval");
     if(this.interval === "interval"){
-      this.displayAcodeon = "block";
+      this.displayInterval = "block";
+      this.displayDay = "none";
+    }
+    else if(this.interval === "day"){
+      this.displayInterval = "none";
+      this.displayDay = "block";
     }
     else{
-      this.displayAcodeon = "none";
+      this.displayDay = "none";
+      this.displayInterval = "none";
     }
   }
 

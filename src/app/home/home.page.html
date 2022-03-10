@@ -7,7 +7,7 @@
     <ion-popover [dismissOnSelect]="true" trigger="userIconBTN">
       <ng-template>
         <ion-content>
-          <ion-list>
+          <ion-list color="secondary">
             <ion-item color="secondary" (click)="redirect()" [button]="true">
               <ion-label>Opções</ion-label>
             </ion-item >
@@ -51,7 +51,7 @@
           <ion-popover id="filter" trigger="dateModal">
             <ng-template>
               <ion-content>
-                <ion-list>
+                <ion-list color="secondary">
                   <ion-item lines="none" color="secondary">
                     <ion-label style="text-transform: none;font-size: 0.9rem;">Intervalo de Faturamento</ion-label>
                     <ion-select value="{{interval}}" interface="popover" (ionChange)="setInterval($event)" placeholder="Selecione">
@@ -62,17 +62,17 @@
                       <ion-select-option value="interval">Intervalo</ion-select-option>
                     </ion-select>
                   </ion-item>
-                  <ion-accordion-group style="display: {{displayAcodeon}};">
-                    <ion-accordion value="inicio">
+                  <ion-accordion-group>
+                    <ion-accordion value="inicio" style="display: {{displayInterval}};">
                       <ion-item lines="none" color="secondary" slot="header">
-                        <ion-label>Inicio<p class="p">{{ dateValueInit }}</p></ion-label>
+                        <ion-label>inicio<p class="p">{{ dateValueInit }}</p></ion-label>
                       </ion-item>
 
                       <ion-list slot="content">
                         <ion-datetime style="width: 100%;" value="{{dateValueInit}}" locale="pt-BR" #dateTimeInit (ionChange)="dateChangeInit(dateTimeInit.value)" max="{{ maxDate }}" presentation="date"></ion-datetime>
                       </ion-list>
                     </ion-accordion>
-                    <ion-accordion value="fim">
+                    <ion-accordion value="fim" style="display: {{displayInterval}};">
                       <ion-item lines="none" color="secondary"slot="header">
                         <ion-label>fim<p class="p">{{ dateValueFinish }}</p></ion-label>
                       </ion-item>
@@ -81,9 +81,18 @@
                         <ion-datetime style="width: 100%;" value="{{dateValueFinish}}" locale="pt-BR" #dateTimeFinish (ionChange)="dateChangeFinish(dateTimeFinish.value)" max="{{ maxDate }}" min={{dateValueInit}} presentation="date"></ion-datetime>
                       </ion-list>
                     </ion-accordion>
+                    <ion-accordion value="fim" style="display: {{displayDay}};">
+                      <ion-item lines="none" color="secondary"slot="header">
+                        <ion-label>Dia<p class="p">{{ dateValueDay }}</p></ion-label>
+                      </ion-item>
+
+                      <ion-list slot="content">
+                        <ion-datetime style="width: 100%;" value="{{dateValueDay}}" locale="pt-BR" #dateTimeDay (ionChange)="dateChangeDay(dateTimeDay.value)" max="{{ maxDate }}" presentation="date"></ion-datetime>
+                      </ion-list>
+                    </ion-accordion>
                   </ion-accordion-group>
                 </ion-list>
-                <ion-button (click)="applyDateChanger(); dateTimeFinish.confirm(true); dateTimeInit.confirm(true);" expand="block" fill="clear" shape="round">
+                <ion-button (click)="applyDateChanger(); dateTimeDay.confirm(true); dateTimeFinish.confirm(true); dateTimeInit.confirm(true);" expand="block" fill="clear" shape="round">
                   Filtrar
                 </ion-button>
               </ion-content>
