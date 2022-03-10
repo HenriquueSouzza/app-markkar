@@ -12,6 +12,8 @@ export interface interfaceFaturamento{
   interval: string;
   date: string;
   cmvPercentage: string;
+  dateInit: string;
+  dateFinish: string;
 }
 
 @Injectable({

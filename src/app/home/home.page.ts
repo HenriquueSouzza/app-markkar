@@ -9,7 +9,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
 import { Router } from '@angular/router';
-import { LoadingController, MenuController, AlertController } from '@ionic/angular';
+import { LoadingController, MenuController, AlertController, PopoverController } from '@ionic/angular';
 import { StorageService } from './../servico/storage.service';
 import { LoginService } from './../servico/login.service';
 import { LojasService } from '../servico/lojas.service';
@@ -33,7 +33,9 @@ export class HomePage implements OnInit {
   somaMargemTotal: string;
   somaCMVTotal: string;
   maxDate: any = format(parseISO(new Date().toISOString()),"yyyy-MM-dd");
-  dateValue: any;
+  dateValueInit: string;
+  dateValueFinish: string;
+  interval: string;
   valFLogin: boolean;
   valCnpj: string;
   valToken: string;
@@ -43,20 +45,25 @@ export class HomePage implements OnInit {
   mask: boolean;
   cmvPerc: boolean;
   perc: string;
+  displayAcodeon: string;
 
-  constructor(private Lojas: LojasService, private service: LoginService, public loadingController: LoadingController, private menu: MenuController, private storage: Storage, private storageService: StorageService, private router: Router, public alertController: AlertController) { }
+  constructor(private popoverController: PopoverController, private Lojas: LojasService, private service: LoginService, public loadingController: LoadingController, private menu: MenuController, private storage: Storage, private storageService: StorageService, private router: Router, public alertController: AlertController) { }
 
   async ngOnInit() {
     this.menu.enable(true, 'homeMenu');
     this.dateLoader = true;
     this.contentLoader = false;
     await this.storage.set("date", this.maxDate);
-    if(await this.storage.get("interval") === null || await this.storage.get("interval") === "" || await this.storage.get("interval") === "on"){await this.storage.set("interval", "month");}
+    if(await this.storage.get("intervalHeader") === null || await this.storage.get("intervalHeader") === "" || await this.storage.get("intervalHeader") === "on"){await this.storage.set("intervalHeader", "month");}
+    if(await this.storage.get("interval") === null || await this.storage.get("interval") === "" || await this.storage.get("interval") === "on"){await this.storage.set("interval", "day");}
     this.mask = await this.storage.get("mask");
     this.cmvPerc = await this.storage.get("cmvPerc");
+    this.interval = "day";
+    this.displayAcodeon = "none";
     if(this.cmvPerc === true){this.perc = "%";}
     if(this.cmvPerc === false){this.perc = "";}
-    this.dateValue = await this.storage.get("date");
+    this.dateValueInit = this.maxDate;
+    this.dateValueFinish = this.maxDate;
     this.valFLogin = await this.storage.get('fOpen');
     this.valCnpj = await this.storage.get('cnpj');
     this.valToken = await this.storage.get('token');
@@ -76,7 +83,7 @@ export class HomePage implements OnInit {
         else if(response["status"] === "success"){
           this.service.login(validateLogin).subscribe(async response =>{
             if(response["status"] === 'success'){
-              this.headerFat(await this.storage.get("interval"));
+              this.headerFat(await this.storage.get("intervalHeader"));
               this.unidadeFatTotal();
             }
             else if(response["status"] === 'failed'){
@@ -101,7 +108,7 @@ export class HomePage implements OnInit {
   //Faturamento
   headerFat(interval){
     if(interval === "" || interval === "on" || interval === null){interval = "month";}
-    const interfaceHFat = {cnpj: this.valCnpj, token: this.valToken, interval, date:"", cmvPercentage: this.cmvPerc.toString()};
+    const interfaceHFat = {cnpj: this.valCnpj, token: this.valToken, interval, date:"", cmvPercentage: this.cmvPerc.toString(), dateInit: null, dateFinish: null};
     this.Lojas.faturamento(interfaceHFat).subscribe(response => {
       this.unidadesHeader = Object.values(response);
       let unidades = this.unidadesHeader;
@@ -140,7 +147,7 @@ export class HomePage implements OnInit {
     });
   }
   unidadeFatTotal(){
-    const dayFat = {cnpj: this.valCnpj, token: this.valToken, interval: "day", date: this.dateValue, cmvPercentage: this.cmvPerc.toString()};
+    const dayFat = {cnpj: this.valCnpj, token: this.valToken, interval: this.interval, date: "", cmvPercentage: this.cmvPerc.toString(), dateInit: this.dateValueInit, dateFinish: this.dateValueFinish};
     this.Lojas.faturamento(dayFat).subscribe(response => {
       this.unidades = Object.values(response);
       let unidades = this.unidades;
@@ -180,9 +187,16 @@ export class HomePage implements OnInit {
       }
     });
   }
-  async dateChange(value){
-    await this.storage.set("date", format(parseISO(value),"yyyy-MM-dd"));
-    this.dateValue = await this.storage.get("date");
+
+  async dateChangeInit(value){
+    await this.storage.set("dateInit", format(parseISO(value),"yyyy-MM-dd"));
+    this.dateValueInit = await this.storage.get("dateInit");
+  }
+  async dateChangeFinish(value){
+    await this.storage.set("dateFinish", format(parseISO(value),"yyyy-MM-dd"));
+    this.dateValueFinish = await this.storage.get("dateFinish");
+  }
+  applyDateChanger(){
     this.dateLoader = false;
     this.unidadeFatTotal();
   }
@@ -191,6 +205,16 @@ export class HomePage implements OnInit {
       return parseFloat(num).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
     }else{
       return num;
+    }
+  }
+  async setInterval(event){
+    await this.storage.set("interval", event.detail.value);
+    this.interval = await this.storage.get("interval");
+    if(this.interval === "interval"){
+      this.displayAcodeon = "block";
+    }
+    else{
+      this.displayAcodeon = "none";
     }
   }
 

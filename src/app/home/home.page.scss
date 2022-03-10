@@ -31,8 +31,9 @@ ion-datetime{
   --title-color: var(--ion-color-primary);
   color: white;
 }
-#date{
-  --width: 300px;
+#filter{
+  --width: 80%;
+  --height: auto;
 }
 
 //header
@@ -123,20 +124,17 @@ ion-datetime{
   align-items: center;
   justify-content: space-between;
 
-  ion-button{
-    display: flex;
-    align-items: center;
-    color: var(--ion-color-primary);
-    font-family: 'robotoBold';
-    text-transform: uppercase;
-    font-size: 1.2rem;
-
-    ion-icon{
-      font-size: 1.5rem;
-      color: var(--ion-color-primary);
-    }
+  ion-accordion-group{
+    width: 100%;
   }
-
+  ion-accordion{
+    width: 100%;
+  }
+  ion-accordion.accordion-expanding ion-item[slot="header"],
+  ion-accordion.accordion-expanded ion-item[slot="header"] {
+    --color: red;
+    --background: red;
+  }
 }
 .unidades{
   display: flex;
