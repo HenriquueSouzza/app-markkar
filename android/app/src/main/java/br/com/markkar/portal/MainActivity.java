@@ -1,4 +1,4 @@
-package io.ionic.starter;
+package br.com.markkar.portal;
 
 import com.getcapacitor.BridgeActivity;
 
