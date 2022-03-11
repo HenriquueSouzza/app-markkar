@@ -46,8 +46,8 @@
     <section class="section">
       <div class="unidades">
         <div class="informacoes">
-          <ion-button expand="block" fill="clear" shape="round">unidades</ion-button>
-          <ion-button id="dateModal" expand="block" fill="clear" shape="round">Filter<ion-icon name="funnel-outline"></ion-icon></ion-button>
+          <ion-button expand="block" fill="clear" style="font-size: 1rem; width: 142px;" shape="round">unidades</ion-button>
+          <ion-button id="dateModal" expand="block" fill="clear" style="width: 142px;" shape="round">Filter<ion-icon style="width: 13px; margin-left: 5px;font-size: 1rem;" name="funnel-outline"></ion-icon></ion-button>
           <ion-popover id="filter" trigger="dateModal">
             <ng-template>
               <ion-content>
@@ -92,7 +92,7 @@
                     </ion-accordion>
                   </ion-accordion-group>
                 </ion-list>
-                <ion-button (click)="applyDateChanger(); dateTimeDay.confirm(true); dateTimeFinish.confirm(true); dateTimeInit.confirm(true);" expand="block" fill="clear" shape="round">
+                <ion-button id="btnFilter" (click)="applyDateChanger(); dateTimeDay.confirm(true); dateTimeFinish.confirm(true); dateTimeInit.confirm(true);" expand="block" fill="clear" shape="round">
                   Filtrar
                 </ion-button>
               </ion-content>

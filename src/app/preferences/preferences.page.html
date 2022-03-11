@@ -16,6 +16,12 @@
       </ion-select>
     </ion-item>
     <ion-item lines="none" color="secondary">
+      <ion-label style="text-transform: none;">Moeda</ion-label>
+      <ion-select cancel-text="cancelar" value="Portugues" ok-text="confirmar" interface="popover" (ionChange)="blank()" placeholder="Selecione">
+        <ion-select-option value="Portugues">Real(R$)</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item lines="none" color="secondary">
       <ion-label style="text-transform: none;">Intervalo de Faturamento</ion-label>
       <ion-select cancel-text="cancelar" value="{{valueInterval}}" ok-text="confirmar" interface="popover" (ionChange)="setInterval($event)" placeholder="Selecione">
         <ion-select-option value="all">Todos</ion-select-option>

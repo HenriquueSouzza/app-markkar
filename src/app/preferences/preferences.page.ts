@@ -26,10 +26,10 @@ export class PreferencesPage implements OnInit {
 
   async ngOnInit() {
     this.menu.enable(false, 'homeMenu');
-    if(await this.storage.get("interval") === "on"){await this.storage.set("intervalHeader", "month");}
+    if(await this.storage.get("intervalHeader") === "on"){await this.storage.set("intervalHeader", "month");}
     if(await this.storage.get("mask") === null){await this.storage.set("mask", true);}
     if(await this.storage.get("cmvPerc") === null){await this.storage.set("cmvPerc", true);}
-    this.valueInterval = await this.storage.get("interval");
+    this.valueInterval = await this.storage.get("intervalHeader");
     this.mask = await this.storage.get("mask");
     this.cmvPerc = await this.storage.get("cmvPerc");
   }
