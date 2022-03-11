@@ -38,12 +38,13 @@ ion-skeleton-text{
 }
 ion-popover {
   --background: var(--ion-color-dark2) !important;
+  --backdrop-opacity: 0.4 !important;
 }
 ion-select-popover{
   --background: var(--ion-color-dark2) !important;
 }
 ion-header{
-  background-color: var(--ion-color-dark2) !important;
+  background-color: var(--ion-color-dark) !important;
 }
 ion-content {
   --background: var(--ion-color-dark2) !important;
@@ -104,4 +105,16 @@ html.md{
 .datetime-size-fixed{
   max-width: 100% !important;
 }
-
+.list-ios{
+  background: var(--ion-color-dark2) !important;
+}
+.list-md{
+  background: var(--ion-color-dark2) !important;
+  --color: white !important;
+}
+.select-interface-option{
+  --background:  var(--ion-color-dark2) !important;
+  color: white !important;
+  --color: white !important;
+  --background-focused-opacity: 0.8 !important;
+}
