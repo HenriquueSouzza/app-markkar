@@ -7,7 +7,7 @@
     <form #f="ngForm" (ngSubmit)="enviarLogin(f)">
       <input ngModel name="cnpj" maxlength="14" type="text" placeholder="Digite o CNPJ...">
       <span>{{ cnpjErr }}</span>
-      <input ngModel name="senha" type="password" placeholder="Digite a Senha...">
+      <input ngModel name="token" type="text" placeholder="Digite seu Token...">
       <span>{{ err }}</span>
       <button type="submit">Buscar</button>
     </form>

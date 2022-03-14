@@ -100,8 +100,11 @@ export class HomePage implements OnInit {
     }
     else if(this.valLogin !== null && this.valSenhaLogin !== null && this.valCnpj !== null && this.valToken !== null && this.valIdToken !== null){
       this.service.firstlogin(validateLoginEmp).subscribe(async response =>{
-        if(response["status"] === "failed" || response["status"] === "blocked"){
+        if(response["status"] === "failed"){
           this.error("errLogEmp");
+        }
+        else if(response["status"] === "blocked"){
+          this.router.navigateByUrl('/token-block', { replaceUrl: true });
         }
         else if(response["status"] === "success"){
           this.service.login(validateLogin).subscribe(async response =>{

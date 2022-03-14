@@ -5,9 +5,8 @@ import { LoginService } from './../servico/login.service';
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
-import { LoadingController } from '@ionic/angular';
+import { LoadingController, MenuController } from '@ionic/angular';
 import { Storage } from '@ionic/storage-angular';
-import { MenuController } from '@ionic/angular';
 
 @Component({
   selector: 'app-login-empresa',
@@ -32,13 +31,7 @@ export class LoginEmpresaPage implements OnInit {
     const validatefLogin = {cnpj: valCnpj, token: valToken};
     if(valCnpj !== null && valToken !== null){
       this.service.firstlogin(validatefLogin).subscribe(async response =>{
-        if(response["status"] === "failed"){
-          this.router.navigateByUrl('/login-empresa', { replaceUrl: true });
-        }
-        else if(response["status"] === "blocked"){
-          alert("Token bloqueado");
-        }
-        else if(response["status"] === "success"){
+        if(response["status"] === "success"){
           this.router.navigateByUrl('/login', { replaceUrl: true });
         }
         else if(response["status"] === 'errDB'){

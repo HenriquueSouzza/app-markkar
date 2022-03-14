@@ -73,7 +73,7 @@ export class ValidateLoginPage implements OnInit {
         }
         else if(response["status"] === "blocked"){
           await loading.dismiss();
-          this.router.navigateByUrl('/login-empresa', { replaceUrl: true });
+          this.router.navigateByUrl('/token-block', { replaceUrl: true });
         }
         else if(response["status"] === "success"){
           await loading.dismiss();

@@ -34,6 +34,10 @@ const routes: Routes = [
     path: 'preferences',
     loadChildren: () => import('./preferences/preferences.module').then( m => m.PreferencesPageModule)
   },
+  {
+    path: 'token-block',
+    loadChildren: () => import('./token-block/token-block.module').then( m => m.TokenBlockPageModule)
+  },
 
 ];
 
