@@ -22,8 +22,25 @@ import { format, parseISO } from 'date-fns';
   styleUrls: ['./home.page.scss'],
 })
 export class HomePage implements OnInit {
+
+//Settings and Bool
   contentLoader: boolean;
   dateLoader: boolean;
+  mask: boolean;
+  cmvPerc: boolean;
+  perc: string;
+  displayInterval: string;
+  displayDay: string;
+
+//Login
+  valFLogin: boolean;
+  valCnpj: string;
+  valToken: string;
+  valIdToken: string;
+  valLogin: string;
+  valSenhaLogin: string;
+
+//Faturamento
   unidades: string[];
   unidadesHeader: string[];
   somaFatHeader: string;
@@ -32,42 +49,44 @@ export class HomePage implements OnInit {
   somaFatTotal: string;
   somaMargemTotal: string;
   somaCMVTotal: string;
+
+//Date
   maxDate: any = format(parseISO(new Date().toISOString()),"yyyy-MM-dd");
+  interval: string;
   dateValueInit: string;
   dateValueFinish: string;
   dateValueDay: string;
-  interval: string;
-  valFLogin: boolean;
-  valCnpj: string;
-  valToken: string;
-  valIdToken: string;
-  valLogin: string;
-  valSenhaLogin: string;
-  mask: boolean;
-  cmvPerc: boolean;
-  perc: string;
-  displayInterval: string;
-  displayDay: string;
+  dateValueDayFormat: string;
+  dateValueInitFormat: string;
+  dateValueFinishFormat: string;
 
-  constructor(private popoverController: PopoverController, private Lojas: LojasService, private service: LoginService, public loadingController: LoadingController, private menu: MenuController, private storage: Storage, private storageService: StorageService, private router: Router, public alertController: AlertController) { }
+  constructor(private Lojas: LojasService, private service: LoginService, public loadingController: LoadingController, private menu: MenuController, private storage: Storage, private storageService: StorageService, private router: Router, public alertController: AlertController) { }
 
   async ngOnInit() {
+    //Set Menu
     this.menu.enable(true, 'homeMenu');
+    //Set Loaders
     this.dateLoader = true;
     this.contentLoader = false;
-    await this.storage.set("date", this.maxDate);
+    //Error Prevention
     if(await this.storage.get("intervalHeader") === null || await this.storage.get("intervalHeader") === "" || await this.storage.get("intervalHeader") === "on"){await this.storage.set("intervalHeader", "month");}
     if(await this.storage.get("interval") === null || await this.storage.get("interval") === "" || await this.storage.get("interval") === "on"){await this.storage.set("interval", "day");}
+    //Set Preferences
     this.mask = await this.storage.get("mask");
     this.cmvPerc = await this.storage.get("cmvPerc");
+    if(this.cmvPerc === true){this.perc = "%";}
+    if(this.cmvPerc === false){this.perc = "";}
+    //Set Dates and Filter Default
     this.interval = "day";
     this.displayInterval = "none";
     this.displayDay = "block";
-    if(this.cmvPerc === true){this.perc = "%";}
-    if(this.cmvPerc === false){this.perc = "";}
     this.dateValueInit = this.maxDate;
     this.dateValueFinish = this.maxDate;
     this.dateValueDay = this.maxDate;
+    this.dateValueInitFormat = format(parseISO(this.maxDate), "dd/MM/yyyy");
+    this.dateValueFinishFormat = format(parseISO(this.maxDate), "dd/MM/yyyy");
+    this.dateValueDayFormat = format(parseISO(this.maxDate), "dd/MM/yyyy");
+    //Login Validation
     this.valFLogin = await this.storage.get('fOpen');
     this.valCnpj = await this.storage.get('cnpj');
     this.valToken = await this.storage.get('token');
@@ -191,14 +210,16 @@ export class HomePage implements OnInit {
       }
     });
   }
-
   async dateChangeInit(value){
+    this.dateValueInitFormat = format(parseISO( value), "dd/MM/yyyy");
     this.dateValueInit = value;
   }
   async dateChangeFinish(value){
+    this.dateValueFinishFormat = format(parseISO( value), "dd/MM/yyyy");
     this.dateValueFinish = value;
   }
   async dateChangeDay(value){
+    this.dateValueDayFormat = format(parseISO( value), "dd/MM/yyyy");
     this.dateValueDay = value;
   }
   applyDateChanger(){
