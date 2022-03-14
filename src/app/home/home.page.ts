@@ -133,7 +133,7 @@ export class HomePage implements OnInit {
     if(interval === "" || interval === "on" || interval === null){interval = "month";}
     const interfaceHFat = {cnpj: this.valCnpj, token: this.valToken, interval, date:"", cmvPercentage: this.cmvPerc.toString(), dateInit: null, dateFinish: null};
     this.Lojas.faturamento(interfaceHFat).subscribe(response => {
-      this.unidadesHeader = Object.values(response);
+      this.unidadesHeader = Object.values(response["Faturamento"]);
       let unidades = this.unidadesHeader;
       var somaFatArray = [];
       var somaMargemArray = [];
@@ -172,7 +172,7 @@ export class HomePage implements OnInit {
   unidadeFatTotal(){
     const dayFat = {cnpj: this.valCnpj, token: this.valToken, interval: this.interval, date: this.dateValueDay, cmvPercentage: this.cmvPerc.toString(), dateInit: this.dateValueInit, dateFinish: this.dateValueFinish};
     this.Lojas.faturamento(dayFat).subscribe(response => {
-      this.unidades = Object.values(response);
+      this.unidades = Object.values(response["Faturamento"]);
       let unidades = this.unidades;
       var somaFatArray = [];
       var somaMargemArray = [];
