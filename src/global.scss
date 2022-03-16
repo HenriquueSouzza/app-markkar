@@ -88,9 +88,9 @@ ion-toggle{
   --background: rgb(128, 128, 128) !important;
   --handle-background: rgb(184, 184, 184) !important;
 }
-h1, h2, h3, h4, h5, h6, p {
-  line-height: 1 !important;
-  margin: 0 !important;
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1;
+  margin: 0;
 }
 .ion-page{
   min-height: 100vh !important;

@@ -92,7 +92,8 @@ export class ValidateLoginPage implements OnInit {
     }
     else{
       await loading.dismiss();
-      this.router.navigateByUrl('/welcome', { replaceUrl: true });
+        this.btn = 'block';
+        alert("falha desconhecida");
     }
   }
 }

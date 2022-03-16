@@ -31,6 +31,8 @@ export class HomePage implements OnInit {
   perc: string;
   displayInterval: string;
   displayDay: string;
+  unidadesCheck: any;
+  displayUnidades = false;
 
 //Login
   valFLogin: boolean;
@@ -41,7 +43,7 @@ export class HomePage implements OnInit {
   valSenhaLogin: string;
 
 //Faturamento
-  unidades: string[];
+  unidadesFat: string[];
   unidadesHeader: string[];
   somaFatHeader: string;
   somaMargemHeader: string;
@@ -65,12 +67,16 @@ export class HomePage implements OnInit {
   async ngOnInit() {
     //Set Menu
     this.menu.enable(true, 'homeMenu');
+    this.displayUnidades = false;
     //Set Loaders
     this.dateLoader = true;
     this.contentLoader = false;
     //Error Prevention
+    if(await this.storage.get("unidadesCheck") === null){await this.storage.set("unidadesCheck", {});}
     if(await this.storage.get("intervalHeader") === null || await this.storage.get("intervalHeader") === "" || await this.storage.get("intervalHeader") === "on"){await this.storage.set("intervalHeader", "month");}
     if(await this.storage.get("interval") === null || await this.storage.get("interval") === "" || await this.storage.get("interval") === "on"){await this.storage.set("interval", "day");}
+    //Set CheckBox
+    this.unidadesCheck = await this.storage.get("unidadesCheck");
     //Set Preferences
     this.mask = await this.storage.get("mask");
     this.cmvPerc = await this.storage.get("cmvPerc");
@@ -96,7 +102,7 @@ export class HomePage implements OnInit {
     const validateLogin = {user: this.valLogin, senha: this.valSenhaLogin, id_token: this.valIdToken};
     const validateLoginEmp = {cnpj: this.valCnpj, token: this.valToken};
     if(this.valFLogin !== false){
-      this.router.navigateByUrl('/welcome', { replaceUrl: true });
+      this.router.navigateByUrl('/validate-login', { replaceUrl: true });
     }
     else if(this.valLogin !== null && this.valSenhaLogin !== null && this.valCnpj !== null && this.valToken !== null && this.valIdToken !== null){
       this.service.firstlogin(validateLoginEmp).subscribe(async response =>{
@@ -172,24 +178,49 @@ export class HomePage implements OnInit {
       }
     });
   }
-  unidadeFatTotal(){
+  async unidadeFatTotal(){
     const dayFat = {cnpj: this.valCnpj, token: this.valToken, interval: this.interval, date: this.dateValueDay, cmvPercentage: this.cmvPerc.toString(), dateInit: this.dateValueInit, dateFinish: this.dateValueFinish};
-    this.Lojas.faturamento(dayFat).subscribe(response => {
-      this.unidades = Object.values(response["Faturamento"]);
-      let unidades = this.unidades;
+    this.Lojas.faturamento(dayFat).subscribe(async response => {
+      var unidades = response;
+      this.unidadesFat = Object.values(response["Faturamento"]);
+      let unidadesFat = this.unidadesFat;
       var somaFatArray = [];
       var somaMargemArray = [];
       var somaCMVrray = [];
-      var rows = 0;
-      for(var all of unidades){
-        somaFatArray.push(parseFloat((all["somaFat"])));
-        somaMargemArray.push(parseFloat((all["somaMargem"])));
-        somaCMVrray.push(parseFloat(all["cmv_vlr"]));
-        rows = rows + 1;
+      if(Object.values(this.unidadesCheck).length === 0){
+        for(var all of unidadesFat){
+          somaFatArray.push(parseFloat((all["somaFat"])));
+          somaMargemArray.push(parseFloat((all["somaMargem"])));
+          somaCMVrray.push(parseFloat(all["cmv_vlr"]));
+          this.unidadesCheck[all["nome_cc"]] = {unidade: all["nome_cc"], check: true, display: 'block'};
+          await this.storage.set("unidadesCheck", this.unidadesCheck);
+        }
+      }else{
+        for(var all of unidadesFat){
+          somaFatArray.push(parseFloat((all["somaFat"])));
+          somaMargemArray.push(parseFloat((all["somaMargem"])));
+          somaCMVrray.push(parseFloat(all["cmv_vlr"]));
+        }
       }
-      var prepareRealFat = somaFatArray.reduce(somaArray, 0);
-      var prepareRealMargem = somaMargemArray.reduce(somaArray, 0);
-      var prepareRealCMV = somaCMVrray.reduce(somaArray, 0) / rows;
+      var unidadesIgnore = [];
+      var ignoreSomaFatArray = [];
+      var ignoreSomaMargemArray = [];
+      var ignoreSomaCMVrray = [];
+      for(var tt of Object.values(this.unidadesCheck)){
+        if(tt['check'] === false){
+          unidadesIgnore.push(tt['unidade']);
+          for(tt of Object.values(unidades)){
+            ignoreSomaFatArray.push(parseFloat(tt[unidadesIgnore[unidadesIgnore.length - 1]]['somaFat']));
+            ignoreSomaMargemArray.push(parseFloat(tt[unidadesIgnore[unidadesIgnore.length - 1]]['somaMargem']));
+            ignoreSomaCMVrray.push(parseFloat(tt[unidadesIgnore[unidadesIgnore.length - 1]]['cmv_vlr']));
+          }
+        }
+      }
+      console.log(unidadesIgnore);
+      console.log(ignoreSomaFatArray);
+      var prepareRealFat = somaFatArray.reduce(somaArray, 0) - ignoreSomaFatArray.reduce(somaArray, 0);
+      var prepareRealMargem = somaMargemArray.reduce(somaArray, 0) - ignoreSomaMargemArray.reduce(somaArray, 0);
+      var prepareRealCMV = (somaCMVrray.reduce(somaArray, 0) - ignoreSomaCMVrray.reduce(somaArray, 0)) / (somaCMVrray.length-unidadesIgnore.length);
       function somaArray(total, numero){
         return total + numero;
       }
@@ -205,8 +236,8 @@ export class HomePage implements OnInit {
         this.contentLoader = true;
         this.dateLoader = true;
       }else{
-        this.somaFatTotal = prepareRealFat;
-        this.somaMargemTotal = prepareRealMargem;
+        this.somaFatTotal = prepareRealFat.toString();
+        this.somaMargemTotal = prepareRealMargem.toString();
         this.somaCMVTotal = prepareRealCMV.toString();
         this.contentLoader = true;
         this.dateLoader = true;
@@ -251,6 +282,11 @@ export class HomePage implements OnInit {
       this.displayDay = "none";
       this.displayInterval = "none";
     }
+  }
+  async unidadesChangeCheck(event, id){
+    if(event === true){var display = 'block';}else if(event === false){var display = 'none';}
+    this.unidadesCheck[id] = {unidade: id, check: event, display};
+    await this.storage.set("unidadesCheck", this.unidadesCheck);
   }
 
   //Usuario
@@ -375,7 +411,7 @@ export class HomePage implements OnInit {
     await alert.present();
   }
   async doRefresh(event) {
-    this.unidades = [];
+    this.unidadesFat = [];
     this.unidadesHeader = [];
     this.somaFatHeader = "";
     this.somaMargemHeader = "";
@@ -384,7 +420,7 @@ export class HomePage implements OnInit {
     this.contentLoader = false;
     this.ngOnInit();
     const verfyComplete = setInterval(() => {
-      if (this.unidades !== [] && this.unidadesHeader !== [] && this.somaMargemTotal !== ""){
+      if (this.unidadesFat !== [] && this.unidadesHeader !== [] && this.somaMargemTotal !== ""){
         this.contentLoader = true;
         event.target.complete();
         clearInterval(verfyComplete);
