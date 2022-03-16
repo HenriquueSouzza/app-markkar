@@ -1,10 +1,5 @@
-/* eslint-disable prefer-const */
 /* eslint-disable no-var */
-/* eslint-disable prefer-arrow/prefer-arrow-functions */
-/* eslint-disable @typescript-eslint/no-shadow */
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable max-len */
-/* eslint-disable @typescript-eslint/quotes */
+/* eslint-disable prefer-const */
 /* eslint-disable @typescript-eslint/dot-notation */
 import { Component, OnInit } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
@@ -26,6 +21,7 @@ export class HomePage implements OnInit {
 //Settings and Bool
   contentLoader: boolean;
   dateLoader: boolean;
+  dateLoaderTotal: boolean;
   mask: boolean;
   cmvPerc: boolean;
   perc: string;
@@ -53,7 +49,7 @@ export class HomePage implements OnInit {
   somaCMVTotal: string;
 
 //Date
-  maxDate: any = format(parseISO(new Date().toISOString()),"yyyy-MM-dd");
+  maxDate: any = format(parseISO(new Date().toISOString()),'yyyy-MM-dd');
   interval: string;
   dateValueInit: string;
   dateValueFinish: string;
@@ -62,36 +58,52 @@ export class HomePage implements OnInit {
   dateValueInitFormat: string;
   dateValueFinishFormat: string;
 
-  constructor(private Lojas: LojasService, private service: LoginService, public loadingController: LoadingController, private menu: MenuController, private storage: Storage, private storageService: StorageService, private router: Router, public alertController: AlertController) { }
+  constructor(
+    private lojas: LojasService,
+    private service: LoginService,
+    public loadingController: LoadingController,
+    private menu: MenuController, private storage: Storage,
+    private storageService: StorageService, private router: Router,
+    public alertController: AlertController
+    ) { }
 
   async ngOnInit() {
     //Set Menu
     this.menu.enable(true, 'homeMenu');
     this.displayUnidades = false;
     //Set Loaders
-    this.dateLoader = true;
+    this.dateLoader = false;
+    this.dateLoaderTotal = false;
     this.contentLoader = false;
     //Error Prevention
-    if(await this.storage.get("unidadesCheck") === null){await this.storage.set("unidadesCheck", {});}
-    if(await this.storage.get("intervalHeader") === null || await this.storage.get("intervalHeader") === "" || await this.storage.get("intervalHeader") === "on"){await this.storage.set("intervalHeader", "month");}
-    if(await this.storage.get("interval") === null || await this.storage.get("interval") === "" || await this.storage.get("interval") === "on"){await this.storage.set("interval", "day");}
+    if(await this.storage.get('unidadesCheck') === null){await this.storage.set('unidadesCheck', {});}
+    if(
+      await this.storage.get('intervalHeader') === null ||
+      await this.storage.get('intervalHeader') === '' ||
+      await this.storage.get('intervalHeader') === 'on'
+    ){await this.storage.set('intervalHeader', 'month');}
+    if(
+      await this.storage.get('interval') === null ||
+      await this.storage.get('interval') === '' ||
+      await this.storage.get('interval') === 'on'
+    ){await this.storage.set('interval', 'day');}
     //Set CheckBox
-    this.unidadesCheck = await this.storage.get("unidadesCheck");
+    this.unidadesCheck = await this.storage.get('unidadesCheck');
     //Set Preferences
-    this.mask = await this.storage.get("mask");
-    this.cmvPerc = await this.storage.get("cmvPerc");
-    if(this.cmvPerc === true){this.perc = "%";}
-    if(this.cmvPerc === false){this.perc = "";}
+    this.mask = await this.storage.get('mask');
+    this.cmvPerc = await this.storage.get('cmvPerc');
+    if(this.cmvPerc === true){this.perc = '%';}
+    if(this.cmvPerc === false){this.perc = '';}
     //Set Dates and Filter Default
-    this.interval = "day";
-    this.displayInterval = "none";
-    this.displayDay = "block";
+    this.interval = 'day';
+    this.displayInterval = 'none';
+    this.displayDay = 'block';
     this.dateValueInit = this.maxDate;
     this.dateValueFinish = this.maxDate;
     this.dateValueDay = this.maxDate;
-    this.dateValueInitFormat = format(parseISO(this.maxDate), "dd/MM/yyyy");
-    this.dateValueFinishFormat = format(parseISO(this.maxDate), "dd/MM/yyyy");
-    this.dateValueDayFormat = format(parseISO(this.maxDate), "dd/MM/yyyy");
+    this.dateValueInitFormat = format(parseISO(this.maxDate), 'dd/MM/yyyy');
+    this.dateValueFinishFormat = format(parseISO(this.maxDate), 'dd/MM/yyyy');
+    this.dateValueDayFormat = format(parseISO(this.maxDate), 'dd/MM/yyyy');
     //Login Validation
     this.valFLogin = await this.storage.get('fOpen');
     this.valCnpj = await this.storage.get('cnpj');
@@ -99,65 +111,77 @@ export class HomePage implements OnInit {
     this.valIdToken = await this.storage.get('idToken');
     this.valLogin = await this.storage.get('login');
     this.valSenhaLogin = await this.storage.get('senha');
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     const validateLogin = {user: this.valLogin, senha: this.valSenhaLogin, id_token: this.valIdToken};
     const validateLoginEmp = {cnpj: this.valCnpj, token: this.valToken};
     if(this.valFLogin !== false){
       this.router.navigateByUrl('/validate-login', { replaceUrl: true });
     }
-    else if(this.valLogin !== null && this.valSenhaLogin !== null && this.valCnpj !== null && this.valToken !== null && this.valIdToken !== null){
+    else if(
+      this.valLogin !== null &&
+      this.valSenhaLogin !== null &&
+      this.valCnpj !== null &&
+      this.valToken !== null &&
+      this.valIdToken !== null){
       this.service.firstlogin(validateLoginEmp).subscribe(async response =>{
-        if(response["status"] === "failed"){
-          this.error("errLogEmp");
+        if(response['status'] === 'failed'){
+          this.error('errLogEmp');
         }
-        else if(response["status"] === "blocked"){
+        else if(response['status'] === 'blocked'){
           this.router.navigateByUrl('/token-block', { replaceUrl: true });
         }
-        else if(response["status"] === "success"){
+        else if(response['status'] === 'success'){
+          // eslint-disable-next-line @typescript-eslint/no-shadow
           this.service.login(validateLogin).subscribe(async response =>{
-            if(response["status"] === 'success'){
-              this.headerFat(await this.storage.get("intervalHeader"));
+            if(response['status'] === 'success'){
+              this.headerFat(await this.storage.get('intervalHeader'));
               this.unidadeFatTotal();
             }
-            else if(response["status"] === 'failed'){
-              this.error("errLog");
+            else if(response['status'] === 'failed'){
+              this.error('errLog');
             }
-            else if(response["status"] === 'errDB'){
-              this.error("serverdb");
+            else if(response['status'] === 'errDB'){
+              this.error('serverdb');
             }
           }, async error => {
-            this.error("server");
+            this.error('server');
           });
         }
-        else if(response["status"] === 'errDB'){
-          this.error("serverdb");
+        else if(response['status'] === 'errDB'){
+          this.error('serverdb');
         }
       }, async error => {
-        this.error("server");
+        this.error('server');
       });
     }
   }
 
   //Faturamento
   headerFat(interval){
-    if(interval === "" || interval === "on" || interval === null){interval = "month";}
-    const interfaceHFat = {cnpj: this.valCnpj, token: this.valToken, interval, date:"", cmvPercentage: this.cmvPerc.toString(), dateInit: null, dateFinish: null};
-    this.Lojas.faturamento(interfaceHFat).subscribe(response => {
-      this.unidadesHeader = Object.values(response["Faturamento"]);
+    if(interval === '' || interval === 'on' || interval === null){interval = 'month';}
+    const interfaceHFat = {
+      cnpj: this.valCnpj, token: this.valToken,
+      interval, date:'', cmvPercentage: this.cmvPerc.toString(),
+      dateInit: null, dateFinish: null
+    };
+    this.lojas.faturamento(interfaceHFat).subscribe(response => {
+      this.unidadesHeader = Object.values(response['Faturamento']);
       let unidades = this.unidadesHeader;
       var somaFatArray = [];
       var somaMargemArray = [];
       var somaCMVrray = [];
       var rows = 0;
       for(var all of unidades){
-        somaFatArray.push(parseFloat(all["somaFat"]));
-        somaMargemArray.push(parseFloat(all["somaMargem"]));
-        somaCMVrray.push(parseFloat(all["cmv_vlr"]));
+        somaFatArray.push(parseFloat(all['somaFat']));
+        somaMargemArray.push(parseFloat(all['somaMargem']));
+        somaCMVrray.push(parseFloat(all['cmv_vlr']));
         rows = rows + 1;
       }
       var prepareRealFat = somaFatArray.reduce(somaArray, 0);
       var prepareRealMargem = somaMargemArray.reduce(somaArray, 0);
       var prepareRealCMV = somaCMVrray.reduce(somaArray, 0) / rows;
-      function somaArray(total, numero){
+      // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
+      function somaArray(total: any, numero: any): any{
         return total + numero;
       }
       if(this.mask === true){
@@ -179,48 +203,54 @@ export class HomePage implements OnInit {
     });
   }
   async unidadeFatTotal(){
-    const dayFat = {cnpj: this.valCnpj, token: this.valToken, interval: this.interval, date: this.dateValueDay, cmvPercentage: this.cmvPerc.toString(), dateInit: this.dateValueInit, dateFinish: this.dateValueFinish};
-    this.Lojas.faturamento(dayFat).subscribe(async response => {
+    const dayFat = {
+      cnpj: this.valCnpj, token: this.valToken,
+      interval: this.interval, date: this.dateValueDay,
+      cmvPercentage: this.cmvPerc.toString(), dateInit: this.dateValueInit,
+      dateFinish: this.dateValueFinish
+    };
+    this.lojas.faturamento(dayFat).subscribe(async response => {
       var unidades = response;
-      this.unidadesFat = Object.values(response["Faturamento"]);
+      this.unidadesFat = Object.values(response['Faturamento']);
       let unidadesFat = this.unidadesFat;
       var somaFatArray = [];
       var somaMargemArray = [];
       var somaCMVrray = [];
       if(Object.values(this.unidadesCheck).length === 0){
         for(var all of unidadesFat){
-          somaFatArray.push(parseFloat((all["somaFat"])));
-          somaMargemArray.push(parseFloat((all["somaMargem"])));
-          somaCMVrray.push(parseFloat(all["cmv_vlr"]));
-          this.unidadesCheck[all["nome_cc"]] = {unidade: all["nome_cc"], check: true, display: 'block'};
-          await this.storage.set("unidadesCheck", this.unidadesCheck);
+          somaFatArray.push(parseFloat((all['somaFat'])));
+          somaMargemArray.push(parseFloat((all['somaMargem'])));
+          somaCMVrray.push(parseFloat(all['cmv_vlr']));
+          this.unidadesCheck[all['nome_cc']] = {unidade: all['nome_cc'], check: true, display: 'block'};
+          await this.storage.set('unidadesCheck', this.unidadesCheck);
         }
       }else{
         for(var all of unidadesFat){
-          somaFatArray.push(parseFloat((all["somaFat"])));
-          somaMargemArray.push(parseFloat((all["somaMargem"])));
-          somaCMVrray.push(parseFloat(all["cmv_vlr"]));
+          somaFatArray.push(parseFloat((all['somaFat'])));
+          somaMargemArray.push(parseFloat((all['somaMargem'])));
+          somaCMVrray.push(parseFloat(all['cmv_vlr']));
         }
       }
       var unidadesIgnore = [];
       var ignoreSomaFatArray = [];
       var ignoreSomaMargemArray = [];
       var ignoreSomaCMVrray = [];
-      for(var tt of Object.values(this.unidadesCheck)){
-        if(tt['check'] === false){
-          unidadesIgnore.push(tt['unidade']);
-          for(tt of Object.values(unidades)){
-            ignoreSomaFatArray.push(parseFloat(tt[unidadesIgnore[unidadesIgnore.length - 1]]['somaFat']));
-            ignoreSomaMargemArray.push(parseFloat(tt[unidadesIgnore[unidadesIgnore.length - 1]]['somaMargem']));
-            ignoreSomaCMVrray.push(parseFloat(tt[unidadesIgnore[unidadesIgnore.length - 1]]['cmv_vlr']));
+      for(var unidadegIgnore of Object.values(this.unidadesCheck)){
+        if(unidadegIgnore['check'] === false){
+          unidadesIgnore.push(unidadegIgnore['unidade']);
+          for(unidadegIgnore of Object.values(unidades)){
+            ignoreSomaFatArray.push(parseFloat(unidadegIgnore[unidadesIgnore[unidadesIgnore.length - 1]]['somaFat']));
+            ignoreSomaMargemArray.push(parseFloat(unidadegIgnore[unidadesIgnore[unidadesIgnore.length - 1]]['somaMargem']));
+            ignoreSomaCMVrray.push(parseFloat(unidadegIgnore[unidadesIgnore[unidadesIgnore.length - 1]]['cmv_vlr']));
           }
         }
       }
-      console.log(unidadesIgnore);
-      console.log(ignoreSomaFatArray);
       var prepareRealFat = somaFatArray.reduce(somaArray, 0) - ignoreSomaFatArray.reduce(somaArray, 0);
       var prepareRealMargem = somaMargemArray.reduce(somaArray, 0) - ignoreSomaMargemArray.reduce(somaArray, 0);
-      var prepareRealCMV = (somaCMVrray.reduce(somaArray, 0) - ignoreSomaCMVrray.reduce(somaArray, 0)) / (somaCMVrray.length-unidadesIgnore.length);
+      var prepareRealCMV = (
+        somaCMVrray.reduce(somaArray, 0) - ignoreSomaCMVrray.reduce(somaArray, 0)) / (somaCMVrray.length-unidadesIgnore.length
+      );
+      // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
       function somaArray(total, numero){
         return total + numero;
       }
@@ -234,30 +264,33 @@ export class HomePage implements OnInit {
           this.somaCMVTotal = prepareRealCMV.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
         }
         this.contentLoader = true;
-        this.dateLoader = true;
+        this.dateLoader = false;
+        this.dateLoaderTotal = false;
       }else{
         this.somaFatTotal = prepareRealFat.toString();
         this.somaMargemTotal = prepareRealMargem.toString();
         this.somaCMVTotal = prepareRealCMV.toString();
         this.contentLoader = true;
-        this.dateLoader = true;
+        this.dateLoader = false;
+        this.dateLoaderTotal = false;
       }
     });
   }
   async dateChangeInit(value){
-    this.dateValueInitFormat = format(parseISO( value), "dd/MM/yyyy");
+    this.dateValueInitFormat = format(parseISO( value), 'dd/MM/yyyy');
     this.dateValueInit = value;
   }
   async dateChangeFinish(value){
-    this.dateValueFinishFormat = format(parseISO( value), "dd/MM/yyyy");
+    this.dateValueFinishFormat = format(parseISO( value), 'dd/MM/yyyy');
     this.dateValueFinish = value;
   }
   async dateChangeDay(value){
-    this.dateValueDayFormat = format(parseISO( value), "dd/MM/yyyy");
+    this.dateValueDayFormat = format(parseISO( value), 'dd/MM/yyyy');
     this.dateValueDay = value;
   }
   applyDateChanger(){
-    this.dateLoader = false;
+    this.dateLoader = true;
+    this.dateLoaderTotal = true;
     this.unidadeFatTotal();
   }
   convertInReal(num){
@@ -268,31 +301,33 @@ export class HomePage implements OnInit {
     }
   }
   async setInterval(event){
-    await this.storage.set("interval", event.detail.value);
-    this.interval = await this.storage.get("interval");
-    if(this.interval === "interval"){
-      this.displayInterval = "block";
-      this.displayDay = "none";
+    await this.storage.set('interval', event.detail.value);
+    this.interval = await this.storage.get('interval');
+    if(this.interval === 'interval'){
+      this.displayInterval = 'block';
+      this.displayDay = 'none';
     }
-    else if(this.interval === "day"){
-      this.displayInterval = "none";
-      this.displayDay = "block";
+    else if(this.interval === 'day'){
+      this.displayInterval = 'none';
+      this.displayDay = 'block';
     }
     else{
-      this.displayDay = "none";
-      this.displayInterval = "none";
+      this.displayDay = 'none';
+      this.displayInterval = 'none';
     }
   }
   async unidadesChangeCheck(event, id){
     if(event === true){var display = 'block';}else if(event === false){var display = 'none';}
     this.unidadesCheck[id] = {unidade: id, check: event, display};
-    await this.storage.set("unidadesCheck", this.unidadesCheck);
+    await this.storage.set('unidadesCheck', this.unidadesCheck);
+    this.dateLoaderTotal = true;
+    this.unidadeFatTotal();
   }
 
   //Usuario
   async logOut(): Promise<void>{
-    await this.storage.remove("login");
-    await this.storage.remove("senha");
+    await this.storage.remove('login');
+    await this.storage.remove('senha');
     this.router.navigateByUrl('/login', { replaceUrl: true });
   }
   redirect(){
@@ -301,10 +336,10 @@ export class HomePage implements OnInit {
 
   //Tratamento de Erros
   async error(err) {
-    if(err === "server"){
+    if(err === 'server'){
       const alert = await this.alertController.create({
         cssClass: 'my-custom-class',
-        header: "Falha ao conectar com o servidor",
+        header: 'Falha ao conectar com o servidor',
         message: 'Deseja tentar novamente ?',
         buttons: [
            {
@@ -327,10 +362,10 @@ export class HomePage implements OnInit {
       });
       await alert.present();
     }
-    else if(err === "serverdb"){
+    else if(err === 'serverdb'){
       const alert = await this.alertController.create({
         cssClass: 'my-custom-class',
-        header: "Falha ao conectar com o servidor de dados",
+        header: 'Falha ao conectar com o servidor de dados',
         message: 'Deseja tentar novamente ?',
         buttons: [
           {
@@ -353,10 +388,10 @@ export class HomePage implements OnInit {
       });
       await alert.present();
     }
-    else if(err === "errLogEmp"){
+    else if(err === 'errLogEmp'){
       const alert = await this.alertController.create({
         cssClass: 'my-custom-class',
-        header: "Falha ao logar na empresa",
+        header: 'Falha ao logar na empresa',
         buttons: [
           {
             text: 'OK',
@@ -369,10 +404,10 @@ export class HomePage implements OnInit {
       });
       await alert.present();
     }
-    else if(err === "errLog"){
+    else if(err === 'errLog'){
       const alert = await this.alertController.create({
         cssClass: 'my-custom-class',
-        header: "Falha ao logar",
+        header: 'Falha ao logar',
         buttons: [
           {
             text: 'OK',
@@ -413,14 +448,14 @@ export class HomePage implements OnInit {
   async doRefresh(event) {
     this.unidadesFat = [];
     this.unidadesHeader = [];
-    this.somaFatHeader = "";
-    this.somaMargemHeader = "";
-    this.somaFatTotal = "";
-    this.somaMargemTotal = "";
+    this.somaFatHeader = '';
+    this.somaMargemHeader = '';
+    this.somaFatTotal = '';
+    this.somaMargemTotal = '';
     this.contentLoader = false;
     this.ngOnInit();
     const verfyComplete = setInterval(() => {
-      if (this.unidadesFat !== [] && this.unidadesHeader !== [] && this.somaMargemTotal !== ""){
+      if (this.unidadesFat !== [] && this.unidadesHeader !== [] && this.somaMargemTotal !== ''){
         this.contentLoader = true;
         event.target.complete();
         clearInterval(verfyComplete);

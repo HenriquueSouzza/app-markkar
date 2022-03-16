@@ -101,48 +101,49 @@
       </div>
       <ng-container *ngFor="let unidade of unidadesFat">
         <div *ngIf="!displayUnidades" class="unidade" [ngStyle]="{'display': unidadesCheck[unidade['nome_cc']]['display']}">
-          <h2 >{{unidade['nome_cc']}}</h2>
-          <ion-checkbox *ngIf="unidadesCheck[unidade['nome_cc']]['check'] === undefined"  [checked]="false" (ionChange)="unidadesChangeCheck($event['detail'].checked,unidade['nome_cc'])"></ion-checkbox>
-          <ion-checkbox *ngIf="unidadesCheck[unidade['nome_cc']]['check'] !== undefined" [checked]="unidadesCheck[unidade['nome_cc']]['check']" (ionChange)="unidadesChangeCheck($event['detail'].checked,unidade['nome_cc'])"></ion-checkbox>
+          <div class="headerUnidades">
+            <h2 >{{unidade['nome_cc']}}</h2>
+          </div>
           <div class="dados">
             <div class="dado">
               <h3>faturamento:</h3>
-              <p *ngIf="dateLoader">{{ convertInReal(unidade['somaFat']) }}</p>
-              <ion-skeleton-text *ngIf="!dateLoader" animated style="width: 30%"></ion-skeleton-text>
+              <p *ngIf="!dateLoader">{{ convertInReal(unidade['somaFat']) }}</p>
+              <ion-skeleton-text *ngIf="dateLoader" animated style="width: 30%"></ion-skeleton-text>
             </div>
             <div class="dado">
               <h3 id="cmv">cmv:</h3>
-              <p *ngIf="dateLoader && cmvPerc">{{unidade['cmv_vlr']}}{{perc}}</p>
-              <p *ngIf="dateLoader && !cmvPerc">{{convertInReal(unidade['cmv_vlr'])}}{{perc}}</p>
-              <ion-skeleton-text *ngIf="!dateLoader" animated style="width: 30%"></ion-skeleton-text>
+              <p *ngIf="!dateLoader && cmvPerc">{{unidade['cmv_vlr']}}{{perc}}</p>
+              <p *ngIf="!dateLoader && !cmvPerc">{{convertInReal(unidade['cmv_vlr'])}}{{perc}}</p>
+              <ion-skeleton-text *ngIf="dateLoader" animated style="width: 30%"></ion-skeleton-text>
             </div>
             <div class="dado">
               <h3>margem:</h3>
-              <p *ngIf="dateLoader">{{ convertInReal(unidade['somaMargem']) }}</p>
-              <ion-skeleton-text *ngIf="!dateLoader" animated style="width: 30%"></ion-skeleton-text>
+              <p *ngIf="!dateLoader">{{ convertInReal(unidade['somaMargem']) }}</p>
+              <ion-skeleton-text *ngIf="dateLoader" animated style="width: 30%"></ion-skeleton-text>
             </div>
           </div>
         </div>
-        <div *ngIf="displayUnidades" class="unidade" [ngStyle]="{'display': 'block'}">
-          <h2 >{{unidade['nome_cc']}}</h2>
-          <ion-checkbox *ngIf="unidadesCheck[unidade['nome_cc']]['check'] === undefined"  [checked]="false" (ionChange)="unidadesChangeCheck($event['detail'].checked,unidade['nome_cc'])"></ion-checkbox>
-          <ion-checkbox *ngIf="unidadesCheck[unidade['nome_cc']]['check'] !== undefined" [checked]="unidadesCheck[unidade['nome_cc']]['check']" (ionChange)="unidadesChangeCheck($event['detail'].checked,unidade['nome_cc'])"></ion-checkbox>
+        <div *ngIf="displayUnidades" class="unidade" style="display: block;" [ngStyle]="{'opacity': unidadesCheck[unidade['nome_cc']]['check'] ? '100%' : '45%'}" >
+          <div class="headerUnidades">
+            <ion-checkbox [checked]="unidadesCheck[unidade['nome_cc']]['check']" (ionChange)="unidadesChangeCheck($event['detail'].checked,unidade['nome_cc'])"></ion-checkbox>
+            <h2 >{{unidade['nome_cc']}}</h2>
+          </div>
           <div class="dados">
             <div class="dado">
               <h3>faturamento:</h3>
-              <p *ngIf="dateLoader">{{ convertInReal(unidade['somaFat']) }}</p>
-              <ion-skeleton-text *ngIf="!dateLoader" animated style="width: 30%"></ion-skeleton-text>
+              <p *ngIf="!dateLoader">{{ convertInReal(unidade['somaFat']) }}</p>
+              <ion-skeleton-text *ngIf="dateLoader" animated style="width: 30%"></ion-skeleton-text>
             </div>
             <div class="dado">
               <h3 id="cmv">cmv:</h3>
-              <p *ngIf="dateLoader && cmvPerc">{{unidade['cmv_vlr']}}{{perc}}</p>
-              <p *ngIf="dateLoader && !cmvPerc">{{convertInReal(unidade['cmv_vlr'])}}{{perc}}</p>
-              <ion-skeleton-text *ngIf="!dateLoader" animated style="width: 30%"></ion-skeleton-text>
+              <p *ngIf="!dateLoader && cmvPerc">{{unidade['cmv_vlr']}}{{perc}}</p>
+              <p *ngIf="!dateLoader && !cmvPerc">{{convertInReal(unidade['cmv_vlr'])}}{{perc}}</p>
+              <ion-skeleton-text *ngIf="dateLoader" animated style="width: 30%"></ion-skeleton-text>
             </div>
             <div class="dado">
               <h3>margem:</h3>
-              <p *ngIf="dateLoader">{{ convertInReal(unidade['somaMargem']) }}</p>
-              <ion-skeleton-text *ngIf="!dateLoader" animated style="width: 30%"></ion-skeleton-text>
+              <p *ngIf="!dateLoader">{{ convertInReal(unidade['somaMargem']) }}</p>
+              <ion-skeleton-text *ngIf="dateLoader" animated style="width: 30%"></ion-skeleton-text>
             </div>
           </div>
         </div>
@@ -169,18 +170,18 @@
         <div id="dadosTotal">
           <div class="dadoTotal">
             <h3>faturamento:</h3>
-            <p *ngIf="dateLoader">{{ somaFatTotal }}</p>
-            <ion-skeleton-text *ngIf="!dateLoader" animated style="width: 30%"></ion-skeleton-text>
+            <p *ngIf="!dateLoaderTotal">{{ somaFatTotal }}</p>
+            <ion-skeleton-text *ngIf="dateLoaderTotal" animated style="width: 30%"></ion-skeleton-text>
           </div>
           <div class="dadoTotal">
             <h3>CMV:</h3>
-            <p *ngIf="dateLoader">{{somaCMVTotal}}{{perc}}</p>
-            <ion-skeleton-text *ngIf="!dateLoader" animated style="width: 30%"></ion-skeleton-text>
+            <p *ngIf="!dateLoaderTotal">{{somaCMVTotal}}{{perc}}</p>
+            <ion-skeleton-text *ngIf="dateLoaderTotal" animated style="width: 30%"></ion-skeleton-text>
           </div>
           <div class="dadoTotal">
             <h3>margem:</h3>
-            <p *ngIf="dateLoader">{{ somaMargemTotal }}</p>
-            <ion-skeleton-text *ngIf="!dateLoader" animated style="width: 30%"></ion-skeleton-text>
+            <p *ngIf="!dateLoaderTotal">{{ somaMargemTotal }}</p>
+            <ion-skeleton-text *ngIf="dateLoaderTotal" animated style="width: 30%"></ion-skeleton-text>
           </div>
         </div>
       </div>
