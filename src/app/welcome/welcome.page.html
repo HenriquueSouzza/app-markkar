@@ -1,7 +1,7 @@
 <ion-content>
   <form #f="ngForm" (ngSubmit)="enviarLogin(f)">
-    <ion-slides [options]="slideOpts" #slider>
-      <ion-slide>
+    <swiper id="swiper" #swiper [config]="{initialSlide: 0,speed: 400,allowTouchMove: true}">
+      <ng-template swiperSlide>
         <img class="imgSlide" src="../../assets/img/backgW/1.png" alt="">
         <div class="utilitsSlide">
           <div class="headerSlideLogo">
@@ -11,8 +11,8 @@
           </div>
           <ion-button expand="block" fill="clear" shape="round" (click)="slideNext()">Próximo</ion-button>
         </div>
-      </ion-slide>
-      <ion-slide>
+      </ng-template>
+      <ng-template swiperSlide>
         <img class="imgSlide" src="../../assets/img/backgW/2.png" alt="">
         <div class="utilitsSlide">
           <div class="headerSlide">
@@ -31,8 +31,8 @@
             </div>
           </div>
         </div>
-      </ion-slide>
-      <ion-slide>
+      </ng-template>
+      <ng-template swiperSlide>
         <img class="imgSlide" src="../../assets/img/backgW/3.png" alt="">
         <div class="utilitsSlide">
           <div class="headerSlide">
@@ -51,7 +51,7 @@
             </div>
           </div>
         </div>
-      </ion-slide>
-    </ion-slides>
+      </ng-template>
+    </swiper>
   </form>
 </ion-content>

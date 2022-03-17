@@ -3,10 +3,10 @@
 	"appName": "Portal Markkar",
 	"webDir": "www",
 	"bundledWebRuntime": false,
-  "plugins": {
-    "SplashScreen": {
-      "launchAutoHide": false,
-      "showSpinner": false
-    }
-  }
+	"plugins": {
+		"SplashScreen": {
+			"launchAutoHide": false,
+			"showSpinner": false
+		}
+	}
 }

@@ -4,12 +4,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
 import { Router } from '@angular/router';
-import { LoadingController, MenuController, AlertController, PopoverController } from '@ionic/angular';
+import { LoadingController, MenuController, AlertController, PopoverController, isPlatform } from '@ionic/angular';
+import { format, parseISO } from 'date-fns';
+import { BackgroundColorOptions, StatusBar} from '@capacitor/status-bar';
 import { StorageService } from './../servico/storage.service';
 import { LoginService } from './../servico/login.service';
 import { LojasService } from '../servico/lojas.service';
-import { format, parseISO } from 'date-fns';
-
 
 @Component({
   selector: 'app-home',
@@ -164,6 +164,9 @@ export class HomePage implements OnInit {
       if(this.cmvPerc === false){this.perc = '';}
       this.headerFat(await this.storage.get('intervalHeader'));
       this.unidadeFatTotal();
+    }
+    if(isPlatform('mobile')){
+      StatusBar.setBackgroundColor({color: '#222428'});
     }
  }
 

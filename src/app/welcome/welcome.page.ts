@@ -6,11 +6,13 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { StorageService } from './../servico/storage.service';
 import { LoginService } from './../servico/login.service';
 import { NgForm } from '@angular/forms';
-import { LoadingController } from '@ionic/angular';
 import { Storage } from '@ionic/storage-angular';
-import { MenuController } from '@ionic/angular';
-import { IonSlides } from '@ionic/angular';
+import { MenuController, IonicSlides, IonSlides, LoadingController} from '@ionic/angular';
 import { Router } from '@angular/router';
+import SwiperCore, { Autoplay, Keyboard, Pagination, Scrollbar, Zoom } from 'swiper';
+import { SwiperComponent } from 'swiper/angular';
+
+SwiperCore.use([Autoplay, Keyboard, Pagination, Scrollbar, Zoom, IonicSlides]);
 
 @Component({
   selector: 'app-welcome',
@@ -24,22 +26,16 @@ export class WelcomePage implements OnInit {
   colorCnpj: string;
   colorTOKEN: string;
 
-  slideOpts = {
-    initialSlide: 0,
-    speed: 400,
-    allowTouchMove: false
-  };
-
   constructor(private service: LoginService, public loadingController: LoadingController, private storageService: StorageService, private storage: Storage, private menu: MenuController, private router: Router) { }
 
-  @ViewChild('slider')  slides: IonSlides;
+  @ViewChild('swiper') swiper: SwiperComponent;
 
     slideNext(){
-        this.slides.slideNext();
+        this.swiper.swiperRef.slideNext();
       }
 
     slidePrev(){
-      this.slides.slidePrev();
+      this.swiper.swiperRef.slidePrev();
     }
 
   async ngOnInit() {
@@ -64,7 +60,7 @@ export class WelcomePage implements OnInit {
     const login = form.value;
     if(login.cnpj.toString().length !== 14){
       await loading.dismiss();
-      this.slides.slidePrev();
+      this.swiper.swiperRef.slidePrev();
       this.cnpjErr = "Digite um CNPJ valido";
       this.colorCnpj = "danger";
     }

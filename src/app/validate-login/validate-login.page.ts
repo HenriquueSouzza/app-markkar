@@ -5,10 +5,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
 import { Router } from '@angular/router';
-import { LoadingController } from '@ionic/angular';
+import { isPlatform, LoadingController } from '@ionic/angular';
 import { MenuController } from '@ionic/angular';
 import { StorageService } from './../servico/storage.service';
 import { LoginService } from './../servico/login.service';
+import { BackgroundColorOptions, StatusBar } from '@capacitor/status-bar';
 
 @Component({
   selector: 'app-validate-login',
@@ -49,6 +50,10 @@ export class ValidateLoginPage implements OnInit {
         if(response["status"] === 'success'){
           await loading.dismiss();
           this.router.navigateByUrl('/home', { replaceUrl: true });
+          if(isPlatform('mobile')){
+            const optsBck: BackgroundColorOptions = {color: '#222428'};
+            StatusBar.setBackgroundColor(optsBck);
+          }
         }
         else if(response["status"] === 'failed'){
           await loading.dismiss();
