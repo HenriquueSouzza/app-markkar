@@ -155,6 +155,17 @@ export class HomePage implements OnInit {
       });
     }
   }
+  async ionViewWillEnter(){
+    this.menu.enable(true, 'homeMenu');
+    if(this.mask !== await this.storage.get('mask') || this.cmvPerc !== await this.storage.get('cmvPerc')){
+      this.mask = await this.storage.get('mask');
+      this.cmvPerc = await this.storage.get('cmvPerc');
+      if(this.cmvPerc === true){this.perc = '%';}
+      if(this.cmvPerc === false){this.perc = '';}
+      this.headerFat(await this.storage.get('intervalHeader'));
+      this.unidadeFatTotal();
+    }
+ }
 
   //Faturamento
   headerFat(interval){
