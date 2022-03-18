@@ -3,14 +3,15 @@
 /* eslint-disable @typescript-eslint/dot-notation */
 /* eslint-disable @typescript-eslint/quotes */
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { StorageService } from './../servico/storage.service';
-import { LoginService } from './../servico/login.service';
 import { NgForm } from '@angular/forms';
 import { Storage } from '@ionic/storage-angular';
-import { MenuController, IonicSlides, IonSlides, LoadingController} from '@ionic/angular';
+import { MenuController, IonicSlides, IonSlides, LoadingController, isPlatform} from '@ionic/angular';
 import { Router } from '@angular/router';
 import SwiperCore, { Autoplay, Keyboard, Pagination, Scrollbar, Zoom } from 'swiper';
 import { SwiperComponent } from 'swiper/angular';
+import { StatusBar } from '@capacitor/status-bar';
+import { StorageService } from './../servico/storage.service';
+import { LoginService } from './../servico/login.service';
 
 SwiperCore.use([Autoplay, Keyboard, Pagination, Scrollbar, Zoom, IonicSlides]);
 
@@ -44,6 +45,9 @@ export class WelcomePage implements OnInit {
     const valToken = await this.storage.get('token');
     if(valCnpj !== null && valToken !== null){
       this.router.navigateByUrl('/login', { replaceUrl: true });
+    }
+    if(isPlatform('mobile')){
+      StatusBar.setBackgroundColor({color: '#141518'});
     }
   }
 

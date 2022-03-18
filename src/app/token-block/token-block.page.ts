@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/dot-notation */
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { LoadingController, MenuController } from '@ionic/angular';
+import { isPlatform, LoadingController, MenuController } from '@ionic/angular';
 import { LoginService } from '../servico/login.service';
 import { StorageService } from '../servico/storage.service';
 import { Storage } from '@ionic/storage-angular';
+import { StatusBar } from '@capacitor/status-bar';
 
 @Component({
   selector: 'app-token-block',
@@ -49,6 +50,9 @@ export class TokenBlockPage implements OnInit {
         this.loader = false;
         alert('falha ao conectar com o servidor');
       });
+    }
+    if(isPlatform('mobile')){
+      StatusBar.setBackgroundColor({color: '#141518'});
     }
   }
 

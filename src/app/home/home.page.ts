@@ -6,7 +6,7 @@ import { Storage } from '@ionic/storage-angular';
 import { Router } from '@angular/router';
 import { LoadingController, MenuController, AlertController, PopoverController, isPlatform } from '@ionic/angular';
 import { format, parseISO } from 'date-fns';
-import { BackgroundColorOptions, StatusBar} from '@capacitor/status-bar';
+import { StatusBar} from '@capacitor/status-bar';
 import { StorageService } from './../servico/storage.service';
 import { LoginService } from './../servico/login.service';
 import { LojasService } from '../servico/lojas.service';
@@ -47,6 +47,7 @@ export class HomePage implements OnInit {
   somaFatTotal: string;
   somaMargemTotal: string;
   somaCMVTotal: string;
+  intervalHeader: string;
 
 //Date
   maxDate: any = format(parseISO(new Date().toISOString()),'yyyy-MM-dd');
@@ -94,6 +95,7 @@ export class HomePage implements OnInit {
     this.cmvPerc = await this.storage.get('cmvPerc');
     if(this.cmvPerc === true){this.perc = '%';}
     if(this.cmvPerc === false){this.perc = '';}
+    this.intervalHeader = await this.storage.get('intervalHeader');
     //Set Dates and Filter Default
     this.interval = 'day';
     this.displayInterval = 'none';
@@ -134,7 +136,7 @@ export class HomePage implements OnInit {
           // eslint-disable-next-line @typescript-eslint/no-shadow
           this.service.login(validateLogin).subscribe(async response =>{
             if(response['status'] === 'success'){
-              this.headerFat(await this.storage.get('intervalHeader'));
+              this.headerFat(this.intervalHeader);
               this.unidadeFatTotal();
             }
             else if(response['status'] === 'failed'){
@@ -157,7 +159,11 @@ export class HomePage implements OnInit {
   }
   async ionViewWillEnter(){
     this.menu.enable(true, 'homeMenu');
-    if(this.mask !== await this.storage.get('mask') || this.cmvPerc !== await this.storage.get('cmvPerc')){
+    if(
+    this.mask !== await this.storage.get('mask') ||
+    this.cmvPerc !== await this.storage.get('cmvPerc') ||
+    this.intervalHeader !== await this.storage.get('intervalHeader')
+    ){
       this.mask = await this.storage.get('mask');
       this.cmvPerc = await this.storage.get('cmvPerc');
       if(this.cmvPerc === true){this.perc = '%';}
@@ -193,7 +199,8 @@ export class HomePage implements OnInit {
       }
       var prepareRealFat = somaFatArray.reduce(somaArray, 0);
       var prepareRealMargem = somaMargemArray.reduce(somaArray, 0);
-      var prepareRealCMV = somaCMVrray.reduce(somaArray, 0) / rows;
+      if(this.cmvPerc === true){var prepareRealCMV = somaCMVrray.reduce(somaArray, 0) / somaCMVrray.length;}
+      else{prepareRealCMV = somaCMVrray.reduce(somaArray, 0);}
       // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
       function somaArray(total: any, numero: any): any{
         return total + numero;
@@ -261,9 +268,11 @@ export class HomePage implements OnInit {
       }
       var prepareRealFat = somaFatArray.reduce(somaArray, 0) - ignoreSomaFatArray.reduce(somaArray, 0);
       var prepareRealMargem = somaMargemArray.reduce(somaArray, 0) - ignoreSomaMargemArray.reduce(somaArray, 0);
+      if(this.cmvPerc === true){
       var prepareRealCMV = (
         somaCMVrray.reduce(somaArray, 0) - ignoreSomaCMVrray.reduce(somaArray, 0)) / (somaCMVrray.length-unidadesIgnore.length
-      );
+      );}else{prepareRealCMV = (
+        somaCMVrray.reduce(somaArray, 0) - ignoreSomaCMVrray.reduce(somaArray, 0));}
       // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
       function somaArray(total, numero){
         return total + numero;
