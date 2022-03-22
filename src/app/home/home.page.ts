@@ -37,6 +37,7 @@ export class HomePage implements OnInit {
   valIdToken: string;
   valLogin: string;
   valSenhaLogin: string;
+  empresa: string;
 
 //Faturamento
   unidadesFat: string[];
@@ -77,7 +78,9 @@ export class HomePage implements OnInit {
     this.dateLoaderTotal = false;
     this.contentLoader = false;
     //Error Prevention
-    if(await this.storage.get('unidadesCheck') === null){await this.storage.set('unidadesCheck', {});}
+    if(await this.storage.get('unidadesCheck') === null){
+      await this.storage.set('unidadesCheck', {});
+    }
     if(
       await this.storage.get('intervalHeader') === null ||
       await this.storage.get('intervalHeader') === '' ||
@@ -90,6 +93,7 @@ export class HomePage implements OnInit {
     ){await this.storage.set('interval', 'day');}
     //Set CheckBox
     this.unidadesCheck = await this.storage.get('unidadesCheck');
+    this.empresa = await this.storage.get('empresaAtual');
     //Set Preferences
     this.mask = await this.storage.get('mask');
     this.cmvPerc = await this.storage.get('cmvPerc');
@@ -190,12 +194,10 @@ export class HomePage implements OnInit {
       var somaFatArray = [];
       var somaMargemArray = [];
       var somaCMVrray = [];
-      var rows = 0;
       for(var all of unidades){
         somaFatArray.push(parseFloat(all['somaFat']));
         somaMargemArray.push(parseFloat(all['somaMargem']));
         somaCMVrray.push(parseFloat(all['cmv_vlr']));
-        rows = rows + 1;
       }
       var prepareRealFat = somaFatArray.reduce(somaArray, 0);
       var prepareRealMargem = somaMargemArray.reduce(somaArray, 0);
@@ -237,12 +239,14 @@ export class HomePage implements OnInit {
       var somaFatArray = [];
       var somaMargemArray = [];
       var somaCMVrray = [];
-      if(Object.values(this.unidadesCheck).length === 0){
+      var unidadesCheck = {};
+      if((!this.unidadesCheck.hasOwnProperty(this.empresa))){
         for(var all of unidadesFat){
           somaFatArray.push(parseFloat((all['somaFat'])));
           somaMargemArray.push(parseFloat((all['somaMargem'])));
           somaCMVrray.push(parseFloat(all['cmv_vlr']));
-          this.unidadesCheck[all['nome_cc']] = {unidade: all['nome_cc'], check: true, display: 'block'};
+          unidadesCheck[all['nome_cc']] = {unidade: all['nome_cc'], check: true, display: 'block'};
+          this.unidadesCheck[this.empresa] = unidadesCheck;
           await this.storage.set('unidadesCheck', this.unidadesCheck);
         }
       }else{
@@ -256,7 +260,7 @@ export class HomePage implements OnInit {
       var ignoreSomaFatArray = [];
       var ignoreSomaMargemArray = [];
       var ignoreSomaCMVrray = [];
-      for(var unidadegIgnore of Object.values(this.unidadesCheck)){
+      for(var unidadegIgnore of Object.values(this.unidadesCheck[this.empresa])){
         if(unidadegIgnore['check'] === false){
           unidadesIgnore.push(unidadegIgnore['unidade']);
           for(unidadegIgnore of Object.values(unidades)){
@@ -340,8 +344,8 @@ export class HomePage implements OnInit {
     }
   }
   async unidadesChangeCheck(event, id){
-    if(event === true){var display = 'block';}else if(event === false){var display = 'none';}
-    this.unidadesCheck[id] = {unidade: id, check: event, display};
+    if(event === true){var display = 'block';}else if(event === false){display = 'none';}
+    this.unidadesCheck[this.empresa][id] = {unidade: id, check: event, display};
     await this.storage.set('unidadesCheck', this.unidadesCheck);
     this.dateLoaderTotal = true;
     this.unidadeFatTotal();

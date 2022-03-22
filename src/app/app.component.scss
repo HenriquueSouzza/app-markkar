@@ -12,3 +12,16 @@ ion-list{
   --background: var(--ion-color-dark2);
   padding: 0;
 }
+#labelAvatar{
+  display: flex;
+  align-items: baseline;
+  margin-left: 0px;
+  padding: 18px 0;
+  font-size: 1rem;
+  font-family: 'robotoBold';
+  #pLabelAvatar{
+    font-size: 1.3rem;
+    color: white;
+    text-transform: capitalize;
+  }
+}

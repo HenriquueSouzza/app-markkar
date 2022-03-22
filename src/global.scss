@@ -55,7 +55,7 @@ ion-select-popover{
   --background: var(--ion-color-dark2) !important;
 }
 ion-header{
-  background-color: var(--ion-color-dark) !important;
+  background-color: transparent !important
 }
 ion-content {
   --background: var(--ion-color-dark2) !important;
@@ -178,4 +178,8 @@ html.md{
 }
 .interactive.hydrated{
   margin-bottom: 5px !important;
+}
+.header-md::after {
+  /* Removes the toolbar shadow. */
+  background: none !important;
 }

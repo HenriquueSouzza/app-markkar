@@ -1,16 +1,24 @@
 <ion-app>
-  <ion-menu side="start" menuId="homeMenu" contentId="main">
+  <ion-menu (ionWillOpen)="ngOnInit()" side="start" menuId="homeMenu" contentId="main">
     <ion-header>
-      <ion-toolbar color="dark">
-        <ion-title>unidades</ion-title>
+      <ion-toolbar color="dark" style="border-radius: 0 0 10px 10px;">
+          <div style="padding: 10px 0;padding-left: 5px; display: flex; align-items: center; justify-content: flex-start;">
+            <ion-avatar style="width: 50px;height: 50px;" slot="start">
+              <img src="../../assets/img/avatar.png">
+            </ion-avatar>
+            <ion-label id="labelAvatar">Olá <p id="pLabelAvatar">, {{name}}</p></ion-label>
+          </div>
       </ion-toolbar>
     </ion-header>
     <ion-content>
-      <ion-list>
-        <ion-item [button]="true" color="secondary">madureira</ion-item>
-        <ion-item [button]="true" color="secondary">barra</ion-item>
-        <ion-item [button]="true" color="secondary">copacabana</ion-item>
+      <ion-list *ngFor="let empresa of empresas" >
+        <ion-item (click)="changeEmpresa(empresa['empresa'], empresa['cnpj'], empresa['token'], empresa['idToken'])" [button]="true" color="secondary">{{empresa['empresa']}}</ion-item>
       </ion-list>
+      <div style="width: 100%; display: flex; align-items: center; justify-content: center; margin: 15px 0;">
+        <ion-button style="width: 80%;" (click)="redirect()" expand="block" fill="clear" shape="round">
+          Adicionar nova empresa
+        </ion-button>
+      </div>
     </ion-content>
   </ion-menu>
   <ion-router-outlet id="main"></ion-router-outlet>

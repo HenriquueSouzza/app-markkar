@@ -1,9 +1,9 @@
 <ion-header>
-  <div class="toolbar">
-    <ion-menu-button color="primary"><ion-icon name="menu-outline"></ion-icon></ion-menu-button>
-    <h1>markkar</h1>
-    <ion-button id="userIconBTN" size="small" expand="block" fill="clear" shape="round"><ion-icon class="userIcon" color="primary" name="person-outline"></ion-icon></ion-button>
-  </div>
+  <ion-toolbar class="toolbar">
+    <ion-menu-button slot="start" color="primary"><ion-icon name="menu-outline"></ion-icon></ion-menu-button>
+    <ion-title mode="ios">markkar</ion-title>
+    <ion-button slot="end" id="userIconBTN" size="small" expand="block" fill="clear" shape="round"><ion-icon class="userIcon" color="primary" name="settings-outline"></ion-icon></ion-button>
+  </ion-toolbar>
   <ion-popover [dismissOnSelect]="true" trigger="userIconBTN">
     <ng-template>
       <ion-content>
@@ -40,7 +40,7 @@
 </ion-header>
 
 <ion-content>
-  <ion-refresher slot="fixed"(ionRefresh)="doRefresh($event)">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
   <section class="section">
@@ -100,7 +100,7 @@
         </ion-popover>
       </div>
       <ng-container *ngFor="let unidade of unidadesFat">
-        <div *ngIf="!displayUnidades" class="unidade" [ngStyle]="{'display': unidadesCheck[unidade['nome_cc']]['display']}">
+        <div *ngIf="!displayUnidades" class="unidade" [ngStyle]="{'display': unidadesCheck[empresa][unidade['nome_cc']]['display']}">
           <div class="headerUnidades">
             <h2 >{{unidade['nome_cc']}}</h2>
           </div>
@@ -123,9 +123,9 @@
             </div>
           </div>
         </div>
-        <div *ngIf="displayUnidades" class="unidade" style="display: block;" [ngStyle]="{'opacity': unidadesCheck[unidade['nome_cc']]['check'] ? '100%' : '45%'}" >
+        <div *ngIf="displayUnidades" class="unidade" style="display: block;" [ngStyle]="{'opacity': unidadesCheck[empresa][unidade['nome_cc']]['check'] ? '100%' : '45%'}" >
           <div class="headerUnidades">
-            <ion-checkbox [checked]="unidadesCheck[unidade['nome_cc']]['check']" (ionChange)="unidadesChangeCheck($event['detail'].checked,unidade['nome_cc'])"></ion-checkbox>
+            <ion-checkbox [checked]="unidadesCheck[empresa][unidade['nome_cc']]['check']" (ionChange)="unidadesChangeCheck($event['detail'].checked,unidade['nome_cc'])"></ion-checkbox>
             <h2 >{{unidade['nome_cc']}}</h2>
           </div>
           <div class="dados">

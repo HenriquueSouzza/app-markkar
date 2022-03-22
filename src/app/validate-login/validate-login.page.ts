@@ -42,10 +42,11 @@ export class ValidateLoginPage implements OnInit {
       await this.storage.set("interval", "day");
       await this.storage.set("mask", true);
       await this.storage.set("cmvPerc", true);
+      await this.storage.set('empresas', {});
       await loading.dismiss();
       this.router.navigateByUrl('/welcome', { replaceUrl: true });
     }
-    else if(valLogin !== null && valSenhaLogin !== null){
+    else if(valLogin !== null && valSenhaLogin !== null && valIdToken !== null){
       this.service.login(validateLogin).subscribe(async response =>{
         if(response["status"] === 'success'){
           await loading.dismiss();
@@ -94,6 +95,10 @@ export class ValidateLoginPage implements OnInit {
         this.btn = 'block';
         alert("falha ao conectar com o servidor");
       });
+    }
+    else if(valCnpj === null || valToken === null || valLogin === null || valSenhaLogin === null || valIdToken === null){
+      await loading.dismiss();
+          this.router.navigateByUrl('/login-empresa', { replaceUrl: true });
     }
     else{
       await loading.dismiss();

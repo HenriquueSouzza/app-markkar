@@ -1,3 +1,4 @@
+/* eslint-disable no-var */
 /* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/member-ordering */
 /* eslint-disable @typescript-eslint/dot-notation */
@@ -99,6 +100,14 @@ export class WelcomePage implements OnInit {
           await this.storageService.set("cnpj", login.cnpj);
           await this.storageService.set("token", login.token);
           await this.storageService.set("idToken", response["id_token"]);
+          var empresas = await this.storage.get('empresas');
+          empresas[response['Empresa']] = {
+          empresa: response['Empresa'],
+          cnpj: login.cnpj,
+          token: login.token,
+          idToken: response['id_token']};
+          await this.storage.set('empresas', empresas);
+          await this.storage.set('empresaAtual', response['Empresa']);
           await loading.dismiss();
           this.router.navigateByUrl('/login', { replaceUrl: true });
         }
