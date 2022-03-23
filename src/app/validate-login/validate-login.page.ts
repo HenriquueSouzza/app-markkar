@@ -5,11 +5,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
 import { Router } from '@angular/router';
-import { isPlatform, LoadingController } from '@ionic/angular';
-import { MenuController } from '@ionic/angular';
+import { isPlatform, LoadingController, ToastController, MenuController } from '@ionic/angular';
+import { BackgroundColorOptions, StatusBar } from '@capacitor/status-bar';
+import { SplashScreen } from '@capacitor/splash-screen';
 import { StorageService } from './../servico/storage.service';
 import { LoginService } from './../servico/login.service';
-import { BackgroundColorOptions, StatusBar } from '@capacitor/status-bar';
 
 @Component({
   selector: 'app-validate-login',
@@ -20,15 +20,19 @@ export class ValidateLoginPage implements OnInit {
 
   btn: string;
 
-  constructor(private menu: MenuController, private router: Router, private storage: Storage, private storageService: StorageService, private service: LoginService, public loadingController: LoadingController) { }
+  constructor(
+    private menu: MenuController,
+    private router: Router,
+    private storage: Storage,
+    private storageService: StorageService,
+    private service: LoginService,
+    public loadingController: LoadingController,
+    public toastController: ToastController
+    ) { }
 
   async ngOnInit() {
     this.menu.enable(false, 'homeMenu');
     this.btn = "none";
-    const loading = await this.loadingController.create({
-    message: 'carregando...'
-    });
-    await loading.present();
     const valFLogin = await this.storage.get('fOpen');
     const valCnpj = await this.storage.get('cnpj');
     const valToken = await this.storage.get('token');
@@ -43,67 +47,100 @@ export class ValidateLoginPage implements OnInit {
       await this.storage.set("mask", true);
       await this.storage.set("cmvPerc", true);
       await this.storage.set('empresas', {});
-      await loading.dismiss();
       this.router.navigateByUrl('/welcome', { replaceUrl: true });
+      setTimeout(() => {
+        SplashScreen.hide();
+      }, 600);
     }
     else if(valLogin !== null && valSenhaLogin !== null && valIdToken !== null){
       this.service.login(validateLogin).subscribe(async response =>{
         if(response["status"] === 'success'){
-          await loading.dismiss();
+          this.btn = 'block';
           this.router.navigateByUrl('/home', { replaceUrl: true });
-          if(isPlatform('mobile')){
+          setTimeout(() => {
+            SplashScreen.hide();
+          }, 600);
+          if(!isPlatform('mobileweb') && isPlatform('android')){
             const optsBck: BackgroundColorOptions = {color: '#222428'};
             StatusBar.setBackgroundColor(optsBck);
           }
         }
         else if(response["status"] === 'failed'){
-          await loading.dismiss();
           this.router.navigateByUrl('/login', { replaceUrl: true });
+          setTimeout(() => {
+            SplashScreen.hide();
+          }, 600);
         }
         else if(response["status"] === 'errDB'){
-          await loading.dismiss();
           this.btn = 'block';
-          alert("falha ao conectar com o servidor de dados");
+          setTimeout(() => {
+            SplashScreen.hide();
+          }, 600);
+          this.presentToast("Falha ao conectar com o servidor de dados");
         }
       }, async error => {
-        await loading.dismiss();
         this.btn = 'block';
-        alert("falha ao conectar com o servidor");
+        setTimeout(() => {
+          SplashScreen.hide();
+        }, 600);
+        this.presentToast("Falha ao conectar com o servidor");
       });
     }
     else if(valCnpj !== null && valToken !== null){
       this.service.firstlogin(validatefLogin).subscribe(async response =>{
         if(response["status"] === "failed"){
-          await loading.dismiss();
           this.router.navigateByUrl('/login-empresa', { replaceUrl: true });
+          setTimeout(() => {
+            SplashScreen.hide();
+          }, 600);
         }
         else if(response["status"] === "blocked"){
-          await loading.dismiss();
           this.router.navigateByUrl('/token-block', { replaceUrl: true });
+          setTimeout(() => {
+            SplashScreen.hide();
+          }, 600);
         }
         else if(response["status"] === "success"){
-          await loading.dismiss();
           this.router.navigateByUrl('/login', { replaceUrl: true });
+          setTimeout(() => {
+            SplashScreen.hide();
+          }, 600);
         }
         else if(response["status"] === 'errDB'){
-          await loading.dismiss();
           this.btn = 'block';
-          alert("falha ao conectar com o servidor de dados");
+          setTimeout(() => {
+            SplashScreen.hide();
+          }, 600);
+          this.presentToast("Falha ao conectar com o servidor de dados");
         }
       }, async error => {
-        await loading.dismiss();
         this.btn = 'block';
-        alert("falha ao conectar com o servidor");
+        setTimeout(() => {
+          SplashScreen.hide();
+        }, 600);
+        this.presentToast("Falha ao conectar com o servidor");
       });
     }
     else if(valCnpj === null || valToken === null || valLogin === null || valSenhaLogin === null || valIdToken === null){
-      await loading.dismiss();
-          this.router.navigateByUrl('/login-empresa', { replaceUrl: true });
+      this.router.navigateByUrl('/login-empresa', { replaceUrl: true });
+      setTimeout(() => {
+        SplashScreen.hide();
+      }, 600);
     }
     else{
-      await loading.dismiss();
         this.btn = 'block';
-        alert("falha desconhecida");
+        setTimeout(() => {
+          SplashScreen.hide();
+        }, 600);
+         this.presentToast("Falha desconhecida");
     }
+  }
+  async presentToast(men) {
+    const toast = await this.toastController.create({
+      message: men,
+      duration: 2000,
+      color: 'dark'
+    });
+    toast.present();
   }
 }

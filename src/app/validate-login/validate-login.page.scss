@@ -1,5 +1,23 @@
-#black{
-  background-color: black;
+#splash{
   width: 100vw;
   height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
+ion-icon{
+  position: absolute;
+  top: 30vh;
+  font-size: 13rem;
+}
+ion-button{
+  width: 45px;
+  height: 45px;
+  --padding-start: 7px;
+  --padding-end: 7px;
+}
+.span{
+  margin-top: 20vh;
+}
+

@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { SplashScreen } from '@capacitor/splash-screen';
 import { Storage } from '@ionic/storage-angular';
 import { StorageService } from './servico/storage.service';
 
@@ -36,6 +35,3 @@ export class AppComponent implements OnInit {
     this.router.navigateByUrl('/login-empresa', { replaceUrl: true });
   }
 }
-setTimeout(() => {
-  SplashScreen.hide();
-}, 2000);

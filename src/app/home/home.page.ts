@@ -175,7 +175,7 @@ export class HomePage implements OnInit {
       this.headerFat(await this.storage.get('intervalHeader'));
       this.unidadeFatTotal();
     }
-    if(isPlatform('mobile')){
+    if(!isPlatform('mobileweb') && isPlatform('android')){
       StatusBar.setBackgroundColor({color: '#222428'});
     }
  }
