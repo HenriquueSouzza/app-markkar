@@ -368,6 +368,7 @@ export class HomePage implements OnInit {
         cssClass: 'my-custom-class',
         header: 'Falha ao conectar com o servidor',
         message: 'Deseja tentar novamente ?',
+        backdropDismiss: false,
         buttons: [
            {
             text: 'SAIR',
@@ -375,7 +376,7 @@ export class HomePage implements OnInit {
             cssClass: 'secondary',
             id: 'cancel-button',
             handler: () => {
-             // navigator['app'].exitApp();
+              navigator['app'].exitApp();
             }
           },
           {
@@ -394,6 +395,7 @@ export class HomePage implements OnInit {
         cssClass: 'my-custom-class',
         header: 'Falha ao conectar com o servidor de dados',
         message: 'Deseja tentar novamente ?',
+        backdropDismiss: false,
         buttons: [
           {
             text: 'SAIR',
@@ -401,7 +403,7 @@ export class HomePage implements OnInit {
             cssClass: 'secondary',
             id: 'cancel-button',
             handler: () => {
-            // navigator['app'].exitApp();
+            navigator['app'].exitApp();
             }
           },
           {
@@ -419,6 +421,7 @@ export class HomePage implements OnInit {
       const alert = await this.alertController.create({
         cssClass: 'my-custom-class',
         header: 'Falha ao logar na empresa',
+        backdropDismiss: false,
         buttons: [
           {
             text: 'OK',
@@ -435,6 +438,7 @@ export class HomePage implements OnInit {
       const alert = await this.alertController.create({
         cssClass: 'my-custom-class',
         header: 'Falha ao logar',
+        backdropDismiss: false,
         buttons: [
           {
             text: 'OK',

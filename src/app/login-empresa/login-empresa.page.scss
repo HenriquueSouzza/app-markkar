@@ -1,10 +1,14 @@
+#imgBck{
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  z-index: 0;
+}
 #idEmpresa{
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  background: rgb(0,0,0);
-  background: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(18,19,19,1) 51%, rgba(77,77,77,1) 100%);
   width: 100vw;
   height: 100vh;
 
@@ -36,19 +40,17 @@
     justify-content: center;
 
     input{
-      border: none;
+      border: var(--ion-color-primary) solid 1px;
       outline: 0;
       border-radius: 10px;
       padding: 5px;
       width: 80%;
       min-height: 30px;
       margin-bottom: 10px;
+      background: transparent;
     }
-    button{
-      border-radius: 10px;
-      padding: 5px;
-      height: 30px;
-      min-width: 80%;
+    ion-button{
+      width: 80%;
     }
   }
 }

@@ -19,6 +19,7 @@ export class LoginEmpresaPage implements OnInit {
   err: string;
   colorCnpj: string;
   colorTOKEN: string;
+  loader = false;
 
   // eslint-disable-next-line max-len
   constructor(
@@ -73,45 +74,44 @@ export class LoginEmpresaPage implements OnInit {
       });
     }
   }
-
+  colorReset(){
+    this.colorCnpj = 'white';
+    this.colorTOKEN = 'white';
+  }
   async enviarLogin(form: NgForm){
-    const loading = await this.loadingController.create({
-      message: 'autenticando...'
-    });
-    await loading.present();
+    this.loader = true;
     const login = form.value;
     if(login.cnpj.length !== 14){
-      await loading.dismiss();
+      this.loader = false;
       this.cnpjErr = 'Digite um CNPJ valido';
-      this.colorCnpj = 'danger';
+      this.colorCnpj = 'red';
     }
     else if(login.token.length === 0){
-      await loading.dismiss();
+      this.loader = false;
       this.cnpjErr = null;
       this.colorCnpj = null;
-      this.colorTOKEN = 'danger';
+      this.colorTOKEN = 'red';
       this.err = 'Digite uma senha';
     }
     else{
+      this.err = null;
       this.cnpjErr = null;
-      this.colorTOKEN = null;
-      this.colorCnpj = null;
       this.service.firstlogin(login).subscribe(async response =>{
         if(response['status'] === 'failed'){
-          this.colorTOKEN = 'danger';
-          this.colorCnpj = 'danger';
+          this.colorTOKEN = 'red';
+          this.colorCnpj = 'red';
           this.err = 'CNPJ ou TOKEN invalido';
-          await loading.dismiss();
+          this.loader = false;
         }
         else if(response['status'] === 'blocked'){
-          this.colorTOKEN = 'danger';
+          this.colorTOKEN = 'red';
           this.err = 'TOKEN bloqueado';
-          await loading.dismiss();
+          this.loader = false;
         }
         else if(response['status'] === 'success'){
           this.err = null;
-          this.colorTOKEN = null;
-          this.colorCnpj = null;
+          this.colorTOKEN = 'white';
+          this.colorCnpj = 'white';
           await this.storageService.set('fOpen', false);
           await this.storageService.set('cnpj', login.cnpj);
           await this.storageService.set('token', login.token);
@@ -124,11 +124,11 @@ export class LoginEmpresaPage implements OnInit {
           idToken: response['id_token']};
           await this.storage.set('empresas', empresas);
           await this.storage.set('empresaAtual', response['Empresa']);
-          await loading.dismiss();
+          this.loader = false;
           this.router.navigateByUrl('/login', { replaceUrl: true });
         }
       }, async error => {
-        await loading.dismiss();
+        this.loader = false;
         this.err = 'falha ao conectar com o servidor';
       });
     }
