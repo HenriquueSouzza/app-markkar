@@ -20,8 +20,8 @@ import { StorageService } from '../servico/storage.service';
 export class PreferencesPage implements OnInit {
 
   valueInterval: string;
-  mask: string;
-  cmvPerc: string;
+  mask: boolean;
+  cmvPerc: boolean;
   constructor(private menu: MenuController, private router: Router, private storage: Storage, private storageService: StorageService,) { }
 
   async ngOnInit() {

@@ -34,4 +34,27 @@ export class AppComponent implements OnInit {
   redirect(){
     this.router.navigateByUrl('/login-empresa', { replaceUrl: true });
   }
+
+  async deleteEmp(empresa, cnpj, token, idToken){
+    const empresas = await this.storage.get('empresas');
+    //delete empresas[empresa];
+    if(empresa === await this.storage.get('empresaAtual') &&
+    cnpj === await this.storage.get('cnpj') &&
+    token === await this.storage.get('token') &&
+    idToken === await this.storage.get('idToken')
+    ){
+      await this.storageService.set('cnpj', '');
+      await this.storageService.set('token', '');
+      await this.storageService.set('idToken', '');
+      await this.storageService.set('empresaAtual', '');
+      delete empresas[empresa];
+      await this.storage.set('empresas', empresas);
+      this.ngOnInit();
+      this.router.navigateByUrl('/login-empresa', { replaceUrl: true });
+    }else{
+      delete empresas[empresa];
+      await this.storage.set('empresas', empresas);
+      this.ngOnInit();
+    }
+  }
 }
