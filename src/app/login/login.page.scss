@@ -1,9 +1,15 @@
+#imgBck{
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  z-index: 0;
+}
 #idEmpresa{
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  background-color: rgb(192, 131, 0);
+  position: absolute;
   width: 100vw;
   height: 100vh;
 
@@ -13,16 +19,20 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin-top: 20vh;
+    margin-top: 13vh;
     margin-bottom: 45px;
 
     img{
-      max-width: 30%;
+      max-width: 40%;
+      margin-bottom: 15px;
     }
 
     h1{
       color: white;
       margin: 5px 0 0 0 ;
+      text-align: start;
+      font-family: 'robotoBold';
+      width: 80%;
     }
   }
 
@@ -34,19 +44,18 @@
     justify-content: center;
 
     input{
-      border: none;
+      border: var(--ion-color-primary) solid 1px;
       outline: 0;
       border-radius: 10px;
       padding: 5px;
       width: 80%;
-      min-height: 30px;
+      min-height: 36px;
       margin-bottom: 10px;
+      background: transparent;
     }
-    button{
-      border-radius: 10px;
-      padding: 5px;
-      min-height: 30px;
+    ion-button{
       width: 80%;
+      --border-radius: 10px;
     }
   }
 }

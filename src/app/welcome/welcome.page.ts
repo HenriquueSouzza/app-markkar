@@ -47,7 +47,7 @@ export class WelcomePage implements OnInit {
     if(valCnpj !== null && valToken !== null){
       this.router.navigateByUrl('/login', { replaceUrl: true });
     }
-    if(isPlatform('mobile')){
+    if(!isPlatform('mobileweb') && isPlatform('android')){
       StatusBar.setBackgroundColor({color: '#141518'});
     }
   }
@@ -101,13 +101,13 @@ export class WelcomePage implements OnInit {
           await this.storageService.set("token", login.token);
           await this.storageService.set("idToken", response["id_token"]);
           var empresas = await this.storage.get('empresas');
-          empresas[response['Empresa']] = {
-          empresa: response['Empresa'],
+          empresas[response['empresa']] = {
+          empresa: response['empresa'],
           cnpj: login.cnpj,
           token: login.token,
           idToken: response['id_token']};
           await this.storage.set('empresas', empresas);
-          await this.storage.set('empresaAtual', response['Empresa']);
+          await this.storage.set('empresaAtual', response['empresa']);
           await loading.dismiss();
           this.router.navigateByUrl('/login', { replaceUrl: true });
         }

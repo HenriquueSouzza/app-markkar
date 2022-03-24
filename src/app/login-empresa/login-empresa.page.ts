@@ -5,8 +5,9 @@ import { LoginService } from './../servico/login.service';
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AlertController, LoadingController, MenuController } from '@ionic/angular';
+import { AlertController, isPlatform, LoadingController, MenuController } from '@ionic/angular';
 import { Storage } from '@ionic/storage-angular';
+import { StatusBar } from '@capacitor/status-bar';
 
 @Component({
   selector: 'app-login-empresa',
@@ -35,6 +36,9 @@ export class LoginEmpresaPage implements OnInit {
 
   async ngOnInit() {
     this.menu.enable(false, 'homeMenu');
+    if(!isPlatform('mobileweb') && isPlatform('android')){
+      StatusBar.setBackgroundColor({color: '#141518'});
+    }
     const valCnpj = await this.storage.get('cnpj');
     const valToken = await this.storage.get('token');
     const validatefLogin = {cnpj: valCnpj, token: valToken};
@@ -43,8 +47,8 @@ export class LoginEmpresaPage implements OnInit {
         if(response['status'] === 'success'){
           const alert = await this.alertController.create({
             cssClass: 'my-custom-class',
-            header: 'Você ja possui uma empresa salva.',
-            message: 'Deseja logar com' + ' ' + response['Empresa'] + ' ' + '?',
+            header: 'Você já possui uma empresa salva.',
+            message: 'Deseja logar com' + ' ' + response['empresa'] + ' ' + '?',
             buttons: [
               {
                 text: 'NÃO',
@@ -52,7 +56,6 @@ export class LoginEmpresaPage implements OnInit {
                 cssClass: 'secondary',
                 id: 'cancel-button',
                 handler: () => {
-                // navigator['app'].exitApp();
                 }
               },
               {
@@ -67,10 +70,10 @@ export class LoginEmpresaPage implements OnInit {
           await alert.present();
         }
         else if(response['status'] === 'errDB'){
-          alert('falha ao conectar com o servidor de dados');
+          this.error('serverdb');
         }
       }, async error => {
-        alert('falha ao conectar com o servidor');
+        this.error('server');
       });
     }
   }
@@ -117,20 +120,116 @@ export class LoginEmpresaPage implements OnInit {
           await this.storageService.set('token', login.token);
           await this.storageService.set('idToken', response['id_token']);
           var empresas = await this.storage.get('empresas');
-          empresas[response['Empresa']] = {
-          empresa: response['Empresa'],
+          empresas[response['empresa']] = {
+          empresa: response['empresa'],
           cnpj: login.cnpj,
           token: login.token,
           idToken: response['id_token']};
           await this.storage.set('empresas', empresas);
-          await this.storage.set('empresaAtual', response['Empresa']);
+          await this.storage.set('empresaAtual', response['empresa']);
           this.loader = false;
           this.router.navigateByUrl('/login', { replaceUrl: true });
+        }
+        else if(response['status'] === 'errDB'){
+          this.loader = false;
+          this.err ='falha ao conectar com o servidor de dados';
         }
       }, async error => {
         this.loader = false;
         this.err = 'falha ao conectar com o servidor';
       });
+    }
+  }
+
+  //Tratamento de Erros
+  async error(err) {
+    if(err === 'server'){
+      const alert = await this.alertController.create({
+        cssClass: 'my-custom-class',
+        header: 'Falha ao conectar com o servidor',
+        message: 'Deseja tentar novamente ?',
+        backdropDismiss: false,
+        buttons: [
+           {
+            text: 'SAIR',
+            role: 'cancel',
+            cssClass: 'secondary',
+            id: 'cancel-button',
+            handler: () => {
+              navigator['app'].exitApp();
+            }
+          },
+          {
+            text: 'SIM',
+            id: 'confirm-button',
+            handler: () => {
+              this.ngOnInit();
+            }
+          }
+        ]
+      });
+      await alert.present();
+    }
+    else if(err === 'serverdb'){
+      const alert = await this.alertController.create({
+        cssClass: 'my-custom-class',
+        header: 'Falha ao conectar com o servidor de dados',
+        message: 'Deseja tentar novamente ?',
+        backdropDismiss: false,
+        buttons: [
+          {
+            text: 'SAIR',
+            role: 'cancel',
+            cssClass: 'secondary',
+            id: 'cancel-button',
+            handler: () => {
+            navigator['app'].exitApp();
+            }
+          },
+          {
+            text: 'SIM',
+            id: 'confirm-button',
+            handler: () => {
+              this.ngOnInit();
+            }
+          }
+        ]
+      });
+      await alert.present();
+    }
+    else if(err === 'errLogEmp'){
+      const alert = await this.alertController.create({
+        cssClass: 'my-custom-class',
+        header: 'Falha ao logar na empresa',
+        backdropDismiss: false,
+        buttons: [
+          {
+            text: 'OK',
+            id: 'confirm-button',
+            handler: () => {
+              this.router.navigateByUrl('/login-empresa', { replaceUrl: true });
+            }
+          }
+        ]
+      });
+      await alert.present();
+    }
+    else if(err === 'errLog'){
+      const alert = await this.alertController.create({
+        cssClass: 'my-custom-class',
+        header: 'Falha ao logar',
+        backdropDismiss: false,
+        buttons: [
+          {
+            text: 'OK',
+            id: 'confirm-button',
+            handler: () => {
+              this.router.navigateByUrl('/login', { replaceUrl: true });
+            }
+          }
+        ]
+      });
+      await alert.present();
     }
   }
 }

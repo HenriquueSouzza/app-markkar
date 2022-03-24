@@ -1,14 +1,16 @@
 <ion-content [fullscreen]="true">
-  <section id="idEmpresa">
+  <img id="imgBck" src="assets/img/backgW/1.png" alt="">
+  <section style="z-index: 10;" id="idEmpresa">
     <div>
-      <img src="assets/img/logoMarkkar.png" alt="MarkkarLogo">
-      <h1>Portal Markkar</h1>
+      <img src="assets/img/m-markkar.png" alt="MarkkarLogo">
+      <h1>Seja Bem-vindo,</h1>
+      <h1>{{empAtual}}.</h1>
     </div>
-    <form  #f="ngForm" (ngSubmit)="enviarLogin(f)" >
-      <input ngModel name="user" autocomplete="off" type="text" placeholder="Digite o seu usuario...">
-      <input ngModel name="senha" type="password" placeholder="Digite a sua Senha...">
-      <span>{{ errLogin }}</span>
-      <button type="submit">Entrar</button>
+    <form #f="ngForm" (ngSubmit)="enviarLogin(f)">
+      <input (click)="colorReset()" [ngStyle]="{'color': colorInput}" ngModel name="user" autocomplete="off" type="text" placeholder="Digite o seu usuario...">
+      <input (click)="colorReset()" [ngStyle]="{'color': colorInput}" ngModel name="senha" type="password" placeholder="Digite a sua Senha...">
+      <span style="z-index: 10; color: red;font-family: 'robotoBold'; text-transform: uppercase;">{{ errLogin }}</span>
+      <ion-button type="submit" expand="block" shape="round">ENTRAR</ion-button>
     </form>
   </section>
 </ion-content>

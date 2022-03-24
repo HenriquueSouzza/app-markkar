@@ -24,6 +24,10 @@ export interface login{
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage implements OnInit {
+
+  empAtual: string;
+  colorInput = 'white';
+
   //strings html span
   errLogin: string;
 
@@ -39,6 +43,8 @@ export class LoginPage implements OnInit {
 
   async ngOnInit() {
     this.menu.enable(false, 'homeMenu');
+    const login = await this.storage.get("login");
+    this.empAtual = await this.storage.get('empresaAtual');
     const valIdToken = await this.storage.get('idToken');
     const valLogin = await this.storage.get('login');
     const valSenhaLogin = await this.storage.get('senha');
@@ -49,8 +55,8 @@ export class LoginPage implements OnInit {
           this.errLogin = null;
           const alert = await this.alertController.create({
             cssClass: 'my-custom-class',
-            header: 'Você ja possui uma empresa salva.',
-            message: 'Deseja logar com' + " " + await this.storage.get("login") + " " + "?",
+            header: 'Você já possui um login salvo.',
+            message: 'Deseja logar com' + " " + login.toUpperCase() + " " + "?",
             buttons: [
               {
                 text: 'NÃO',
@@ -84,20 +90,24 @@ export class LoginPage implements OnInit {
   }
 
   async enviarLogin(form: NgForm){
+    this.errLogin = null;
     const loading = await this.loadingController.create({
       message: 'autenticando...'
     });
+    await loading.present();
     const login = form.value;
     if(login.user.length === 0){
+      await loading.dismiss();
       this.errLogin = "Digite um usuario";
     }
     else if(login.senha.length === 0){
+      await loading.dismiss();
       this.errLogin = "Digite uma senha";
     }
     else{
+      login.user = login.user.trim();
       login.id_token = await this.storage.get('idToken');
       this.service.login(login).subscribe(async response =>{
-        await loading.present();
         if(response["status"] === 'success'){
           this.errLogin = null;
           await this.storageService.set("login", login.user);
@@ -106,6 +116,7 @@ export class LoginPage implements OnInit {
           this.router.navigateByUrl('/home', { replaceUrl: true });
         }
         else if(response["status"] === 'failed'){
+          this.colorInput = 'red';
           this.errLogin = "Login ou Senha não encontrados";
           await loading.dismiss();
         }
@@ -118,5 +129,8 @@ export class LoginPage implements OnInit {
         this.errLogin ="falha ao conectar com o servidor";
       });
     }
+  }
+  colorReset(){
+    this.colorInput = 'white';
   }
 }
