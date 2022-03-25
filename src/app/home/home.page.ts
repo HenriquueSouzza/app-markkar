@@ -2,7 +2,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
 import { Router } from '@angular/router';
-import { LoadingController, MenuController, AlertController, PopoverController, isPlatform } from '@ionic/angular';
+import { LoadingController, MenuController, AlertController, PopoverController, isPlatform, ToastController } from '@ionic/angular';
 import { format, parseISO } from 'date-fns';
 import { StatusBar} from '@capacitor/status-bar';
 import { StorageService } from './../servico/storage.service';
@@ -64,7 +64,8 @@ export class HomePage implements OnInit {
     public loadingController: LoadingController,
     private menu: MenuController, private storage: Storage,
     private storageService: StorageService, private router: Router,
-    public alertController: AlertController
+    public alertController: AlertController,
+    public toastController: ToastController
     ) { }
 
   async ngOnInit() {
@@ -496,5 +497,13 @@ export class HomePage implements OnInit {
         clearInterval(verfyComplete);
       }
     }, 300);
+  }
+  async presentToast(men) {
+    const toast = await this.toastController.create({
+      message: men,
+      duration: 2000,
+      color: 'dark'
+    });
+    toast.present();
   }
 }

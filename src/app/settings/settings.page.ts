@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { LoadingController, MenuController, AlertController, Platform, NavController } from '@ionic/angular';
+import { LoadingController, MenuController, AlertController, Platform, NavController, ToastController } from '@ionic/angular';
 import { Storage } from '@ionic/storage-angular';
 import { Router } from '@angular/router';
 import { StorageService } from '../servico/storage.service';
@@ -22,8 +22,8 @@ export class SettingsPage implements OnInit {
     private storage: Storage,
     private storageService: StorageService,
     private platform: Platform,
-    private navCtrl: NavController
-
+    private navCtrl: NavController,
+    public toastController: ToastController
     ) {
       this.platform.backButton.subscribeWithPriority(10, () => {
         this.enableMenu();
@@ -42,5 +42,14 @@ export class SettingsPage implements OnInit {
 
   redirect(){
     this.router.navigateByUrl('/preferences');
+  }
+
+  async presentToast(men) {
+    const toast = await this.toastController.create({
+      message: men,
+      duration: 2000,
+      color: 'dark'
+    });
+    toast.present();
   }
 }
