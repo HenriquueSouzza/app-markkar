@@ -1,7 +1,4 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/dot-notation */
-/* eslint-disable @typescript-eslint/quotes */
-/* eslint-disable max-len */
 import { Component, OnInit } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
 import { Router } from '@angular/router';
@@ -32,20 +29,21 @@ export class ValidateLoginPage implements OnInit {
 
   async ngOnInit() {
     this.menu.enable(false, 'homeMenu');
-    this.btn = "none";
+    this.btn = 'none';
     const valFLogin = await this.storage.get('fOpen');
     const valCnpj = await this.storage.get('cnpj');
     const valToken = await this.storage.get('token');
     const valIdToken = await this.storage.get('idToken');
     const valLogin = await this.storage.get('login');
     const valSenhaLogin = await this.storage.get('senha');
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     const validateLogin = {user: valLogin, senha: valSenhaLogin, id_token: valIdToken};
     const validatefLogin = {cnpj: valCnpj, token: valToken};
     if(valFLogin !== false){
-      await this.storage.set("intervalHeader", "month");
-      await this.storage.set("interval", "day");
-      await this.storage.set("mask", true);
-      await this.storage.set("cmvPerc", true);
+      await this.storage.set('intervalHeader', 'month');
+      await this.storage.set('interval', 'day');
+      await this.storage.set('mask', true);
+      await this.storage.set('cmvPerc', true);
       await this.storage.set('empresas', {});
       this.router.navigateByUrl('/welcome', { replaceUrl: true });
       setTimeout(() => {
@@ -54,7 +52,7 @@ export class ValidateLoginPage implements OnInit {
     }
     else if(valLogin !== null && valSenhaLogin !== null && valIdToken !== null){
       this.service.login(validateLogin).subscribe(async response =>{
-        if(response["status"] === 'success'){
+        if(response['status'] === 'success'){
           this.btn = 'block';
           this.router.navigateByUrl('/home', { replaceUrl: true });
           setTimeout(() => {
@@ -65,60 +63,60 @@ export class ValidateLoginPage implements OnInit {
             StatusBar.setBackgroundColor(optsBck);
           }
         }
-        else if(response["status"] === 'failed'){
+        else if(response['status'] === 'failed'){
           this.router.navigateByUrl('/login', { replaceUrl: true });
           setTimeout(() => {
             SplashScreen.hide();
           }, 600);
         }
-        else if(response["status"] === 'errDB'){
+        else if(response['status'] === 'errDB'){
           this.btn = 'block';
           setTimeout(() => {
             SplashScreen.hide();
           }, 600);
-          this.presentToast("Falha ao conectar com o servidor de dados");
+          this.presentToast('Falha ao conectar com o servidor de dados');
         }
       }, async error => {
         this.btn = 'block';
         setTimeout(() => {
           SplashScreen.hide();
         }, 600);
-        this.presentToast("Falha ao conectar com o servidor");
+        this.presentToast('Falha ao conectar com o servidor');
       });
     }
     else if(valCnpj !== null && valToken !== null){
       this.service.firstlogin(validatefLogin).subscribe(async response =>{
-        if(response["status"] === "failed"){
+        if(response['status'] === 'failed'){
           this.router.navigateByUrl('/login-empresa', { replaceUrl: true });
           setTimeout(() => {
             SplashScreen.hide();
           }, 600);
         }
-        else if(response["status"] === "blocked"){
+        else if(response['status'] === 'blocked'){
           this.router.navigateByUrl('/token-block', { replaceUrl: true });
           setTimeout(() => {
             SplashScreen.hide();
           }, 600);
         }
-        else if(response["status"] === "success"){
+        else if(response['status'] === 'success'){
           this.router.navigateByUrl('/login', { replaceUrl: true });
           setTimeout(() => {
             SplashScreen.hide();
           }, 600);
         }
-        else if(response["status"] === 'errDB'){
+        else if(response['status'] === 'errDB'){
           this.btn = 'block';
           setTimeout(() => {
             SplashScreen.hide();
           }, 600);
-          this.presentToast("Falha ao conectar com o servidor de dados");
+          this.presentToast('Falha ao conectar com o servidor de dados');
         }
       }, async error => {
         this.btn = 'block';
         setTimeout(() => {
           SplashScreen.hide();
         }, 600);
-        this.presentToast("Falha ao conectar com o servidor");
+        this.presentToast('Falha ao conectar com o servidor');
       });
     }
     else if(valCnpj === null || valToken === null || valLogin === null || valSenhaLogin === null || valIdToken === null){
@@ -132,7 +130,7 @@ export class ValidateLoginPage implements OnInit {
         setTimeout(() => {
           SplashScreen.hide();
         }, 600);
-         this.presentToast("Falha desconhecida");
+         this.presentToast('Falha desconhecida');
     }
   }
   async presentToast(men) {

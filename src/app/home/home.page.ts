@@ -1,5 +1,3 @@
-/* eslint-disable no-var */
-/* eslint-disable prefer-const */
 /* eslint-disable @typescript-eslint/dot-notation */
 import { Component, OnInit } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
@@ -190,19 +188,19 @@ export class HomePage implements OnInit {
     };
     this.lojas.faturamento(interfaceHFat).subscribe(response => {
       this.unidadesHeader = Object.values(response['Faturamento']);
-      let unidades = this.unidadesHeader;
-      var somaFatArray = [];
-      var somaMargemArray = [];
-      var somaCMVrray = [];
-      for(var all of unidades){
+      const unidades = this.unidadesHeader;
+      const somaFatArray = [];
+      const somaMargemArray = [];
+      const somaCMVrray = [];
+      for(const all of unidades){
         somaFatArray.push(parseFloat(all['somaFat']));
         somaMargemArray.push(parseFloat(all['somaMargem']));
         somaCMVrray.push(parseFloat(all['cmv_vlr']));
       }
-      var prepareRealFat = somaFatArray.reduce(somaArray, 0);
-      var prepareRealMargem = somaMargemArray.reduce(somaArray, 0);
-      if(this.cmvPerc === true){var prepareRealCMV = somaCMVrray.reduce(somaArray, 0) / somaCMVrray.length;}
-      else{prepareRealCMV = somaCMVrray.reduce(somaArray, 0);}
+      const prepareRealFat = somaFatArray.reduce(somaArray, 0);
+      const prepareRealMargem = somaMargemArray.reduce(somaArray, 0);
+      let prepareRealCMV = somaCMVrray.reduce(somaArray, 0) / somaCMVrray.length;
+      if(!this.cmvPerc){prepareRealCMV = somaCMVrray.reduce(somaArray, 0);}
       // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
       function somaArray(total: any, numero: any): any{
         return total + numero;
@@ -233,14 +231,15 @@ export class HomePage implements OnInit {
       dateFinish: this.dateValueFinish
     };
     this.lojas.faturamento(dayFat).subscribe(async response => {
-      var unidades = response;
+      const unidades = response;
       this.unidadesFat = Object.values(response['Faturamento']);
-      let unidadesFat = this.unidadesFat;
-      var somaFatArray = [];
-      var somaMargemArray = [];
-      var somaCMVrray = [];
-      var unidadesCheck = {};
+      const unidadesFat = this.unidadesFat;
+      const somaFatArray = [];
+      const somaMargemArray = [];
+      const somaCMVrray = [];
+      const unidadesCheck = {};
       if((!this.unidadesCheck.hasOwnProperty(this.empresa))){
+        // eslint-disable-next-line no-var
         for(var all of unidadesFat){
           somaFatArray.push(parseFloat((all['somaFat'])));
           somaMargemArray.push(parseFloat((all['somaMargem'])));
@@ -250,17 +249,18 @@ export class HomePage implements OnInit {
           await this.storage.set('unidadesCheck', this.unidadesCheck);
         }
       }else{
+        // eslint-disable-next-line no-var
         for(var all of unidadesFat){
           somaFatArray.push(parseFloat((all['somaFat'])));
           somaMargemArray.push(parseFloat((all['somaMargem'])));
           somaCMVrray.push(parseFloat(all['cmv_vlr']));
         }
       }
-      var unidadesIgnore = [];
-      var ignoreSomaFatArray = [];
-      var ignoreSomaMargemArray = [];
-      var ignoreSomaCMVrray = [];
-      for(var unidadegIgnore of Object.values(this.unidadesCheck[this.empresa])){
+      const unidadesIgnore = [];
+      const ignoreSomaFatArray = [];
+      const ignoreSomaMargemArray = [];
+      const ignoreSomaCMVrray = [];
+      for(let unidadegIgnore of Object.values(this.unidadesCheck[this.empresa])){
         if(unidadegIgnore['check'] === false){
           unidadesIgnore.push(unidadegIgnore['unidade']);
           for(unidadegIgnore of Object.values(unidades)){
@@ -270,13 +270,11 @@ export class HomePage implements OnInit {
           }
         }
       }
-      var prepareRealFat = somaFatArray.reduce(somaArray, 0) - ignoreSomaFatArray.reduce(somaArray, 0);
-      var prepareRealMargem = somaMargemArray.reduce(somaArray, 0) - ignoreSomaMargemArray.reduce(somaArray, 0);
-      if(this.cmvPerc === true){
-      var prepareRealCMV = (
-        somaCMVrray.reduce(somaArray, 0) - ignoreSomaCMVrray.reduce(somaArray, 0)) / (somaCMVrray.length-unidadesIgnore.length
-      );}else{prepareRealCMV = (
-        somaCMVrray.reduce(somaArray, 0) - ignoreSomaCMVrray.reduce(somaArray, 0));}
+      const prepareRealFat = somaFatArray.reduce(somaArray, 0) - ignoreSomaFatArray.reduce(somaArray, 0);
+      const prepareRealMargem = somaMargemArray.reduce(somaArray, 0) - ignoreSomaMargemArray.reduce(somaArray, 0);
+      let prepareRealCMV = (somaCMVrray.reduce(somaArray, 0) - ignoreSomaCMVrray.reduce(somaArray, 0)) /
+      (somaCMVrray.length-unidadesIgnore.length);
+      if(!this.cmvPerc){prepareRealCMV = (somaCMVrray.reduce(somaArray, 0) - ignoreSomaCMVrray.reduce(somaArray, 0));}
       // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
       function somaArray(total, numero){
         return total + numero;
@@ -285,7 +283,12 @@ export class HomePage implements OnInit {
         this.somaFatTotal = prepareRealFat.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
         this.somaMargemTotal = prepareRealMargem.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
         if(this.cmvPerc === true){
-          this.somaCMVTotal = prepareRealCMV.toString();
+          if(isNaN(prepareRealCMV)){
+            prepareRealCMV = 0;
+            this.somaCMVTotal = prepareRealCMV.toString();
+          }else{
+            this.somaCMVTotal = prepareRealCMV.toString();
+          }
         }
         else if(this.cmvPerc === false){
           this.somaCMVTotal = prepareRealCMV.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
@@ -344,7 +347,8 @@ export class HomePage implements OnInit {
     }
   }
   async unidadesChangeCheck(event, id){
-    if(event === true){var display = 'block';}else if(event === false){display = 'none';}
+    let display = 'block';
+    if(!event){display = 'none';}
     this.unidadesCheck[this.empresa][id] = {unidade: id, check: event, display};
     await this.storage.set('unidadesCheck', this.unidadesCheck);
     this.dateLoaderTotal = true;

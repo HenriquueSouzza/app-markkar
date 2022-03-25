@@ -1,4 +1,3 @@
-/* eslint-disable no-var */
 /* eslint-disable @typescript-eslint/dot-notation */
 import { StorageService } from './../servico/storage.service';
 import { LoginService } from './../servico/login.service';
@@ -119,7 +118,7 @@ export class LoginEmpresaPage implements OnInit {
           await this.storageService.set('cnpj', login.cnpj);
           await this.storageService.set('token', login.token);
           await this.storageService.set('idToken', response['id_token']);
-          var empresas = await this.storage.get('empresas');
+          const empresas = await this.storage.get('empresas');
           empresas[response['empresa']] = {
           empresa: response['empresa'],
           cnpj: login.cnpj,

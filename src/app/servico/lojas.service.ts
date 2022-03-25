@@ -1,11 +1,8 @@
-/* eslint-disable quote-props */
-/* eslint-disable max-len */
-/* eslint-disable @typescript-eslint/quotes */
-/* eslint-disable @typescript-eslint/naming-convention */
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export interface interfaceFaturamento{
   cnpj: string;
   token: string;

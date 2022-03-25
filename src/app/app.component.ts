@@ -32,12 +32,11 @@ export class AppComponent implements OnInit {
   }
 
   redirect(){
-    this.router.navigateByUrl('/login-empresa', { replaceUrl: true });
+    this.router.navigateByUrl('/login-empresa', { replaceUrl: false });
   }
 
   async deleteEmp(empresa, cnpj, token, idToken){
     const empresas = await this.storage.get('empresas');
-    //delete empresas[empresa];
     if(empresa === await this.storage.get('empresaAtual') &&
     cnpj === await this.storage.get('cnpj') &&
     token === await this.storage.get('token') &&

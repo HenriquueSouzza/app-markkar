@@ -27,11 +27,11 @@
         <ion-select-option value="all">Todos</ion-select-option>
         <ion-select-option value="year">Anual</ion-select-option>
         <ion-select-option value="month">Mensal</ion-select-option>
-        <ion-select-option value="day">Diario</ion-select-option>
+        <ion-select-option value="day">Diário</ion-select-option>
       </ion-select>
     </ion-item>
     <ion-item (click)="mask = !mask" [button]="true" lines="none" color="secondary">
-      <ion-label style="text-transform: none;">Exibir Mascara Monetaria <p class="p">Os valores exibirão uma mascara. Ex: R$, US$...</p></ion-label>
+      <ion-label style="text-transform: none;">Exibir Máscara Monetaria <p class="p">Os valores exibirão uma máscara. Ex: R$, US$...</p></ion-label>
       <ion-toggle #setMaskToggle checked="{{ mask }}" (ionChange)="setMask($event)"></ion-toggle>
     </ion-item>
     <ion-item (click)="cmvPerc = !cmvPerc" [button]="true" lines="none" color="secondary">

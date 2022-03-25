@@ -1,8 +1,4 @@
-/* eslint-disable no-var */
-/* eslint-disable max-len */
-/* eslint-disable @typescript-eslint/member-ordering */
 /* eslint-disable @typescript-eslint/dot-notation */
-/* eslint-disable @typescript-eslint/quotes */
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Storage } from '@ionic/storage-angular';
@@ -28,8 +24,15 @@ export class WelcomePage implements OnInit {
   colorCnpj: string;
   colorTOKEN: string;
 
-  constructor(private service: LoginService, public loadingController: LoadingController, private storageService: StorageService, private storage: Storage, private menu: MenuController, private router: Router) { }
+  constructor(
+    private service: LoginService,
+    public loadingController: LoadingController,
+    private storageService: StorageService,
+    private storage: Storage,
+    private menu: MenuController,
+    private router: Router) { }
 
+  // eslint-disable-next-line @typescript-eslint/member-ordering
   @ViewChild('swiper') swiper: SwiperComponent;
 
     slideNext(){
@@ -66,41 +69,41 @@ export class WelcomePage implements OnInit {
     if(login.cnpj.toString().length !== 14){
       await loading.dismiss();
       this.swiper.swiperRef.slidePrev();
-      this.cnpjErr = "Digite um CNPJ valido";
-      this.colorCnpj = "danger";
+      this.cnpjErr = 'Digite um CNPJ valido';
+      this.colorCnpj = 'danger';
     }
     else if(login.token.length === 0){
       await loading.dismiss();
       this.cnpjErr = null;
       this.colorCnpj = null;
-      this.colorTOKEN = "danger";
-      this.err = "Digite uma senha";
+      this.colorTOKEN = 'danger';
+      this.err = 'Digite uma senha';
     }
     else{
       this.cnpjErr = null;
       this.colorTOKEN = null;
       this.colorCnpj = null;
       this.service.firstlogin(login).subscribe(async response =>{
-        if(response["status"] === "failed"){
-          this.colorTOKEN = "danger";
-          this.colorCnpj = "danger";
-          this.err = "CNPJ ou TOKEN invalido";
+        if(response['status'] === 'failed'){
+          this.colorTOKEN = 'danger';
+          this.colorCnpj = 'danger';
+          this.err = 'CNPJ ou TOKEN invalido';
           await loading.dismiss();
         }
-        else if(response["status"] === "blocked"){
-          this.colorTOKEN = "danger";
-          this.err = "TOKEN bloqueado";
+        else if(response['status'] === 'blocked'){
+          this.colorTOKEN = 'danger';
+          this.err = 'TOKEN bloqueado';
           await loading.dismiss();
         }
-        else if(response["status"] === "success"){
+        else if(response['status'] === 'success'){
           this.err = null;
           this.colorTOKEN = null;
           this.colorCnpj = null;
-          await this.storageService.set("fOpen", false);
-          await this.storageService.set("cnpj", login.cnpj);
-          await this.storageService.set("token", login.token);
-          await this.storageService.set("idToken", response["id_token"]);
-          var empresas = await this.storage.get('empresas');
+          await this.storageService.set('fOpen', false);
+          await this.storageService.set('cnpj', login.cnpj);
+          await this.storageService.set('token', login.token);
+          await this.storageService.set('idToken', response['id_token']);
+          const empresas = await this.storage.get('empresas');
           empresas[response['empresa']] = {
           empresa: response['empresa'],
           cnpj: login.cnpj,
@@ -113,7 +116,7 @@ export class WelcomePage implements OnInit {
         }
       }, async error => {
         await loading.dismiss();
-        this.err = "falha ao conectar com o servidor";
+        this.err = 'falha ao conectar com o servidor';
       });
     }
   }

@@ -36,6 +36,7 @@ ion-datetime{
 #filter{
   --width: 80%;
   --height: auto;
+  --max-width: 700px;
 }
 
 //header
@@ -171,12 +172,20 @@ ion-toolbar{
         display: flex;
         align-items: baseline;
         justify-content: space-between;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
 
         h3{
+          white-space: nowrap;
           text-transform: capitalize;
           font-family: 'robotoBold';
+          text-overflow: ellipsis;
+          overflow: hidden;
         }
         #cmv{
+          text-overflow: ellipsis;
+          overflow: hidden;
           text-transform: uppercase;
         }
       }
@@ -204,10 +213,13 @@ ion-toolbar{
         display: flex;
         align-items: baseline;
         justify-content: space-between;
-
+        white-space: nowrap;
         h3{
+          white-space: nowrap;
           text-transform: capitalize;
           font-family: 'robotoBold';
+          text-overflow: ellipsis;
+          overflow: hidden;
         }
       }
     }
@@ -221,4 +233,21 @@ ion-toolbar{
 }
 .content-ltr{
   background: transparent !important;
+}
+@media screen and (max-width: 320px) {
+
+  .headerSection{
+    #totalLiquido{
+      h2{
+        font-size: max(min(calc(100vw - 220px),1.5rem),1.1rem);
+      }
+    }
+    #total{
+      div{
+        h3{
+          font-size: max(min(calc(100vw - 220px),1.1rem),0.7rem);
+        }
+      }
+    }
+  }
 }

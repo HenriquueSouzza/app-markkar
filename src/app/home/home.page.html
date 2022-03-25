@@ -58,7 +58,7 @@
                     <ion-select-option value="all">Todos</ion-select-option>
                     <ion-select-option value="year">Anual</ion-select-option>
                     <ion-select-option value="month">Mensal</ion-select-option>
-                    <ion-select-option value="day">Diario</ion-select-option>
+                    <ion-select-option value="day">Diário</ion-select-option>
                     <ion-select-option value="interval">Intervalo</ion-select-option>
                   </ion-select>
                 </ion-item>
@@ -102,7 +102,7 @@
       <ng-container *ngFor="let unidade of unidadesFat">
         <div *ngIf="!displayUnidades" class="unidade" [ngStyle]="{'display': unidadesCheck[empresa][unidade['nome_cc']]['display']}">
           <div class="headerUnidades">
-            <h2 >{{unidade['nome_cc']}}</h2>
+            <h2>{{unidade['nome_cc']}}</h2>
           </div>
           <div class="dados">
             <div class="dado">
@@ -149,19 +149,19 @@
         </div>
       </ng-container>
       <div *ngIf="!contentLoader" class="unidade">
-        <ion-skeleton-text color="dark" animated style="width: 70%; height: 19px;"></ion-skeleton-text>
+        <ion-skeleton-text color="dark" animated style="width: 70%; height: 19px;max-width: 300px;"></ion-skeleton-text>
         <div class="dados">
           <div class="dado">
             <h3>faturamento:</h3>
-            <ion-skeleton-text animated style="width: 30%;"></ion-skeleton-text>
+            <ion-skeleton-text animated style="width: 30%;max-width: 110px;"></ion-skeleton-text>
           </div>
           <div class="dado">
             <h3 id="cmv">cmv:</h3>
-            <ion-skeleton-text animated style="width: 30%"></ion-skeleton-text>
+            <ion-skeleton-text animated style="width: 30%;max-width: 110px;"></ion-skeleton-text>
           </div>
           <div class="dado">
             <h3>margem:</h3>
-            <ion-skeleton-text animated style="width: 30%"></ion-skeleton-text>
+            <ion-skeleton-text animated style="width: 30%;max-width: 110px;"></ion-skeleton-text>
           </div>
         </div>
       </div>
@@ -171,17 +171,17 @@
           <div class="dadoTotal">
             <h3>faturamento:</h3>
             <p *ngIf="!dateLoaderTotal">{{ somaFatTotal }}</p>
-            <ion-skeleton-text *ngIf="dateLoaderTotal" animated style="width: 30%"></ion-skeleton-text>
+            <ion-skeleton-text *ngIf="dateLoaderTotal" animated style="width: 30%;max-width: 110px;"></ion-skeleton-text>
           </div>
           <div class="dadoTotal">
             <h3>CMV:</h3>
             <p *ngIf="!dateLoaderTotal">{{somaCMVTotal}}{{perc}}</p>
-            <ion-skeleton-text *ngIf="dateLoaderTotal" animated style="width: 30%"></ion-skeleton-text>
+            <ion-skeleton-text *ngIf="dateLoaderTotal" animated style="width: 30%;max-width: 110px;"></ion-skeleton-text>
           </div>
           <div class="dadoTotal">
             <h3>margem:</h3>
             <p *ngIf="!dateLoaderTotal">{{ somaMargemTotal }}</p>
-            <ion-skeleton-text *ngIf="dateLoaderTotal" animated style="width: 30%"></ion-skeleton-text>
+            <ion-skeleton-text *ngIf="dateLoaderTotal" animated style="width: 30%;max-width: 110px;"></ion-skeleton-text>
           </div>
         </div>
       </div>
@@ -190,15 +190,15 @@
         <div id="dadosTotal">
           <div class="dadoTotal">
             <h3>faturamento:</h3>
-            <ion-skeleton-text animated style="width: 30%"></ion-skeleton-text>
+            <ion-skeleton-text animated style="width: 30%;max-width: 110px;"></ion-skeleton-text>
           </div>
           <div class="dadoTotal">
             <h3>CMV:</h3>
-            <ion-skeleton-text animated style="width: 30%"></ion-skeleton-text>
+            <ion-skeleton-text animated style="width: 30%;max-width: 110px;"></ion-skeleton-text>
           </div>
           <div class="dadoTotal">
             <h3>margem:</h3>
-            <ion-skeleton-text animated style="width: 30%"></ion-skeleton-text>
+            <ion-skeleton-text animated style="width: 30%;max-width: 110px;"></ion-skeleton-text>
           </div>
         </div>
       </div>

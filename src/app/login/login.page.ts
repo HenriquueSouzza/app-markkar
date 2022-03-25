@@ -1,7 +1,4 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/dot-notation */
-/* eslint-disable @typescript-eslint/quotes */
 import { StorageService } from './../servico/storage.service';
 import { LoginService } from './../servico/login.service';
 import { Component, OnInit } from '@angular/core';
@@ -43,20 +40,21 @@ export class LoginPage implements OnInit {
 
   async ngOnInit() {
     this.menu.enable(false, 'homeMenu');
-    const login = await this.storage.get("login");
+    const login = await this.storage.get('login');
     this.empAtual = await this.storage.get('empresaAtual');
     const valIdToken = await this.storage.get('idToken');
     const valLogin = await this.storage.get('login');
     const valSenhaLogin = await this.storage.get('senha');
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     const valLogins = {user: valLogin, senha: valSenhaLogin, id_token: valIdToken};
     if(valIdToken !== null && valLogin !== null && valSenhaLogin !== null){
       this.service.login(valLogins).subscribe(async response =>{
-        if(response["status"] === 'success'){
+        if(response['status'] === 'success'){
           this.errLogin = null;
           const alert = await this.alertController.create({
             cssClass: 'my-custom-class',
             header: 'Você já possui um login salvo.',
-            message: 'Deseja logar com' + " " + login.toUpperCase() + " " + "?",
+            message: 'Deseja logar com' + ' ' + login.toUpperCase() + ' ' + '?',
             buttons: [
               {
                 text: 'NÃO',
@@ -78,13 +76,13 @@ export class LoginPage implements OnInit {
           });
           await alert.present();
         }
-        else if(response["status"] === 'failed'){
+        else if(response['status'] === 'failed'){
         }
-        else if(response["status"] === 'errDB'){
-          this.errLogin = "Não foi possivel conectar com o servidor de dados";
+        else if(response['status'] === 'errDB'){
+          this.errLogin = 'Não foi possivel conectar com o servidor de dados';
         }
       }, async error => {
-        this.errLogin ="falha ao conectar com o servidor";
+        this.errLogin ='falha ao conectar com o servidor';
       });
     }
   }
@@ -98,35 +96,35 @@ export class LoginPage implements OnInit {
     const login = form.value;
     if(login.user.length === 0){
       await loading.dismiss();
-      this.errLogin = "Digite um usuario";
+      this.errLogin = 'Digite um usuario';
     }
     else if(login.senha.length === 0){
       await loading.dismiss();
-      this.errLogin = "Digite uma senha";
+      this.errLogin = 'Digite uma senha';
     }
     else{
       login.user = login.user.trim();
       login.id_token = await this.storage.get('idToken');
       this.service.login(login).subscribe(async response =>{
-        if(response["status"] === 'success'){
+        if(response['status'] === 'success'){
           this.errLogin = null;
-          await this.storageService.set("login", login.user);
-          await this.storageService.set("senha", login.senha);
+          await this.storageService.set('login', login.user);
+          await this.storageService.set('senha', login.senha);
           await loading.dismiss();
           this.router.navigateByUrl('/home', { replaceUrl: true });
         }
-        else if(response["status"] === 'failed'){
+        else if(response['status'] === 'failed'){
           this.colorInput = 'red';
-          this.errLogin = "Login ou Senha não encontrados";
+          this.errLogin = 'Login ou Senha não encontrados';
           await loading.dismiss();
         }
-        else if(response["status"] === 'errDB'){
-          this.errLogin = "Não foi possivel conectar com o servidor de dados";
+        else if(response['status'] === 'errDB'){
+          this.errLogin = 'Não foi possivel conectar com o servidor de dados';
           await loading.dismiss();
         }
       }, async error => {
         await loading.dismiss();
-        this.errLogin ="falha ao conectar com o servidor";
+        this.errLogin ='falha ao conectar com o servidor';
       });
     }
   }
