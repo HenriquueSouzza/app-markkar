@@ -84,7 +84,9 @@ ion-label{
 ion-datetime{
   --background: var(--ion-color-dark2) !important;
   --title-color: var(--ion-color-primary) !important;
+  --background-rgb: 20,21,24 !important;
   color: white !important;
+  text-transform: uppercase;
 }
 ion-app{
   min-height: 100vh !important;
@@ -186,4 +188,7 @@ html.ios{
 .header-md::after {
   /* Removes the toolbar shadow. */
   background: none !important;
+}
+:host .picker-before{
+  --background: red;
 }

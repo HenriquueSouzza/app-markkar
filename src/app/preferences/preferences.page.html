@@ -9,19 +9,19 @@
 
 <ion-content>
   <ion-list>
-    <ion-item lines="none" color="secondary">
+    <ion-item [detail]="false" lines="none" color="secondary">
       <ion-label style="text-transform: none;">Idioma</ion-label>
       <ion-select cancel-text="cancelar" value="Portugues" ok-text="confirmar" interface="popover" (ionChange)="blank()" placeholder="Selecione">
         <ion-select-option value="Portugues">Português</ion-select-option>
       </ion-select>
     </ion-item>
-    <ion-item lines="none" color="secondary">
+    <ion-item [detail]="false" lines="none" color="secondary">
       <ion-label style="text-transform: none;">Moeda</ion-label>
       <ion-select cancel-text="cancelar" value="Portugues" ok-text="confirmar" interface="popover" (ionChange)="blank()" placeholder="Selecione">
         <ion-select-option value="Portugues">Real(R$)</ion-select-option>
       </ion-select>
     </ion-item>
-    <ion-item lines="none" color="secondary">
+    <ion-item [detail]="false" lines="none" color="secondary">
       <ion-label style="text-transform: none;">Intervalo de Faturamento</ion-label>
       <ion-select cancel-text="cancelar" value="{{valueInterval}}" ok-text="confirmar" interface="popover" (ionChange)="setInterval($event)" placeholder="Selecione">
         <ion-select-option value="all">Todos</ion-select-option>
@@ -30,11 +30,11 @@
         <ion-select-option value="day">Diário</ion-select-option>
       </ion-select>
     </ion-item>
-    <ion-item (click)="mask = !mask" [button]="true" lines="none" color="secondary">
+    <ion-item [detail]="false" (click)="mask = !mask" [button]="true" lines="none" color="secondary">
       <ion-label style="text-transform: none;">Exibir Máscara Monetaria <p class="p">Os valores exibirão uma máscara. Ex: R$, US$...</p></ion-label>
       <ion-toggle #setMaskToggle checked="{{ mask }}" (ionChange)="setMask($event)"></ion-toggle>
     </ion-item>
-    <ion-item (click)="cmvPerc = !cmvPerc" [button]="true" lines="none" color="secondary">
+    <ion-item [detail]="false" (click)="cmvPerc = !cmvPerc" [button]="true" lines="none" color="secondary">
       <ion-label style="text-transform: none;">CMV Porcentual<p class="p">Os valores de CMV serão convertidos para porcentegem.</p></ion-label>
       <ion-toggle #setMaskToggle checked="{{ cmvPerc }}" (ionChange)="setCMV($event)"></ion-toggle>
     </ion-item>

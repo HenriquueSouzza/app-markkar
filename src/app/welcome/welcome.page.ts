@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import SwiperCore, { Autoplay, Keyboard, Pagination, Scrollbar, Zoom } from 'swiper';
 import { SwiperComponent } from 'swiper/angular';
 import { StatusBar } from '@capacitor/status-bar';
+import { Platform } from '@ionic/angular';
 import { StorageService } from './../servico/storage.service';
 import { LoginService } from './../servico/login.service';
 
@@ -23,6 +24,7 @@ export class WelcomePage implements OnInit {
   err: string;
   colorCnpj: string;
   colorTOKEN: string;
+  keyHeight = 0;
 
   constructor(
     private service: LoginService,
@@ -30,7 +32,12 @@ export class WelcomePage implements OnInit {
     private storageService: StorageService,
     private storage: Storage,
     private menu: MenuController,
-    private router: Router) { }
+    private router: Router,
+    private platform: Platform
+    ) { this.platform.keyboardDidShow.subscribe(ev => {
+      const { keyboardHeight } = ev;
+      this.keyHeight = keyboardHeight / 2;
+    }); }
 
   // eslint-disable-next-line @typescript-eslint/member-ordering
   @ViewChild('swiper') swiper: SwiperComponent;

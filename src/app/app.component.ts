@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ToastController } from '@ionic/angular';
 import { Storage } from '@ionic/storage-angular';
 import { StorageService } from './servico/storage.service';
 
@@ -15,7 +16,8 @@ export class AppComponent implements OnInit {
   constructor(
     private storage: Storage,
     private storageService: StorageService,
-    private router: Router
+    private router: Router,
+    public toastController: ToastController
     ) {}
 
   async ngOnInit() {
@@ -55,5 +57,14 @@ export class AppComponent implements OnInit {
       await this.storage.set('empresas', empresas);
       this.ngOnInit();
     }
+  }
+
+  async presentToast(men) {
+    const toast = await this.toastController.create({
+      message: men,
+      duration: 2000,
+      color: 'dark'
+    });
+    toast.present();
   }
 }

@@ -12,6 +12,10 @@ ion-list{
   --background: var(--ion-color-dark2);
   padding: 0;
 }
+ion-button.ios{
+  margin-top: 6px;
+  margin-bottom: 14px;
+}
 #labelAvatar{
   display: flex;
   align-items: baseline;
@@ -23,5 +27,29 @@ ion-list{
     font-size: 1.3rem;
     color: white;
     text-transform: capitalize;
+  }
+}
+.ion-color-secondary {
+  --ion-color-base: var(--ion-color-dark) !important;
+}
+#footer{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  bottom: 40px;
+  position: absolute;
+
+  #imgFooter{
+    width: 100px;
+  }
+}
+.pgs{
+  margin: 13px 0;
+
+  ion-label{
+    margin-left: 0px !important;
+    font-family: 'robotoBold';
   }
 }

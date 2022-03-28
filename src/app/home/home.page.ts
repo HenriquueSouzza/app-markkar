@@ -174,6 +174,16 @@ export class HomePage implements OnInit {
       this.headerFat(await this.storage.get('intervalHeader'));
       this.unidadeFatTotal();
     }
+    if(this.valCnpj !== await this.storage.get('cnpj')){
+      this.unidadesFat = [];
+      this.unidadesHeader = [];
+      this.somaFatHeader = '';
+      this.somaMargemHeader = '';
+      this.somaFatTotal = '';
+      this.somaMargemTotal = '';
+      this.contentLoader = false;
+      this.ngOnInit();
+    }
     if(!isPlatform('mobileweb') && isPlatform('android')){
       StatusBar.setBackgroundColor({color: '#222428'});
     }

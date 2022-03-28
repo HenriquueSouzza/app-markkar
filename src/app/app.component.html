@@ -2,28 +2,50 @@
   <ion-menu (ionWillOpen)="ngOnInit()" side="start" menuId="homeMenu" contentId="main">
     <ion-header>
       <ion-toolbar color="dark" style="border-radius: 0 0 30px 0;">
-          <div style="padding: 10px 0;padding-left: 16px; display: flex; align-items: center; justify-content: flex-start;">
+          <div style="padding: 20px 0 20px 0;padding-left: 16px; display: flex; align-items: center; justify-content: flex-start;">
             <ion-avatar style="width: 50px;height: 50px;" slot="start">
               <img src="../../assets/img/avatar.png">
             </ion-avatar>
             <ion-label id="labelAvatar">Olá <p id="pLabelAvatar">, {{name}}</p></ion-label>
           </div>
+          <ion-list style="background: var(--ion-color-dark) !important; margin-bottom: 20px;">
+            <ion-list-header>
+              <ion-label style="margin-top: 0;margin-left: 0px !important;">Multiempresa</ion-label>
+              <ion-button (click)="redirect()" expand="block" fill="clear" shape="round">
+                <ion-icon name="add-outline"></ion-icon>
+              </ion-button>
+            </ion-list-header>
+            <ion-item-sliding *ngFor="let empresa of empresas">
+              <ion-item-options side="start">
+                <ion-item-option (click)="deleteEmp(empresa['empresa'], empresa['cnpj'], empresa['token'], empresa['idToken'])" color="danger">Deletar</ion-item-option>
+              </ion-item-options>
+              <ion-item lines="none" (click)="changeEmpresa(empresa['empresa'], empresa['cnpj'], empresa['token'], empresa['idToken'])" [button]="true" color="secondary"><ion-icon style="margin-right: 10px;" name="business-outline"></ion-icon>{{empresa['empresa'].toLowerCase()}}</ion-item>
+            </ion-item-sliding>
+          </ion-list>
       </ion-toolbar>
     </ion-header>
     <ion-content>
-      <ion-list *ngFor="let empresa of empresas" >
-        <ion-item-sliding>
-          <ion-item-options side="start">
-            <ion-item-option (click)="deleteEmp(empresa['empresa'], empresa['cnpj'], empresa['token'], empresa['idToken'])" color="danger">Deletar</ion-item-option>
-          </ion-item-options>
-          <ion-item (click)="changeEmpresa(empresa['empresa'], empresa['cnpj'], empresa['token'], empresa['idToken'])" [button]="true" color="secondary">{{empresa['empresa'].toLowerCase()}}</ion-item>
-        </ion-item-sliding>
+      <ion-list lines="none" style="margin-top: 20px;">
+        <ion-item [detail]="false" class="pgs" [button]="true">
+          <ion-icon slot="start" name="home-outline"></ion-icon>
+          <ion-label>home</ion-label>
+        </ion-item>
+        <ion-item [detail]="false" (click)="presentToast('Em desenvolvimento...')" class="pgs" [button]="true">
+          <ion-icon slot="start" name="person-outline"></ion-icon>
+          <ion-label>caixa</ion-label>
+        </ion-item>
+        <ion-item [detail]="false" (click)="presentToast('Em desenvolvimento...')" class="pgs" [button]="true">
+          <ion-icon slot="start" name="receipt-outline"></ion-icon>
+          <ion-label>relatórios</ion-label>
+        </ion-item>
+        <ion-item [detail]="false" (click)="presentToast('Em desenvolvimento...')" class="pgs" [button]="true">
+          <ion-icon slot="start" name="pie-chart-outline"></ion-icon>
+          <ion-label>estoque</ion-label>
+        </ion-item>
       </ion-list>
-      <div style="width: 100%; display: flex; align-items: center; justify-content: center; margin: 15px 0;">
-        <ion-button style="width: 80%;" (click)="redirect()" expand="block" fill="clear" shape="round">
-          Adicionar nova empresa
-        </ion-button>
-      </div>
+      <footer id="footer">
+        <img id="imgFooter" src="../../assets/img/marca-horizontal-sem-slogan.png" alt="logoMarkkar">
+      </footer>
     </ion-content>
   </ion-menu>
   <ion-router-outlet id="main"></ion-router-outlet>

@@ -77,7 +77,7 @@ ion-toolbar{
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 30px;
+    margin-bottom: 10px;
     text-transform: uppercase;
     h2{
       margin-bottom: 5px;
@@ -89,10 +89,11 @@ ion-toolbar{
     }
   }
   #total{
-    width: 100%;
+    width: 95%;
     display: flex;
     align-items: center;
     justify-content: space-around;
+    padding: 10px 0;
 
     div{
       display: flex;
@@ -146,25 +147,35 @@ ion-toolbar{
 
     .headerUnidades{
       display: flex;
+      align-items: center;
+      margin-bottom: 5px;
 
       h2{
-        margin-bottom: 5px;
         font-size: 1.2rem;
         color: rgb(187, 187, 187);
         font-family: 'robotoBold';
+        height: 20px;
       }
       ion-checkbox{
         margin-right: 10px;
+        margin-bottom: 0px !important;
         --background-checked: var(--ion-color-dark);
         --checkmark-color: var(--ion-color-primary);
         --border-color-checked: var(--ion-color-dark);
         --background: var(--ion-color-dark);
         --border-color: var(--ion-color-primary);
       }
+      ion-checkbox.md{
+        margin-bottom: 1px !important;
+      }
+      ion-checkbox.ios{
+        height: 20px;
+        width: 20px;
+      }
     }
     .dados{
       border-radius: 12px;
-      border: #ff9e19 solid 1px;
+      border: #ff9f19 solid 1px;
       padding: 8px;
 
       .dado{
@@ -233,6 +244,12 @@ ion-toolbar{
 }
 .content-ltr{
   background: transparent !important;
+}
+#grafico{
+  width: 90%;
+  height: 100px;
+  border-radius: 12px;
+  border: #ff9f19 solid 1px;
 }
 @media screen and (max-width: 320px) {
 
