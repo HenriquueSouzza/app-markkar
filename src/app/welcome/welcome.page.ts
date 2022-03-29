@@ -24,7 +24,8 @@ export class WelcomePage implements OnInit {
   err: string;
   colorCnpj: string;
   colorTOKEN: string;
-  keyHeight = 0;
+  keyHeight = false;
+  keyHeightM = false;
 
   constructor(
     private service: LoginService,
@@ -34,10 +35,21 @@ export class WelcomePage implements OnInit {
     private menu: MenuController,
     private router: Router,
     private platform: Platform
-    ) { this.platform.keyboardDidShow.subscribe(ev => {
-      const { keyboardHeight } = ev;
-      this.keyHeight = keyboardHeight / 2;
-    }); }
+    ) {
+      this.platform.keyboardDidShow.subscribe(ev => {
+        const { keyboardHeight } = ev;
+        if(platform.height() <= 500){
+          this.keyHeight = true;
+        }
+        else if(platform.height() <= 690){
+          this.keyHeightM = true;
+        }
+      });
+      this.platform.keyboardDidHide.subscribe(ev => {
+        this.keyHeight = false;
+        this.keyHeightM = false;
+      });
+    }
 
   // eslint-disable-next-line @typescript-eslint/member-ordering
   @ViewChild('swiper') swiper: SwiperComponent;

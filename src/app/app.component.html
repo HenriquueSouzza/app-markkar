@@ -15,21 +15,25 @@
                 <ion-icon name="add-outline"></ion-icon>
               </ion-button>
             </ion-list-header>
-            <ion-item-sliding *ngFor="let empresa of empresas">
-              <ion-item-options side="start">
-                <ion-item-option (click)="deleteEmp(empresa['empresa'], empresa['cnpj'], empresa['token'], empresa['idToken'])" color="danger">Deletar</ion-item-option>
-              </ion-item-options>
-              <ion-item lines="none" (click)="changeEmpresa(empresa['empresa'], empresa['cnpj'], empresa['token'], empresa['idToken'])" [button]="true" color="secondary"><ion-icon style="margin-right: 10px;" name="business-outline"></ion-icon>{{empresa['empresa'].toLowerCase()}}</ion-item>
-            </ion-item-sliding>
+            <ion-menu-toggle>
+              <ion-item-sliding *ngFor="let empresa of empresas">
+                <ion-item-options side="start">
+                  <ion-item-option (click)="deleteEmp(empresa['empresa'], empresa['cnpj'], empresa['token'], empresa['idToken'])" color="danger">Deletar</ion-item-option>
+                </ion-item-options>
+                <ion-item lines="none" (click)="changeEmpresa(empresa['empresa'], empresa['cnpj'], empresa['token'], empresa['idToken'])" [button]="true" color="secondary"><ion-icon style="margin-right: 10px;" name="business-outline"></ion-icon>{{empresa['empresa'].toLowerCase()}}</ion-item>
+              </ion-item-sliding>
+            </ion-menu-toggle>
           </ion-list>
       </ion-toolbar>
     </ion-header>
     <ion-content>
       <ion-list lines="none" style="margin-top: 20px;">
-        <ion-item [detail]="false" class="pgs" [button]="true">
-          <ion-icon slot="start" name="home-outline"></ion-icon>
-          <ion-label>home</ion-label>
-        </ion-item>
+        <ion-menu-toggle>
+          <ion-item [routerLink]="['/home']" [detail]="false" class="pgs" [button]="true">
+            <ion-icon slot="start" name="home-outline"></ion-icon>
+            <ion-label>home</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
         <ion-item [detail]="false" (click)="presentToast('Em desenvolvimento...')" class="pgs" [button]="true">
           <ion-icon slot="start" name="person-outline"></ion-icon>
           <ion-label>caixa</ion-label>

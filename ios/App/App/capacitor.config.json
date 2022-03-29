@@ -2,5 +2,12 @@
 	"appId": "br.com.markkar.portal",
 	"appName": "Portal Markkar",
 	"webDir": "www",
-	"bundledWebRuntime": false
+	"bundledWebRuntime": false,
+	"plugins": {
+		"SplashScreen": {
+			"launchAutoHide": false,
+			"androidScaleType": "CENTER_CROP",
+			"showSpinner": false
+		}
+	}
 }

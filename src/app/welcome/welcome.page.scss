@@ -86,6 +86,7 @@ form{
     }
     .contentSlide{
       margin-top: 80px;
+      transition: all 0.5s;
 
       ion-item{
         --color: white;
@@ -102,6 +103,12 @@ form{
         width: 90%;
         height: 50px;
       }
+    }
+    .contentSlide.inputUpM{
+      margin-top: 40px;
+    }
+    .contentSlide.inputUp{
+      margin-top: 0px;
     }
   }
 }

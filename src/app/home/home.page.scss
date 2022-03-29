@@ -177,6 +177,9 @@ ion-toolbar{
       border-radius: 12px;
       border: #ff9f19 solid 1px;
       padding: 8px;
+      height: 114px;
+      min-height: 114px;
+      max-height: 114px;
 
       .dado{
         padding: 5px;
