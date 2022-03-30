@@ -4,7 +4,7 @@ import { LoginService } from './../servico/login.service';
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AlertController, isPlatform, LoadingController, MenuController } from '@ionic/angular';
+import { AlertController, isPlatform, LoadingController, MenuController, Platform } from '@ionic/angular';
 import { Storage } from '@ionic/storage-angular';
 import { StatusBar } from '@capacitor/status-bar';
 
@@ -20,6 +20,8 @@ export class LoginEmpresaPage implements OnInit {
   colorCnpj: string;
   colorTOKEN: string;
   loader = false;
+  keyHeight = false;
+  keyHeightM = false;
 
   // eslint-disable-next-line max-len
   constructor(
@@ -29,8 +31,23 @@ export class LoginEmpresaPage implements OnInit {
     public loadingController: LoadingController,
     private storageService: StorageService,
     private storage: Storage,
-    public alertController: AlertController
-    ) { }
+    public alertController: AlertController,
+    private platform: Platform
+    ) {
+      this.platform.keyboardDidShow.subscribe(ev => {
+        const { keyboardHeight } = ev;
+        if(platform.height() <= 500){
+          this.keyHeight = true;
+        }
+        else if(platform.height() <= 690){
+          this.keyHeightM = true;
+        }
+      });
+      this.platform.keyboardDidHide.subscribe(ev => {
+        this.keyHeight = false;
+        this.keyHeightM = false;
+      });
+     }
 
 
   async ngOnInit() {
