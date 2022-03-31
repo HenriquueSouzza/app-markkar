@@ -51,8 +51,8 @@ export class TokenBlockPage implements OnInit {
         alert('falha ao conectar com o servidor');
       });
     }
-    if(isPlatform('mobile')){
-      StatusBar.setBackgroundColor({color: '#141518'});
+    if(!isPlatform('mobileweb') && isPlatform('android')){
+      StatusBar.setBackgroundColor({color: '#222428'});
     }
   }
 

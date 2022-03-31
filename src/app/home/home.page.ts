@@ -160,30 +160,35 @@ export class HomePage implements OnInit {
       });
     }
   }
-  async ionViewWillEnter(){
+  async ionViewDidEnter(){
     this.menu.enable(true, 'homeMenu');
-    if(
-    this.mask !== await this.storage.get('mask') ||
-    this.cmvPerc !== await this.storage.get('cmvPerc') ||
-    this.intervalHeader !== await this.storage.get('intervalHeader')
-    ){
-      this.mask = await this.storage.get('mask');
-      this.cmvPerc = await this.storage.get('cmvPerc');
-      if(this.cmvPerc === true){this.perc = '%';}
-      if(this.cmvPerc === false){this.perc = '';}
-      this.headerFat(await this.storage.get('intervalHeader'));
-      this.unidadeFatTotal();
-    }
-    if(this.valCnpj !== await this.storage.get('cnpj')){
-      this.unidadesFat = [];
-      this.unidadesHeader = [];
-      this.somaFatHeader = '';
-      this.somaMargemHeader = '';
-      this.somaFatTotal = '';
-      this.somaMargemTotal = '';
-      this.contentLoader = false;
-      this.ngOnInit();
-    }
+    const verfyComplete = setInterval(async () => {
+      if (this.valSenhaLogin !== null){
+        clearInterval(verfyComplete);
+        if(
+        this.mask !== await this.storage.get('mask') ||
+        this.cmvPerc !== await this.storage.get('cmvPerc') ||
+        this.intervalHeader !== await this.storage.get('intervalHeader')
+        ){
+          this.mask = await this.storage.get('mask');
+          this.cmvPerc = await this.storage.get('cmvPerc');
+          if(this.cmvPerc === true){this.perc = '%';}
+          if(this.cmvPerc === false){this.perc = '';}
+          this.headerFat(await this.storage.get('intervalHeader'));
+          this.unidadeFatTotal();
+        }
+        if(this.valCnpj !== await this.storage.get('cnpj')){
+          this.unidadesFat = [];
+          this.unidadesHeader = [];
+          this.somaFatHeader = '';
+          this.somaMargemHeader = '';
+          this.somaFatTotal = '';
+          this.somaMargemTotal = '';
+          this.contentLoader = false;
+          this.ngOnInit();
+        }
+      }
+    }, 100);
     if(!isPlatform('mobileweb') && isPlatform('android')){
       StatusBar.setBackgroundColor({color: '#222428'});
     }
@@ -198,7 +203,7 @@ export class HomePage implements OnInit {
       dateInit: null, dateFinish: null
     };
     this.lojas.faturamento(interfaceHFat).subscribe(response => {
-      this.unidadesHeader = Object.values(response['Faturamento']);
+      this.unidadesHeader = Object.values(response['revenues']);
       const unidades = this.unidadesHeader;
       const somaFatArray = [];
       const somaMargemArray = [];
@@ -232,6 +237,8 @@ export class HomePage implements OnInit {
         this.somaCMVHeader = prepareRealCMV.toString();
         this.contentLoader = true;
       }
+    }, async error => {
+      console.log(error.error.connection);
     });
   }
   async unidadeFatTotal(){
@@ -243,7 +250,7 @@ export class HomePage implements OnInit {
     };
     this.lojas.faturamento(dayFat).subscribe(async response => {
       const unidades = response;
-      this.unidadesFat = Object.values(response['Faturamento']);
+      this.unidadesFat = Object.values(response['revenues']);
       const unidadesFat = this.unidadesFat;
       const somaFatArray = [];
       const somaMargemArray = [];
@@ -315,6 +322,8 @@ export class HomePage implements OnInit {
         this.dateLoader = false;
         this.dateLoaderTotal = false;
       }
+    }, async error => {
+      this.error(error.error.connection.status);
     });
   }
   async dateChangeInit(value){
@@ -432,7 +441,7 @@ export class HomePage implements OnInit {
       });
       await alert.present();
     }
-    else if(err === 'errLogEmp'){
+    else if(err === 'errLogEmp' || 'failed'){
       const alert = await this.alertController.create({
         cssClass: 'my-custom-class',
         header: 'Falha ao logar na empresa',
@@ -460,6 +469,36 @@ export class HomePage implements OnInit {
             id: 'confirm-button',
             handler: () => {
               this.router.navigateByUrl('/login', { replaceUrl: true });
+            }
+          }
+        ]
+      });
+      await alert.present();
+    }
+    else if(err === 'blocked'){
+      this.router.navigateByUrl('/token-block', { replaceUrl: true });
+    }
+    else{
+      const alert = await this.alertController.create({
+        cssClass: 'my-custom-class',
+        header: 'error desconhecido',
+        message: 'Deseja tentar novamente ?',
+        backdropDismiss: false,
+        buttons: [
+           {
+            text: 'SAIR',
+            role: 'cancel',
+            cssClass: 'secondary',
+            id: 'cancel-button',
+            handler: () => {
+              navigator['app'].exitApp();
+            }
+          },
+          {
+            text: 'SIM',
+            id: 'confirm-button',
+            handler: () => {
+              this.ngOnInit();
             }
           }
         ]
