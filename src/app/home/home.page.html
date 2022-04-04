@@ -100,9 +100,9 @@
         </ion-popover>
       </div>
       <ng-container *ngFor="let unidade of unidadesFat">
-        <div *ngIf="!displayUnidades" class="unidade" [ngStyle]="{'display': unidadesCheck[empresa][unidade['nome_cc']]['display']}">
+        <div *ngIf="!displayUnidades" class="unidade" [ngStyle]="{'display': unidadesCheck[empresa][unidade['unidade']]['display']}">
           <div class="headerUnidades">
-            <h2>{{unidade['nome_cc']}}</h2>
+            <h2>{{unidade['unidade']}}</h2>
           </div>
           <div class="dados">
             <div class="dado">
@@ -123,10 +123,10 @@
             </div>
           </div>
         </div>
-        <div *ngIf="displayUnidades" class="unidade" style="display: block;" [ngStyle]="{'opacity': unidadesCheck[empresa][unidade['nome_cc']]['check'] ? '100%' : '45%'}" >
+        <div *ngIf="displayUnidades" class="unidade" style="display: block;" [ngStyle]="{'opacity': unidadesCheck[empresa][unidade['unidade']]['check'] ? '100%' : '45%'}" >
           <div class="headerUnidades">
-            <ion-checkbox [checked]="unidadesCheck[empresa][unidade['nome_cc']]['check']" (ionChange)="unidadesChangeCheck($event['detail'].checked,unidade['nome_cc'])"></ion-checkbox>
-            <h2 (click)="unidadesCheck[empresa][unidade['nome_cc']]['check'] = !unidadesCheck[empresa][unidade['nome_cc']]['check']">{{unidade['nome_cc']}}</h2>
+            <ion-checkbox [checked]="unidadesCheck[empresa][unidade['unidade']]['check']" (ionChange)="unidadesChangeCheck($event['detail'].checked,unidade['unidade'])"></ion-checkbox>
+            <h2 (click)="unidadesCheck[empresa][unidade['unidade']]['check'] = !unidadesCheck[empresa][unidade['unidade']]['check']">{{unidade['unidade']}}</h2>
           </div>
           <div class="dados">
             <div class="dado">
@@ -203,7 +203,7 @@
         </div>
       </div>
       <div id="grafico">
-
+        <canvas baseChart [datasets]="chartData" [labels]="chartlabels" [options]="chartOptions" [type]="chartType"></canvas>
       </div>
     </div>
   </section>

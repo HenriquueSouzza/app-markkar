@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/dot-notation */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
 import { Router } from '@angular/router';
 import { LoadingController, MenuController, AlertController, PopoverController, isPlatform, ToastController } from '@ionic/angular';
@@ -8,6 +8,8 @@ import { StatusBar} from '@capacitor/status-bar';
 import { StorageService } from './../servico/storage.service';
 import { LoginService } from './../servico/login.service';
 import { LojasService } from '../servico/lojas.service';
+import { ChartDataset, ChartOptions, ChartType } from 'chart.js';
+import { BaseChartDirective } from 'ng2-charts';
 
 @Component({
   selector: 'app-home',
@@ -15,6 +17,45 @@ import { LojasService } from '../servico/lojas.service';
   styleUrls: ['./home.page.scss'],
 })
 export class HomePage implements OnInit {
+
+  public chartData: ChartDataset[] = [];
+  public chartType: ChartType = 'bar';
+  public chartlabels: string[] = [];
+  public chartOptions: ChartOptions = {
+    locale: 'pt-BR',
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      title: {
+        display: true,
+        text: 'Gráfico de Margem',
+        padding: {
+          top: 10,
+          bottom: 0
+      }
+      },
+      legend: {
+        display: true,
+        position: 'top',
+        align: 'center',
+        labels: {
+          boxWidth: 15,
+          boxHeight: 15,
+        }
+      }
+    },
+    scales:{
+      y:{
+        beginAtZero: false,
+        display: false,
+        ticks: {
+          callback: (value) => value.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})
+        }
+      }
+    }
+  };
+  // eslint-disable-next-line @typescript-eslint/member-ordering
+  @ViewChild(BaseChartDirective) chart: BaseChartDirective;
 
 //Settings and Bool
   contentLoader: boolean;
@@ -66,7 +107,7 @@ export class HomePage implements OnInit {
     private storageService: StorageService, private router: Router,
     public alertController: AlertController,
     public toastController: ToastController
-    ) { }
+    ) {  }
 
   async ngOnInit() {
     //Set Menu
@@ -203,7 +244,7 @@ export class HomePage implements OnInit {
       dateInit: null, dateFinish: null
     };
     this.lojas.faturamento(interfaceHFat).subscribe(response => {
-      this.unidadesHeader = Object.values(response['revenues']);
+      this.unidadesHeader = Object.values(response['totalBilling']);
       const unidades = this.unidadesHeader;
       const somaFatArray = [];
       const somaMargemArray = [];
@@ -250,21 +291,28 @@ export class HomePage implements OnInit {
     };
     this.lojas.faturamento(dayFat).subscribe(async response => {
       const unidades = response;
-      this.unidadesFat = Object.values(response['revenues']);
+      const grafico = response['monthlyBilling'];
+      this.unidadesFat = Object.values(response['totalBilling']);
       const unidadesFat = this.unidadesFat;
       const somaFatArray = [];
       const somaMargemArray = [];
       const somaCMVrray = [];
       const unidadesCheck = {};
+      this.chartData = [];
+      this.chartlabels = [];
       if((!this.unidadesCheck.hasOwnProperty(this.empresa))){
         // eslint-disable-next-line no-var
         for(var all of unidadesFat){
           somaFatArray.push(parseFloat((all['somaFat'])));
           somaMargemArray.push(parseFloat((all['somaMargem'])));
           somaCMVrray.push(parseFloat(all['cmv_vlr']));
-          unidadesCheck[all['nome_cc']] = {unidade: all['nome_cc'], check: true, display: 'block'};
+          unidadesCheck[all['unidade']] = {unidade: all['unidade'], check: true, display: 'block'};
           this.unidadesCheck[this.empresa] = unidadesCheck;
           await this.storage.set('unidadesCheck', this.unidadesCheck);
+          this.chartData.push({data: [], label: all['unidade']});
+          for(const margem of Object.values(grafico[all['unidade']])){
+            this.chartData[this.chartData.length - 1].data.push(margem['margem']);
+          }
         }
       }else{
         // eslint-disable-next-line no-var
@@ -272,13 +320,24 @@ export class HomePage implements OnInit {
           somaFatArray.push(parseFloat((all['somaFat'])));
           somaMargemArray.push(parseFloat((all['somaMargem'])));
           somaCMVrray.push(parseFloat(all['cmv_vlr']));
+          this.chartData.push({data: [], label: all['unidade']});
+          for(const margem of Object.values(grafico[all['unidade']])){
+            this.chartData[this.chartData.length - 1].data.push(margem['margem']);
+          }
+          console.log(this.chartData);
         }
+      }
+      for(const teste of Object.values(grafico[unidadesFat[0]['unidade']])){
+        this.chartlabels.push(teste['data']);
+        this.chart.chart.update();
       }
       const unidadesIgnore = [];
       const ignoreSomaFatArray = [];
       const ignoreSomaMargemArray = [];
       const ignoreSomaCMVrray = [];
       for(let unidadegIgnore of Object.values(this.unidadesCheck[this.empresa])){
+        //unidadesStr.push({data: [], label: unidadegIgnore['unidade']});
+        //console.log(unidadesStr);
         if(unidadegIgnore['check'] === false){
           unidadesIgnore.push(unidadegIgnore['unidade']);
           for(unidadegIgnore of Object.values(unidades)){
