@@ -1,3 +1,13 @@
+
+/*
+
+Markkar systems integration app.
+contact us by (https://markkar.com.br/).
+Copyright © Markkar Consultoria Financeira e Sistemas.
+
+*/
+
+
 /* eslint-disable @typescript-eslint/dot-notation */
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
@@ -18,6 +28,7 @@ import { BaseChartDirective } from 'ng2-charts';
 })
 export class HomePage implements OnInit {
 
+  //Chart configs
   public chartData: ChartDataset[] = [];
   public chartType: ChartType = 'bar';
   public chartlabels: string[] = [];
@@ -56,6 +67,8 @@ export class HomePage implements OnInit {
   };
   // eslint-disable-next-line @typescript-eslint/member-ordering
   @ViewChild(BaseChartDirective) chart: BaseChartDirective;
+
+  month = ['Jan', 'Fev', 'Mar', 'Abr', 'Jun', 'Jul', 'Ago', 'Set', 'Nov', 'Dez'];
 
 //Settings and Bool
   contentLoader: boolean;
@@ -177,16 +190,15 @@ export class HomePage implements OnInit {
           this.router.navigateByUrl('/token-block', { replaceUrl: true });
         }
         else if(response['status'] === 'success'){
-          // eslint-disable-next-line @typescript-eslint/no-shadow
-          this.service.login(validateLogin).subscribe(async response =>{
-            if(response['status'] === 'success'){
+          this.service.login(validateLogin).subscribe(async res =>{
+            if(res['status'] === 'success'){
               this.headerFat(this.intervalHeader);
               this.unidadeFatTotal();
             }
-            else if(response['status'] === 'failed'){
+            else if(res['status'] === 'failed'){
               this.error('errLog');
             }
-            else if(response['status'] === 'errDB'){
+            else if(res['status'] === 'errDB'){
               this.error('serverdb');
             }
           }, async error => {
@@ -278,9 +290,7 @@ export class HomePage implements OnInit {
         this.somaCMVHeader = prepareRealCMV.toString();
         this.contentLoader = true;
       }
-    }, async error => {
-      console.log(error.error.connection);
-    });
+    }, async error => { });
   }
   async unidadeFatTotal(){
     const dayFat = {
@@ -291,7 +301,7 @@ export class HomePage implements OnInit {
     };
     this.lojas.faturamento(dayFat).subscribe(async response => {
       const unidades = response;
-      const grafico = response['monthlyBilling'];
+      const grafico = response['MonthlyBillingForFourMonths'];
       this.unidadesFat = Object.values(response['totalBilling']);
       const unidadesFat = this.unidadesFat;
       const somaFatArray = [];
@@ -301,61 +311,51 @@ export class HomePage implements OnInit {
       this.chartData = [];
       this.chartlabels = [];
       if((!this.unidadesCheck.hasOwnProperty(this.empresa))){
-        // eslint-disable-next-line no-var
-        for(var all of unidadesFat){
-          somaFatArray.push(parseFloat((all['somaFat'])));
-          somaMargemArray.push(parseFloat((all['somaMargem'])));
-          somaCMVrray.push(parseFloat(all['cmv_vlr']));
-          unidadesCheck[all['unidade']] = {unidade: all['unidade'], check: true, display: 'block'};
+        for(const unidade of unidadesFat){
+          somaFatArray.push(parseFloat((unidade['somaFat'])));
+          somaMargemArray.push(parseFloat((unidade['somaMargem'])));
+          somaCMVrray.push(parseFloat(unidade['cmv_vlr']));
+          unidadesCheck[unidade['unidade']] = {unidade: unidade['unidade'], check: true, display: 'block'};
           this.unidadesCheck[this.empresa] = unidadesCheck;
           await this.storage.set('unidadesCheck', this.unidadesCheck);
-          this.chartData.push({data: [], label: all['unidade']});
-          for(const margem of Object.values(grafico[all['unidade']])){
+          this.chartData.push({data: [], label: unidade['unidade']});
+          for(const margem of Object.values(grafico[unidade['unidade']])){
             this.chartData[this.chartData.length - 1].data.push(margem['margem']);
           }
         }
       }else{
-        // eslint-disable-next-line no-var
-        for(var all of unidadesFat){
-          somaFatArray.push(parseFloat((all['somaFat'])));
-          somaMargemArray.push(parseFloat((all['somaMargem'])));
-          somaCMVrray.push(parseFloat(all['cmv_vlr']));
-          this.chartData.push({data: [], label: all['unidade']});
-          for(const margem of Object.values(grafico[all['unidade']])){
+        for(const unidade of unidadesFat){
+          somaFatArray.push(parseFloat((unidade['somaFat'])));
+          somaMargemArray.push(parseFloat((unidade['somaMargem'])));
+          somaCMVrray.push(parseFloat(unidade['cmv_vlr']));
+          this.chartData.push({data: [], label: unidade['unidade']});
+          for(const margem of Object.values(grafico[unidade['unidade']])){
             this.chartData[this.chartData.length - 1].data.push(margem['margem']);
           }
-          console.log(this.chartData);
         }
       }
       for(const teste of Object.values(grafico[unidadesFat[0]['unidade']])){
-        this.chartlabels.push(teste['data']);
+        this.chartlabels.push(this.month[teste['month'] - 1]);
         this.chart.chart.update();
       }
       const unidadesIgnore = [];
       const ignoreSomaFatArray = [];
       const ignoreSomaMargemArray = [];
       const ignoreSomaCMVrray = [];
-      for(let unidadegIgnore of Object.values(this.unidadesCheck[this.empresa])){
-        //unidadesStr.push({data: [], label: unidadegIgnore['unidade']});
-        //console.log(unidadesStr);
+      for(const unidadegIgnore of Object.values(this.unidadesCheck[this.empresa])){
         if(unidadegIgnore['check'] === false){
           unidadesIgnore.push(unidadegIgnore['unidade']);
-          for(unidadegIgnore of Object.values(unidades)){
-            ignoreSomaFatArray.push(parseFloat(unidadegIgnore[unidadesIgnore[unidadesIgnore.length - 1]]['somaFat']));
-            ignoreSomaMargemArray.push(parseFloat(unidadegIgnore[unidadesIgnore[unidadesIgnore.length - 1]]['somaMargem']));
-            ignoreSomaCMVrray.push(parseFloat(unidadegIgnore[unidadesIgnore[unidadesIgnore.length - 1]]['cmv_vlr']));
-          }
+          ignoreSomaFatArray.push(parseFloat(unidades['totalBilling'][unidadesIgnore[unidadesIgnore.length - 1]]['somaFat']));
+          ignoreSomaMargemArray.push(parseFloat(unidades['totalBilling'][unidadesIgnore[unidadesIgnore.length - 1]]['somaMargem']));
+          ignoreSomaCMVrray.push(parseFloat(unidades['totalBilling'][unidadesIgnore[unidadesIgnore.length - 1]]['cmv_vlr']));
         }
       }
+      const somaArray = (total, numero) => total + numero;
       const prepareRealFat = somaFatArray.reduce(somaArray, 0) - ignoreSomaFatArray.reduce(somaArray, 0);
       const prepareRealMargem = somaMargemArray.reduce(somaArray, 0) - ignoreSomaMargemArray.reduce(somaArray, 0);
       let prepareRealCMV = (somaCMVrray.reduce(somaArray, 0) - ignoreSomaCMVrray.reduce(somaArray, 0)) /
       (somaCMVrray.length-unidadesIgnore.length);
       if(!this.cmvPerc){prepareRealCMV = (somaCMVrray.reduce(somaArray, 0) - ignoreSomaCMVrray.reduce(somaArray, 0));}
-      // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
-      function somaArray(total, numero){
-        return total + numero;
-      }
       if(this.mask === true){
         this.somaFatTotal = prepareRealFat.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
         this.somaMargemTotal = prepareRealMargem.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
@@ -382,7 +382,11 @@ export class HomePage implements OnInit {
         this.dateLoaderTotal = false;
       }
     }, async error => {
-      this.error(error.error.connection.status);
+      if(typeof error.error.connection == 'undefined'){
+        this.error(error.error);
+      }else{
+        this.error(error.error.connection.status);
+      }
     });
   }
   async dateChangeInit(value){
@@ -500,7 +504,7 @@ export class HomePage implements OnInit {
       });
       await alert.present();
     }
-    else if(err === 'errLogEmp' || 'failed'){
+    else if(err === 'errLogEmp' || err === 'failed'){
       const alert = await this.alertController.create({
         cssClass: 'my-custom-class',
         header: 'Falha ao logar na empresa',
