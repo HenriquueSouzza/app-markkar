@@ -1,10 +1,10 @@
 
 /*
-
-Markkar systems integration app.
-contact us by (https://markkar.com.br/).
-Copyright © Markkar Consultoria Financeira e Sistemas.
-
+|
+| - Markkar systems integration app.
+| - contact us by (https://markkar.com.br/).
+| - Copyright © Markkar Consultoria Financeira e Sistemas.
+|
 */
 
 
@@ -18,7 +18,7 @@ import { StatusBar} from '@capacitor/status-bar';
 import { StorageService } from './../servico/storage.service';
 import { LoginService } from './../servico/login.service';
 import { LojasService } from '../servico/lojas.service';
-import { ChartDataset, ChartOptions, ChartType } from 'chart.js';
+import { ChartDataset, ChartOptions, ChartType, Color } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 
 @Component({
@@ -68,7 +68,7 @@ export class HomePage implements OnInit {
   // eslint-disable-next-line @typescript-eslint/member-ordering
   @ViewChild(BaseChartDirective) chart: BaseChartDirective;
 
-  month = ['Jan', 'Fev', 'Mar', 'Abr', 'Jun', 'Jul', 'Ago', 'Set', 'Nov', 'Dez'];
+  month = [ 'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
 
 //Settings and Bool
   contentLoader: boolean;
@@ -256,15 +256,34 @@ export class HomePage implements OnInit {
       dateInit: null, dateFinish: null
     };
     this.lojas.faturamento(interfaceHFat).subscribe(response => {
+      const grafico = response['MonthlyBillingForFourMonths'];
       this.unidadesHeader = Object.values(response['totalBilling']);
       const unidades = this.unidadesHeader;
       const somaFatArray = [];
       const somaMargemArray = [];
       const somaCMVrray = [];
-      for(const all of unidades){
-        somaFatArray.push(parseFloat(all['somaFat']));
-        somaMargemArray.push(parseFloat(all['somaMargem']));
-        somaCMVrray.push(parseFloat(all['cmv_vlr']));
+      this.chartData = [];
+      this.chartlabels = [];
+      let n = 1;
+      for(const unidade of unidades){
+        somaFatArray.push(parseFloat(unidade['somaFat']));
+        somaMargemArray.push(parseFloat(unidade['somaMargem']));
+        somaCMVrray.push(parseFloat(unidade['cmv_vlr']));
+        n = n - 0.15;
+        const color = 'rgba(255, 159, 25,'+n+')';
+        this.chartData.push({
+          data: [], label: unidade['unidade'],
+          backgroundColor: color,
+          borderColor: color,
+          hoverBackgroundColor: 'rgba(255, 159, 25, 1)'
+        });
+        for(const margem of Object.values(grafico[unidade['unidade']])){
+          this.chartData[this.chartData.length - 1].data.push(margem['margem']);
+        }
+      }
+      for(const teste of Object.values(grafico[unidades[0]['unidade']])){
+        this.chartlabels.push(this.month[teste['month'] - 1]);
+        this.chart.chart.update();
       }
       const prepareRealFat = somaFatArray.reduce(somaArray, 0);
       const prepareRealMargem = somaMargemArray.reduce(somaArray, 0);
@@ -301,15 +320,12 @@ export class HomePage implements OnInit {
     };
     this.lojas.faturamento(dayFat).subscribe(async response => {
       const unidades = response;
-      const grafico = response['MonthlyBillingForFourMonths'];
       this.unidadesFat = Object.values(response['totalBilling']);
       const unidadesFat = this.unidadesFat;
       const somaFatArray = [];
       const somaMargemArray = [];
       const somaCMVrray = [];
       const unidadesCheck = {};
-      this.chartData = [];
-      this.chartlabels = [];
       if((!this.unidadesCheck.hasOwnProperty(this.empresa))){
         for(const unidade of unidadesFat){
           somaFatArray.push(parseFloat((unidade['somaFat'])));
@@ -318,25 +334,16 @@ export class HomePage implements OnInit {
           unidadesCheck[unidade['unidade']] = {unidade: unidade['unidade'], check: true, display: 'block'};
           this.unidadesCheck[this.empresa] = unidadesCheck;
           await this.storage.set('unidadesCheck', this.unidadesCheck);
-          this.chartData.push({data: [], label: unidade['unidade']});
-          for(const margem of Object.values(grafico[unidade['unidade']])){
-            this.chartData[this.chartData.length - 1].data.push(margem['margem']);
-          }
         }
       }else{
+        let n = 1;
         for(const unidade of unidadesFat){
+          n = n - 0.15;
+          const color = 'rgba(255, 159, 25,'+n+')';
           somaFatArray.push(parseFloat((unidade['somaFat'])));
           somaMargemArray.push(parseFloat((unidade['somaMargem'])));
           somaCMVrray.push(parseFloat(unidade['cmv_vlr']));
-          this.chartData.push({data: [], label: unidade['unidade']});
-          for(const margem of Object.values(grafico[unidade['unidade']])){
-            this.chartData[this.chartData.length - 1].data.push(margem['margem']);
-          }
         }
-      }
-      for(const teste of Object.values(grafico[unidadesFat[0]['unidade']])){
-        this.chartlabels.push(this.month[teste['month'] - 1]);
-        this.chart.chart.update();
       }
       const unidadesIgnore = [];
       const ignoreSomaFatArray = [];
