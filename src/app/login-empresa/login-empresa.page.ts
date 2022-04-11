@@ -137,10 +137,12 @@ export class LoginEmpresaPage implements OnInit {
           await this.storageService.set('idToken', response['id_token']);
           const empresas = await this.storage.get('empresas');
           empresas[response['empresa']] = {
-          empresa: response['empresa'],
-          cnpj: login.cnpj,
-          token: login.token,
-          idToken: response['id_token']};
+            empresa: response['empresa'],
+            cnpj: login.cnpj,
+            token: login.token,
+            idToken: response['id_token'],
+            icon: 'business-outline'
+          };
           await this.storage.set('empresas', empresas);
           await this.storage.set('empresaAtual', response['empresa']);
           this.loader = false;

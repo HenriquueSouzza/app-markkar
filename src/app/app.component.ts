@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ToastController } from '@ionic/angular';
+import { isPlatform, ToastController } from '@ionic/angular';
 import { Storage } from '@ionic/storage-angular';
 import { StorageService } from './servico/storage.service';
 
@@ -13,6 +13,9 @@ export class AppComponent implements OnInit {
 
   empresas: any;
   name: string;
+  modalOpCl = false;
+  platform = isPlatform('android');
+
   constructor(
     private storage: Storage,
     private storageService: StorageService,

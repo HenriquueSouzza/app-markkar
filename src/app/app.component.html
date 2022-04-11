@@ -11,8 +11,8 @@
           <ion-list style="background: var(--ion-color-dark) !important; margin-bottom: 20px;">
             <ion-list-header>
               <ion-label style="margin-top: 0;margin-left: 0px !important;">Multiempresa</ion-label>
-              <ion-button (click)="redirect()" expand="block" fill="clear" shape="round">
-                <ion-icon name="add-outline"></ion-icon>
+              <ion-button (click)="modalOpCl = true" expand="block" fill="clear" shape="round">
+                <ion-icon name="create-outline"></ion-icon>
               </ion-button>
             </ion-list-header>
             <ion-menu-toggle>
@@ -20,7 +20,7 @@
                 <ion-item-options side="start">
                   <ion-item-option (click)="deleteEmp(empresa['empresa'], empresa['cnpj'], empresa['token'], empresa['idToken'])" color="danger">Deletar</ion-item-option>
                 </ion-item-options>
-                <ion-item lines="none" (click)="changeEmpresa(empresa['empresa'], empresa['cnpj'], empresa['token'], empresa['idToken'])" [button]="true" color="secondary"><ion-icon style="margin-right: 10px;" name="business-outline"></ion-icon>{{empresa['empresa'].toLowerCase()}}</ion-item>
+                <ion-item lines="none" (click)="changeEmpresa(empresa['empresa'], empresa['cnpj'], empresa['token'], empresa['idToken'])" [button]="true" color="secondary"><ion-icon style="margin-right: 10px;" name="{{empresa['icon']}}"></ion-icon>{{empresa['empresa'].toLowerCase()}}</ion-item>
               </ion-item-sliding>
             </ion-menu-toggle>
           </ion-list>
@@ -52,6 +52,36 @@
       </footer>
     </ion-content>
   </ion-menu>
+  <ion-modal [isOpen]="modalOpCl">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar style="height: 62px;" color="dark">
+          <ion-title style="height: 62px;" >Multi Empresa</ion-title>
+          <ion-button *ngIf="platform" style="height: 54px; margin: 0; text-transform: uppercase;" slot="end" (click)="modalOpCl = false; redirect()" expand="block" fill="clear" shape="round">nova</ion-button>
+          <ion-button *ngIf="!platform" style="height: 54px; margin: 0; text-transform: uppercase;" slot="start" (click)="modalOpCl = false; redirect()" expand="block" fill="clear" shape="round">nova</ion-button>
+          <ion-button style="height: 54px; margin: 0; text-transform: uppercase;" slot="end" (click)="modalOpCl = false" expand="block" fill="clear" shape="round">sair</ion-button>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <div *ngFor="let empresa of empresas">
+          <ion-item lines="none" color="secondary">
+            <ion-label style="font-family: 'robotoBold';">{{empresa['empresa'].toLowerCase()}}</ion-label>
+          </ion-item>
+          <div>
+            <h2>cnpj: {{empresa['cnpj']}}</h2>
+            <h2>endereço:</h2>
+            <h2>telefone:</h2>
+            <h2>email:</h2>
+            <h2>apelido:</h2>
+            <div style="display: flex;">
+              <h2>icone:</h2>
+              <ion-icon style="margin-right: 10px;" name="{{empresa['icon']}}"></ion-icon>
+            </div>
+          </div>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
   <ion-router-outlet id="main"></ion-router-outlet>
   <ion-router-outlet></ion-router-outlet>
 </ion-app>
