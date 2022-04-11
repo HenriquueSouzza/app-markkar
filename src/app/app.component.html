@@ -59,7 +59,7 @@
           <ion-title style="height: 62px;" >Multi Empresa</ion-title>
           <ion-button *ngIf="platform" style="height: 54px; margin: 0; text-transform: uppercase;" slot="end" (click)="modalOpCl = false; redirect()" expand="block" fill="clear" shape="round">nova</ion-button>
           <ion-button *ngIf="!platform" style="height: 54px; margin: 0; text-transform: uppercase;" slot="start" (click)="modalOpCl = false; redirect()" expand="block" fill="clear" shape="round">nova</ion-button>
-          <ion-button style="height: 54px; margin: 0; text-transform: uppercase;" slot="end" (click)="modalOpCl = false" expand="block" fill="clear" shape="round">sair</ion-button>
+          <ion-button style="height: 54px; margin: 0; text-transform: uppercase;" slot="end" (click)="modalOpCl = false" expand="block" fill="clear" shape="round">fechar</ion-button>
         </ion-toolbar>
       </ion-header>
       <ion-content>
@@ -68,11 +68,11 @@
             <ion-label style="font-family: 'robotoBold';">{{empresa['empresa'].toLowerCase()}}</ion-label>
           </ion-item>
           <div>
-            <h2>cnpj: {{empresa['cnpj']}}</h2>
+            <h2>cnpj: {{cnpjMask(empresa['cnpj'])}}</h2>
+            <h2>cep:</h2>
             <h2>endereço:</h2>
             <h2>telefone:</h2>
             <h2>email:</h2>
-            <h2>apelido:</h2>
             <div style="display: flex;">
               <h2>icone:</h2>
               <ion-icon style="margin-right: 10px;" name="{{empresa['icon']}}"></ion-icon>

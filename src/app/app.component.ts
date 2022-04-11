@@ -1,3 +1,4 @@
+import { CepService } from './servico/cep.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { isPlatform, ToastController } from '@ionic/angular';
@@ -20,10 +21,12 @@ export class AppComponent implements OnInit {
     private storage: Storage,
     private storageService: StorageService,
     private router: Router,
-    public toastController: ToastController
+    public toastController: ToastController,
+    public searchCep: CepService
     ) {}
 
   async ngOnInit() {
+    //this.searchStreet('22725030');
     this.empresas = Object.values(await this.storage.get('empresas'));
     this.name = await this.storage.get('login');
   }
@@ -70,4 +73,14 @@ export class AppComponent implements OnInit {
     });
     toast.present();
   }
+
+  cnpjMask(value){
+    return value.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5');
+  }
+
+  /*searchStreet(cep){
+    this.searchCep.searchForCep(cep).subscribe(response => {
+      console.log(response);
+    });
+  }*/
 }
