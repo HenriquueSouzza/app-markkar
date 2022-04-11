@@ -123,12 +123,18 @@ export class WelcomePage implements OnInit {
           await this.storageService.set('token', login.token);
           await this.storageService.set('idToken', response['id_token']);
           const empresas = await this.storage.get('empresas');
+          let icone = null;
+          if(response['icone'] === null || response['icone'] === ''){
+            icone = 'business-outline';
+          }
           empresas[response['empresa']] = {
             empresa: response['empresa'],
             cnpj: login.cnpj,
             token: login.token,
             idToken: response['id_token'],
-            icon: 'business-outline'
+            icon: icone,
+            telefone: response['telefone'],
+            email: response['email']
           };
           await this.storage.set('empresas', empresas);
           await this.storage.set('empresaAtual', response['empresa']);

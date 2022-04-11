@@ -26,7 +26,7 @@ export class AppComponent implements OnInit {
     ) {}
 
   async ngOnInit() {
-    //this.searchStreet('22725030');
+    this.searchStreet('22725030');
     this.empresas = Object.values(await this.storage.get('empresas'));
     this.name = await this.storage.get('login');
   }
@@ -78,9 +78,23 @@ export class AppComponent implements OnInit {
     return value.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5');
   }
 
-  /*searchStreet(cep){
+  telMask(num){
+    if(num === null || num === ''){
+      return 'Não Cadastrado';
+    }else{
+      return num.replace(/^(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+    }
+  }
+
+  nullEmail(email){
+    if(email === null || email === ''){
+      return 'Não Cadastrado';
+    }else{ return email;}
+  }
+
+  searchStreet(cep){
     this.searchCep.searchForCep(cep).subscribe(response => {
       console.log(response);
     });
-  }*/
+  }
 }
