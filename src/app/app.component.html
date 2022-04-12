@@ -67,15 +67,50 @@
       <ion-content>
         <div class="empresa" *ngFor="let empresa of empresas">
           <ion-item style="width: 100%;" lines="none" color="secondary">
-            <ion-label style="font-family: 'robotoBold';margin-bottom: 3px; font-size: 1.2rem;">{{empresa['empresa'].toLowerCase()}}</ion-label>
+            <ion-label style="font-family: 'robotoBold';margin: 0;margin-bottom: 3px; font-size: 1.2rem;">{{empresa['empresa'].toLowerCase()}}</ion-label>
           </ion-item>
           <div class="informacoes">
-            <h2>cnpj: {{cnpjMask(empresa['cnpj'])}}</h2>
-            <h2>telefone: {{telMask(empresa['telefone'])}}</h2>
-            <h2>email: {{nullEmail(empresa['email'])}}</h2>
-            <div style="display: flex;">
+            <div class="informacao">
+              <h2>cnpj:</h2>
+              <p>{{cnpjMask(empresa['cnpj'])}}</p>
+            </div>
+            <div class="informacao">
+              <h2>telefone:</h2>
+              <p>{{telMask(empresa['telefone'])}}</p>
+            </div>
+            <div class="informacao">
+              <h2>email:</h2>
+              <p>{{nullEmail(empresa['email'])}}</p>
+            </div>
+            <div class="informacaoIcon">
               <h2>icone:</h2>
               <ion-icon style="margin-right: 10px;" name="{{empresa['icon']}}"></ion-icon>
+            </div>
+            <div class="informacaoUnids">
+              <h2 style="font-family: 'robotoBold';text-transform: uppercase; color: var(--ion-color-primary);">unidades:</h2>
+              <div class="unids" *ngFor="let unidade of forUnids(unidades[empresa['empresa']])">
+                <h2>{{unidade['unidade'].toLowerCase()}}:</h2>
+                <div class="informacaoUnid">
+                  <h3>Telefone:</h3>
+                  <p>Não Cadastrado</p>
+                </div>
+                <div class="informacaoUnid">
+                  <h3>Cep:</h3>
+                  <p>Não Cadastrado</p>
+                </div>
+                <div class="informacaoUnid">
+                  <h3>Endereço:</h3>
+                  <p>Não Cadastrado</p>
+                </div>
+                <div class="informacaoUnid">
+                  <h3>Bairro:</h3>
+                  <p>Não Cadastrado</p>
+                </div>
+                <div style="margin-bottom: 20px;" class="informacaoUnid">
+                  <h3>Localidade:</h3>
+                  <p>Não Cadastrado</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>

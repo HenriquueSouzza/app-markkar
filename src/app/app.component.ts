@@ -13,6 +13,7 @@ import { StorageService } from './servico/storage.service';
 export class AppComponent implements OnInit {
 
   empresas: any;
+  unidades: any;
   name: string;
   modalOpCl = false;
   platform = isPlatform('android');
@@ -28,6 +29,7 @@ export class AppComponent implements OnInit {
   async ngOnInit() {
     this.searchStreet('22725030');
     this.empresas = Object.values(await this.storage.get('empresas'));
+    this.unidades = await this.storage.get('unidadesCheck');
     this.name = await this.storage.get('login');
   }
 
@@ -74,15 +76,15 @@ export class AppComponent implements OnInit {
     toast.present();
   }
 
-  cnpjMask(value){
-    return value.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5');
+  cnpjMask(cnpj){
+    return cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5');
   }
 
-  telMask(num){
-    if(num === null || num === ''){
+  telMask(telNumber){
+    if(telNumber === null || telNumber === ''){
       return 'Não Cadastrado';
     }else{
-      return num.replace(/^(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+      return telNumber.replace(/^(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
     }
   }
 
@@ -96,5 +98,9 @@ export class AppComponent implements OnInit {
     this.searchCep.searchForCep(cep).subscribe(response => {
       console.log(response);
     });
+  }
+
+  forUnids(val){
+    return Object.values(val);
   }
 }
