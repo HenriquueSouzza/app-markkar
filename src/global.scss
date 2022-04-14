@@ -192,3 +192,8 @@ html.ios{
 :host .picker-before{
   --background: red;
 }
+ion-modal{
+  .ion-page {
+    min-height: 0 !important;
+  }
+}

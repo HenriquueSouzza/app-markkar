@@ -17,7 +17,7 @@ export class AppComponent implements OnInit {
   unidades: any;
   name: string;
   modalOpCl = false;
-  platform = isPlatform('android');
+  platform = isPlatform('ios');
 
   constructor(
     private storage: Storage,
