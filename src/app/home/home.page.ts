@@ -215,32 +215,34 @@ export class HomePage implements OnInit {
   }
   async ionViewDidEnter(){
     this.menu.enable(true, 'homeMenu');
-    const verfyComplete = setInterval(async () => {
-      if (this.valSenhaLogin !== null){
-        clearInterval(verfyComplete);
-        if(
-        this.mask !== await this.storage.get('mask') ||
-        this.cmvPerc !== await this.storage.get('cmvPerc') ||
-        this.intervalHeader !== await this.storage.get('intervalHeader')
-        ){
-          this.mask = await this.storage.get('mask');
-          this.cmvPerc = await this.storage.get('cmvPerc');
-          if(this.cmvPerc === true){this.perc = '%';}
-          if(this.cmvPerc === false){this.perc = '';}
-          this.headerFat(await this.storage.get('intervalHeader'));
-          this.unidadeFatTotal();
+    const verfyComplete = setInterval(() => {
+      setTimeout(async () => {
+        if (this.valSenhaLogin !== null){
+          clearInterval(verfyComplete);
+          if(
+          this.mask !== await this.storage.get('mask') ||
+          this.cmvPerc !== await this.storage.get('cmvPerc') ||
+          this.intervalHeader !== await this.storage.get('intervalHeader')
+          ){
+            this.mask = await this.storage.get('mask');
+            this.cmvPerc = await this.storage.get('cmvPerc');
+            if(this.cmvPerc === true){this.perc = '%';}
+            if(this.cmvPerc === false){this.perc = '';}
+            this.headerFat(await this.storage.get('intervalHeader'));
+            this.unidadeFatTotal();
+          }
+          if(this.valCnpj !== await this.storage.get('cnpj')){
+            this.unidadesFat = [];
+            this.unidadesHeader = [];
+            this.somaFatHeader = '';
+            this.somaMargemHeader = '';
+            this.somaFatTotal = '';
+            this.somaMargemTotal = '';
+            this.contentLoader = false;
+            this.ngOnInit();
+          }
         }
-        if(this.valCnpj !== await this.storage.get('cnpj')){
-          this.unidadesFat = [];
-          this.unidadesHeader = [];
-          this.somaFatHeader = '';
-          this.somaMargemHeader = '';
-          this.somaFatTotal = '';
-          this.somaMargemTotal = '';
-          this.contentLoader = false;
-          this.ngOnInit();
-        }
-      }
+      }, 500);
     }, 100);
     if(!isPlatform('mobileweb') && isPlatform('android')){
       StatusBar.setBackgroundColor({color: '#222428'});

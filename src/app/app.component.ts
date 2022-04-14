@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/dot-notation */
 import { CepService } from './servico/cep.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
@@ -27,7 +28,7 @@ export class AppComponent implements OnInit {
     ) {}
 
   async ngOnInit() {
-    this.searchStreet('22725030');
+    //this.searchStreet('22725030');
     this.empresas = Object.values(await this.storage.get('empresas'));
     this.unidades = await this.storage.get('unidadesCheck');
     this.name = await this.storage.get('login');

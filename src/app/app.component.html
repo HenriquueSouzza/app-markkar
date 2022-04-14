@@ -53,11 +53,11 @@
     </ion-content>
   </ion-menu>
   <!--<ion-modal [isOpen]="modalOpCl">-->
-    <ion-modal [isOpen]="modalOpCl">
+  <ion-modal [isOpen]="modalOpCl" (didDismiss)="modalOpCl = false" [swipeToClose]="true">
     <ng-template>
       <ion-header>
         <ion-toolbar style="height: 62px;" color="dark">
-          <ion-title style="height: 62px; font-size: 1.2rem;" >Multi Empresa</ion-title>
+          <ion-title style="height: 62px; font-size: 1.2rem;">Multi Empresa</ion-title>
           <ion-button *ngIf="platform" style="height: 56px; margin: 0; text-transform: uppercase;" slot="end" (click)="modalOpCl = false; redirect()" expand="block" fill="clear" shape="round">add</ion-button>
           <ion-button *ngIf="platform" style="height: 54px; margin: 0; text-transform: uppercase; padding: 0;" slot="end" (click)="modalOpCl = false" expand="block" fill="clear" shape="round">fechar</ion-button>
           <ion-button *ngIf="!platform" style="width: 65px; padding-top: 4px; height: 56px; margin: 0; text-transform: uppercase;" slot="start" (click)="modalOpCl = false; redirect()" expand="block" fill="clear" shape="round">add</ion-button>
@@ -87,10 +87,10 @@
               <ion-icon style="margin-right: 10px;" name="{{empresa['icon']}}"></ion-icon>
             </div>
             <div class="informacaoUnids">
-              <h2 style="font-family: 'robotoBold';text-transform: uppercase; color: var(--ion-color-primary);">unidades:</h2>
+              <h2 style="font-family: 'robotoBold';text-transform: uppercase;">unidades:</h2>
               <div class="unids" *ngFor="let unidade of forUnids(unidades[empresa['empresa']])">
-                <h2>{{unidade['unidade'].toLowerCase()}}:</h2>
-                <div class="informacaoUnid">
+                <h2 style="color: var(--ion-color-primary);">{{unidade['unidade'].toLowerCase()}}:</h2>
+                <div style="margin-top: 10px;" class="informacaoUnid">
                   <h3>Telefone:</h3>
                   <p>Não Cadastrado</p>
                 </div>
