@@ -1,4 +1,3 @@
-
 /*
 |
 | - Markkar systems integration app.
@@ -7,14 +6,20 @@
 |
 */
 
-
 /* eslint-disable @typescript-eslint/dot-notation */
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
 import { Router } from '@angular/router';
-import { LoadingController, MenuController, AlertController, PopoverController, isPlatform, ToastController } from '@ionic/angular';
+import {
+  LoadingController,
+  MenuController,
+  AlertController,
+  PopoverController,
+  isPlatform,
+  ToastController,
+} from '@ionic/angular';
 import { format, parseISO } from 'date-fns';
-import { StatusBar} from '@capacitor/status-bar';
+import { StatusBar } from '@capacitor/status-bar';
 import { StorageService } from './../servico/storage.service';
 import { LoginService } from './../servico/login.service';
 import { LojasService } from '../servico/lojas.service';
@@ -27,7 +32,6 @@ import { BaseChartDirective } from 'ng2-charts';
   styleUrls: ['./home.page.scss'],
 })
 export class HomePage implements OnInit {
-
   //Chart configs
   public chartData: ChartDataset[] = [];
   public chartType: ChartType = 'bar';
@@ -42,8 +46,8 @@ export class HomePage implements OnInit {
         text: 'Gráfico de Margem',
         padding: {
           top: 10,
-          bottom: 0
-      }
+          bottom: 0,
+        },
       },
       legend: {
         display: true,
@@ -52,25 +56,42 @@ export class HomePage implements OnInit {
         labels: {
           boxWidth: 15,
           boxHeight: 15,
-        }
-      }
+        },
+      },
     },
-    scales:{
-      y:{
+    scales: {
+      y: {
         beginAtZero: false,
         display: false,
         ticks: {
-          callback: (value) => value.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})
-        }
-      }
-    }
+          callback: (value) =>
+            value.toLocaleString('pt-br', {
+              style: 'currency',
+              currency: 'BRL',
+            }),
+        },
+      },
+    },
   };
   // eslint-disable-next-line @typescript-eslint/member-ordering
   @ViewChild(BaseChartDirective) chart: BaseChartDirective;
 
-  month = [ 'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+  month = [
+    'Janeiro',
+    'Fevereiro',
+    'Março',
+    'Abril',
+    'Maio',
+    'Junho',
+    'Julho',
+    'Agosto',
+    'Setembro',
+    'Outubro',
+    'Novembro',
+    'Dezembro',
+  ];
 
-//Settings and Bool
+  //Settings and Bool
   contentLoader: boolean;
   dateLoader: boolean;
   dateLoaderTotal: boolean;
@@ -82,7 +103,7 @@ export class HomePage implements OnInit {
   unidadesCheck: any;
   displayUnidades = false;
 
-//Login
+  //Login
   valFLogin: boolean;
   valCnpj: string;
   valToken: string;
@@ -91,7 +112,7 @@ export class HomePage implements OnInit {
   valSenhaLogin: string;
   empresa: string;
 
-//Faturamento
+  //Faturamento
   unidadesFat: string[];
   unidadesHeader: string[];
   somaFatHeader: string;
@@ -102,8 +123,8 @@ export class HomePage implements OnInit {
   somaCMVTotal: string;
   intervalHeader: string;
 
-//Date
-  maxDate: any = format(parseISO(new Date().toISOString()),'yyyy-MM-dd');
+  //Date
+  maxDate: any = format(parseISO(new Date().toISOString()), 'yyyy-MM-dd');
   interval: string;
   dateValueInit: string;
   dateValueFinish: string;
@@ -116,11 +137,13 @@ export class HomePage implements OnInit {
     private lojas: LojasService,
     private service: LoginService,
     public loadingController: LoadingController,
-    private menu: MenuController, private storage: Storage,
-    private storageService: StorageService, private router: Router,
+    private menu: MenuController,
+    private storage: Storage,
+    private storageService: StorageService,
+    private router: Router,
     public alertController: AlertController,
     public toastController: ToastController
-    ) {  }
+  ) {}
 
   async ngOnInit() {
     //Set Menu
@@ -131,27 +154,35 @@ export class HomePage implements OnInit {
     this.dateLoaderTotal = false;
     this.contentLoader = false;
     //Error Prevention
-    if(await this.storage.get('unidadesCheck') === null){
+    if ((await this.storage.get('unidadesCheck')) === null) {
       await this.storage.set('unidadesCheck', {});
     }
-    if(
-      await this.storage.get('intervalHeader') === null ||
-      await this.storage.get('intervalHeader') === '' ||
-      await this.storage.get('intervalHeader') === 'on'
-    ){await this.storage.set('intervalHeader', 'month');}
-    if(
-      await this.storage.get('interval') === null ||
-      await this.storage.get('interval') === '' ||
-      await this.storage.get('interval') === 'on'
-    ){await this.storage.set('interval', 'day');}
+    if (
+      (await this.storage.get('intervalHeader')) === null ||
+      (await this.storage.get('intervalHeader')) === '' ||
+      (await this.storage.get('intervalHeader')) === 'on'
+    ) {
+      await this.storage.set('intervalHeader', 'month');
+    }
+    if (
+      (await this.storage.get('interval')) === null ||
+      (await this.storage.get('interval')) === '' ||
+      (await this.storage.get('interval')) === 'on'
+    ) {
+      await this.storage.set('interval', 'day');
+    }
     //Set CheckBox
     this.unidadesCheck = await this.storage.get('unidadesCheck');
     this.empresa = await this.storage.get('empresaAtual');
     //Set Preferences
     this.mask = await this.storage.get('mask');
     this.cmvPerc = await this.storage.get('cmvPerc');
-    if(this.cmvPerc === true){this.perc = '%';}
-    if(this.cmvPerc === false){this.perc = '';}
+    if (this.cmvPerc === true) {
+      this.perc = '%';
+    }
+    if (this.cmvPerc === false) {
+      this.perc = '';
+    }
     this.intervalHeader = await this.storage.get('intervalHeader');
     //Set Dates and Filter Default
     this.interval = 'day';
@@ -170,68 +201,77 @@ export class HomePage implements OnInit {
     this.valIdToken = await this.storage.get('idToken');
     this.valLogin = await this.storage.get('login');
     this.valSenhaLogin = await this.storage.get('senha');
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const validateLogin = {user: this.valLogin, senha: this.valSenhaLogin, id_token: this.valIdToken};
-    const validateLoginEmp = {cnpj: this.valCnpj, token: this.valToken};
-    if(this.valFLogin !== false){
+    const validateLogin = {
+      user: this.valLogin,
+      senha: this.valSenhaLogin,
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      id_token: this.valIdToken,
+    };
+    const validateLoginEmp = { cnpj: this.valCnpj, token: this.valToken };
+    if (this.valFLogin !== false) {
       this.router.navigateByUrl('/validate-login', { replaceUrl: true });
-    }
-    else if(
+    } else if (
       this.valLogin !== null &&
       this.valSenhaLogin !== null &&
       this.valCnpj !== null &&
       this.valToken !== null &&
-      this.valIdToken !== null){
-      this.service.firstlogin(validateLoginEmp).subscribe(async response =>{
-        if(response['status'] === 'failed'){
-          this.error('errLogEmp');
+      this.valIdToken !== null
+    ) {
+      this.service.firstlogin(validateLoginEmp).subscribe(
+        async (response) => {
+          if (response['status'] === 'failed') {
+            this.error('errLogEmp');
+          } else if (response['status'] === 'blocked') {
+            this.router.navigateByUrl('/token-block', { replaceUrl: true });
+          } else if (response['status'] === 'success') {
+            this.service.login(validateLogin).subscribe(
+              async (res) => {
+                if (res['status'] === 'success') {
+                  this.headerFat(this.intervalHeader);
+                  this.unidadeFatTotal();
+                } else if (res['status'] === 'failed') {
+                  this.error('errLog');
+                } else if (res['status'] === 'errDB') {
+                  this.error('serverdb');
+                }
+              },
+              async (error) => {
+                this.error('server');
+              }
+            );
+          } else if (response['status'] === 'errDB') {
+            this.error('serverdb');
+          }
+        },
+        async (error) => {
+          this.error('server');
         }
-        else if(response['status'] === 'blocked'){
-          this.router.navigateByUrl('/token-block', { replaceUrl: true });
-        }
-        else if(response['status'] === 'success'){
-          this.service.login(validateLogin).subscribe(async res =>{
-            if(res['status'] === 'success'){
-              this.headerFat(this.intervalHeader);
-              this.unidadeFatTotal();
-            }
-            else if(res['status'] === 'failed'){
-              this.error('errLog');
-            }
-            else if(res['status'] === 'errDB'){
-              this.error('serverdb');
-            }
-          }, async error => {
-            this.error('server');
-          });
-        }
-        else if(response['status'] === 'errDB'){
-          this.error('serverdb');
-        }
-      }, async error => {
-        this.error('server');
-      });
+      );
     }
   }
-  async ionViewDidEnter(){
+  async ionViewDidEnter() {
     this.menu.enable(true, 'homeMenu');
     const verfyComplete = setInterval(() => {
       setTimeout(async () => {
-        if (this.valSenhaLogin !== null){
+        if (this.valSenhaLogin !== null) {
           clearInterval(verfyComplete);
-          if(
-          this.mask !== await this.storage.get('mask') ||
-          this.cmvPerc !== await this.storage.get('cmvPerc') ||
-          this.intervalHeader !== await this.storage.get('intervalHeader')
-          ){
+          if (
+            this.mask !== (await this.storage.get('mask')) ||
+            this.cmvPerc !== (await this.storage.get('cmvPerc')) ||
+            this.intervalHeader !== (await this.storage.get('intervalHeader'))
+          ) {
             this.mask = await this.storage.get('mask');
             this.cmvPerc = await this.storage.get('cmvPerc');
-            if(this.cmvPerc === true){this.perc = '%';}
-            if(this.cmvPerc === false){this.perc = '';}
+            if (this.cmvPerc === true) {
+              this.perc = '%';
+            }
+            if (this.cmvPerc === false) {
+              this.perc = '';
+            }
             this.headerFat(await this.storage.get('intervalHeader'));
             this.unidadeFatTotal();
           }
-          if(this.valCnpj !== await this.storage.get('cnpj')){
+          if (this.valCnpj !== (await this.storage.get('cnpj'))) {
             this.unidadesFat = [];
             this.unidadesHeader = [];
             this.somaFatHeader = '';
@@ -244,249 +284,335 @@ export class HomePage implements OnInit {
         }
       }, 500);
     }, 100);
-    if(!isPlatform('mobileweb') && isPlatform('android')){
-      StatusBar.setBackgroundColor({color: '#222428'});
+    if (!isPlatform('mobileweb') && isPlatform('android')) {
+      StatusBar.setBackgroundColor({ color: '#222428' });
     }
- }
+  }
 
   //Faturamento
-  headerFat(interval){
-    if(interval === '' || interval === 'on' || interval === null){interval = 'month';}
+  headerFat(interval) {
+    if (interval === '' || interval === 'on' || interval === null) {
+      interval = 'month';
+    }
     const interfaceHFat = {
-      cnpj: this.valCnpj, token: this.valToken,
-      interval, date:'', cmvPercentage: this.cmvPerc.toString(),
-      dateInit: null, dateFinish: null
+      cnpj: this.valCnpj,
+      token: this.valToken,
+      interval,
+      date: '',
+      cmvPercentage: this.cmvPerc.toString(),
+      dateInit: null,
+      dateFinish: null,
     };
-    this.lojas.faturamento(interfaceHFat).subscribe(response => {
-      const grafico = response['MonthlyBillingForFourMonths'];
-      this.unidadesHeader = Object.values(response['totalBilling']);
-      const unidades = this.unidadesHeader;
-      const somaFatArray = [];
-      const somaMargemArray = [];
-      const somaCMVrray = [];
-      this.chartData = [];
-      this.chartlabels = [];
-      let n = 1;
-      for(const unidade of unidades){
-        somaFatArray.push(parseFloat(unidade['somaFat']));
-        somaMargemArray.push(parseFloat(unidade['somaMargem']));
-        somaCMVrray.push(parseFloat(unidade['cmv_vlr']));
-        n = n - 0.15;
-        const color = 'rgba(255, 159, 25,'+n+')';
-        this.chartData.push({
-          data: [], label: unidade['unidade'],
-          backgroundColor: color,
-          borderColor: color,
-          hoverBackgroundColor: 'rgba(255, 159, 25, 1)'
-        });
-        for(const margem of Object.values(grafico[unidade['unidade']])){
-          this.chartData[this.chartData.length - 1].data.push(margem['margem']);
-        }
-      }
-      for(const teste of Object.values(grafico[unidades[0]['unidade']])){
-        this.chartlabels.push(this.month[teste['month'] - 1]);
-        this.chart.chart.update();
-      }
-      const prepareRealFat = somaFatArray.reduce(somaArray, 0);
-      const prepareRealMargem = somaMargemArray.reduce(somaArray, 0);
-      let prepareRealCMV = somaCMVrray.reduce(somaArray, 0) / somaCMVrray.length;
-      if(!this.cmvPerc){prepareRealCMV = somaCMVrray.reduce(somaArray, 0);}
-      // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
-      function somaArray(total: any, numero: any): any{
-        return total + numero;
-      }
-      if(this.mask === true){
-        this.somaFatHeader = prepareRealFat.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
-        this.somaMargemHeader = prepareRealMargem.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
-        if(this.cmvPerc === true){
-          this.somaCMVHeader = prepareRealCMV.toString();
-        }
-        else if(this.cmvPerc === false){
-          this.somaCMVHeader = prepareRealCMV.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
-        }
-        this.contentLoader = true;
-      }else{
-        this.somaFatHeader = prepareRealFat;
-        this.somaMargemHeader = prepareRealMargem;
-        this.somaCMVHeader = prepareRealCMV.toString();
-        this.contentLoader = true;
-      }
-    }, async error => { });
-  }
-  async unidadeFatTotal(){
-    const dayFat = {
-      cnpj: this.valCnpj, token: this.valToken,
-      interval: this.interval, date: this.dateValueDay,
-      cmvPercentage: this.cmvPerc.toString(), dateInit: this.dateValueInit,
-      dateFinish: this.dateValueFinish
-    };
-    this.lojas.faturamento(dayFat).subscribe(async response => {
-      const unidades = response;
-      this.unidadesFat = Object.values(response['totalBilling']);
-      const unidadesFat = this.unidadesFat;
-      const somaFatArray = [];
-      const somaMargemArray = [];
-      const somaCMVrray = [];
-      const unidadesCheck = {};
-      if((!this.unidadesCheck.hasOwnProperty(this.empresa))){
-        for(const unidade of unidadesFat){
-          somaFatArray.push(parseFloat((unidade['somaFat'])));
-          somaMargemArray.push(parseFloat((unidade['somaMargem'])));
-          somaCMVrray.push(parseFloat(unidade['cmv_vlr']));
-          unidadesCheck[unidade['unidade']] = {unidade: unidade['unidade'], check: true, display: 'block'};
-          this.unidadesCheck[this.empresa] = unidadesCheck;
-          await this.storage.set('unidadesCheck', this.unidadesCheck);
-        }
-      }else{
+    this.lojas.faturamento(interfaceHFat).subscribe(
+      (response) => {
+        const grafico = response['MonthlyBillingForFourMonths'];
+        this.unidadesHeader = Object.values(response['totalBilling']);
+        const unidades = this.unidadesHeader;
+        const somaFatArray = [];
+        const somaMargemArray = [];
+        const somaCMVrray = [];
+        this.chartData = [];
+        this.chartlabels = [];
         let n = 1;
-        for(const unidade of unidadesFat){
-          n = n - 0.15;
-          const color = 'rgba(255, 159, 25,'+n+')';
-          somaFatArray.push(parseFloat((unidade['somaFat'])));
-          somaMargemArray.push(parseFloat((unidade['somaMargem'])));
+        for (const unidade of unidades) {
+          somaFatArray.push(parseFloat(unidade['somaFat']));
+          somaMargemArray.push(parseFloat(unidade['somaMargem']));
           somaCMVrray.push(parseFloat(unidade['cmv_vlr']));
-        }
-      }
-      const unidadesIgnore = [];
-      const ignoreSomaFatArray = [];
-      const ignoreSomaMargemArray = [];
-      const ignoreSomaCMVrray = [];
-      for(const unidadegIgnore of Object.values(this.unidadesCheck[this.empresa])){
-        if(unidadegIgnore['check'] === false){
-          unidadesIgnore.push(unidadegIgnore['unidade']);
-          ignoreSomaFatArray.push(parseFloat(unidades['totalBilling'][unidadesIgnore[unidadesIgnore.length - 1]]['somaFat']));
-          ignoreSomaMargemArray.push(parseFloat(unidades['totalBilling'][unidadesIgnore[unidadesIgnore.length - 1]]['somaMargem']));
-          ignoreSomaCMVrray.push(parseFloat(unidades['totalBilling'][unidadesIgnore[unidadesIgnore.length - 1]]['cmv_vlr']));
-        }
-      }
-      const somaArray = (total, numero) => total + numero;
-      const prepareRealFat = somaFatArray.reduce(somaArray, 0) - ignoreSomaFatArray.reduce(somaArray, 0);
-      const prepareRealMargem = somaMargemArray.reduce(somaArray, 0) - ignoreSomaMargemArray.reduce(somaArray, 0);
-      let prepareRealCMV = (somaCMVrray.reduce(somaArray, 0) - ignoreSomaCMVrray.reduce(somaArray, 0)) /
-      (somaCMVrray.length-unidadesIgnore.length);
-      if(!this.cmvPerc){prepareRealCMV = (somaCMVrray.reduce(somaArray, 0) - ignoreSomaCMVrray.reduce(somaArray, 0));}
-      if(this.mask === true){
-        this.somaFatTotal = prepareRealFat.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
-        this.somaMargemTotal = prepareRealMargem.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
-        if(this.cmvPerc === true){
-          if(isNaN(prepareRealCMV)){
-            prepareRealCMV = 0;
-            this.somaCMVTotal = prepareRealCMV.toString();
-          }else{
-            this.somaCMVTotal = prepareRealCMV.toString();
+          n = n - 0.15;
+          const color = 'rgba(255, 159, 25,' + n + ')';
+          this.chartData.push({
+            data: [],
+            label: unidade['unidade'],
+            backgroundColor: color,
+            borderColor: color,
+            hoverBackgroundColor: 'rgba(255, 159, 25, 1)',
+          });
+          for (const margem of Object.values(grafico[unidade['unidade']])) {
+            this.chartData[this.chartData.length - 1].data.push(
+              margem['margem']
+            );
           }
         }
-        else if(this.cmvPerc === false){
-          this.somaCMVTotal = prepareRealCMV.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
+        for (const teste of Object.values(grafico[unidades[0]['unidade']])) {
+          this.chartlabels.push(this.month[teste['month'] - 1]);
+          this.chart.chart.update();
         }
-        this.contentLoader = true;
-        this.dateLoader = false;
-        this.dateLoaderTotal = false;
-      }else{
-        this.somaFatTotal = prepareRealFat.toString();
-        this.somaMargemTotal = prepareRealMargem.toString();
-        this.somaCMVTotal = prepareRealCMV.toString();
-        this.contentLoader = true;
-        this.dateLoader = false;
-        this.dateLoaderTotal = false;
-      }
-    }, async error => {
-      if(typeof error.error.connection == 'undefined'){
-        this.error(error.error);
-      }else{
-        this.error(error.error.connection.status);
-      }
-    });
+        const prepareRealFat = somaFatArray.reduce(somaArray, 0);
+        const prepareRealMargem = somaMargemArray.reduce(somaArray, 0);
+        let prepareRealCMV =
+          somaCMVrray.reduce(somaArray, 0) / somaCMVrray.length;
+        if (!this.cmvPerc) {
+          prepareRealCMV = somaCMVrray.reduce(somaArray, 0);
+        }
+        // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
+        function somaArray(total: any, numero: any): any {
+          return total + numero;
+        }
+        if (this.mask === true) {
+          this.somaFatHeader = prepareRealFat.toLocaleString('pt-br', {
+            style: 'currency',
+            currency: 'BRL',
+          });
+          this.somaMargemHeader = prepareRealMargem.toLocaleString('pt-br', {
+            style: 'currency',
+            currency: 'BRL',
+          });
+          if (this.cmvPerc === true) {
+            this.somaCMVHeader = prepareRealCMV.toString();
+          } else if (this.cmvPerc === false) {
+            this.somaCMVHeader = prepareRealCMV.toLocaleString('pt-br', {
+              style: 'currency',
+              currency: 'BRL',
+            });
+          }
+          this.contentLoader = true;
+        } else {
+          this.somaFatHeader = prepareRealFat;
+          this.somaMargemHeader = prepareRealMargem;
+          this.somaCMVHeader = prepareRealCMV.toString();
+          this.contentLoader = true;
+        }
+      },
+      async (error) => {}
+    );
   }
-  async dateChangeInit(value){
-    this.dateValueInitFormat = format(parseISO( value), 'dd/MM/yyyy');
+  async unidadeFatTotal() {
+    const dayFat = {
+      cnpj: this.valCnpj,
+      token: this.valToken,
+      interval: this.interval,
+      date: this.dateValueDay,
+      cmvPercentage: this.cmvPerc.toString(),
+      dateInit: this.dateValueInit,
+      dateFinish: this.dateValueFinish,
+    };
+    this.lojas.faturamento(dayFat).subscribe(
+      async (response) => {
+        const unidades = response;
+        this.unidadesFat = Object.values(response['totalBilling']);
+        const unidadesFat = this.unidadesFat;
+        const somaFatArray = [];
+        const somaMargemArray = [];
+        const somaCMVrray = [];
+        const unidadesCheck = {};
+        if (
+          !this.unidadesCheck.hasOwnProperty(this.empresa) ||
+          Object.values(this.unidadesCheck[this.empresa])[0]['telefone'] ===
+            undefined
+        ) {
+          for (const unidade of unidadesFat) {
+            somaFatArray.push(parseFloat(unidade['somaFat']));
+            somaMargemArray.push(parseFloat(unidade['somaMargem']));
+            somaCMVrray.push(parseFloat(unidade['cmv_vlr']));
+            unidadesCheck[unidade['unidade']] = {
+              unidade: unidade['unidade'],
+              telefone: unidade['telefone'],
+              cep: unidade['cep'],
+              endereco: unidade['endereco'],
+              bairro: unidade['bairro'],
+              cidade: unidade['cidade'],
+              uf: unidade['uf'],
+              ultimaExportacao: unidade['ultimaExportacao'],
+              check: true,
+              display: 'block',
+            };
+            this.unidadesCheck[this.empresa] = unidadesCheck;
+            await this.storage.set('unidadesCheck', this.unidadesCheck);
+          }
+        } else {
+          let n = 1;
+          for (const unidade of unidadesFat) {
+            n = n - 0.15;
+            const color = 'rgba(255, 159, 25,' + n + ')';
+            somaFatArray.push(parseFloat(unidade['somaFat']));
+            somaMargemArray.push(parseFloat(unidade['somaMargem']));
+            somaCMVrray.push(parseFloat(unidade['cmv_vlr']));
+          }
+        }
+        const unidadesIgnore = [];
+        const ignoreSomaFatArray = [];
+        const ignoreSomaMargemArray = [];
+        const ignoreSomaCMVrray = [];
+        for (const unidadegIgnore of Object.values(
+          this.unidadesCheck[this.empresa]
+        )) {
+          if (unidadegIgnore['check'] === false) {
+            unidadesIgnore.push(unidadegIgnore['unidade']);
+            ignoreSomaFatArray.push(
+              parseFloat(
+                unidades['totalBilling'][
+                  unidadesIgnore[unidadesIgnore.length - 1]
+                ]['somaFat']
+              )
+            );
+            ignoreSomaMargemArray.push(
+              parseFloat(
+                unidades['totalBilling'][
+                  unidadesIgnore[unidadesIgnore.length - 1]
+                ]['somaMargem']
+              )
+            );
+            ignoreSomaCMVrray.push(
+              parseFloat(
+                unidades['totalBilling'][
+                  unidadesIgnore[unidadesIgnore.length - 1]
+                ]['cmv_vlr']
+              )
+            );
+          }
+        }
+        const somaArray = (total, numero) => total + numero;
+        const prepareRealFat =
+          somaFatArray.reduce(somaArray, 0) -
+          ignoreSomaFatArray.reduce(somaArray, 0);
+        const prepareRealMargem =
+          somaMargemArray.reduce(somaArray, 0) -
+          ignoreSomaMargemArray.reduce(somaArray, 0);
+        let prepareRealCMV =
+          (somaCMVrray.reduce(somaArray, 0) -
+            ignoreSomaCMVrray.reduce(somaArray, 0)) /
+          (somaCMVrray.length - unidadesIgnore.length);
+        if (!this.cmvPerc) {
+          prepareRealCMV =
+            somaCMVrray.reduce(somaArray, 0) -
+            ignoreSomaCMVrray.reduce(somaArray, 0);
+        }
+        if (this.mask === true) {
+          this.somaFatTotal = prepareRealFat.toLocaleString('pt-br', {
+            style: 'currency',
+            currency: 'BRL',
+          });
+          this.somaMargemTotal = prepareRealMargem.toLocaleString('pt-br', {
+            style: 'currency',
+            currency: 'BRL',
+          });
+          if (this.cmvPerc === true) {
+            if (isNaN(prepareRealCMV)) {
+              prepareRealCMV = 0;
+              this.somaCMVTotal = prepareRealCMV.toString();
+            } else {
+              this.somaCMVTotal = prepareRealCMV.toString();
+            }
+          } else if (this.cmvPerc === false) {
+            this.somaCMVTotal = prepareRealCMV.toLocaleString('pt-br', {
+              style: 'currency',
+              currency: 'BRL',
+            });
+          }
+          this.contentLoader = true;
+          this.dateLoader = false;
+          this.dateLoaderTotal = false;
+        } else {
+          this.somaFatTotal = prepareRealFat.toString();
+          this.somaMargemTotal = prepareRealMargem.toString();
+          this.somaCMVTotal = prepareRealCMV.toString();
+          this.contentLoader = true;
+          this.dateLoader = false;
+          this.dateLoaderTotal = false;
+        }
+      },
+      async (error) => {
+        if (typeof error.error.connection == 'undefined') {
+          this.error(error.error);
+        } else {
+          this.error(error.error.connection.status);
+        }
+      }
+    );
+  }
+  async dateChangeInit(value) {
+    this.dateValueInitFormat = format(parseISO(value), 'dd/MM/yyyy');
     this.dateValueInit = value;
   }
-  async dateChangeFinish(value){
-    this.dateValueFinishFormat = format(parseISO( value), 'dd/MM/yyyy');
+  async dateChangeFinish(value) {
+    this.dateValueFinishFormat = format(parseISO(value), 'dd/MM/yyyy');
     this.dateValueFinish = value;
   }
-  async dateChangeDay(value){
-    this.dateValueDayFormat = format(parseISO( value), 'dd/MM/yyyy');
+  async dateChangeDay(value) {
+    this.dateValueDayFormat = format(parseISO(value), 'dd/MM/yyyy');
     this.dateValueDay = value;
   }
-  applyDateChanger(){
+  applyDateChanger() {
     this.dateLoader = true;
     this.dateLoaderTotal = true;
     this.unidadeFatTotal();
   }
-  convertInReal(num){
-    if(this.mask === true){
-      return parseFloat(num).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
-    }else{
+  convertInReal(num) {
+    if (this.mask === true) {
+      return parseFloat(num).toLocaleString('pt-br', {
+        style: 'currency',
+        currency: 'BRL',
+      });
+    } else {
       return num;
     }
   }
-  async setInterval(event){
+  async setInterval(event) {
     await this.storage.set('interval', event.detail.value);
     this.interval = await this.storage.get('interval');
-    if(this.interval === 'interval'){
+    if (this.interval === 'interval') {
       this.displayInterval = 'block';
       this.displayDay = 'none';
-    }
-    else if(this.interval === 'day'){
+    } else if (this.interval === 'day') {
       this.displayInterval = 'none';
       this.displayDay = 'block';
-    }
-    else{
+    } else {
       this.displayDay = 'none';
       this.displayInterval = 'none';
     }
   }
-  async unidadesChangeCheck(event, id){
+  async unidadesChangeCheck(event, id) {
     let display = 'block';
-    if(!event){display = 'none';}
-    this.unidadesCheck[this.empresa][id] = {unidade: id, check: event, display};
+    if (!event) {
+      display = 'none';
+    }
+    this.unidadesCheck[this.empresa][id]['unidade'] = id;
+    this.unidadesCheck[this.empresa][id]['check'] = event;
+    this.unidadesCheck[this.empresa][id]['display'] = display;
     await this.storage.set('unidadesCheck', this.unidadesCheck);
     this.dateLoaderTotal = true;
     this.unidadeFatTotal();
   }
 
   //Usuario
-  async logOut(): Promise<void>{
+  async logOut(): Promise<void> {
     await this.storage.remove('login');
     await this.storage.remove('senha');
     this.router.navigateByUrl('/login', { replaceUrl: true });
   }
-  redirect(){
+  redirect() {
     this.router.navigateByUrl('/settings');
   }
 
   //Tratamento de Erros
   async error(err) {
-    if(err === 'server'){
+    if (err === 'server') {
       const alert = await this.alertController.create({
         cssClass: 'my-custom-class',
         header: 'Falha ao conectar com o servidor',
         message: 'Deseja tentar novamente ?',
         backdropDismiss: false,
         buttons: [
-           {
+          {
             text: 'SAIR',
             role: 'cancel',
             cssClass: 'secondary',
             id: 'cancel-button',
             handler: () => {
               navigator['app'].exitApp();
-            }
+            },
           },
           {
             text: 'SIM',
             id: 'confirm-button',
             handler: () => {
               this.ngOnInit();
-            }
-          }
-        ]
+            },
+          },
+        ],
       });
       await alert.present();
-    }
-    else if(err === 'serverdb'){
+    } else if (err === 'serverdb') {
       const alert = await this.alertController.create({
         cssClass: 'my-custom-class',
         header: 'Falha ao conectar com o servidor de dados',
@@ -499,21 +625,20 @@ export class HomePage implements OnInit {
             cssClass: 'secondary',
             id: 'cancel-button',
             handler: () => {
-            navigator['app'].exitApp();
-            }
+              navigator['app'].exitApp();
+            },
           },
           {
             text: 'SIM',
             id: 'confirm-button',
             handler: () => {
               this.ngOnInit();
-            }
-          }
-        ]
+            },
+          },
+        ],
       });
       await alert.present();
-    }
-    else if(err === 'errLogEmp' || err === 'failed'){
+    } else if (err === 'errLogEmp' || err === 'failed') {
       const alert = await this.alertController.create({
         cssClass: 'my-custom-class',
         header: 'Falha ao logar na empresa',
@@ -524,13 +649,12 @@ export class HomePage implements OnInit {
             id: 'confirm-button',
             handler: () => {
               this.router.navigateByUrl('/login-empresa', { replaceUrl: true });
-            }
-          }
-        ]
+            },
+          },
+        ],
       });
       await alert.present();
-    }
-    else if(err === 'errLog'){
+    } else if (err === 'errLog') {
       const alert = await this.alertController.create({
         cssClass: 'my-custom-class',
         header: 'Falha ao logar',
@@ -541,39 +665,37 @@ export class HomePage implements OnInit {
             id: 'confirm-button',
             handler: () => {
               this.router.navigateByUrl('/login', { replaceUrl: true });
-            }
-          }
-        ]
+            },
+          },
+        ],
       });
       await alert.present();
-    }
-    else if(err === 'blocked'){
+    } else if (err === 'blocked') {
       this.router.navigateByUrl('/token-block', { replaceUrl: true });
-    }
-    else{
+    } else {
       const alert = await this.alertController.create({
         cssClass: 'my-custom-class',
         header: 'error desconhecido',
         message: 'Deseja tentar novamente ?',
         backdropDismiss: false,
         buttons: [
-           {
+          {
             text: 'SAIR',
             role: 'cancel',
             cssClass: 'secondary',
             id: 'cancel-button',
             handler: () => {
               navigator['app'].exitApp();
-            }
+            },
           },
           {
             text: 'SIM',
             id: 'confirm-button',
             handler: () => {
               this.ngOnInit();
-            }
-          }
-        ]
+            },
+          },
+        ],
       });
       await alert.present();
     }
@@ -590,15 +712,16 @@ export class HomePage implements OnInit {
           text: 'NÃO',
           role: 'cancel',
           cssClass: 'secondary',
-          id: 'cancel-button'
-        }, {
+          id: 'cancel-button',
+        },
+        {
           text: 'SIM',
           id: 'confirm-button',
           handler: () => {
             this.logOut();
-          }
-        }
-      ]
+          },
+        },
+      ],
     });
     await alert.present();
   }
@@ -612,7 +735,11 @@ export class HomePage implements OnInit {
     this.contentLoader = false;
     this.ngOnInit();
     const verfyComplete = setInterval(() => {
-      if (this.unidadesFat !== [] && this.unidadesHeader !== [] && this.somaMargemTotal !== ''){
+      if (
+        this.unidadesFat !== [] &&
+        this.unidadesHeader !== [] &&
+        this.somaMargemTotal !== ''
+      ) {
         this.contentLoader = true;
         event.target.complete();
         clearInterval(verfyComplete);
@@ -623,7 +750,7 @@ export class HomePage implements OnInit {
     const toast = await this.toastController.create({
       message: men,
       duration: 2000,
-      color: 'dark'
+      color: 'dark',
     });
     toast.present();
   }

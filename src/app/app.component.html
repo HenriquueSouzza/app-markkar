@@ -52,12 +52,11 @@
       </footer>
     </ion-content>
   </ion-menu>
-  <!--<ion-modal [isOpen]="modalOpCl">-->
   <ion-modal [isOpen]="modalOpCl" (didDismiss)="modalOpCl = false" [swipeToClose]="true">
     <ng-template>
       <ion-header>
         <ion-toolbar style="height: 62px;" color="dark">
-          <ion-title style="height: 62px; font-size: 1.2rem;">Multi Empresa</ion-title>
+          <ion-title style="height: 62px; font-size: 1.2rem;">MultiEmpresa</ion-title>
           <ion-button *ngIf="!platform" style="height: 56px; margin: 0; text-transform: uppercase;" slot="end" (click)="modalOpCl = false; redirect()" expand="block" fill="clear" shape="round">add</ion-button>
           <ion-button *ngIf="!platform" style="height: 54px; margin: 0; text-transform: uppercase; padding: 0;" slot="end" (click)="modalOpCl = false" expand="block" fill="clear" shape="round">fechar</ion-button>
           <ion-button *ngIf="platform" style="width: 65px; padding-top: 4px; height: 56px; margin: 0; text-transform: uppercase;" slot="start" (click)="modalOpCl = false; redirect()" expand="block" fill="clear" shape="round">add</ion-button>
@@ -75,10 +74,6 @@
               <p>{{cnpjMask(empresa['cnpj'])}}</p>
             </div>
             <div class="informacao">
-              <h2>telefone:</h2>
-              <p>{{telMask(empresa['telefone'])}}</p>
-            </div>
-            <div class="informacao">
               <h2>email:</h2>
               <p>{{nullEmail(empresa['email'])}}</p>
             </div>
@@ -92,23 +87,31 @@
                 <h2 style="color: var(--ion-color-primary);">{{unidade['unidade'].toLowerCase()}}:</h2>
                 <div style="margin-top: 10px;" class="informacaoUnid">
                   <h3>Telefone:</h3>
-                  <p>Não Cadastrado</p>
+                  <p>{{unidade['telefone']}}</p>
                 </div>
                 <div class="informacaoUnid">
                   <h3>Cep:</h3>
-                  <p>Não Cadastrado</p>
+                  <p>{{unidade['cep']}}</p>
                 </div>
                 <div class="informacaoUnid">
                   <h3>Endereço:</h3>
-                  <p>Não Cadastrado</p>
+                  <p>{{unidade['endereco']}}</p>
                 </div>
                 <div class="informacaoUnid">
                   <h3>Bairro:</h3>
-                  <p>Não Cadastrado</p>
+                  <p>{{unidade['bairro']}}</p>
                 </div>
                 <div style="margin-bottom: 20px;" class="informacaoUnid">
-                  <h3>Localidade:</h3>
-                  <p>Não Cadastrado</p>
+                  <h3>Cidade:</h3>
+                  <p>{{unidade['cidade']}}</p>
+                </div>
+                <div style="margin-bottom: 20px;" class="informacaoUnid">
+                  <h3>UF:</h3>
+                  <p>{{unidade['uf']}}</p>
+                </div>
+                <div style="margin-bottom: 20px;" class="informacaoUnid">
+                  <h3>Ultima Exportação:</h3>
+                  <p>{{unidade['ultimaExportacao']}}</p>
                 </div>
               </div>
             </div>
