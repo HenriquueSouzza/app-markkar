@@ -137,6 +137,7 @@ export class HomePage implements OnInit {
   dateTimeInit: any;
   displayIntervalUnid: string;
 
+
   constructor(
     private lojas: LojasService,
     private service: LoginService,
@@ -192,6 +193,9 @@ export class HomePage implements OnInit {
     this.interval = 'day';
     this.displayInterval = 'none';
     this.displayDay = 'block';
+    this.dateTimeDay = {confirm: () => { }};
+    this.dateTimeFinish = {confirm: () => { }};
+    this.dateTimeInit = {confirm: () => { }};
     this.dateValueInit = this.maxDate;
     this.dateValueFinish = this.maxDate;
     this.dateValueDay = this.maxDate;
