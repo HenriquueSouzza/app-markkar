@@ -145,9 +145,17 @@ ion-toolbar{
     width: 90%;
     margin:0 0 15px 0;
 
+    .headerUnidades.check{
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      margin-bottom: 5px;
+    }
+
     .headerUnidades{
       display: flex;
       align-items: center;
+      justify-content: space-between;
       margin-bottom: 5px;
 
       h2{
@@ -155,7 +163,17 @@ ion-toolbar{
         color: rgb(187, 187, 187);
         font-family: 'robotoBold';
         height: 20px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
       }
+
+      p{
+        font-size: 1rem;
+        color: rgb(187, 187, 187);
+        font-family: 'robotoBold';
+      }
+
       ion-checkbox{
         margin-right: 10px;
         margin-bottom: 0px !important;

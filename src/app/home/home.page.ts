@@ -132,6 +132,10 @@ export class HomePage implements OnInit {
   dateValueDayFormat: string;
   dateValueInitFormat: string;
   dateValueFinishFormat: string;
+  dateTimeFinish: any;
+  dateTimeDay: any;
+  dateTimeInit: any;
+  displayIntervalUnid: string;
 
   constructor(
     private lojas: LojasService,
@@ -551,11 +555,24 @@ export class HomePage implements OnInit {
     await this.storage.set('interval', event.detail.value);
     this.interval = await this.storage.get('interval');
     if (this.interval === 'interval') {
+      this.displayIntervalUnid = 'intervalo';
       this.displayInterval = 'block';
       this.displayDay = 'none';
     } else if (this.interval === 'day') {
       this.displayInterval = 'none';
       this.displayDay = 'block';
+    } else if(this.interval === 'month'){
+      this.displayIntervalUnid = 'Mensal';
+      this.displayDay = 'none';
+      this.displayInterval = 'none';
+    } else if(this.interval === 'year'){
+      this.displayIntervalUnid = 'Anual';
+      this.displayDay = 'none';
+      this.displayInterval = 'none';
+    } else if(this.interval === 'all'){
+      this.displayIntervalUnid = 'Todos';
+      this.displayDay = 'none';
+      this.displayInterval = 'none';
     } else {
       this.displayDay = 'none';
       this.displayInterval = 'none';
