@@ -52,7 +52,7 @@
       </footer>
     </ion-content>
   </ion-menu>
-  <ion-modal [isOpen]="modalOpCl" (didDismiss)="modalOpCl = false" [swipeToClose]="true">
+  <ion-modal [isOpen]="modalOpCl" (didDismiss)="modalOpCl = false" [canDismiss]="true">
     <ng-template>
       <ion-header>
         <ion-toolbar style="height: 62px;" color="dark">

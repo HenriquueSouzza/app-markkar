@@ -52,6 +52,14 @@
           <ng-template>
             <ion-content>
               <ion-list color="secondary">
+                <ion-item [detail]="false" lines="none" color="secondary">
+                  <ion-label style="text-transform: none;font-size: 0.9rem;">Intervalo do Gráfico</ion-label>
+                  <ion-select cancel-text="cancelar" [value]="valueGraficoInterval" ok-text="confirmar" (ionChange)="setGraficoInterval($event)" interface="popover" placeholder="Selecione">
+                    <ion-select-option value="1FourMonth">1º Quadrimestre</ion-select-option>
+                    <ion-select-option value="2FourMonth">2º Quadrimestre</ion-select-option>
+                    <ion-select-option value="3FourMonth">3º Quadrimestre</ion-select-option>
+                  </ion-select>
+                </ion-item>
                 <ion-item lines="none" color="secondary">
                   <ion-label style="text-transform: none;font-size: 0.9rem;">Intervalo de Faturamento</ion-label>
                   <ion-select value="{{interval}}" interface="popover" (ionChange)="setInterval($event)" placeholder="Selecione">

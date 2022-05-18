@@ -18,8 +18,8 @@ export interface Login{
   providedIn: 'root'
 })
 export class LoginService {
-  private flurl = 'http://portal-markkar.herokuapp.com/Login-Empresarial';
-  private lurl = 'http://portal-markkar.herokuapp.com/Login';
+  private flurl = 'http://mkservidor.ddns.net/Login-Empresarial';
+  private lurl = 'http://mkservidor.ddns.net/Login';
 
   constructor(private http: HttpClient) { }
 

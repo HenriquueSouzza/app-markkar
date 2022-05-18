@@ -30,6 +30,7 @@ export class ValidateLoginPage implements OnInit {
   async ngOnInit() {
     this.menu.enable(false, 'homeMenu');
     this.btn = 'none';
+    const valIntGra = await this.storage.get('intervalGrafico');
     const valFLogin = await this.storage.get('fOpen');
     const valCnpj = await this.storage.get('cnpj');
     const valToken = await this.storage.get('token');
@@ -49,6 +50,10 @@ export class ValidateLoginPage implements OnInit {
       setTimeout(() => {
         SplashScreen.hide();
       }, 600);
+    }
+    else if(valIntGra !== 'lastFourMonths' && valIntGra !== 'fourMonths'){
+      await this.storage.set('intervalGrafico', 'lastFourMonths');
+      this.router.navigateByUrl('/welcome', { replaceUrl: true });
     }
     else if(valLogin !== null && valSenhaLogin !== null && valIdToken !== null){
       this.service.login(validateLogin).subscribe(async response =>{
