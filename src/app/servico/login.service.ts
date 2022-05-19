@@ -18,8 +18,8 @@ export interface Login{
   providedIn: 'root'
 })
 export class LoginService {
-  private flurl = 'http://mkservidor.ddns.net/Login-Empresarial';
-  private lurl = 'http://mkservidor.ddns.net/Login';
+  private flurl = 'http://mkservidor.ddns.net:8080/Login-Empresarial';
+  private lurl = 'http://mkservidor.ddns.net:8080/Login';
 
   constructor(private http: HttpClient) { }
 

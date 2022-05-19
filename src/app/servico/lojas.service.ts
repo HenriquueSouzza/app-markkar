@@ -17,7 +17,7 @@ export interface interfaceFaturamento {
   providedIn: 'root',
 })
 export class LojasService {
-  private url = 'http://mkservidor.ddns.net/Unidades';
+  private url = 'http://mkservidor.ddns.net:8080/Unidades';
 
   constructor(private http: HttpClient) {}
 

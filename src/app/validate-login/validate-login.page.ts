@@ -42,6 +42,7 @@ export class ValidateLoginPage implements OnInit {
     const validatefLogin = {cnpj: valCnpj, token: valToken};
     if(valFLogin !== false){
       await this.storage.set('intervalHeader', 'month');
+      await this.storage.set('intervalGrafico', 'lastFourMonths');
       await this.storage.set('interval', 'day');
       await this.storage.set('mask', true);
       await this.storage.set('cmvPerc', true);
