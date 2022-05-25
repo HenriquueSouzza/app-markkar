@@ -44,21 +44,12 @@ ion-toolbar{
   --background: var(--ion-color-dark);
   --min-height: 10px;
 
-  .userIconBTN{
-    width: 48px;
-    height: 48px;
-    --padding-start: 0;
-    --padding-end: 0;
-  }
-
   .userIcon{
     font-size: 1.7em;
   }
   ion-button{
-    width: 48px;
-    height: 48px;
-    --padding-start: 0;
-    --padding-end: 0;
+    --padding-start: 5px;
+    --padding-end: 5px;
   }
 }
 .headerSection{
@@ -69,7 +60,7 @@ ion-toolbar{
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 145px;
+  height: 120px;
 
   #totalLiquido{
     width: 100%;

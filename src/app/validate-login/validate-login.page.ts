@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
 import { Router } from '@angular/router';
 import { isPlatform, LoadingController, ToastController, MenuController } from '@ionic/angular';
-import { BackgroundColorOptions, StatusBar } from '@capacitor/status-bar';
+import { BackgroundColorOptions, StatusBar, StatusBarStyle } from '@capacitor/status-bar';
 import { SplashScreen } from '@capacitor/splash-screen';
 import { StorageService } from './../servico/storage.service';
 import { LoginService } from './../servico/login.service';
@@ -67,6 +67,9 @@ export class ValidateLoginPage implements OnInit {
           if(!isPlatform('mobileweb') && isPlatform('android')){
             const optsBck: BackgroundColorOptions = {color: '#222428'};
             StatusBar.setBackgroundColor(optsBck);
+          }
+          if(!isPlatform('mobileweb') && isPlatform('ios')){
+            StatusBar.setStyle({style: StatusBarStyle.Dark});
           }
         }
         else if(response['status'] === 'failed'){

@@ -52,15 +52,15 @@
       </footer>
     </ion-content>
   </ion-menu>
-  <ion-modal [isOpen]="modalOpCl" (didDismiss)="modalOpCl = false" [canDismiss]="true">
+  <ion-modal [isOpen]="modalOpCl" (didDismiss)="modalOpCl = false" [canDismiss]="true" swipe-to-close="true">
     <ng-template>
       <ion-header>
-        <ion-toolbar style="height: 62px;" color="dark">
-          <ion-title style="height: 62px; font-size: 1.2rem;">MultiEmpresa</ion-title>
+        <ion-toolbar style="height: auto;" color="dark">
+          <ion-title>MultiEmpresa</ion-title>
           <ion-button *ngIf="!platform" style="height: 56px; margin: 0; text-transform: uppercase;" slot="end" (click)="modalOpCl = false; redirect()" expand="block" fill="clear" shape="round">add</ion-button>
           <ion-button *ngIf="!platform" style="height: 54px; margin: 0; text-transform: uppercase; padding: 0;" slot="end" (click)="modalOpCl = false" expand="block" fill="clear" shape="round">fechar</ion-button>
-          <ion-button *ngIf="platform" style="width: 65px; padding-top: 4px; height: 56px; margin: 0; text-transform: uppercase;" slot="start" (click)="modalOpCl = false; redirect()" expand="block" fill="clear" shape="round">add</ion-button>
-          <ion-button *ngIf="platform" style="width: 77px; height: 54px; margin: 0; text-transform: uppercase; padding: 0;" slot="end" (click)="modalOpCl = false" expand="block" fill="clear" shape="round">fechar</ion-button>
+          <ion-button *ngIf="platform" mode="ios" slot="start" style="height: auto; margin: 0;" (click)="modalOpCl = false; redirect()" expand="block" fill="clear" shape="round">Add</ion-button>
+          <ion-button *ngIf="platform" mode="ios" slot="end" style="height: auto; margin: 0;" (click)="modalOpCl = false"  expand="block" fill="clear" shape="round">Fechar</ion-button>
         </ion-toolbar>
       </ion-header>
       <ion-content>
