@@ -1,3 +1,4 @@
+/* eslint-disable import/no-deprecated */
 /* eslint-disable @typescript-eslint/dot-notation */
 import { Component, OnInit } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
