@@ -140,7 +140,6 @@ export class HomePage implements OnInit {
   dateTimeInit: any;
   displayIntervalUnid: string;
 
-
   constructor(
     private lojas: LojasService,
     private service: LoginService,
@@ -198,9 +197,9 @@ export class HomePage implements OnInit {
     this.interval = 'day';
     this.displayInterval = 'none';
     this.displayDay = 'block';
-    this.dateTimeDay = {confirm: () => { }};
-    this.dateTimeFinish = {confirm: () => { }};
-    this.dateTimeInit = {confirm: () => { }};
+    this.dateTimeDay = { confirm: () => {} };
+    this.dateTimeFinish = { confirm: () => {} };
+    this.dateTimeInit = { confirm: () => {} };
     this.dateValueInit = this.maxDate;
     this.dateValueFinish = this.maxDate;
     this.dateValueDay = this.maxDate;
@@ -271,12 +270,16 @@ export class HomePage implements OnInit {
           if (
             this.mask !== (await this.storage.get('mask')) ||
             this.cmvPerc !== (await this.storage.get('cmvPerc')) ||
-            this.intervalHeader !== (await this.storage.get('intervalHeader')) ||
-            this.valueGraficoInterval !== await this.storage.get('intervalGrafico')
+            this.intervalHeader !==
+              (await this.storage.get('intervalHeader')) ||
+            this.valueGraficoInterval !==
+              (await this.storage.get('intervalGrafico'))
           ) {
             this.mask = await this.storage.get('mask');
             this.cmvPerc = await this.storage.get('cmvPerc');
-            this.valueGraficoInterval = await this.storage.get('intervalGrafico');
+            this.valueGraficoInterval = await this.storage.get(
+              'intervalGrafico'
+            );
             if (this.cmvPerc === true) {
               this.perc = '%';
             }
@@ -317,8 +320,7 @@ export class HomePage implements OnInit {
       cmvPercentage: this.cmvPerc.toString(),
       dateInit: null,
       dateFinish: null,
-      fourMonths: this.valueGraficoInterval
-
+      fourMonths: this.valueGraficoInterval,
     };
     this.lojas.faturamento(interfaceHFat).subscribe(
       (response) => {
@@ -350,16 +352,16 @@ export class HomePage implements OnInit {
             );
           }
         }
-         if (this.valueGraficoInterval === 'lastFourMonths') {
+        if (this.valueGraficoInterval === 'lastFourMonths') {
           this.titleGra = 'Últimos quatro meses';
         } else if (this.valueGraficoInterval === 'fourMonths') {
           this.titleGra = 'Quadrimestre';
         } else if (this.valueGraficoInterval === '1FourMonth') {
-            this.titleGra = '1º Quadrimestre';
+          this.titleGra = '1º Quadrimestre';
         } else if (this.valueGraficoInterval === '2FourMonth') {
-            this.titleGra = '2º Quadrimestre';
+          this.titleGra = '2º Quadrimestre';
         } else if (this.valueGraficoInterval === '3FourMonth') {
-            this.titleGra = '3º Quadrimestre';
+          this.titleGra = '3º Quadrimestre';
         }
         this.chartOptions.plugins.title.text = `Gráfico de Margem ( ${this.titleGra} )`;
         for (const teste of Object.values(grafico[unidades[0]['unidade']])) {
@@ -396,9 +398,13 @@ export class HomePage implements OnInit {
           }
           this.contentLoader = true;
         } else {
-          this.somaFatHeader = prepareRealFat;
-          this.somaMargemHeader = prepareRealMargem;
-          this.somaCMVHeader = prepareRealCMV.toString();
+          this.somaFatHeader = this.formatReall(prepareRealFat);
+          this.somaMargemHeader = this.formatReall(prepareRealMargem);
+          if (this.cmvPerc === true) {
+            this.somaCMVHeader = prepareRealCMV.toString();
+          } else if (this.cmvPerc === false) {
+            this.somaCMVHeader = this.formatReall(prepareRealCMV).toString();
+          }
           this.contentLoader = true;
         }
       },
@@ -414,7 +420,7 @@ export class HomePage implements OnInit {
       cmvPercentage: this.cmvPerc.toString(),
       dateInit: this.dateValueInit,
       dateFinish: this.dateValueFinish,
-      fourMonths: this.valueGraficoInterval
+      fourMonths: this.valueGraficoInterval,
     };
     this.lojas.faturamento(dayFat).subscribe(
       async (response) => {
@@ -533,9 +539,13 @@ export class HomePage implements OnInit {
           this.dateLoader = false;
           this.dateLoaderTotal = false;
         } else {
-          this.somaFatTotal = prepareRealFat.toString();
-          this.somaMargemTotal = prepareRealMargem.toString();
-          this.somaCMVTotal = prepareRealCMV.toString();
+          this.somaFatTotal = this.formatReall(prepareRealFat).toString();
+          this.somaMargemTotal = this.formatReall(prepareRealMargem).toString();
+          if (this.cmvPerc === true) {
+            this.somaCMVTotal = prepareRealCMV.toString();
+          } else if (this.cmvPerc === false) {
+            this.somaCMVTotal = this.formatReall(prepareRealCMV).toString();
+          }
           this.contentLoader = true;
           this.dateLoader = false;
           this.dateLoaderTotal = false;
@@ -566,22 +576,39 @@ export class HomePage implements OnInit {
     this.dateLoader = true;
     this.dateLoaderTotal = true;
     this.unidadeFatTotal();
-    if(this.valueGraficoIntervalFilter !== this.valueGraficoInterval
-    ) {
+    if (this.valueGraficoIntervalFilter !== this.valueGraficoInterval) {
       this.valueGraficoInterval = this.valueGraficoIntervalFilter;
       this.headerFat(await this.storage.get('intervalHeader'));
     }
   }
-  convertInReal(num) {
+  formatReall(valor) {
+    valor = valor + '';
+    valor = parseInt(valor.replace(/[\D]+/g, ''));
+    valor = valor + '';
+    valor = valor.replace(/([0-9]{2})$/g, ',$1');
+    if (valor.length > 6) {
+      valor = valor.replace(/([0-9]{3}),([0-9]{2}$)/g, '.$1,$2');
+    }
+    return valor;
+  }
+  convertInReal(valor) {
     if (this.mask === true) {
-      return parseFloat(num).toLocaleString('pt-br', {
+      return parseFloat(valor).toLocaleString('pt-br', {
         style: 'currency',
         currency: 'BRL',
       });
     } else {
-      return num;
+      valor = valor + '';
+      valor = parseInt(valor.replace(/[\D]+/g, ''));
+      valor = valor + '';
+      valor = valor.replace(/([0-9]{2})$/g, ',$1');
+      if (valor.length > 6) {
+        valor = valor.replace(/([0-9]{3}),([0-9]{2}$)/g, '.$1,$2');
+      }
+      return valor;
     }
   }
+
   async setGraficoInterval(event) {
     this.valueGraficoIntervalFilter = event.detail.value;
   }
@@ -595,15 +622,15 @@ export class HomePage implements OnInit {
     } else if (this.interval === 'day') {
       this.displayInterval = 'none';
       this.displayDay = 'block';
-    } else if(this.interval === 'month'){
+    } else if (this.interval === 'month') {
       this.displayIntervalUnid = 'Mensal';
       this.displayDay = 'none';
       this.displayInterval = 'none';
-    } else if(this.interval === 'year'){
+    } else if (this.interval === 'year') {
       this.displayIntervalUnid = 'Anual';
       this.displayDay = 'none';
       this.displayInterval = 'none';
-    } else if(this.interval === 'all'){
+    } else if (this.interval === 'all') {
       this.displayIntervalUnid = 'Todos';
       this.displayDay = 'none';
       this.displayInterval = 'none';
