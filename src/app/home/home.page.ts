@@ -390,12 +390,16 @@ export class HomePage implements OnInit {
           }
           this.contentLoader = true;
         } else {
-          this.somaFatHeader = this.formatReall(prepareRealFat);
-          this.somaMargemHeader = this.formatReall(prepareRealMargem);
+          this.somaFatHeader = this.formatReall(prepareRealFat.toFixed(2));
+          this.somaMargemHeader = this.formatReall(
+            prepareRealMargem.toFixed(2)
+          );
           if (this.cmvPerc === true) {
             this.somaCMVHeader = prepareRealCMV.toString();
           } else if (this.cmvPerc === false) {
-            this.somaCMVHeader = this.formatReall(prepareRealCMV).toString();
+            this.somaCMVHeader = this.formatReall(
+              prepareRealCMV.toFixed(2)
+            ).toString();
           }
           this.contentLoader = true;
         }
@@ -426,7 +430,11 @@ export class HomePage implements OnInit {
         if (
           !this.unidadesCheck.hasOwnProperty(this.empresa) ||
           Object.values(this.unidadesCheck[this.empresa])[0]['telefone'] ===
-            undefined
+            undefined ||
+          unidadesFat[0]['ultimaExportacao'] !==
+            Object.values(this.unidadesCheck[this.empresa])[0][
+              'ultimaExportacao'
+            ]
         ) {
           for (const unidade of unidadesFat) {
             somaFatArray.push(parseFloat(unidade['somaFat']));
@@ -531,12 +539,23 @@ export class HomePage implements OnInit {
           this.dateLoader = false;
           this.dateLoaderTotal = false;
         } else {
-          this.somaFatTotal = this.formatReall(prepareRealFat.toFixed(2)).toString();
-          this.somaMargemTotal = this.formatReall(prepareRealMargem.toFixed(2)).toString();
+          this.somaFatTotal = this.formatReall(
+            prepareRealFat.toFixed(2)
+          ).toString();
+          this.somaMargemTotal = this.formatReall(
+            prepareRealMargem.toFixed(2)
+          ).toString();
           if (this.cmvPerc === true) {
-            this.somaCMVTotal = prepareRealCMV.toString();
+            if (isNaN(prepareRealCMV)) {
+              prepareRealCMV = 0;
+              this.somaCMVTotal = prepareRealCMV.toString();
+            } else {
+              this.somaCMVTotal = prepareRealCMV.toString();
+            }
           } else if (this.cmvPerc === false) {
-            this.somaCMVTotal = this.formatReall(prepareRealCMV.toFixed(2)).toString();
+            this.somaCMVTotal = this.formatReall(
+              prepareRealCMV.toFixed(2)
+            ).toString();
           }
           this.contentLoader = true;
           this.dateLoader = false;
