@@ -103,7 +103,9 @@ export class LoginPage implements OnInit {
       });
     }
   }
-
+  change(){
+    this.router.navigateByUrl('/login-empresa', { replaceUrl: true });
+  }
   async enviarLogin(form: NgForm){
     this.errLogin = null;
     const loading = await this.loadingController.create({

@@ -1,117 +1,260 @@
 <ion-app>
-  <ion-menu (ionWillOpen)="ngOnInit()" side="start" menuId="homeMenu" contentId="main">
+  <ion-menu
+    (ionWillOpen)="ngOnInit()"
+    side="start"
+    menuId="homeMenu"
+    contentId="main"
+  >
     <ion-header>
-      <ion-toolbar color="dark" style="border-radius: 0 0 30px 0;">
-          <div style="padding: 20px 0 20px 0;padding-left: 16px; display: flex; align-items: center; justify-content: flex-start;">
-            <ion-avatar style="width: 50px;height: 50px;" slot="start">
-              <img src="../../assets/img/avatar.png">
-            </ion-avatar>
-            <ion-label id="labelAvatar">Olá <p id="pLabelAvatar">, {{name}}</p></ion-label>
-          </div>
-          <ion-list style="background: var(--ion-color-dark) !important; margin-bottom: 20px;">
-            <ion-list-header>
-              <ion-label style="margin-top: 0;margin-left: 0px !important;">Multiempresa</ion-label>
-              <ion-button (click)="modalOpCl = true" expand="block" fill="clear" shape="round">
-                <ion-icon name="add-outline"></ion-icon>
-              </ion-button>
-            </ion-list-header>
-            <ion-menu-toggle>
-              <ion-item-sliding *ngFor="let empresa of empresas">
-                <ion-item-options side="start">
-                  <ion-item-option (click)="deleteEmp(empresa['empresa'], empresa['cnpj'], empresa['token'], empresa['idToken'])" color="danger">Deletar</ion-item-option>
-                </ion-item-options>
-                <ion-item lines="none" (click)="changeEmpresa(empresa['empresa'], empresa['cnpj'], empresa['token'], empresa['idToken'])" [button]="true" color="secondary"><ion-icon style="margin-right: 10px;" name="{{empresa['icon']}}"></ion-icon>{{empresa['empresa'].toLowerCase()}}</ion-item>
-              </ion-item-sliding>
-            </ion-menu-toggle>
-          </ion-list>
+      <ion-toolbar color="dark" style="border-radius: 0 0 30px 0">
+        <div
+          style="
+            padding: 20px 0 20px 0;
+            padding-left: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+          "
+        >
+          <ion-avatar style="width: 50px; height: 50px" slot="start">
+            <img src="../../assets/img/avatar.png" />
+          </ion-avatar>
+          <ion-label id="labelAvatar"
+            >Olá
+            <p id="pLabelAvatar">, {{ name }}</p></ion-label
+          >
+        </div>
+        <ion-list
+          style="
+            background: var(--ion-color-dark) !important;
+            margin-bottom: 20px;
+          "
+        >
+          <ion-list-header>
+            <ion-label style="margin-top: 0; margin-left: 0px !important"
+              >Multiempresa</ion-label
+            >
+            <ion-button
+              (click)="redirect()"
+              expand="block"
+              fill="clear"
+              shape="round"
+            >
+              <ion-icon name="add-outline"></ion-icon>
+            </ion-button>
+          </ion-list-header>
+          <ion-menu-toggle>
+            <ion-item
+              *ngFor="let empresa of empresas"
+              style="
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                overflow: hidden;
+              "
+              lines="none"
+              (click)="modalOpCl = true"
+              [button]="true"
+              color="secondary"
+              ><ion-icon slot="start"
+                style="margin-right: 10px"
+                name="{{ empresa['icon'] }}"
+              ></ion-icon
+              > <ion-label> {{ empresa["empresa"].toLowerCase() }}</ion-label></ion-item
+            >
+          </ion-menu-toggle>
+        </ion-list>
       </ion-toolbar>
     </ion-header>
     <ion-content>
-      <ion-list lines="none" style="margin-top: 20px;">
+      <ion-list lines="none" style="margin-top: 20px">
         <ion-menu-toggle>
-          <ion-item [routerLink]="['/home']" [detail]="false" class="pgs" [button]="true">
+          <ion-item
+            [routerLink]="['/home']"
+            [detail]="false"
+            class="pgs"
+            [button]="true"
+          >
             <ion-icon slot="start" name="home-outline"></ion-icon>
             <ion-label>home</ion-label>
           </ion-item>
         </ion-menu-toggle>
-        <ion-item [detail]="false" (click)="presentToast('Em desenvolvimento...')" class="pgs" [button]="true">
+        <ion-item
+          [detail]="false"
+          (click)="presentToast('Em desenvolvimento...')"
+          class="pgs"
+          [button]="true"
+        >
           <ion-icon slot="start" name="person-outline"></ion-icon>
           <ion-label>caixa</ion-label>
         </ion-item>
-        <ion-item [detail]="false" (click)="presentToast('Em desenvolvimento...')" class="pgs" [button]="true">
+        <ion-item
+          [detail]="false"
+          (click)="presentToast('Em desenvolvimento...')"
+          class="pgs"
+          [button]="true"
+        >
           <ion-icon slot="start" name="receipt-outline"></ion-icon>
           <ion-label>relatórios</ion-label>
         </ion-item>
-        <ion-item [detail]="false" (click)="presentToast('Em desenvolvimento...')" class="pgs" [button]="true">
+        <ion-item
+          [detail]="false"
+          (click)="presentToast('Em desenvolvimento...')"
+          class="pgs"
+          [button]="true"
+        >
           <ion-icon slot="start" name="pie-chart-outline"></ion-icon>
           <ion-label>estoque</ion-label>
         </ion-item>
       </ion-list>
       <footer id="footer">
-        <img id="imgFooter" src="../../assets/img/marca-horizontal-sem-slogan.png" alt="logoMarkkar">
+        <img
+          id="imgFooter"
+          src="../../assets/img/marca-horizontal-sem-slogan.png"
+          alt="logoMarkkar"
+        />
       </footer>
     </ion-content>
   </ion-menu>
-  <ion-modal [isOpen]="modalOpCl" (didDismiss)="modalOpCl = false" [canDismiss]="true" swipe-to-close="true">
+  <ion-modal
+    [isOpen]="modalOpCl"
+    (didDismiss)="modalOpCl = false"
+    [canDismiss]="true"
+    swipe-to-close="true"
+  >
     <ng-template>
       <ion-header>
-        <ion-toolbar style="height: auto;" color="dark">
+        <ion-toolbar style="height: auto" color="dark">
           <ion-title>MultiEmpresa</ion-title>
-          <ion-button *ngIf="!platform" style="height: 56px; margin: 0; text-transform: uppercase;" slot="end" (click)="modalOpCl = false; redirect()" expand="block" fill="clear" shape="round">add</ion-button>
-          <ion-button *ngIf="!platform" style="height: 54px; margin: 0; text-transform: uppercase; padding: 0;" slot="end" (click)="modalOpCl = false" expand="block" fill="clear" shape="round">fechar</ion-button>
-          <ion-button *ngIf="platform" mode="ios" slot="start" style="height: auto; margin: 0;" (click)="modalOpCl = false; redirect()" expand="block" fill="clear" shape="round">Add</ion-button>
-          <ion-button *ngIf="platform" mode="ios" slot="end" style="height: auto; margin: 0;" (click)="modalOpCl = false"  expand="block" fill="clear" shape="round">Fechar</ion-button>
+          <ion-button
+            *ngIf="!platform"
+            style="
+              height: 54px;
+              margin: 0;
+              text-transform: uppercase;
+              padding: 0;
+            "
+            slot="end"
+            (click)="modalOpCl = false"
+            expand="block"
+            fill="clear"
+            shape="round"
+            >fechar</ion-button
+          >
+          <ion-button
+            *ngIf="platform"
+            mode="ios"
+            slot="end"
+            style="height: auto; margin: 0"
+            (click)="modalOpCl = false"
+            expand="block"
+            fill="clear"
+            shape="round"
+            >Fechar</ion-button
+          >
         </ion-toolbar>
       </ion-header>
       <ion-content>
         <div class="empresa" *ngFor="let empresa of empresas">
-          <ion-item style="width: 100%;" lines="none" color="secondary">
-            <ion-label style="font-family: 'robotoBold';margin: 0;margin-bottom: 3px; font-size: 1.2rem;">{{empresa['empresa'].toLowerCase()}}</ion-label>
+          <ion-item style="width: 100%" lines="none" color="secondary">
+            <ion-label
+              style="
+                font-family: 'robotoBold';
+                margin: 0;
+                margin-bottom: 3px;
+                font-size: 1.2rem;
+              "
+              >{{ empresa["empresa"].toLowerCase() }}</ion-label
+            >
+            <ion-button
+              lot="end"
+              style="height: auto; margin: 0; padding: 5px"
+              (click)="
+                deleteEmp(
+                  empresa['empresa'],
+                  empresa['cnpj'],
+                  empresa['token'],
+                  empresa['idToken']
+                )
+              "
+              color="danger"
+              expand="block"
+              fill="clear"
+              shape="round"
+              >Deletar</ion-button
+            >
+            <ion-button
+              *ngIf="empresa['empresa'] !== empresaAtual"
+              lot="end"
+              style="height: auto; margin: 0; padding: 5px"
+              (click)="
+                modalOpCl = false;
+                changeEmpresa(
+                  empresa['empresa'],
+                  empresa['cnpj'],
+                  empresa['token'],
+                  empresa['idToken']
+                )
+              "
+              expand="block"
+              fill="clear"
+              shape="round"
+              >acessar</ion-button
+            >
           </ion-item>
           <div class="informacoes">
             <div class="informacao">
               <h2>cnpj:</h2>
-              <p>{{cnpjMask(empresa['cnpj'])}}</p>
+              <p>{{ cnpjMask(empresa["cnpj"]) }}</p>
             </div>
             <div class="informacao">
               <h2>email:</h2>
-              <p>{{nullEmail(empresa['email'])}}</p>
+              <p>{{ nullEmail(empresa["email"]) }}</p>
             </div>
             <div class="informacaoIcon">
               <h2>icone:</h2>
-              <ion-icon style="margin-right: 10px;" name="{{empresa['icon']}}"></ion-icon>
+              <ion-icon
+                style="margin-right: 10px"
+                name="{{ empresa['icon'] }}"
+              ></ion-icon>
             </div>
             <div class="informacaoUnids">
-              <h2 style="font-family: 'robotoBold';text-transform: uppercase;">unidades:</h2>
-              <div class="unids" *ngFor="let unidade of forUnids(unidades[empresa['empresa']])">
-                <h2 style="color: var(--ion-color-primary);">{{unidade['unidade'].toLowerCase()}}:</h2>
-                <div style="margin-top: 10px;" class="informacaoUnid">
+              <h2 style="font-family: 'robotoBold'; text-transform: uppercase">
+                unidades:
+              </h2>
+              <div
+                class="unids"
+                *ngFor="let unidade of forUnids(unidades[empresa['empresa']])"
+              >
+                <h2 style="color: var(--ion-color-primary)">
+                  {{ unidade["unidade"].toLowerCase() }}:
+                </h2>
+                <div style="margin-top: 10px" class="informacaoUnid">
                   <h3>Telefone:</h3>
-                  <p>{{unidade['telefone']}}</p>
+                  <p>{{ unidade["telefone"] }}</p>
                 </div>
                 <div class="informacaoUnid">
                   <h3>Cep:</h3>
-                  <p>{{unidade['cep']}}</p>
+                  <p>{{ unidade["cep"] }}</p>
                 </div>
                 <div class="informacaoUnid">
                   <h3>Endereço:</h3>
-                  <p>{{unidade['endereco']}}</p>
+                  <p>{{ unidade["endereco"] }}</p>
                 </div>
                 <div class="informacaoUnid">
                   <h3>Bairro:</h3>
-                  <p>{{unidade['bairro']}}</p>
+                  <p>{{ unidade["bairro"] }}</p>
                 </div>
-                <div style="margin-bottom: 20px;" class="informacaoUnid">
+                <div style="margin-bottom: 20px" class="informacaoUnid">
                   <h3>Cidade:</h3>
-                  <p>{{unidade['cidade']}}</p>
+                  <p>{{ unidade["cidade"] }}</p>
                 </div>
-                <div style="margin-bottom: 20px;" class="informacaoUnid">
+                <div style="margin-bottom: 20px" class="informacaoUnid">
                   <h3>UF:</h3>
-                  <p>{{unidade['uf']}}</p>
+                  <p>{{ unidade["uf"] }}</p>
                 </div>
-                <div style="margin-bottom: 20px;" class="informacaoUnid">
+                <div style="margin-bottom: 20px" class="informacaoUnid">
                   <h3>Ultima Exportação:</h3>
-                  <p>{{unidade['ultimaExportacao']}}</p>
+                  <p>{{ unidade["ultimaExportacao"] }}</p>
                 </div>
               </div>
             </div>

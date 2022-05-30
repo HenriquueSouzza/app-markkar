@@ -10,6 +10,9 @@
       <input (click)="colorReset()" [ngStyle]="{'color': colorInput}" ngModel name="senha" type="password" placeholder="Digite a sua Senha...">
       <span style="z-index: 10; color: red;font-family: 'robotoBold'; text-transform: uppercase;">{{ errLogin }}</span>
       <ion-button type="submit" expand="block" shape="round">ENTRAR</ion-button>
+      <ion-button id="btnAlternate" style="color: white;" (click)="change()" expand="block" fill="clear" shape="round">
+        Trocar Empresa
+      </ion-button>
     </form>
   </section>
 </ion-content>

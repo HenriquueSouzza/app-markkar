@@ -1,11 +1,3 @@
-/*
-|
-| - Markkar systems integration app.
-| - contact us by (https://markkar.com.br/).
-| - Copyright © Markkar Consultoria Financeira e Sistemas.
-|
-*/
-
 /* eslint-disable @typescript-eslint/dot-notation */
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
@@ -539,12 +531,12 @@ export class HomePage implements OnInit {
           this.dateLoader = false;
           this.dateLoaderTotal = false;
         } else {
-          this.somaFatTotal = this.formatReall(prepareRealFat).toString();
-          this.somaMargemTotal = this.formatReall(prepareRealMargem).toString();
+          this.somaFatTotal = this.formatReall(prepareRealFat.toFixed(2)).toString();
+          this.somaMargemTotal = this.formatReall(prepareRealMargem.toFixed(2)).toString();
           if (this.cmvPerc === true) {
             this.somaCMVTotal = prepareRealCMV.toString();
           } else if (this.cmvPerc === false) {
-            this.somaCMVTotal = this.formatReall(prepareRealCMV).toString();
+            this.somaCMVTotal = this.formatReall(prepareRealCMV.toFixed(2)).toString();
           }
           this.contentLoader = true;
           this.dateLoader = false;
