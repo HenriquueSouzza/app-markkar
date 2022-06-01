@@ -36,11 +36,13 @@ export class LoginEmpresaPage implements OnInit {
     ) {
       this.platform.keyboardDidShow.subscribe(ev => {
         const { keyboardHeight } = ev;
-        if(platform.height() <= 500){
-          this.keyHeight = true;
-        }
-        else if(platform.height() <= 690){
-          this.keyHeightM = true;
+        if(!isPlatform('ios')){
+          if(platform.height() <= 500){
+            this.keyHeight = true;
+          }
+          else if(platform.height() <= 690){
+            this.keyHeightM = true;
+          }
         }
       });
       this.platform.keyboardDidHide.subscribe(ev => {

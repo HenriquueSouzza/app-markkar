@@ -3,7 +3,7 @@ import { StorageService } from './../servico/storage.service';
 import { LoginService } from './../servico/login.service';
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { AlertController, LoadingController, Platform } from '@ionic/angular';
+import { AlertController, isPlatform, LoadingController, Platform } from '@ionic/angular';
 import { Storage } from '@ionic/storage-angular';
 import { Router } from '@angular/router';
 import { MenuController } from '@ionic/angular';
@@ -42,11 +42,13 @@ export class LoginPage implements OnInit {
     ) {
       this.platform.keyboardDidShow.subscribe(ev => {
         const { keyboardHeight } = ev;
-        if(platform.height() <= 500){
-          this.keyHeight = true;
-        }
-        else if(platform.height() <= 690){
-          this.keyHeightM = true;
+        if(!isPlatform('ios')){
+          if(platform.height() <= 500){
+            this.keyHeight = true;
+          }
+          else if(platform.height() <= 690){
+            this.keyHeightM = true;
+          }
         }
       });
       this.platform.keyboardDidHide.subscribe(ev => {

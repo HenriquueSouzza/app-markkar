@@ -381,7 +381,7 @@ export class HomePage implements OnInit {
             currency: 'BRL',
           });
           if (this.cmvPerc === true) {
-            this.somaCMVHeader = prepareRealCMV.toString();
+            this.somaCMVHeader = prepareRealCMV.toFixed(2).toString();
           } else if (this.cmvPerc === false) {
             this.somaCMVHeader = prepareRealCMV.toLocaleString('pt-br', {
               style: 'currency',
@@ -395,7 +395,7 @@ export class HomePage implements OnInit {
             prepareRealMargem.toFixed(2)
           );
           if (this.cmvPerc === true) {
-            this.somaCMVHeader = prepareRealCMV.toString();
+            this.somaCMVHeader = prepareRealCMV.toFixed(2).toString();
           } else if (this.cmvPerc === false) {
             this.somaCMVHeader = this.formatReall(
               prepareRealCMV.toFixed(2)
@@ -527,7 +527,7 @@ export class HomePage implements OnInit {
               prepareRealCMV = 0;
               this.somaCMVTotal = prepareRealCMV.toString();
             } else {
-              this.somaCMVTotal = prepareRealCMV.toString();
+              this.somaCMVTotal = prepareRealCMV.toFixed(2).toString();
             }
           } else if (this.cmvPerc === false) {
             this.somaCMVTotal = prepareRealCMV.toLocaleString('pt-br', {
@@ -550,7 +550,7 @@ export class HomePage implements OnInit {
               prepareRealCMV = 0;
               this.somaCMVTotal = prepareRealCMV.toString();
             } else {
-              this.somaCMVTotal = prepareRealCMV.toString();
+              this.somaCMVTotal = prepareRealCMV.toFixed(2).toString();
             }
           } else if (this.cmvPerc === false) {
             this.somaCMVTotal = this.formatReall(
