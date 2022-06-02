@@ -44,6 +44,10 @@ export class AppComponent implements OnInit {
     this.router.navigateByUrl('/login', { replaceUrl: true });
   }
 
+  tt(tt){
+    alert(tt);
+  }
+
   redirect() {
     this.router.navigateByUrl('/login-empresa', { replaceUrl: false });
   }
