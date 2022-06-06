@@ -9,5 +9,8 @@
 			"androidScaleType": "CENTER_CROP",
 			"showSpinner": false
 		}
+	},
+	"server": {
+		"url": "http://192.168.1.14:8100"
 	}
 }

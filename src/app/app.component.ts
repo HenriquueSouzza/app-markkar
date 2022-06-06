@@ -32,7 +32,7 @@ export class AppComponent implements OnInit {
     //this.searchStreet('22725030');
     this.empresaAtual = await this.storage.get('empresaAtual');
     this.empresas = Object.values(await this.storage.get('empresas'));
-    this.unidades = await this.storage.get('unidadesCheck');
+    this.unidades = await this.storage.get('multiempresa');
     this.name = await this.storage.get('login');
   }
 

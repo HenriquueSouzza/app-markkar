@@ -93,6 +93,7 @@ export class HomePage implements OnInit {
   displayInterval: string;
   displayDay: string;
   unidadesCheck: any;
+  multiempresa: any;
   displayUnidades = false;
   valueGraficoInterval: string;
   valueGraficoIntervalFilter: string;
@@ -156,6 +157,9 @@ export class HomePage implements OnInit {
     if ((await this.storage.get('unidadesCheck')) === null) {
       await this.storage.set('unidadesCheck', {});
     }
+    if ((await this.storage.get('multiempresa')) === null) {
+      await this.storage.set('multiempresa', {});
+    }
     if (
       (await this.storage.get('intervalHeader')) === null ||
       (await this.storage.get('intervalHeader')) === '' ||
@@ -172,6 +176,7 @@ export class HomePage implements OnInit {
     }
     //Set CheckBox
     this.unidadesCheck = await this.storage.get('unidadesCheck');
+    this.multiempresa = await this.storage.get('multiempresa');
     this.empresa = await this.storage.get('empresaAtual');
     //Set Preferences
     this.mask = await this.storage.get('mask');
@@ -427,28 +432,14 @@ export class HomePage implements OnInit {
         const somaMargemArray = [];
         const somaCMVrray = [];
         const unidadesCheck = {};
-        if (
-          !this.unidadesCheck.hasOwnProperty(this.empresa) ||
-          Object.values(this.unidadesCheck[this.empresa])[0]['telefone'] ===
-            undefined ||
-          unidadesFat[0]['ultimaExportacao'] !==
-            Object.values(this.unidadesCheck[this.empresa])[0][
-              'ultimaExportacao'
-            ]
-        ) {
+        const multiempresa = {};
+        if (!this.unidadesCheck.hasOwnProperty(this.empresa)) {
           for (const unidade of unidadesFat) {
             somaFatArray.push(parseFloat(unidade['somaFat']));
             somaMargemArray.push(parseFloat(unidade['somaMargem']));
             somaCMVrray.push(parseFloat(unidade['cmv_vlr']));
             unidadesCheck[unidade['unidade']] = {
               unidade: unidade['unidade'],
-              telefone: unidade['telefone'],
-              cep: unidade['cep'],
-              endereco: unidade['endereco'],
-              bairro: unidade['bairro'],
-              cidade: unidade['cidade'],
-              uf: unidade['uf'],
-              ultimaExportacao: unidade['ultimaExportacao'],
               check: true,
               display: 'block',
             };
@@ -463,6 +454,33 @@ export class HomePage implements OnInit {
             somaFatArray.push(parseFloat(unidade['somaFat']));
             somaMargemArray.push(parseFloat(unidade['somaMargem']));
             somaCMVrray.push(parseFloat(unidade['cmv_vlr']));
+          }
+        }
+        if (
+          !this.multiempresa.hasOwnProperty(this.empresa) ||
+          unidadesFat[0]['ultimaExportacao'] !==
+            Object.values(this.multiempresa[this.empresa])[0][
+              'ultimaExportacao'
+            ]
+        ) {
+          for (const unidade of unidadesFat) {
+            somaFatArray.push(parseFloat(unidade['somaFat']));
+            somaMargemArray.push(parseFloat(unidade['somaMargem']));
+            somaCMVrray.push(parseFloat(unidade['cmv_vlr']));
+            multiempresa[unidade['unidade']] = {
+              unidade: unidade['unidade'],
+              telefone: unidade['telefone'],
+              cep: unidade['cep'],
+              endereco: unidade['endereco'],
+              bairro: unidade['bairro'],
+              cidade: unidade['cidade'],
+              uf: unidade['uf'],
+              ultimaExportacao: unidade['ultimaExportacao'],
+              check: true,
+              display: 'block',
+            };
+            this.multiempresa[this.empresa] = multiempresa;
+            await this.storage.set('multiempresa', this.multiempresa);
           }
         }
         const unidadesIgnore = [];
