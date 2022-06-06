@@ -433,7 +433,11 @@ export class HomePage implements OnInit {
         const somaCMVrray = [];
         const unidadesCheck = {};
         const multiempresa = {};
-        if (!this.unidadesCheck.hasOwnProperty(this.empresa)) {
+        if (
+          !this.unidadesCheck.hasOwnProperty(this.empresa) ||
+          Object.values(this.unidadesCheck[this.empresa]).length !==
+            unidadesFat.length
+        ) {
           for (const unidade of unidadesFat) {
             somaFatArray.push(parseFloat(unidade['somaFat']));
             somaMargemArray.push(parseFloat(unidade['somaMargem']));
