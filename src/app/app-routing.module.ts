@@ -39,6 +39,10 @@ const routes: Routes = [
     path: 'token-block',
     loadChildren: () => import('./token-block/token-block.module').then( m => m.TokenBlockPageModule)
   },
+  {
+    path: 'barcode-test',
+    loadChildren: () => import('./barcode-test/barcode-test.module').then( m => m.BarcodeTestPageModule)
+  },
 
 ];
 

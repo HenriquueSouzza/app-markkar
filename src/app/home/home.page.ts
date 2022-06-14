@@ -17,6 +17,7 @@ import { LoginService } from './../servico/login.service';
 import { LojasService } from '../servico/lojas.service';
 import { ChartDataset, ChartOptions, ChartType, Color } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
+import { timeout } from 'rxjs/operators';
 
 @Component({
   selector: 'app-home',
@@ -84,6 +85,7 @@ export class HomePage implements OnInit {
   ];
 
   //Settings and Bool
+  tryies = 0;
   contentLoader: boolean;
   dateLoader: boolean;
   dateLoaderTotal: boolean;
@@ -226,7 +228,7 @@ export class HomePage implements OnInit {
       this.valToken !== null &&
       this.valIdToken !== null
     ) {
-      this.service.firstlogin(validateLoginEmp).subscribe(
+      this.service.firstlogin(validateLoginEmp).pipe(timeout(15000)).subscribe(
         async (response) => {
           if (response['status'] === 'failed') {
             this.error('errLogEmp');
@@ -253,7 +255,17 @@ export class HomePage implements OnInit {
           }
         },
         async (error) => {
-          this.error('server');
+          if(error.name === 'TimeoutError'){
+            this.tryies = ++this.tryies;
+            if(this.tryies <= 3){
+              this.ngOnInit();
+            }
+            if(this.tryies > 3){
+              this.error('server');
+            }
+          }else{
+            this.error('server');
+          }
         }
       );
     }
@@ -409,7 +421,7 @@ export class HomePage implements OnInit {
           this.contentLoader = true;
         }
       },
-      async (error) => {}
+      async (error) => { }
     );
   }
   async unidadeFatTotal() {

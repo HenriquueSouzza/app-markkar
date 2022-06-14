@@ -19,6 +19,7 @@
     "@angular/platform-browser": "~14.0.0",
     "@angular/platform-browser-dynamic": "~14.0.0",
     "@angular/router": "~14.0.0",
+    "@capacitor-community/barcode-scanner": "^2.1.1",
     "@capacitor-community/http": "^1.4.1",
     "@capacitor/android": "3.5.1",
     "@capacitor/app": "1.1.1",
