@@ -17,13 +17,14 @@ export interface interfaceFaturamento {
   providedIn: 'root',
 })
 export class LojasService {
-  private url = 'https://app.markkar.com.br/Unidades';
+  private píng = 'https://api.markkar.com.br/Ping';
+  private url = 'https://api.markkar.com.br/Unidades';
   private url2 = 'http://mkservidor.ddns.net:8080/Unidades';
   private urlFinal = this.url;
 
   constructor(private http: HttpClient) {
     this.http
-      .post(this.url2, { teste: 'oi' }, { observe: 'response' })
+      .post(this.píng, { ping: '1' }, { observe: 'response' })
       .pipe(timeout(10000))
       .subscribe(
         (response) => {

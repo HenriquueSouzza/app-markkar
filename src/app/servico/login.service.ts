@@ -18,12 +18,13 @@ export interface Login{
   providedIn: 'root'
 })
 export class LoginService {
-  private flurl = 'https://app.markkar.com.br/Login-Empresarial';
-  private lurl = 'https://app.markkar.com.br/Login';
+  private píng = 'https://api.markkar.com.br/Ping';
+  private flurl = 'https://api.markkar.com.br/Login-Empresarial';
+  private lurl = 'https://api.markkar.com.br/Login';
 
   constructor(private http: HttpClient) {
     this.http
-      .post(this.flurl, { teste: 'oi' }, { observe: 'response' })
+      .post(this.píng, { ping: '1' }, { observe: 'response' })
       .pipe(timeout(10000))
       .subscribe(
         (response) => {
