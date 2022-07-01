@@ -20,15 +20,15 @@
   </ion-popover>
   <header class="headerSection">
     <div id="totalLiquido">
-      <h2 *ngIf="contentLoader">{{somaMargemHeader}}</h2>
+      <h2 *ngIf="contentLoader">{{ somaFatHeader }}</h2>
       <ion-skeleton-text *ngIf="!contentLoader" animated style="width: 140px; height: 24px;"></ion-skeleton-text>
-      <p>margem</p>
+      <p>faturamento {{ fatHeaderTime }}</p>
     </div>
     <div id="total">
       <div>
-        <h3 *ngIf="contentLoader">{{ somaFatHeader }}</h3>
+        <h3 *ngIf="contentLoader">{{ somaMargemHeader }}</h3>
         <ion-skeleton-text *ngIf="!contentLoader" animated style="width: 115px; height: 17px;"></ion-skeleton-text>
-        <p>faturamento</p>
+        <p>margem {{ fatHeaderTime }}</p>
       </div>
       <div>
         <h3 *ngIf="contentLoader">{{somaCMVHeader}}{{perc}}</h3>
@@ -108,7 +108,7 @@
         </ion-popover>
       </div>
       <ng-container *ngFor="let unidade of unidadesFat">
-        <div *ngIf="!displayUnidades" class="unidade" [ngStyle]="{'display': unidadesCheck[empresa][unidade['unidade']]['display']}">
+        <div *ngIf="!displayUnidades" class="unidade" >
           <div class="headerUnidades">
             <h2>{{unidade['unidade']}}</h2>
             <p *ngIf="displayDay === 'block'" >{{ dateValueDayFormat }}</p>

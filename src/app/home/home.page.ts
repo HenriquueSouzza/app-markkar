@@ -36,7 +36,7 @@ export class HomePage implements OnInit {
     plugins: {
       title: {
         display: true,
-        text: 'Gráfico de Margem',
+        text: 'Gráfico do Faturamento',
         padding: {
           top: 10,
           bottom: 0,
@@ -100,6 +100,7 @@ export class HomePage implements OnInit {
   valueGraficoInterval: string;
   valueGraficoIntervalFilter: string;
   titleGra: string;
+  fatHeaderTime: string;
 
   //Login
   valFLogin: boolean;
@@ -190,6 +191,18 @@ export class HomePage implements OnInit {
       this.perc = '';
     }
     this.intervalHeader = await this.storage.get('intervalHeader');
+    if (this.intervalHeader === 'day') {
+      this.fatHeaderTime = 'diario';
+    } else if (this.intervalHeader === 'month') {
+      this.fatHeaderTime = 'Mensal';
+    } else if (this.intervalHeader === 'year') {
+      this.fatHeaderTime = 'Anual';
+      this.displayInterval = 'none';
+    } else if (this.intervalHeader === 'all') {
+      this.fatHeaderTime = 'Todos';
+    } else {
+      this.fatHeaderTime = '';
+    }
     this.valueGraficoInterval = await this.storage.get('intervalGrafico');
     this.valueGraficoIntervalFilter = this.valueGraficoInterval;
     //Set Dates and Filter Default
@@ -228,46 +241,49 @@ export class HomePage implements OnInit {
       this.valToken !== null &&
       this.valIdToken !== null
     ) {
-      this.service.firstlogin(validateLoginEmp).pipe(timeout(15000)).subscribe(
-        async (response) => {
-          if (response['status'] === 'failed') {
-            this.error('errLogEmp');
-          } else if (response['status'] === 'blocked') {
-            this.router.navigateByUrl('/token-block', { replaceUrl: true });
-          } else if (response['status'] === 'success') {
-            this.service.login(validateLogin).subscribe(
-              async (res) => {
-                if (res['status'] === 'success') {
-                  this.headerFat(this.intervalHeader);
-                  this.unidadeFatTotal();
-                } else if (res['status'] === 'failed') {
-                  this.error('errLog');
-                } else if (res['status'] === 'errDB') {
-                  this.error('serverdb');
+      this.service
+        .firstlogin(validateLoginEmp)
+        .pipe(timeout(15000))
+        .subscribe(
+          async (response) => {
+            if (response['status'] === 'failed') {
+              this.error('errLogEmp');
+            } else if (response['status'] === 'blocked') {
+              this.router.navigateByUrl('/token-block', { replaceUrl: true });
+            } else if (response['status'] === 'success') {
+              this.service.login(validateLogin).subscribe(
+                async (res) => {
+                  if (res['status'] === 'success') {
+                    this.headerFat(this.intervalHeader);
+                    this.unidadeFatTotal();
+                  } else if (res['status'] === 'failed') {
+                    this.error('errLog');
+                  } else if (res['status'] === 'errDB') {
+                    this.error('serverdb');
+                  }
+                },
+                async (error) => {
+                  this.error('server');
                 }
-              },
-              async (error) => {
+              );
+            } else if (response['status'] === 'errDB') {
+              this.error('serverdb');
+            }
+          },
+          async (error) => {
+            if (error.name === 'TimeoutError') {
+              this.tryies = ++this.tryies;
+              if (this.tryies <= 3) {
+                this.ngOnInit();
+              }
+              if (this.tryies > 3) {
                 this.error('server');
               }
-            );
-          } else if (response['status'] === 'errDB') {
-            this.error('serverdb');
-          }
-        },
-        async (error) => {
-          if(error.name === 'TimeoutError'){
-            this.tryies = ++this.tryies;
-            if(this.tryies <= 3){
-              this.ngOnInit();
-            }
-            if(this.tryies > 3){
+            } else {
               this.error('server');
             }
-          }else{
-            this.error('server');
           }
-        }
-      );
+        );
     }
   }
   async ionViewDidEnter() {
@@ -284,6 +300,18 @@ export class HomePage implements OnInit {
             this.valueGraficoInterval !==
               (await this.storage.get('intervalGrafico'))
           ) {
+            if (await this.storage.get('intervalHeader') === 'day') {
+              this.fatHeaderTime = 'diario';
+            } else if ( await this.storage.get('intervalHeader') === 'month') {
+              this.fatHeaderTime = 'Mensal';
+            } else if ( await this.storage.get('intervalHeader') === 'year') {
+              this.fatHeaderTime = 'Anual';
+              this.displayInterval = 'none';
+            } else if ( await this.storage.get('intervalHeader') === 'all') {
+              this.fatHeaderTime = 'Todos';
+            } else {
+              this.fatHeaderTime = '';
+            }
             this.mask = await this.storage.get('mask');
             this.cmvPerc = await this.storage.get('cmvPerc');
             this.valueGraficoInterval = await this.storage.get(
@@ -355,9 +383,11 @@ export class HomePage implements OnInit {
             borderColor: color,
             hoverBackgroundColor: 'rgba(255, 159, 25, 1)',
           });
-          for (const margem of Object.values(grafico[unidade['unidade']])) {
+          for (const faturamento of Object.values(
+            grafico[unidade['unidade']]
+          )) {
             this.chartData[this.chartData.length - 1].data.push(
-              margem['margem']
+              faturamento['faturamento']
             );
           }
         }
@@ -372,9 +402,11 @@ export class HomePage implements OnInit {
         } else if (this.valueGraficoInterval === '3FourMonth') {
           this.titleGra = '3º Quadrimestre';
         }
-        this.chartOptions.plugins.title.text = `Gráfico de Margem ( ${this.titleGra} )`;
-        for (const teste of Object.values(grafico[unidades[0]['unidade']])) {
-          this.chartlabels.push(this.month[teste['month'] - 1]);
+        //this.chartOptions.plugins.title.text = `Gráfico de Faturamento ( ${this.titleGra} )`;
+        for (const unidadeGRF of Object.values(
+          grafico[unidades[0]['unidade']]
+        )) {
+          this.chartlabels.push(this.month[unidadeGRF['month'] - 1]);
           this.chart.chart.update();
         }
         const prepareRealFat = somaFatArray.reduce(somaArray, 0);
@@ -421,7 +453,7 @@ export class HomePage implements OnInit {
           this.contentLoader = true;
         }
       },
-      async (error) => { }
+      async (error) => {}
     );
   }
   async unidadeFatTotal() {
