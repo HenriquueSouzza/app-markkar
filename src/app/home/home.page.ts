@@ -660,7 +660,7 @@ export class HomePage implements OnInit {
   }
   formatReall(valor) {
     valor = valor + '';
-    valor = parseInt(valor.replace(/[\D]+/g, ''));
+    valor = parseInt(valor.replace(/[\D]+/g, ''), 10);
     valor = valor + '';
     valor = valor.replace(/([0-9]{2})$/g, ',$1');
     if (valor.length > 6) {
@@ -676,7 +676,7 @@ export class HomePage implements OnInit {
       });
     } else {
       valor = valor + '';
-      valor = parseInt(valor.replace(/[\D]+/g, ''));
+      valor = parseInt(valor.replace(/[\D]+/g, ''), 10);
       valor = valor + '';
       valor = valor.replace(/([0-9]{2})$/g, ',$1');
       if (valor.length > 6) {

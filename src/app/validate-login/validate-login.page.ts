@@ -47,10 +47,10 @@ export class ValidateLoginPage implements OnInit {
     const valIdToken = await this.storage.get('idToken');
     const valLogin = await this.storage.get('login');
     const valSenhaLogin = await this.storage.get('senha');
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     const validateLogin = {
       user: valLogin,
       senha: valSenhaLogin,
+      // eslint-disable-next-line @typescript-eslint/naming-convention
       id_token: valIdToken,
     };
     const validatefLogin = { cnpj: valCnpj, token: valToken };
