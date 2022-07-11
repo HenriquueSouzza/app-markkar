@@ -210,7 +210,7 @@
               </h2>
               <div
                 class="unids"
-                *ngFor="let unidade of forUnids(unidades[empresa['empresa']])"
+                *ngFor="let unidade of forUnids(unidades[empresa['idToken']])"
               >
                 <h2 style="color: var(--ion-color-primary)">
                   {{ unidade["unidade"].toLowerCase() }}:
@@ -251,5 +251,4 @@
     </ng-template>
   </ion-modal>
   <ion-router-outlet id="main"></ion-router-outlet>
-  <ion-router-outlet></ion-router-outlet>
 </ion-app>

@@ -129,7 +129,7 @@ export class WelcomePage implements OnInit {
           if(response['icone'] === null || response['icone'] === ''){
             icone = 'business-outline';
           }
-          empresas[response['empresa']] = {
+          empresas[response['id_token']] = {
             empresa: response['empresa'],
             cnpj: login.cnpj,
             token: login.token,

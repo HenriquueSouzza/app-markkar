@@ -44,10 +44,6 @@ export class AppComponent implements OnInit {
     this.router.navigateByUrl('/login', { replaceUrl: true });
   }
 
-  tt(tt){
-    alert(tt);
-  }
-
   redirect() {
     this.router.navigateByUrl('/login-empresa', { replaceUrl: false });
   }
@@ -72,8 +68,14 @@ export class AppComponent implements OnInit {
           id: 'confirm-button',
           handler: async () => {
             const empresas = await this.storage.get('empresas');
-            delete empresas[empresa];
+            const multiempresa = await this.storage.get('multiempresa');
+            const unidadesCheck = await this.storage.get('unidadesCheck');
+            delete empresas[idToken];
+            delete multiempresa[idToken];
+            delete unidadesCheck[idToken];
             await this.storage.set('empresas', empresas);
+            await this.storage.set('multiempresa', multiempresa);
+            await this.storage.set('unidadesCheck', unidadesCheck);
             this.modalOpCl = false;
             const empresaReset = Object.values(
               await this.storage.get('empresas')
