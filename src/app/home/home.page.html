@@ -26,14 +26,14 @@
     </div>
     <div id="total">
       <div>
-        <h3 *ngIf="contentLoader">{{ somaMargemHeader }}</h3>
-        <ion-skeleton-text *ngIf="!contentLoader" animated style="width: 115px; height: 17px;"></ion-skeleton-text>
-        <p>margem {{ fatHeaderTime }}</p>
-      </div>
-      <div>
         <h3 *ngIf="contentLoader">{{somaCMVHeader}}{{perc}}</h3>
         <ion-skeleton-text *ngIf="!contentLoader" animated style="width: 80px; height: 17px;"></ion-skeleton-text>
         <p>cmv</p>
+      </div>
+      <div>
+        <h3 *ngIf="contentLoader">{{ somaMargemHeader }}</h3>
+        <ion-skeleton-text *ngIf="!contentLoader" animated style="width: 115px; height: 17px;"></ion-skeleton-text>
+        <p>margem {{ fatHeaderTime }}</p>
       </div>
     </div>
   </header>
