@@ -1,0 +1,19 @@
+<ion-content [fullscreen]="true">
+  <img id="imgBck" src="../../assets/img/backgW/1.png" alt="">
+  <section id="idEmpresa">
+    <div class="emp" [ngClass]="{'contentSlide': true, 'inputUp': keyHeight, 'inputUpM': keyHeightM}" style="z-index: 10;">
+      <img style="z-index: 10;"src="assets/img/logoMarkkar.png" alt="MarkkarLogo">
+      <h1 style="z-index: 10;">Portal Markkar</h1>
+    </div>
+    <form style="z-index: 10;" #f="ngForm" (ngSubmit)="enviarLogin(f)">
+      <input (click)="colorReset()" [ngStyle]="{'color': colorCnpj}" style="z-index: 10;" ngModel name="cnpj" maxlength="14" type="tel" placeholder="Digite o CNPJ...">
+      <span style="z-index: 10; color: red; font-family: 'robotoBold'; text-transform: uppercase; margin-bottom: 5px;">{{ cnpjErr }}</span>
+      <input (click)="colorReset()" [ngStyle]="{'color': colorTOKEN}" style="z-index: 10;" ngModel name="token" type="text" placeholder="Digite seu Token...">
+      <span style="z-index: 10; color: red;font-family: 'robotoBold'; text-transform: uppercase;">{{ err }}</span>
+      <ion-button type="submit" id="btnRetry" color="primary" expand="block" shape="round">
+        <ion-spinner *ngIf="loader" ></ion-spinner>
+        <h1 *ngIf="!loader" style="width: 100%; text-align: center; font-size: 1rem;margin: 0 !important; color: white;">Buscar</h1>
+      </ion-button>
+    </form>
+  </section>
+</ion-content>

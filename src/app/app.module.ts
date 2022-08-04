@@ -14,7 +14,9 @@ import { Drivers } from '@ionic/storage';
 import { IonicStorageModule } from '@ionic/storage-angular';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [
+    AppComponent
+  ],
   entryComponents: [],
   imports: [
     BrowserModule,
