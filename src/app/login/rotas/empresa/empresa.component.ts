@@ -80,7 +80,7 @@ async ngOnInit() {
               text: 'SIM',
               id: 'confirm-button',
               handler: () => {
-                this.router.navigateByUrl('/login', { replaceUrl: true });
+                this.router.navigateByUrl('/login/usuario', { replaceUrl: true });
               }
             }
           ]
@@ -154,7 +154,7 @@ async enviarLogin(form: NgForm){
         await this.storage.set('empresas', empresas);
         await this.storage.set('empresaAtual', response['empresa']);
         this.loader = false;
-        this.router.navigateByUrl('/login', { replaceUrl: true });
+        this.router.navigateByUrl('/login/usuario', { replaceUrl: true });
       }
       else if(response['status'] === 'errDB'){
         this.loader = false;
@@ -233,7 +233,7 @@ async error(err) {
           text: 'OK',
           id: 'confirm-button',
           handler: () => {
-            this.router.navigateByUrl('/login-empresa', { replaceUrl: true });
+            this.router.navigateByUrl('/login/empresa', { replaceUrl: true });
           }
         }
       ]
@@ -250,7 +250,7 @@ async error(err) {
           text: 'OK',
           id: 'confirm-button',
           handler: () => {
-            this.router.navigateByUrl('/login', { replaceUrl: true });
+            this.router.navigateByUrl('/login/usuario', { replaceUrl: true });
           }
         }
       ]

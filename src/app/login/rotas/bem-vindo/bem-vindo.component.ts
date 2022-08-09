@@ -67,7 +67,7 @@ export class BemVindoComponent implements OnInit {
     const valCnpj = await this.storage.get('cnpj');
     const valToken = await this.storage.get('token');
     if(valCnpj !== null && valToken !== null){
-      this.router.navigateByUrl('/login', { replaceUrl: true });
+      this.router.navigateByUrl('/login/usuario', { replaceUrl: true });
     }
     if(!isPlatform('mobileweb') && isPlatform('android')){
       StatusBar.setBackgroundColor({color: '#141518'});
@@ -139,7 +139,7 @@ export class BemVindoComponent implements OnInit {
           await this.storage.set('empresas', empresas);
           await this.storage.set('empresaAtual', response['empresa']);
           await loading.dismiss();
-          this.router.navigateByUrl('/login', { replaceUrl: true });
+          this.router.navigateByUrl('/login/usuario', { replaceUrl: true });
         }
       }, async error => {
         await loading.dismiss();

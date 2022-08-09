@@ -1,3 +1,4 @@
+import { UsuarioComponent } from './rotas/usuario/usuario.component';
 import { TokenBlockComponent } from './rotas/token-block/token-block.component';
 import { EmpresaComponent } from './rotas/empresa/empresa.component';
 import { NgModule } from '@angular/core';
@@ -24,6 +25,7 @@ import { BemVindoComponent } from './rotas/bem-vindo/bem-vindo.component';
     LoginPage,
     BemVindoComponent,
     EmpresaComponent,
+    UsuarioComponent,
     TokenBlockComponent,
   ],
 })

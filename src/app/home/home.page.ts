@@ -233,7 +233,7 @@ export class HomePage implements OnInit {
     };
     const validateLoginEmp = { cnpj: this.valCnpj, token: this.valToken };
     if (this.valFLogin !== false) {
-      this.router.navigateByUrl('/validate-login', { replaceUrl: true });
+      this.router.navigateByUrl('/login', { replaceUrl: true });
     } else if (
       this.valLogin !== null &&
       this.valSenhaLogin !== null &&
@@ -249,7 +249,7 @@ export class HomePage implements OnInit {
             if (response['status'] === 'failed') {
               this.error('errLogEmp');
             } else if (response['status'] === 'blocked') {
-              this.router.navigateByUrl('/token-block', { replaceUrl: true });
+              this.router.navigateByUrl('/login/tokenBlock', { replaceUrl: true });
             } else if (response['status'] === 'success') {
               this.service.login(validateLogin).subscribe(
                 async (res) => {
@@ -472,91 +472,99 @@ export class HomePage implements OnInit {
         const unidades = response;
         this.unidadesFat = Object.values(response['totalBilling']);
         const unidadesFat = this.unidadesFat;
-        const somaFatArray = [];
-        const somaMargemArray = [];
-        const somaCMVrray = [];
+        let somaFatArray = [];
+        let somaMargemArray = [];
+        let somaCMVrray = [];
         const unidadesCheck = {};
         const multiempresa = {};
         if (
           !this.unidadesCheck.hasOwnProperty(this.valIdToken) ||
           Object.values(this.unidadesCheck[this.valIdToken]).length !==
-            unidadesFat.length
-        ) {
-          for (const unidade of unidadesFat) {
-            somaFatArray.push(parseFloat(unidade['somaFat']));
-            somaMargemArray.push(parseFloat(unidade['somaMargem']));
-            somaCMVrray.push(parseFloat(unidade['cmv_vlr']));
-            unidadesCheck[unidade['idCentroCusto']] = {
-              unidade: unidade['unidade'],
-              check: true,
-              display: 'block',
-            };
-            this.unidadesCheck[this.valIdToken] = unidadesCheck;
-            await this.storage.set('unidadesCheck', this.unidadesCheck);
+          unidadesFat.length
+          ) {
+            for (const unidade of unidadesFat) {
+              somaFatArray = [];
+              somaMargemArray = [];
+              somaCMVrray = [];
+              somaFatArray.push(parseFloat(unidade['somaFat']));
+              somaMargemArray.push(parseFloat(unidade['somaMargem']));
+              somaCMVrray.push(parseFloat(unidade['cmv_vlr']));
+              unidadesCheck[unidade['idCentroCusto']] = {
+                unidade: unidade['unidade'],
+                check: true,
+                display: 'block',
+              };
+              this.unidadesCheck[this.valIdToken] = unidadesCheck;
+              await this.storage.set('unidadesCheck', this.unidadesCheck);
+            }
+          } else {
+            let n = 1;
+            for (const unidade of unidadesFat) {
+              n = n - 0.15;
+              const color = 'rgba(255, 159, 25,' + n + ')';
+              somaFatArray.push(parseFloat(unidade['somaFat']));
+              somaMargemArray.push(parseFloat(unidade['somaMargem']));
+              somaCMVrray.push(parseFloat(unidade['cmv_vlr']));
+            }
           }
-        } else {
-          let n = 1;
-          for (const unidade of unidadesFat) {
-            n = n - 0.15;
-            const color = 'rgba(255, 159, 25,' + n + ')';
-            somaFatArray.push(parseFloat(unidade['somaFat']));
-            somaMargemArray.push(parseFloat(unidade['somaMargem']));
-            somaCMVrray.push(parseFloat(unidade['cmv_vlr']));
-          }
-        }
-        if (
-          !this.multiempresa.hasOwnProperty(this.valIdToken) ||
-          unidadesFat[0]['ultimaExportacao'] !==
+          if (
+            !this.multiempresa.hasOwnProperty(this.valIdToken) ||
+            unidadesFat[0]['ultimaExportacao'] !==
             Object.values(this.multiempresa[this.valIdToken])[0][
               'ultimaExportacao'
             ]
-        ) {
-          for (const unidade of unidadesFat) {
-            somaFatArray.push(parseFloat(unidade['somaFat']));
-            somaMargemArray.push(parseFloat(unidade['somaMargem']));
-            somaCMVrray.push(parseFloat(unidade['cmv_vlr']));
-            multiempresa[unidade['idCentroCusto']] = {
-              unidade: unidade['unidade'],
-              telefone: unidade['telefone'],
-              cep: unidade['cep'],
-              endereco: unidade['endereco'],
-              bairro: unidade['bairro'],
-              cidade: unidade['cidade'],
-              uf: unidade['uf'],
-              ultimaExportacao: unidade['ultimaExportacao'],
-              check: true,
-              display: 'block',
-            };
-            this.multiempresa[this.valIdToken] = multiempresa;
-            await this.storage.set('multiempresa', this.multiempresa);
-          }
-        }
-        const unidadesIgnore = [];
-        const ignoreSomaFatArray = [];
-        const ignoreSomaMargemArray = [];
-        const ignoreSomaCMVrray = [];
-        for (const unidadegIgnore of Object.values(
-          this.unidadesCheck[this.valIdToken]
-        )) {
-          if (unidadegIgnore['check'] === false) {
-            unidadesIgnore.push(unidadegIgnore['unidade']);
-            ignoreSomaFatArray.push(
-              parseFloat(
-                unidades['totalBilling'][
-                  unidadesIgnore[unidadesIgnore.length - 1]
+            ) {
+              for (const unidade of unidadesFat) {
+                somaFatArray = [];
+                somaMargemArray = [];
+                somaCMVrray = [];
+                somaFatArray.push(parseFloat(unidade['somaFat']));
+                somaMargemArray.push(parseFloat(unidade['somaMargem']));
+                somaCMVrray.push(parseFloat(unidade['cmv_vlr']));
+                multiempresa[unidade['idCentroCusto']] = {
+                  unidade: unidade['unidade'],
+                  telefone: unidade['telefone'],
+                  cep: unidade['cep'],
+                  endereco: unidade['endereco'],
+                  bairro: unidade['bairro'],
+                  cidade: unidade['cidade'],
+                  uf: unidade['uf'],
+                  ultimaExportacao: unidade['ultimaExportacao'],
+                  check: true,
+                  display: 'block',
+                };
+                this.multiempresa[this.valIdToken] = multiempresa;
+                await this.storage.set('multiempresa', this.multiempresa);
+              }
+            }
+            const unidadesTotalBillingId = {};
+            const unidadesIgnore = [];
+            const ignoreSomaFatArray = [];
+            const ignoreSomaMargemArray = [];
+            const ignoreSomaCMVrray = [];
+            for (const unidId of Object.values(unidades['totalBilling'])){
+              unidadesTotalBillingId[unidId['idCentroCusto']] = unidId;
+            }
+            for (const unidadegIgnore of Object.values(this.unidadesCheck[this.valIdToken])) {
+              if (unidadegIgnore['check'] === false) {
+                unidadesIgnore.push(unidadegIgnore['unidade']);
+                ignoreSomaFatArray.push(
+                  parseFloat(
+                    unidadesTotalBillingId[
+                      unidadesIgnore[unidadesIgnore.length - 1]
                 ]['somaFat']
               )
             );
             ignoreSomaMargemArray.push(
               parseFloat(
-                unidades['totalBilling'][
+                unidadesTotalBillingId[
                   unidadesIgnore[unidadesIgnore.length - 1]
                 ]['somaMargem']
               )
             );
             ignoreSomaCMVrray.push(
               parseFloat(
-                unidades['totalBilling'][
+                unidadesTotalBillingId[
                   unidadesIgnore[unidadesIgnore.length - 1]
                 ]['cmv_vlr']
               )
@@ -733,7 +741,7 @@ export class HomePage implements OnInit {
   async logOut(): Promise<void> {
     await this.storage.remove('login');
     await this.storage.remove('senha');
-    this.router.navigateByUrl('/login', { replaceUrl: true });
+    this.router.navigateByUrl('/login/usuario', { replaceUrl: true });
   }
   redirect() {
     this.router.navigateByUrl('/settings');
@@ -803,7 +811,7 @@ export class HomePage implements OnInit {
             text: 'OK',
             id: 'confirm-button',
             handler: () => {
-              this.router.navigateByUrl('/login-empresa', { replaceUrl: true });
+              this.router.navigateByUrl('/login/empresa', { replaceUrl: true });
             },
           },
         ],
@@ -819,14 +827,14 @@ export class HomePage implements OnInit {
             text: 'OK',
             id: 'confirm-button',
             handler: () => {
-              this.router.navigateByUrl('/login', { replaceUrl: true });
+              this.router.navigateByUrl('/login/usuario', { replaceUrl: true });
             },
           },
         ],
       });
       await alert.present();
     } else if (err === 'blocked') {
-      this.router.navigateByUrl('/token-block', { replaceUrl: true });
+      this.router.navigateByUrl('/login/tokenBlock', { replaceUrl: true });
     } else {
       const alert = await this.alertController.create({
         cssClass: 'my-custom-class',

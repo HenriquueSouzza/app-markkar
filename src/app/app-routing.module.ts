@@ -8,24 +8,12 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'validate-login',
+    redirectTo: 'login',
     pathMatch: 'full'
-  },
-  {
-    path: 'login-empresa',
-    loadChildren: () => import('./login-empresa/login-empresa.module').then( m => m.LoginEmpresaPageModule)
   },
   {
     path: 'home',
     loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)
-  },
-  {
-    path: 'validate-login',
-    loadChildren: () => import('./validate-login/validate-login.module').then( m => m.ValidateLoginPageModule)
-  },
-  {
-    path: 'welcome',
-    loadChildren: () => import('./welcome/welcome.module').then( m => m.WelcomePageModule)
   },
   {
     path: 'settings',
@@ -36,13 +24,14 @@ const routes: Routes = [
     loadChildren: () => import('./preferences/preferences.module').then( m => m.PreferencesPageModule)
   },
   {
-    path: 'token-block',
-    loadChildren: () => import('./token-block/token-block.module').then( m => m.TokenBlockPageModule)
-  },
-  {
     path: 'barcode-test',
     loadChildren: () => import('./barcode-test/barcode-test.module').then( m => m.BarcodeTestPageModule)
   },
+  {
+    path: '**',
+    redirectTo: 'login',
+    pathMatch: 'full'
+  }
 
 ];
 

@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { VerificaTokenGuard } from './verifica-token.guard';
+import { TokenBlockGuard } from './token-block.guard';
 
-describe('VerificaTokenGuard', () => {
-  let guard: VerificaTokenGuard;
+describe('TokenBlockGuard', () => {
+  let guard: TokenBlockGuard;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    guard = TestBed.inject(VerificaTokenGuard);
+    guard = TestBed.inject(TokenBlockGuard);
   });
 
   it('should be created', () => {

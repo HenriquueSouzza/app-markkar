@@ -4,68 +4,21 @@
   position: absolute;
   z-index: 0;
 }
-ion-item{
-  --background: transparent !important;
-}
-#idEmpresa{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  position: absolute;
+#splash{
   width: 100vw;
   height: 100vh;
-
-  .emp{
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-top: min(calc(50vh - 200px), 175px);
-    margin-bottom: 45px;
-    --padding-start: calc(50vw - 304px);
-    transition: all 0.5s;
-
-    img{
-      max-width: 30%;
-      margin-inline: 35px 0px;
-    }
-
-    ion-label{
-      color: white;
-      margin: 5px 0 0 0 ;
-      text-align: start;
-      font-family: 'robotoBold';
-      width: 80%;
-    }
-  }
-  .emp.inputUpM{
-    margin-top: calc(35vh - 200px);
-  }
-  .emp.inputUp{
-    margin-top: calc(28vh - 200px);
-  }
-  form{
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-
-    input{
-      border: var(--ion-color-primary) solid 1px;
-      outline: 0;
-      border-radius: 10px;
-      padding: 5px;
-      width: 80%;
-      min-height: 36px;
-      margin-bottom: 10px;
-      background: transparent;
-    }
-    ion-button{
-      width: 80%;
-      --border-radius: 10px;
-    }
-  }
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+ion-icon{
+  font-size: 13rem;
+  margin-top: 30vh;
+}
+ion-button{
+  width: 45px;
+  height: 45px;
+  --padding-start: 7px;
+  --padding-end: 7px;
 }

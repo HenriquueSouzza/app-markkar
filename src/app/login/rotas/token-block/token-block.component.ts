@@ -34,14 +34,14 @@ export class TokenBlockComponent implements OnInit {
       this.service.firstlogin(validatefLogin).subscribe(async response =>{
         if(response['status'] === 'failed'){
           this.loader = false;
-          this.router.navigateByUrl('/login-empresa', { replaceUrl: true });
+          this.router.navigateByUrl('/login/empresa', { replaceUrl: true });
         }
         else if(response['status'] === 'blocked'){
           this.loader = false;
         }
         else if(response['status'] === 'success'){
           this.loader = false;
-          this.router.navigateByUrl('/login', { replaceUrl: true });
+          this.router.navigateByUrl('/login/usuario', { replaceUrl: true });
         }
         else if(response['status'] === 'errDB'){
           this.loader = false;
@@ -63,6 +63,6 @@ export class TokenBlockComponent implements OnInit {
   }
 
   change(){
-    this.router.navigateByUrl('/login-empresa', { replaceUrl: true });
+    this.router.navigateByUrl('/login/empresa', { replaceUrl: true });
   }
 }

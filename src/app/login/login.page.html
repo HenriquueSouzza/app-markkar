@@ -1,18 +1,8 @@
-<ion-content [fullscreen]="true">
-  <img id="imgBck" src="assets/img/backgW/1.png" alt="">
-  <section style="z-index: 10;" id="idEmpresa">
-    <ion-item [ngClass]="{'contentSlide': true, 'inputUp': keyHeight, 'inputUpM': keyHeightM}" lines="none" class="emp">
-      <img slot="start" src="assets/img/m-markkar.png" alt="MarkkarLogo">
-      <ion-label>Seja Bem-vindo, <br> {{empAtual}}.</ion-label>
-    </ion-item>
-    <form #f="ngForm" (ngSubmit)="enviarLogin(f)">
-      <input (click)="colorReset()" [ngStyle]="{'color': colorInput}" ngModel name="user" autocomplete="off" type="text" placeholder="Digite o seu usuario...">
-      <input (click)="colorReset()" [ngStyle]="{'color': colorInput}" ngModel name="senha" type="password" placeholder="Digite a sua Senha...">
-      <span style="z-index: 10; color: red;font-family: 'robotoBold'; text-transform: uppercase;">{{ errLogin }}</span>
-      <ion-button type="submit" expand="block" shape="round">ENTRAR</ion-button>
-      <ion-button id="btnAlternate" style="color: white;" (click)="change()" expand="block" fill="clear" shape="round">
-        Trocar Empresa
-      </ion-button>
-    </form>
-  </section>
+<ion-content>
+  <img id="imgBck" src="../../assets/img/backgW/1.png" alt="">
+  <div id="splash">
+    <ion-icon style="color: #ff9e19;" name="alert-circle-outline"></ion-icon>
+      <span style="z-index: 20;" *ngIf="btn === 'block'"  class="span"><ion-button [ngStyle]="{'display': btn}" (click)="ngOnInit()" expand="block" fill="clear" shape="round"><ion-icon style="margin-top: 0;width: 100%;height: 100%;color: #ff9e19;" name="reload-outline"></ion-icon></ion-button></span>
+      <span style="z-index: 20;" *ngIf="btn === 'none'" class="span"><ion-spinner style="color: #ff9e19;margin-top: 13px;"></ion-spinner></span>
+  </div>
 </ion-content>

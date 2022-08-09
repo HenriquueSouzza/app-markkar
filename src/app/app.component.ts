@@ -41,11 +41,11 @@ export class AppComponent implements OnInit {
     await this.storageService.set('token', token);
     await this.storageService.set('idToken', idToken);
     await this.storageService.set('empresaAtual', empresa);
-    this.router.navigateByUrl('/login', { replaceUrl: true });
+    this.router.navigateByUrl('/login/usuario', { replaceUrl: true });
   }
 
   redirect() {
-    this.router.navigateByUrl('/login-empresa', { replaceUrl: false });
+    this.router.navigateByUrl('/login/empresa', { replaceUrl: false });
   }
 
   async deleteEmp(empresa, cnpj, token, idToken) {
@@ -92,7 +92,7 @@ export class AppComponent implements OnInit {
                 await this.storageService.set('idToken', null);
                 await this.storageService.set('empresaAtual', null);
                 this.ngOnInit();
-                this.router.navigateByUrl('/login-empresa', {
+                this.router.navigateByUrl('/login/empresa', {
                   replaceUrl: true,
                 });
               } else {
@@ -110,7 +110,7 @@ export class AppComponent implements OnInit {
                   empresaReset[0]['empresa']
                 );
                 this.ngOnInit();
-                this.router.navigateByUrl('/login-empresa', {
+                this.router.navigateByUrl('/login/empresa', {
                   replaceUrl: true,
                 });
               }
