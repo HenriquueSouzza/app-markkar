@@ -15,8 +15,8 @@ import {
   StatusBarStyle,
 } from '@capacitor/status-bar';
 import { SplashScreen } from '@capacitor/splash-screen';
-import { StorageService } from '../servico/storage.service';
-import { LoginService } from '../servico/login.service';
+import { StorageService } from '../services/storage/storage.service';
+import { LoginService } from './services/login/login.service';
 
 @Component({
   selector: 'app-login',
@@ -62,6 +62,7 @@ export class LoginPage implements OnInit {
       await this.storage.set('mask', true);
       await this.storage.set('cmvPerc', true);
       await this.storage.set('empresas', {});
+      await this.storage.set('valUpdateReset', '1.12.36');
       this.router.navigateByUrl('/login/bemVindo', { replaceUrl: true });
       setTimeout(() => {
         SplashScreen.hide();
@@ -91,7 +92,7 @@ export class LoginPage implements OnInit {
         async (response) => {
           if (response['status'] === 'success') {
             this.btn = 'block';
-            this.router.navigateByUrl('/home', { replaceUrl: true });
+            this.router.navigateByUrl('/home/faturamento', { replaceUrl: true });
             setTimeout(() => {
               SplashScreen.hide();
             }, 600);

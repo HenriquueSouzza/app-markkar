@@ -1,25 +1,20 @@
-
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { HomePageRoutingModule } from './home-routing.module';
+import { ConfiguracoesPageRoutingModule } from './configuracoes-routing.module';
 
-import { HomePage } from './home.page';
-import { NgChartsModule } from 'ng2-charts';
+import { ConfiguracoesPage } from './configuracoes.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    HomePageRoutingModule,
-    NgChartsModule
+    ConfiguracoesPageRoutingModule
   ],
-  declarations: [
-    HomePage
-  ]
+  declarations: [ConfiguracoesPage]
 })
-export class HomePageModule {}
+export class ConfiguracoesPageModule {}

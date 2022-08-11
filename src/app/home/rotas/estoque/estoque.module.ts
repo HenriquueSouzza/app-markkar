@@ -1,25 +1,20 @@
-
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { HomePageRoutingModule } from './home-routing.module';
+import { EstoquePageRoutingModule } from './estoque-routing.module';
 
-import { HomePage } from './home.page';
-import { NgChartsModule } from 'ng2-charts';
+import { EstoquePage } from './estoque.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    HomePageRoutingModule,
-    NgChartsModule
+    EstoquePageRoutingModule
   ],
-  declarations: [
-    HomePage
-  ]
+  declarations: [EstoquePage]
 })
-export class HomePageModule {}
+export class EstoquePageModule {}

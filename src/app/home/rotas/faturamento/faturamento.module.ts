@@ -1,13 +1,12 @@
-
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { HomePageRoutingModule } from './home-routing.module';
+import { FaturamentoPageRoutingModule } from './faturamento-routing.module';
 
-import { HomePage } from './home.page';
+import { FaturamentoPage } from './faturamento.page';
 import { NgChartsModule } from 'ng2-charts';
 
 @NgModule({
@@ -15,11 +14,9 @@ import { NgChartsModule } from 'ng2-charts';
     CommonModule,
     FormsModule,
     IonicModule,
-    HomePageRoutingModule,
+    FaturamentoPageRoutingModule,
     NgChartsModule
   ],
-  declarations: [
-    HomePage
-  ]
+  declarations: [FaturamentoPage]
 })
-export class HomePageModule {}
+export class FaturamentoPageModule {}

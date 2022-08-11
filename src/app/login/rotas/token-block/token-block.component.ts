@@ -4,8 +4,8 @@ import { Router } from '@angular/router';
 import { isPlatform, LoadingController, MenuController } from '@ionic/angular';
 import { Storage } from '@ionic/storage-angular';
 import { StatusBar } from '@capacitor/status-bar';
-import { LoginService } from 'src/app/servico/login.service';
-import { StorageService } from 'src/app/servico/storage.service';
+import { LoginService } from '../../services/login/login.service';
+import { StorageService } from 'src/app/services/storage/storage.service';
 
 
 @Component({

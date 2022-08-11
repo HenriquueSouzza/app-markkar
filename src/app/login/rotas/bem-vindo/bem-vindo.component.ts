@@ -8,8 +8,8 @@ import SwiperCore, { Autoplay, Keyboard, Pagination, Scrollbar, Zoom } from 'swi
 import { SwiperComponent } from 'swiper/angular';
 import { StatusBar } from '@capacitor/status-bar';
 import { Platform } from '@ionic/angular';
-import { LoginService } from 'src/app/servico/login.service';
-import { StorageService } from 'src/app/servico/storage.service';
+import { LoginService } from '../../services/login/login.service';
+import { StorageService } from 'src/app/services/storage/storage.service';
 
 @Component({
   selector: 'app-bem-vindo',

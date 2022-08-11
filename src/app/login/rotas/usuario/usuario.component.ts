@@ -5,8 +5,8 @@ import { AlertController, isPlatform, LoadingController, Platform } from '@ionic
 import { Storage } from '@ionic/storage-angular';
 import { Router } from '@angular/router';
 import { MenuController } from '@ionic/angular';
-import { LoginService } from 'src/app/servico/login.service';
-import { StorageService } from 'src/app/servico/storage.service';
+import { LoginService } from '../../services/login/login.service';
+import { StorageService } from 'src/app/services/storage/storage.service';
 
 @Component({
   selector: 'app-usuario',
@@ -81,7 +81,7 @@ export class UsuarioComponent implements OnInit {
                 text: 'SIM',
                 id: 'confirm-button',
                 handler: () => {
-                  this.router.navigateByUrl('/home', { replaceUrl: true });
+                  this.router.navigateByUrl('/home/faturamento', { replaceUrl: true });
                 }
               }
             ]
@@ -125,7 +125,7 @@ export class UsuarioComponent implements OnInit {
           await this.storageService.set('login', login.user);
           await this.storageService.set('senha', login.senha);
           await loading.dismiss();
-          this.router.navigateByUrl('/home', { replaceUrl: true });
+          this.router.navigateByUrl('/home/faturamento', { replaceUrl: true });
         }
         else if(response['status'] === 'failed'){
           this.colorInput = 'red';

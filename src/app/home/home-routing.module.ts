@@ -6,7 +6,35 @@ import { HomePage } from './home.page';
 const routes: Routes = [
   {
     path: '',
-    component: HomePage
+    redirectTo: '/home/faturamento',
+    pathMatch: 'full'
+  },
+  {
+    path: '',
+    component: HomePage,
+    children: [
+      {
+        path: 'faturamento',
+        loadChildren: () => import('./rotas/faturamento/faturamento.module').then( m => m.FaturamentoPageModule)
+      },
+      {
+        path: 'estoque',
+        loadChildren: () => import('./rotas/estoque/estoque.module').then( m => m.EstoquePageModule)
+      },
+      {
+        path: 'caixa-movel',
+        loadChildren: () => import('./rotas/caixa-movel/caixa-movel.module').then( m => m.CaixaMovelPageModule)
+      }
+    ]
+  },
+  {
+    path: 'configuracoes',
+    loadChildren: () => import('./rotas/configuracoes/configuracoes.module').then( m => m.ConfiguracoesPageModule)
+  },
+  {
+    path: '**',
+    redirectTo: '/home/faturamento',
+    pathMatch: 'full'
   }
 ];
 

@@ -1,25 +1,20 @@
-
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { HomePageRoutingModule } from './home-routing.module';
+import { CaixaMovelPageRoutingModule } from './caixa-movel-routing.module';
 
-import { HomePage } from './home.page';
-import { NgChartsModule } from 'ng2-charts';
+import { CaixaMovelPage } from './caixa-movel.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    HomePageRoutingModule,
-    NgChartsModule
+    CaixaMovelPageRoutingModule
   ],
-  declarations: [
-    HomePage
-  ]
+  declarations: [CaixaMovelPage]
 })
-export class HomePageModule {}
+export class CaixaMovelPageModule {}

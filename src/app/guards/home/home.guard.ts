@@ -3,23 +3,23 @@ import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTr
 import { Observable } from 'rxjs';
 import { Storage } from '@ionic/storage-angular';
 import { StorageService } from 'src/app/services/storage/storage.service';
-
 @Injectable({
   providedIn: 'root'
 })
-export class UsuarioGuard implements CanActivate {
+export class HomeGuard implements CanActivate {
 
   constructor(private router: Router, private storageService: StorageService, private storage: Storage){ }
 
- async canActivate(
-   route: ActivatedRouteSnapshot,
-   state: RouterStateSnapshot): Promise<boolean> {
-    const valCnpj = await this.storage.get('cnpj');
-    const valToken = await this.storage.get('token');
-    if(valCnpj !== null && valToken !== null){
+  async canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot): Promise<boolean> {
+    const valIdToken = await this.storage.get('idToken');
+    const valLogin = await this.storage.get('login');
+    const valSenhaLogin = await this.storage.get('senha');
+    if(valLogin !== null && valSenhaLogin !== null && valIdToken !== null){
       return true;
     } else {
-      this.router.navigateByUrl('/login/empresa', { replaceUrl: true });
+      this.router.navigateByUrl('/login', { replaceUrl: true });
       return false;
     }
   }
