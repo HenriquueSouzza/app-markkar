@@ -47,7 +47,6 @@
               <ion-icon slot="start" name="business-outline"></ion-icon>
               <ion-label>Multiempresa</ion-label>
             </ion-item>
-          </ion-menu-toggle>
             <ion-item
             [detail]="false"
             (click)="presentToast('Em desenvolvimento...')"
@@ -58,14 +57,16 @@
             <ion-label>Caixa Movel</ion-label>
           </ion-item>
           <ion-item
-            [detail]="false"
-            (click)="presentToast('Em desenvolvimento...')"
-            class="pgs"
-            [button]="true"
+          [detail]="false"
+          (click)="presentToast('Em desenvolvimento...')"
+          [routerLink]="['/home/estoque']"
+          class="pgs"
+          [button]="true"
           >
-            <ion-icon slot="start" name="pie-chart-outline"></ion-icon>
-            <ion-label>estoque</ion-label>
-          </ion-item>
+          <ion-icon slot="start" name="pie-chart-outline"></ion-icon>
+          <ion-label>estoque</ion-label>
+        </ion-item>
+      </ion-menu-toggle>
         </ion-list>
         <footer id="footer">
           <img

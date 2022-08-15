@@ -1,0 +1,32 @@
+:root {
+	--ion-background-color: #141518 !important;
+}
+#scan {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+
+  #backUp {
+
+    width: 100%;
+    height: 35%;
+    background-color: rgba(0, 0, 0, 0.695);
+  }
+
+  #line {
+    width: 100%;
+    height: 2px;
+    background-color: red;
+  }
+
+  #backDown {
+
+    width: 100%;
+    height: 35%;
+    background-color: rgba(0, 0, 0, 0.695);
+  }
+
+}

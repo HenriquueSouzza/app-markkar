@@ -18,10 +18,6 @@ const routes: Routes = [
     canActivate: [ HomeGuard ]
   },
   {
-    path: 'barcode-test',
-    loadChildren: () => import('./barcode-test/barcode-test.module').then( m => m.BarcodeTestPageModule)
-  },
-  {
     path: '**',
     redirectTo: 'login',
     pathMatch: 'full'

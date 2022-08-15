@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { timeout } from 'rxjs/operators';
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export interface interfaceFaturamento {
   cnpj: string;
