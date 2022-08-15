@@ -8,9 +8,12 @@ const config: CapacitorConfig = {
   bundledWebRuntime: false,
   plugins: {
     SplashScreen: {
-      launchAutoHide: false,
       androidScaleType: 'CENTER_CROP',
-      showSpinner: false
+      launchAutoHide: false,
+      showSpinner: false,
+      splashFullScreen: true,
+      splashImmersive: false,
+      backgroundColor: '#141518'
     },
   },
 };

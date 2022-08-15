@@ -66,7 +66,7 @@ export class LoginPage implements OnInit {
       this.router.navigateByUrl('/login/bemVindo', { replaceUrl: true });
       setTimeout(() => {
         SplashScreen.hide();
-      }, 1000);
+      }, 2000);
     } else if (valUpdateReset !== '1.12.36') {
       await this.storage.set('empresas', {});
       await this.storage.set('unidadesCheck', {});
@@ -79,7 +79,7 @@ export class LoginPage implements OnInit {
       this.router.navigateByUrl('/login/empresa', { replaceUrl: true });
       setTimeout(() => {
         SplashScreen.hide();
-      }, 1000);
+      }, 2000);
     } else if (valIntGra !== 'lastFourMonths' && valIntGra !== 'fourMonths') {
       await this.storage.set('intervalGrafico', 'lastFourMonths');
       this.router.navigateByUrl('/login/bemVindo', { replaceUrl: true });
@@ -95,7 +95,7 @@ export class LoginPage implements OnInit {
             this.router.navigateByUrl('/home/faturamento', { replaceUrl: true });
             setTimeout(() => {
               SplashScreen.hide();
-            }, 1000);
+            }, 2000);
             if (!isPlatform('mobileweb') && isPlatform('android')) {
               const optsBck: BackgroundColorOptions = { color: '#222428' };
               StatusBar.setBackgroundColor(optsBck);
@@ -107,12 +107,12 @@ export class LoginPage implements OnInit {
             this.router.navigateByUrl('/login/usuario', { replaceUrl: true });
             setTimeout(() => {
               SplashScreen.hide();
-            }, 1000);
+            }, 2000);
           } else if (response['status'] === 'errDB') {
             this.btn = 'block';
             setTimeout(() => {
               SplashScreen.hide();
-            }, 1000);
+            }, 2000);
             this.presentToast('Falha ao conectar com o servidor de dados');
           }
         },
@@ -120,7 +120,7 @@ export class LoginPage implements OnInit {
           this.btn = 'block';
           setTimeout(() => {
             SplashScreen.hide();
-          }, 1000);
+          }, 2000);
           this.presentToast('Falha ao conectar com o servidor');
         }
       );
@@ -131,22 +131,22 @@ export class LoginPage implements OnInit {
             this.router.navigateByUrl('/login/empresa', { replaceUrl: true });
             setTimeout(() => {
               SplashScreen.hide();
-            }, 1000);
+            }, 2000);
           } else if (response['status'] === 'blocked') {
             this.router.navigateByUrl('/login/tokenBlock', { replaceUrl: true });
             setTimeout(() => {
               SplashScreen.hide();
-            }, 1000);
+            }, 2000);
           } else if (response['status'] === 'success') {
             this.router.navigateByUrl('/login/usuario', { replaceUrl: true });
             setTimeout(() => {
               SplashScreen.hide();
-            }, 1000);
+            }, 2000);
           } else if (response['status'] === 'errDB') {
             this.btn = 'block';
             setTimeout(() => {
               SplashScreen.hide();
-            }, 1000);
+            }, 2000);
             this.presentToast('Falha ao conectar com o servidor de dados');
           }
         },
@@ -154,7 +154,7 @@ export class LoginPage implements OnInit {
           this.btn = 'block';
           setTimeout(() => {
             SplashScreen.hide();
-          }, 1000);
+          }, 2000);
           this.presentToast('Falha ao conectar com o servidor');
         }
       );
@@ -168,12 +168,12 @@ export class LoginPage implements OnInit {
       this.router.navigateByUrl('/login/empresa', { replaceUrl: true });
       setTimeout(() => {
         SplashScreen.hide();
-      }, 1000);
+      }, 2000);
     } else {
       this.btn = 'block';
       setTimeout(() => {
         SplashScreen.hide();
-      }, 1000);
+      }, 2000);
       this.presentToast('Falha desconhecida');
     }
   }
