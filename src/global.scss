@@ -112,15 +112,15 @@ h1, h2, h3, h4, h5, h6 {
   padding-bottom: 0 !important;
 }
 html{
-  background: transparent !important;
+  background: var(--ion-background-color);
   min-height: 100vh !important
 }
 html.md{
-  background: transparent !important;
+  background: var(--ion-background-color) ;
   min-height: 100vh !important
 }
 html.ios{
-  background: transparent !important;
+  background: var(--ion-background-color)  ;
   min-height: 100vh !important
 }
 .datetime-size-fixed{
