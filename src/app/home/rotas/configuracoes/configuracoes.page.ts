@@ -27,22 +27,10 @@ export class ConfiguracoesPage implements OnInit {
     private platform: Platform,
     private navCtrl: NavController,
     public toastController: ToastController
-  ) {
-    this.platform.backButton.subscribeWithPriority(10, () => {
-      this.enableMenu();
-      this.navCtrl.back();
-    });
-  }
+  ) { }
 
   async ngOnInit() {
-    setTimeout(() => {
-      this.menu.enable(false, 'homeMenu');
-    }, 300);
     this.name = await this.storage.get('login');
-  }
-
-  enableMenu() {
-    this.menu.enable(true, 'homeMenu');
   }
 
   redirect() {

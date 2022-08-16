@@ -7,7 +7,7 @@
 		"SplashScreen": {
 			"androidScaleType": "CENTER_CROP",
 			"launchAutoHide": false,
-			"showSpinner": true,
+			"showSpinner": false,
 			"splashFullScreen": true,
 			"splashImmersive": false,
 			"backgroundColor": "#141518"

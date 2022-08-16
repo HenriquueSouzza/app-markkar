@@ -27,7 +27,6 @@ export class PreferenciasPage implements OnInit {
   ) {}
 
   async ngOnInit() {
-    this.menu.enable(false, 'homeMenu');
     if ((await this.storage.get('intervalHeader')) === 'on') {
       await this.storage.set('intervalHeader', 'month');
     }
