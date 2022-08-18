@@ -1,0 +1,52 @@
+#scan {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+
+  #backUp {
+    width: 100%;
+    height: 35%;
+    background-color: rgba(0, 0, 0, 0.695);
+
+    #safe {
+      width: 100%;
+      height: 35px;
+    }
+
+    #btns {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+
+      .flashIcon {
+        color: white;
+      }
+
+      ion-button {
+        --padding-start: 5px;
+        --padding-end: 5px;
+        --padding-bottom: 0px;
+        --padding-top: 0px;
+      }
+    }
+  }
+
+  #line {
+    width: 100%;
+    height: 2px;
+    background-color: red;
+  }
+
+  #backDown {
+    width: 100%;
+    height: 35%;
+    background-color: rgba(0, 0, 0, 0.695);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+}

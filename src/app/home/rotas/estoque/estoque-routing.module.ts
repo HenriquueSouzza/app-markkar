@@ -7,6 +7,14 @@ const routes: Routes = [
   {
     path: '',
     component: EstoquePage
+  },
+  {
+    path: 'scanner',
+    loadChildren: () => import('./rotas/scanner/scanner.module').then( m => m.ScannerPageModule)
+  },
+  {
+    path: 'produtos',
+    loadChildren: () => import('./rotas/produtos/produtos.module').then( m => m.ProdutosPageModule)
   }
 ];
 

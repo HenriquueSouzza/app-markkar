@@ -15,6 +15,7 @@ import { IonicStorageModule } from '@ionic/storage-angular';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { ScreenOrientation } from '@awesome-cordova-plugins/screen-orientation/ngx';
+import { Flashlight } from '@awesome-cordova-plugins/flashlight/ngx';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,7 @@ import { ScreenOrientation } from '@awesome-cordova-plugins/screen-orientation/n
       registrationStrategy: 'registerWhenStable:30000'
     })
   ],
-  providers: [ScreenOrientation, { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+  providers: [ScreenOrientation, Flashlight, { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

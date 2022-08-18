@@ -1,0 +1,30 @@
+<ion-content *ngIf="telaEspelho">
+  <div id="scan">
+    <div id="backUp">
+      <div id="safe"></div>
+      <div id="btns">
+        <ion-button (click)="navigateBack()" fill="clear" shape="round"><ion-icon class="flashIcon" name="close-outline"></ion-icon></ion-button>
+        <ion-button (click)="switchFlashLight();presentToast('Em desenvolvimento...')" fill="clear" shape="round" *ngIf="!flashIsSwitchedOn"><ion-icon class="flashIcon" name="flash-outline"></ion-icon></ion-button>
+        <ion-button (click)="switchFlashLight();presentToast('Em desenvolvimento...')" fill="clear" shape="round" *ngIf="flashIsSwitchedOn"><ion-icon class="flashIcon" name="flash-off-outline"></ion-icon></ion-button>
+      </div>
+    </div>
+    <div id="line"></div>
+    <div id="backDown">
+      <ion-button>Digite o código...</ion-button>
+    </div>
+  </div>
+</ion-content>
+<div id="scan" *ngIf="!telaEspelho">
+  <div id="backUp">
+    <div id="safe"></div>
+    <div id="btns">
+      <ion-button (click)="navigateBack()" fill="clear" shape="round"><ion-icon class="flashIcon" name="close-outline"></ion-icon></ion-button>
+      <ion-button (click)="switchFlashLight();presentToast('Em desenvolvimento...')" fill="clear" shape="round" *ngIf="!flashIsSwitchedOn"><ion-icon class="flashIcon" name="flash-outline"></ion-icon></ion-button>
+      <ion-button (click)="switchFlashLight();presentToast('Em desenvolvimento...')" fill="clear" shape="round" *ngIf="flashIsSwitchedOn"><ion-icon class="flashIcon" name="flash-off-outline"></ion-icon></ion-button>
+    </div>
+  </div>
+  <div id="line"></div>
+  <div id="backDown">
+    <ion-button>Digite o código...</ion-button>
+  </div>
+</div>

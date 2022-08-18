@@ -1,51 +1,47 @@
 <ion-header>
-  <ion-toolbar color="dark" style="height: auto;">
+  <ion-toolbar color="dark" style="height: auto">
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="home"></ion-back-button>
+      <ion-back-button defaultHref="/home"></ion-back-button>
     </ion-buttons>
     <ion-title mode="ios">estoque</ion-title>
   </ion-toolbar>
 </ion-header>
 <ion-content no-bounce has-bouncing="false" forceOverscroll="false">
-  <div class="produtos">
-    <ion-item style="width: 100%" lines="none" color="secondary">
-      <ion-label style="
-      font-family: 'robotoBold';
-      margin: 0;
-      margin-bottom: 3px;
-      font-size: 1.2rem;
-    ">teste</ion-label>
+  <div id="pesquisa">
+    <ion-searchbar placeholder="Digite o nome..."></ion-searchbar>
+    <span>ou</span>
+    <ion-button color="dark" routerLink="/home/estoque/scanner">
+      <ion-icon slot="start" name="barcode-outline"></ion-icon>
+      Scanner
+    </ion-button>
+  </div>
+  <div id="recentes">
+    <ion-item lines="full">
+      <ion-label color="primary">Recentes</ion-label>
     </ion-item>
-    <div class="informacoes">
-      <div class="informacao">
-        <h2>nome:</h2>
-        <p></p>
-      </div>
-      <div class="informacao">
-        <h2>valor:</h2>
-        <p></p>
-      </div>
-      <div class="informacao">
-        <h2>quantidade:</h2>
-        <p></p>
-      </div>
-      <div class="informacao">
-        <h2>unidade:</h2>
-        <p></p>
-      </div>
-      <div class="informacao">
-        <h2>codigo:</h2>
-        <p></p>
-      </div>
-      <div style="margin-bottom: 20px" class="informacao">
-        <h2>id:</h2>
-        <p></p>
-      </div>
-    </div>
+    <ion-list lines="none">
+      <ion-item-sliding>
+        <ion-item [button]="true">
+          <ion-label>
+            teste
+            <p>Cod: teste</p>
+          </ion-label>
+        </ion-item>
+        <ion-item-options side="end">
+          <ion-item-option color="danger" >Deletar</ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+      <ion-item-sliding>
+        <ion-item [button]="true">
+          <ion-label>
+            teste2
+            <p>Cod: teste2</p>
+          </ion-label>
+        </ion-item>
+        <ion-item-options side="end">
+          <ion-item-option color="danger" >Deletar</ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+    </ion-list>
   </div>
 </ion-content>
-<div id="scan" style="display: none;">
-  <div id="backUp"></div>
-  <div id="line"></div>
-  <div id="backDown"></div>
-</div>

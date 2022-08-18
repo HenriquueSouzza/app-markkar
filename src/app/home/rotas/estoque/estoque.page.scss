@@ -1,70 +1,14 @@
-:root {
-	--ion-background-color: yellow !important;
-}
-
-
-#scan {
-  width: 100%;
-  height: 100%;
+#pesquisa{
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-
-  #backUp {
-
-    width: 100%;
-    height: 35%;
-    background-color: rgba(0, 0, 0, 0.695);
-  }
-
-  #line {
-    width: 100%;
-    height: 2px;
-    background-color: red;
-  }
-
-  #backDown {
-
-    width: 100%;
-    height: 35%;
-    background-color: rgba(0, 0, 0, 0.695);
-  }
-
-}
-
-.produtos{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  margin: 10px 0;
-}
+  align-items: center;
 
-.informacoes{
-  width: 90%;
-  height: auto;
-  padding: 0 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-  border-radius: 10px;
-  border: solid orange 1px;
-}
-.informacao{
-  width: 100%;
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  margin-top: 20px;
-
-  h2{
-    font-family: 'robotoBold';
-    text-transform: uppercase;
+  span{
+    margin-bottom: 10px;
   }
 
-  p{
-    margin: 0;
+  ion-button {
+    width: 50%;
   }
 }
