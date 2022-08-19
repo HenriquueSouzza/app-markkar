@@ -13,6 +13,8 @@ import { EstoqueService } from '../../services/estoque/estoque.service';
 export class ScannerPage implements OnInit {
   public flashIsSwitchedOn = false;
   public telaEspelho = true;
+  public telaDigCodigo = false;
+  private scanIsRun = false;
 
   constructor(
     private screenOrientation: ScreenOrientation,
@@ -21,18 +23,16 @@ export class ScannerPage implements OnInit {
     public toastController: ToastController,
     private navCtrl: NavController
   ) {}
+
   ngOnInit() {
     setTimeout(() => {
       this.telaEspelho = false;
     }, 500);
-    this.startScan();
-    setTimeout(() => {
-      this.stopScan();
-      //this.presentToast('Não foi possível ler o código...');
-    }, 15000);
+    this.reloadScan();
   }
 
   async startScan() {
+    this.scanIsRun = true;
     this.screenOrientation.unlock();
     BarcodeScanner.hideBackground(); // make background of WebView transparent
     const result = await BarcodeScanner.startScan(); // start scanning and wait for a result
@@ -49,8 +49,19 @@ export class ScannerPage implements OnInit {
   }
 
   stopScan() {
+    this.scanIsRun = false;
     BarcodeScanner.showBackground();
     BarcodeScanner.stopScan();
+  }
+
+  reloadScan() {
+    this.startScan();
+    setTimeout(() => {
+      if(this.scanIsRun === true){
+        this.stopScan();
+        this.presentToast('Não foi possível ler o código...');
+      }
+    }, 15000);
   }
 
   ionViewWillLeave() {

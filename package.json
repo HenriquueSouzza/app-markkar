@@ -26,6 +26,7 @@
     "@capacitor-community/http": "^1.4.1",
     "@capacitor/android": "^4.0.1",
     "@capacitor/app": "^4.0.1",
+    "@capacitor/clipboard": "^4.0.1",
     "@capacitor/core": "^4.0.1",
     "@capacitor/haptics": "^4.0.1",
     "@capacitor/ios": "^4.0.1",

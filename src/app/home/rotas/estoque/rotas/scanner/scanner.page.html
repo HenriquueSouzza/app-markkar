@@ -1,5 +1,5 @@
-<ion-content *ngIf="telaEspelho">
-  <div id="scan">
+<ion-content *ngIf="telaEspelho" no-bounce has-bouncing="false" forceOverscroll="false">
+  <div id="scan" *ngIf="!telaDigCodigo">
     <div id="backUp">
       <div id="safe"></div>
       <div id="btns">
@@ -10,7 +10,22 @@
     </div>
     <div id="line"></div>
     <div id="backDown">
-      <ion-button>Digite o código...</ion-button>
+      <ion-button (click)="telaDigCodigo = !telaDigCodigo; telaEspelho = true;stopScan()">Digite o código...</ion-button>
+    </div>
+  </div>
+  <div id="code" *ngIf="telaDigCodigo">
+    <ion-item lines="none">
+      <ion-icon routerLink="/home/estoque" routerDirection="back" slot="start" name="arrow-back-outline"></ion-icon>
+    </ion-item>
+    <ion-item lines="none">
+      <ion-label id="titleCode">digite o código de barras</ion-label>
+    </ion-item>
+    <ion-item lines="full">
+      <ion-label position="stacked">código de barras</ion-label>
+      <ion-input inputmode="numeric"></ion-input>
+    </ion-item>
+    <div id="btnConsultar">
+      <ion-button>Consultar</ion-button>
     </div>
   </div>
 </ion-content>
@@ -25,6 +40,6 @@
   </div>
   <div id="line"></div>
   <div id="backDown">
-    <ion-button>Digite o código...</ion-button>
+    <ion-button (click)="telaDigCodigo = !telaDigCodigo; telaEspelho = true;stopScan()">Digite o código...</ion-button>
   </div>
 </div>

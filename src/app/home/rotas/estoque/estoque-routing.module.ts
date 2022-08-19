@@ -15,6 +15,11 @@ const routes: Routes = [
   {
     path: 'produtos',
     loadChildren: () => import('./rotas/produtos/produtos.module').then( m => m.ProdutosPageModule)
+  },
+  {
+    path: '**',
+    redirectTo: '/home/estoque',
+    pathMatch: 'full'
   }
 ];
 
