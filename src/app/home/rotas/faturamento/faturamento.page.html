@@ -175,7 +175,7 @@
           </div>
         </div>
       </div>
-      <div *ngIf="contentLoader" id="totalUnid">
+      <div *ngIf="contentLoader && qntCC > 1" id="totalUnid">
         <h2>total</h2>
         <div id="dadosTotal">
           <div class="dadoTotal">
@@ -195,7 +195,7 @@
           </div>
         </div>
       </div>
-      <div *ngIf="!contentLoader" id="totalUnid">
+      <div *ngIf="!contentLoader && qntCC > 1" id="totalUnid">
         <h2>total</h2>
         <div id="dadosTotal">
           <div class="dadoTotal">

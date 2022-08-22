@@ -121,6 +121,7 @@ export class FaturamentoPage implements OnInit {
   somaMargemTotal: string;
   somaCMVTotal: string;
   intervalHeader: string;
+  qntCC = 0;
 
   //Date
   maxDate: any = format(parseISO(new Date().toISOString()), 'yyyy-MM-dd');
@@ -374,6 +375,7 @@ export class FaturamentoPage implements OnInit {
         let n = 1;
         for (const unidade of unidades) {
           somaFatArray.push(parseFloat(unidade['somaFat']));
+          this.qntCC = somaFatArray.length;
           somaMargemArray.push(parseFloat(unidade['somaMargem']));
           somaCMVrray.push(parseFloat(unidade['cmv_vlr']));
           n = n - 0.15;
@@ -505,6 +507,7 @@ export class FaturamentoPage implements OnInit {
             n = n - 0.15;
             const color = 'rgba(255, 159, 25,' + n + ')';
             somaFatArray.push(parseFloat(unidade['somaFat']));
+            this.qntCC = somaFatArray.length;
             somaMargemArray.push(parseFloat(unidade['somaMargem']));
             somaCMVrray.push(parseFloat(unidade['cmv_vlr']));
           }
