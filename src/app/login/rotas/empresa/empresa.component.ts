@@ -53,7 +53,6 @@ constructor(
 
 
 async ngOnInit() {
-  this.menu.enable(false, 'homeMenu');
   if(!isPlatform('mobileweb') && isPlatform('android')){
     StatusBar.setBackgroundColor({color: '#141518'});
   }

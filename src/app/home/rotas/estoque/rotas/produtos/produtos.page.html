@@ -1,7 +1,10 @@
 <ion-header>
   <ion-toolbar color="dark" style="height: auto;">
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="home"></ion-back-button>
+      <ion-back-button defaultHref="/home/estoque"></ion-back-button>
+    </ion-buttons>
+    <ion-buttons slot="secondary">
+      <ion-button fill="clear" shape="round"><ion-icon slot="icon-only" style="color: white;" name="barcode-outline"></ion-icon></ion-button>
     </ion-buttons>
     <ion-title mode="ios">produtos</ion-title>
   </ion-toolbar>
@@ -14,13 +17,9 @@
       margin: 0;
       margin-bottom: 3px;
       font-size: 1.2rem;
-    ">teste</ion-label>
+    ">Nome</ion-label>
     </ion-item>
     <div class="informacoes">
-      <div class="informacao">
-        <h2>nome:</h2>
-        <p></p>
-      </div>
       <div class="informacao">
         <h2>valor:</h2>
         <p></p>

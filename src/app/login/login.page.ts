@@ -38,7 +38,6 @@ export class LoginPage implements OnInit {
   ) {}
 
   async ngOnInit() {
-    this.menu.enable(false, 'homeMenu');
     this.btn = 'none';
     const valIntGra = await this.storage.get('intervalGrafico');
     const valUpdateReset = await this.storage.get('valUpdateReset');

@@ -7,8 +7,11 @@
   </ion-toolbar>
 </ion-header>
 <ion-content no-bounce has-bouncing="false" forceOverscroll="false">
+  <ion-item lines="none">
+    <ion-label style="font-weight: 600;text-transform: uppercase;">Consulta:</ion-label>
+  </ion-item>
   <div id="pesquisa">
-    <ion-searchbar placeholder="Consulta por nome..."></ion-searchbar>
+    <ion-searchbar mode="ios" placeholder="Consulta por nome..."></ion-searchbar>
     <span>ou</span>
     <ion-button color="dark" routerLink="/home/estoque/scanner">
       <ion-icon slot="start" name="barcode-outline"></ion-icon>
@@ -16,8 +19,8 @@
     </ion-button>
   </div>
   <div id="recentes">
-    <ion-item lines="full">
-      <ion-label color="primary">Recentes</ion-label>
+    <ion-item lines="none">
+      <ion-label style="font-weight: 600;text-transform: uppercase;">Recentes:</ion-label>
     </ion-item>
     <ion-list lines="none">
       <ion-item-sliding>

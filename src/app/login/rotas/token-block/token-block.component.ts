@@ -26,7 +26,6 @@ export class TokenBlockComponent implements OnInit {
     private storage: Storage) { }
 
   async ngOnInit() {
-    this.menu.enable(false, 'homeMenu');
     const valCnpj = await this.storage.get('cnpj');
     const valToken = await this.storage.get('token');
     const validatefLogin = {cnpj: valCnpj, token: valToken};

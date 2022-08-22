@@ -51,7 +51,6 @@ export class UsuarioComponent implements OnInit {
      }
 
   async ngOnInit() {
-    this.menu.enable(false, 'homeMenu');
     const login = await this.storage.get('login');
     this.empAtual = await this.storage.get('empresaAtual');
     const valIdToken = await this.storage.get('idToken');

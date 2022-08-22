@@ -63,7 +63,6 @@ export class BemVindoComponent implements OnInit {
     }
 
   async ngOnInit() {
-    this.menu.enable(false, 'homeMenu');
     const valCnpj = await this.storage.get('cnpj');
     const valToken = await this.storage.get('token');
     if(valCnpj !== null && valToken !== null){

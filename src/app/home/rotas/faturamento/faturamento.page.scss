@@ -43,15 +43,6 @@ ion-datetime{
 //header
 ion-toolbar{
   --background: var(--ion-color-dark);
-  --min-height: 10px;
-
-  .userIcon{
-    font-size: 1.7em;
-  }
-  ion-button{
-    --padding-start: 5px;
-    --padding-end: 5px;
-  }
 }
 .headerSection{
   background-color: var(--ion-color-dark);
