@@ -289,7 +289,7 @@ export class FaturamentoPage implements OnInit {
         );
     }
   }
-  async ionViewDidEnter() {
+  async ionViewWillEnter() {
     this.menu.enable(true, 'homeMenu');
     const verfyComplete = setInterval(() => {
       setTimeout(async () => {
