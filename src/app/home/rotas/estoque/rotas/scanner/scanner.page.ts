@@ -4,6 +4,7 @@ import { BarcodeScanner } from '@capacitor-community/barcode-scanner';
 import { ScreenOrientation } from '@awesome-cordova-plugins/screen-orientation/ngx';
 import { Flashlight } from '@awesome-cordova-plugins/flashlight/ngx';
 import { EstoqueService } from '../../services/estoque/estoque.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-scanner',
@@ -15,16 +16,26 @@ export class ScannerPage implements OnInit {
   public telaEspelho = true;
   public telaDigCodigo = false;
   private scanIsRun = false;
+  private idCc: string;
+  private idEmpBird: any;
 
   constructor(
     private screenOrientation: ScreenOrientation,
     private estoqueService: EstoqueService,
     private flashlight: Flashlight,
     public toastController: ToastController,
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
+    this.route.queryParamMap.subscribe((params: any) => {
+      if (params) {
+        this.idEmpBird = params.params.id1;
+        this.idCc = params.params.id2;
+      }
+    });
+
     setTimeout(() => {
       this.telaEspelho = false;
     }, 500);
@@ -38,13 +49,10 @@ export class ScannerPage implements OnInit {
     const result = await BarcodeScanner.startScan(); // start scanning and wait for a result
     // if the result has content
     if (result.hasContent) {
-      //alert('teste'+result.content); // log the raw scanned content
-      this.estoqueService
-        .estoque({ code: result.content })
-        .subscribe((res: any) => {
-          alert(res.produtos[0].NOME_PRODUTO);
-          //{COD_BARRA: "7899838806976" COD_PRODUTO: "4371" NOME_PRODUTO: "TESTE HENRIQUE" QTD_ESTOQUE: "50" UNIDADE: "UN" VALOR: "5"}
-        });
+      this.navCtrl.navigateForward('/home/estoque/produtos', {
+        queryParams: { id1: this.idEmpBird, id2: this.idCc, code: result.content, nome: ''}
+      });
+      //result.content log the raw scanned content
     }
   }
 
@@ -57,7 +65,7 @@ export class ScannerPage implements OnInit {
   reloadScan() {
     this.startScan();
     setTimeout(() => {
-      if(this.scanIsRun === true){
+      if (this.scanIsRun === true) {
         this.stopScan();
         this.presentToast('Não foi possível ler o código...');
       }

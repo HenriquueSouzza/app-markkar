@@ -10,10 +10,16 @@
   <ion-item lines="none">
     <ion-label style="font-weight: 700;text-transform: uppercase;">Consulta:</ion-label>
   </ion-item>
+  <ion-item lines="none">
+    <ion-label>Centro de custo:</ion-label>
+    <ion-select (ionChange)="centroscustosChange($event)" interface="popover" placeholder="centro de custo">
+      <ion-select-option *ngFor="let cc of centroscustos" [value]="cc.id">{{cc.nome}}</ion-select-option>
+    </ion-select>
+  </ion-item>
   <div id="pesquisa">
     <ion-searchbar placeholder="Consulta por nome..."></ion-searchbar>
     <span>ou</span>
-    <ion-button color="dark" routerLink="/home/estoque/scanner">
+    <ion-button color="dark" (click)="navigateScanner()">
       <ion-icon slot="start" name="barcode-outline"></ion-icon>
       Scanner
     </ion-button>

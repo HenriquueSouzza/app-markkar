@@ -11,35 +11,37 @@
 </ion-header>
 <ion-content no-bounce has-bouncing="false" forceOverscroll="false">
   <div class="produtos">
-    <ion-item style="width: 100%" lines="none" color="secondary">
-      <ion-label style="
-      font-family: 'robotoBold';
-      margin: 0;
-      margin-bottom: 3px;
-      font-size: 1.2rem;
-    ">Nome</ion-label>
-    </ion-item>
-    <div class="informacoes">
-      <div class="informacao">
-        <h2>valor:</h2>
-        <p></p>
+    <ng-container *ngFor="let produto of produtos" >
+      <ion-item style="width: 100%" lines="none" color="secondary">
+        <ion-label style="
+        font-family: 'robotoBold';
+        margin: 0;
+        margin-bottom: 3px;
+        font-size: 1.2rem;
+      ">{{produto['NOME_PRODUTO']}}</ion-label>
+      </ion-item>
+      <div class="informacoes">
+        <div class="informacao">
+          <h2>valor:</h2>
+          <p>{{produto['VALOR']}}</p>
+        </div>
+        <div class="informacao">
+          <h2>quantidade:</h2>
+          <p>{{produto['QTD_ESTOQUE']}}</p>
+        </div>
+        <div class="informacao">
+          <h2>unidade:</h2>
+          <p>{{produto['UNIDADE']}}</p>
+        </div>
+        <div class="informacao">
+          <h2>codigo:</h2>
+          <p>{{produto['COD_BARRA']}}</p>
+        </div>
+        <div style="margin-bottom: 20px" class="informacao">
+          <h2>id:</h2>
+          <p>{{produto['COD_PRODUTO']}}</p>
+        </div>
       </div>
-      <div class="informacao">
-        <h2>quantidade:</h2>
-        <p></p>
-      </div>
-      <div class="informacao">
-        <h2>unidade:</h2>
-        <p></p>
-      </div>
-      <div class="informacao">
-        <h2>codigo:</h2>
-        <p></p>
-      </div>
-      <div style="margin-bottom: 20px" class="informacao">
-        <h2>id:</h2>
-        <p></p>
-      </div>
-    </div>
+    </ng-container>
   </div>
 </ion-content>

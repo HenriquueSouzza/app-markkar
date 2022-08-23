@@ -1,9 +1,16 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Storage } from '@ionic/storage-angular';
+import { StorageService } from 'src/app/services/storage/storage.service';
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
-export interface interfaceEstoque {
-  code: string;
+export interface InterfaceConsultaProduto {
+  codeEmp: string;
+  codeCC: string;
+  codeBar: string | undefined | null;
+  nome: string | undefined | null;
+}
+export interface InterfaceConsultaCentrosCustos {
+  codeEmp: string;
 }
 
 @Injectable({
@@ -11,11 +18,17 @@ export interface interfaceEstoque {
 })
 export class EstoqueService {
 
-  private url = 'http://192.168.1.12/tt';
+  private urlProdutos = 'http://192.168.1.12/app/estoque/produtos';
+  private urlcentroscustos = 'http://192.168.1.12/app/estoque/centroscustos';
+  private idEmpBird: any;
 
   constructor(private http: HttpClient) { }
 
-  estoque(intEst: interfaceEstoque) {
-    return this.http.post(this.url, intEst);
+  consultaProduto(intProd: InterfaceConsultaProduto) {
+    return this.http.post(this.urlProdutos, intProd);
+  }
+
+  consultaCC(intCC: InterfaceConsultaCentrosCustos){
+    return this.http.post(this.urlcentroscustos, intCC);
   }
 }
