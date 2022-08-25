@@ -15,7 +15,7 @@
     </div>
     <div id="line"></div>
     <div id="backDown">
-      <ion-button (click)="telaDigCodigo = !telaDigCodigo; telaEspelho = true;stopScan()">Digite o código</ion-button>
+      <ion-button (click)="telaDigCodigo = !telaDigCodigo; telaEspelho = true;stopScan();">Digite o código</ion-button>
     </div>
   </div>
   <div id="code" *ngIf="telaDigCodigo">
@@ -29,13 +29,15 @@
     <ion-item lines="none">
       <ion-label id="titleCode">digite o código de barras</ion-label>
     </ion-item>
-    <ion-item lines="full">
-      <ion-label position="stacked">código de barras</ion-label>
-      <ion-input inputmode="numeric"></ion-input>
-    </ion-item>
-    <div id="btnConsultar">
-      <ion-button>Consultar</ion-button>
-    </div>
+    <form #f="ngForm" (ngSubmit)="consultarProd(f)">
+      <ion-item lines="full">
+        <ion-label position="stacked">código de barras</ion-label>
+        <ion-input ngModel name="codeProd" inputmode="numeric"></ion-input>
+      </ion-item>
+      <div id="btnConsultar">
+        <ion-button type="submit">Consultar</ion-button>
+      </div>
+    </form>
   </div>
 </ion-content>
 <div id="scan" *ngIf="!telaEspelho">
@@ -54,6 +56,6 @@
   </div>
   <div id="line"></div>
   <div id="backDown">
-    <ion-button (click)="telaDigCodigo = !telaDigCodigo; telaEspelho = true;stopScan()">Digite o código</ion-button>
+    <ion-button (click)="telaDigCodigo = !telaDigCodigo; telaEspelho = true;stopScan();">Digite o código</ion-button>
   </div>
 </div>

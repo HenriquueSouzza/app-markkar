@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/dot-notation */
 import { Component, OnInit } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { EstoqueService } from './services/estoque/estoque.service';
 import { Storage } from '@ionic/storage-angular';
 import { StorageService } from 'src/app/services/storage/storage.service';
@@ -12,8 +13,12 @@ import { NavController, ToastController } from '@ionic/angular';
 })
 export class EstoquePage implements OnInit {
   public centroscustos: Array<any>;
-  private idEmpBird: any;
-  private idCc: string;
+  public consultaNome = false;
+  public estoqueStorageHist: any;
+  public idEmpBird: any;
+  public idCc: string;
+  public recentesExist = false;
+  private estoqueStorage: any;
 
   constructor(
     private estoqueService: EstoqueService,
@@ -32,8 +37,22 @@ export class EstoquePage implements OnInit {
       .consultaCC({ codeEmp: this.idEmpBird })
       .subscribe((res: any) => {
         this.centroscustos = res.centrosCustos;
-        console.log(this.centroscustos);
       });
+  }
+
+  async ionViewWillEnter(){
+    this.estoqueStorage = await this.storage.get('estoque');
+    if (this.estoqueStorage === null){
+      await this.storage.set('estoque', {historico: []});
+      this.estoqueStorage = await this.storage.get('estoque');
+    }
+    this.estoqueStorageHist = this.estoqueStorage.historico;
+    if(this.estoqueStorageHist.length > 0) {
+      this.recentesExist = true;
+    } else {
+      this.recentesExist = false;
+      this.estoqueStorage.historico = {nome: '', codeBar: ''};
+    }
   }
 
   centroscustosChange(cc) {
@@ -58,5 +77,33 @@ export class EstoquePage implements OnInit {
       color: 'dark',
     });
     toast.present();
+  }
+
+  async consultarNome(form: NgForm){
+    if (this.idCc === undefined) {
+      this.presentToast('Escolha o centro de custo');
+    } else {
+      this.navCtrl.navigateForward('/home/estoque/produtos', {
+        queryParams: { id1: this.idEmpBird, id2: this.idCc, code: '', nome: form.value.nomeProd}
+      });
+    }
+  }
+
+  verificaSearchbar(event){
+    if(event.detail.value.length > 0){
+      this.consultaNome = true;
+    } else {
+      this.consultaNome = false;
+    }
+  }
+
+  redirectHist(code){
+    if (this.idCc === undefined) {
+      this.presentToast('Escolha o centro de custo');
+    } else {
+      this.navCtrl.navigateForward('/home/estoque/produtos', {
+        queryParams: { id1: this.idEmpBird, id2: this.idCc, code, nome: ''}
+      });
+    }
   }
 }

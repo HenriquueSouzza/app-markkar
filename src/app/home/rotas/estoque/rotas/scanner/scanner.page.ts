@@ -5,6 +5,7 @@ import { ScreenOrientation } from '@awesome-cordova-plugins/screen-orientation/n
 import { Flashlight } from '@awesome-cordova-plugins/flashlight/ngx';
 import { EstoqueService } from '../../services/estoque/estoque.service';
 import { ActivatedRoute } from '@angular/router';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-scanner',
@@ -97,5 +98,11 @@ export class ScannerPage implements OnInit {
       color: 'dark',
     });
     toast.present();
+  }
+
+  async consultarProd(form: NgForm){
+    this.navCtrl.navigateForward('/home/estoque/produtos', {
+      queryParams: { id1: this.idEmpBird, id2: this.idCc, code: form.value.codeProd, nome: ''}
+    });
   }
 }
