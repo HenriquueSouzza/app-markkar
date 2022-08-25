@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Storage } from '@ionic/storage-angular';
-import { StorageService } from 'src/app/services/storage/storage.service';
 
 export interface InterfaceConsultaProduto {
   codeEmp: string;
@@ -20,7 +18,6 @@ export class EstoqueService {
 
   private urlProdutos = 'http://192.168.1.12/app/estoque/produtos';
   private urlcentroscustos = 'http://192.168.1.12/app/estoque/centroscustos';
-  private idEmpBird: any;
 
   constructor(private http: HttpClient) { }
 
