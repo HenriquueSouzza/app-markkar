@@ -1,0 +1,11 @@
+#venda {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 30px 0 60px 0;
+
+  ion-button {
+    width: 50%;
+  }
+}

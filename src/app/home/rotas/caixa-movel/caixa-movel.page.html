@@ -1,9 +1,22 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="dark">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home/faturamento"></ion-back-button>
+    </ion-buttons>
     <ion-title>caixaMovel</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-
+  <ion-item lines="none">
+    <ion-label style="font-weight: 600; text-transform: uppercase">nova venda:</ion-label>
+  </ion-item>
+  <div id="venda">
+    <ion-button color="dark">iniciar</ion-button>
+  </div>
+  <div id="recentes">
+    <ion-item lines="none">
+      <ion-label style="font-weight: 600; text-transform: uppercase">ultimas vendas:</ion-label>
+    </ion-item>
+  </div>
 </ion-content>

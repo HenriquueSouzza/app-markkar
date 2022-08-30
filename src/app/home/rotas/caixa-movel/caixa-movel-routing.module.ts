@@ -7,6 +7,18 @@ const routes: Routes = [
   {
     path: '',
     component: CaixaMovelPage
+  },
+  {
+    path: 'carrinho',
+    loadChildren: () => import('./rotas/carrinho/carrinho.module').then( m => m.CarrinhoPageModule)
+  },
+  {
+    path: 'scanner',
+    loadChildren: () => import('./rotas/scanner/scanner.module').then( m => m.ScannerPageModule)
+  },
+  {
+    path: 'produtos',
+    loadChildren: () => import('./rotas/produtos/produtos.module').then( m => m.ProdutosPageModule)
   }
 ];
 
