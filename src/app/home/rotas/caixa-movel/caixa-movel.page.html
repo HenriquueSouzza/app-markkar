@@ -3,20 +3,48 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/home/faturamento"></ion-back-button>
     </ion-buttons>
-    <ion-title>caixaMovel</ion-title>
+    <ion-title>caixa Movel</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-item lines="none">
-    <ion-label style="font-weight: 600; text-transform: uppercase">nova venda:</ion-label>
-  </ion-item>
   <div id="venda">
-    <ion-button color="dark">iniciar</ion-button>
-  </div>
-  <div id="recentes">
-    <ion-item lines="none">
-      <ion-label style="font-weight: 600; text-transform: uppercase">ultimas vendas:</ion-label>
-    </ion-item>
+    <ion-button color="dark" [routerLink]="['carrinho']">
+      <div>
+        <ion-icon name="cash-outline"></ion-icon>
+        Vender
+      </div>
+    </ion-button>
+    <ion-button color="dark">
+      <div>
+        <ion-icon name="swap-vertical-outline"></ion-icon>
+        Trocas
+      </div>
+    </ion-button>
+    <ion-button color="dark">
+      <div  style="font-size: .6rem;">
+        <ion-icon name="extension-puzzle-outline"></ion-icon>
+        Em Desenvolvimento...
+      </div>
+    </ion-button>
+    <ion-button color="dark">
+      <div  style="font-size: .6rem;">
+        <ion-icon name="extension-puzzle-outline"></ion-icon>
+        Em Desenvolvimento...
+      </div>
+    </ion-button>
+    <ion-button color="dark">
+      <div  style="font-size: .6rem;">
+        <ion-icon name="extension-puzzle-outline"></ion-icon>
+        Em Desenvolvimento...
+      </div>
+    </ion-button>
+    <ion-button color="dark">
+      <div  style="font-size: .6rem;">
+        <ion-icon name="extension-puzzle-outline"></ion-icon>
+        Em Desenvolvimento...
+      </div>
+    </ion-button>
+
   </div>
 </ion-content>

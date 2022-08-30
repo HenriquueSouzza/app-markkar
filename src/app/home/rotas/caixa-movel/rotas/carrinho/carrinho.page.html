@@ -1,9 +1,59 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="dark">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home/caixa-movel"></ion-back-button>
+    </ion-buttons>
     <ion-title>carrinho</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <div id="produtos">
+    <ion-item class="produto" lines="full">
+      <ion-label>Produto teste
+        <p>Cod: 1168703578965</p>
+        <div style="display: flex;align-items: baseline;justify-content: flex-start;">
+          <div class="addItem">
+            <ion-button expand="block" fill="clear" shape="round"><ion-icon slot="icon-only" name="remove-outline"></ion-icon></ion-button>
+            <input type="number" value="001">
+            <ion-button expand="block" fill="clear" shape="round"><ion-icon slot="icon-only" name="add-outline"></ion-icon></ion-button>
+          </div>
+          <ion-button expand="block" fill="clear" shape="round" style="margin-left: 7px;--padding-start: 7px; --padding-end: 7px;"><ion-icon slot="icon-only" color="danger" name="trash-outline"></ion-icon></ion-button>
+        </div>
+      </ion-label>
+      <ion-label slot="end">R$ 28,00</ion-label>
+    </ion-item>
+    <ion-item class="produto" lines="full">
+      <ion-label>Produto teste2
+        <p>Cod: 1168703965965</p>
+        <div style="display: flex;align-items: baseline;justify-content: flex-start;">
+          <div class="addItem">
+            <ion-button expand="block" fill="clear" shape="round"><ion-icon slot="icon-only" name="remove-outline"></ion-icon></ion-button>
+            <input type="number" value="003">
+            <ion-button expand="block" fill="clear" shape="round"><ion-icon slot="icon-only" name="add-outline"></ion-icon></ion-button>
+          </div>
+          <ion-button expand="block" fill="clear" shape="round" style="margin-left: 7px;--padding-start: 7px; --padding-end: 7px;"><ion-icon slot="icon-only" color="danger" name="trash-outline"></ion-icon></ion-button>
+        </div>
+      </ion-label>
+      <ion-label slot="end">R$ 45,00</ion-label>
+    </ion-item>
+    <ion-button expand="block" fill="clear" shape="round">
+      novo produto
+    </ion-button>
+  </div>
+  <div id="footer">
+    <div id="total">
+      <h3>Total:</h3>
+      <p>R$ 73,00</p>
+    </div>
+    <div id="btns">
+      <ion-button color="danger">
+        Cancelar
+      </ion-button>
+      <ion-button>
+        Pagamento
+      </ion-button>
+    </div>
+  </div>
 
 </ion-content>
