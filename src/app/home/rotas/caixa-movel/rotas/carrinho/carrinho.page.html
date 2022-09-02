@@ -9,37 +9,21 @@
 
 <ion-content>
   <div id="produtos">
-    <ion-item class="produto" lines="full">
-      <ion-label>Produto teste
-        <p>Cod: 1168703578965</p>
+    <ion-item *ngFor="let produto of produtos"  class="produto" lines="full">
+      <ion-label>
+        {{produto['nome']}}
+        <p>Cod: {{produto['cod']}}</p>
         <div style="display: flex;align-items: baseline;justify-content: flex-start;">
           <div class="addItem">
-            <ion-button expand="block" fill="clear" shape="round"><ion-icon slot="icon-only" name="remove-outline"></ion-icon></ion-button>
-            <input type="number" value="001">
-            <ion-button expand="block" fill="clear" shape="round"><ion-icon slot="icon-only" name="add-outline"></ion-icon></ion-button>
+            <ion-button (click)="produto['qnt'] = changeQnt(produto['qnt'], 'sub')" expand="block" fill="clear" shape="round"><ion-icon slot="icon-only" name="remove-outline"></ion-icon></ion-button>
+            <input [value]="produto['qnt']" (input)="produto['qnt'] = toIntQnt($event.target['value'])" onkeypress="return event.charCode >= 48 && event.charCode <= 57" type = "text" maxlength = "6" inputmode="numeric" pattern="[0-9]+">
+            <ion-button (click)="produto['qnt'] = changeQnt(produto['qnt'], 'add')" expand="block" fill="clear" shape="round"><ion-icon slot="icon-only" name="add-outline"></ion-icon></ion-button>
           </div>
           <ion-button expand="block" fill="clear" shape="round" style="margin-left: 7px;--padding-start: 7px; --padding-end: 7px;"><ion-icon slot="icon-only" color="danger" name="trash-outline"></ion-icon></ion-button>
         </div>
       </ion-label>
-      <ion-label slot="end">R$ 28,00</ion-label>
+      <ion-label slot="end">{{convertReal(produto['valor']*produto['qnt'])}}</ion-label>
     </ion-item>
-    <ion-item class="produto" lines="full">
-      <ion-label>Produto teste2
-        <p>Cod: 1168703965965</p>
-        <div style="display: flex;align-items: baseline;justify-content: flex-start;">
-          <div class="addItem">
-            <ion-button expand="block" fill="clear" shape="round"><ion-icon slot="icon-only" name="remove-outline"></ion-icon></ion-button>
-            <input type="number" value="003">
-            <ion-button expand="block" fill="clear" shape="round"><ion-icon slot="icon-only" name="add-outline"></ion-icon></ion-button>
-          </div>
-          <ion-button expand="block" fill="clear" shape="round" style="margin-left: 7px;--padding-start: 7px; --padding-end: 7px;"><ion-icon slot="icon-only" color="danger" name="trash-outline"></ion-icon></ion-button>
-        </div>
-      </ion-label>
-      <ion-label slot="end">R$ 45,00</ion-label>
-    </ion-item>
-    <ion-button expand="block" fill="clear" shape="round">
-      novo produto
-    </ion-button>
   </div>
   <div id="footer">
     <div id="total">

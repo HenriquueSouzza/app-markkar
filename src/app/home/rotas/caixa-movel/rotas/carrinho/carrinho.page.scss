@@ -4,7 +4,7 @@
   justify-content: center;
 }
 .addItem {
-  width: 120px;
+  width: 150px;
   margin-top: 20px;
   display: flex;
   align-items: center;
@@ -20,7 +20,8 @@
   input {
     background: transparent;
     border: none;
-    width: 30px;
+    width: 60px;
+    text-align: center;
   }
 }
 #footer {
