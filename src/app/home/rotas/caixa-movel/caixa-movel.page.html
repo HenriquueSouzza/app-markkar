@@ -7,7 +7,19 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content no-bounce has-bouncing="false" forceOverscroll="false">
+  <ion-item lines="none">
+    <ion-label>Centro de custo:</ion-label>
+    <ion-select
+      (ionChange)="centroscustosChange($event)"
+      interface="popover"
+      placeholder="Selecione"
+    >
+      <ion-select-option *ngFor="let cc of centroscustos" [value]="cc.id"
+        >{{cc.nome}}</ion-select-option
+      >
+    </ion-select>
+  </ion-item>
   <div id="venda">
     <ion-button color="dark" [routerLink]="['carrinho']">
       <div>
