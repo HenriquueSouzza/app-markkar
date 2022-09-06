@@ -1,21 +1,25 @@
+/* eslint-disable @typescript-eslint/dot-notation */
 import { Component, OnInit } from '@angular/core';
 import { NavController, ToastController } from '@ionic/angular';
 import { BarcodeScanner } from '@capacitor-community/barcode-scanner';
 import { ScreenOrientation } from '@awesome-cordova-plugins/screen-orientation/ngx';
 import { Flashlight } from '@awesome-cordova-plugins/flashlight/ngx';
+import { EstoqueService } from '../../../estoque/services/estoque/estoque.service';
 import { ActivatedRoute } from '@angular/router';
 import { NgForm } from '@angular/forms';
-import { EstoqueService } from '../../../estoque/services/estoque/estoque.service';
 
 @Component({
-  selector: 'app-scanner',
-  templateUrl: './scanner.page.html',
-  styleUrls: ['./scanner.page.scss'],
+  selector: 'app-scanner-caixa',
+  templateUrl: './scanner-caixa.page.html',
+  styleUrls: ['./scanner-caixa.page.scss'],
 })
-export class ScannerPage implements OnInit {
+export class ScannerCaixaPage implements OnInit {
+  public produtos: any;
   public flashIsSwitchedOn = false;
   public telaEspelho = true;
   public telaDigCodigo = false;
+  public modalProdIsOpen = false;
+  public totalCarrinho: string;
   private scanIsRun = false;
   private idCc: string;
   private idEmpBird: any;
@@ -40,8 +44,20 @@ export class ScannerPage implements OnInit {
     setTimeout(() => {
       this.telaEspelho = false;
     }, 500);
-    this.reloadScan();
+    //this.reloadScan();
+    setTimeout(() => {
+      const codeBar = '7899838806976';
+      this.openModalProd(codeBar);
+    }, 2000);
   }
+
+  /*
+
+  #
+  # Scanner
+  #
+
+  */
 
   async startScan() {
     this.scanIsRun = true;
@@ -87,7 +103,7 @@ export class ScannerPage implements OnInit {
     this.stopScan();
     this.telaEspelho = true;
     setTimeout(() => {
-      this.navCtrl.navigateBack('/home/estoque');
+      this.navCtrl.navigateBack('/home/caixa-movel');
     }, 500);
   }
 
@@ -101,8 +117,77 @@ export class ScannerPage implements OnInit {
   }
 
   async consultarProd(form: NgForm){
-    this.navCtrl.navigateForward('/home/estoque/produtos', {
+    this.navCtrl.navigateForward('/home/caixa-movel/produtos', {
       queryParams: { id1: this.idEmpBird, id2: this.idCc, code: form.value.codeProd, nome: ''}
     });
+  }
+
+  /*
+
+  #
+  # Modal e carrinho
+  #
+
+  */
+
+  openModalProd(codeBar){
+    this.modalProdIsOpen = true;
+    this.estoqueService.consultaProduto({
+      codeEmp: this.idEmpBird,
+      codeCC: this.idCc,
+      codeBar,
+      nome: ''
+    }).subscribe(async (res: any) => {
+      const produtos = Object.values(res.produtos);
+      this.produtos = {
+        nome: produtos[0]['NOME_PRODUTO'],
+        id: produtos[0]['COD_PRODUTO'],
+        cod: produtos[0]['COD_BARRA'],
+        qnt: 1,
+        qntMax: produtos[0]['QTD_ESTOQUE'],
+        medida: produtos[0]['UNIDADE'],
+        valor: produtos[0]['VALOR']
+      };
+    }
+      //{nome: 'teste', id: 1, cod: 2123, qnt: 5, valor: 18}
+      //{COD_BARRA: "7899838806976" COD_PRODUTO: "4371" NOME_PRODUTO: "TESTE HENRIQUE" QTD_ESTOQUE: "50" UNIDADE: "UN" VALOR: "5"}
+    );
+  }
+
+
+  toIntQnt(qnt){
+    if(qnt < 1 || qnt === ''){
+      return 1;
+    }else {
+      return parseInt(qnt, 10);
+    }
+  }
+
+  changeQnt(qnt, exc){
+    if (exc === 'add') {
+      qnt++;
+    } else if (exc === 'sub') {
+      qnt--;
+    }
+    if(qnt < 1 || qnt === ''){
+      return 1;
+    } else {
+      return qnt;
+    }
+  }
+
+  convertReal(valor){
+    return parseFloat(valor).toLocaleString('pt-br', {
+      style: 'currency',
+      currency: 'BRL',
+    });
+  }
+
+  totalCar(){
+    const valores = [];
+    for (const produto of this.produtos) {
+      valores.push(produto['valor']*produto['qnt']);
+      this.totalCarrinho = this.convertReal(valores.reduce((a, b) => a + b, 0));
+    }
   }
 }

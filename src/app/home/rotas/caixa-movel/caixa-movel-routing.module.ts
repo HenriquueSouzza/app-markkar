@@ -13,8 +13,8 @@ const routes: Routes = [
     loadChildren: () => import('./rotas/carrinho/carrinho.module').then( m => m.CarrinhoPageModule)
   },
   {
-    path: 'scanner',
-    loadChildren: () => import('./rotas/scanner/scanner.module').then( m => m.ScannerPageModule)
+    path: 'scanner-caixa',
+    loadChildren: () => import('./rotas/scanner-caixa/scanner-caixa.module').then( m => m.ScannerCaixaPageModule)
   },
   {
     path: 'produtos',

@@ -4,17 +4,17 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { ScannerPageRoutingModule } from './scanner-routing.module';
+import { ScannerCaixaPageRoutingModule } from './scanner-caixa-routing.module';
 
-import { ScannerPage } from './scanner.page';
+import { ScannerCaixaPage } from './scanner-caixa.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    ScannerPageRoutingModule
+    ScannerCaixaPageRoutingModule
   ],
-  declarations: [ScannerPage]
+  declarations: [ScannerCaixaPage]
 })
-export class ScannerPageModule {}
+export class ScannerCaixaPageModule {}

@@ -51,3 +51,31 @@ ion-toolbar {
     }
   }
 }
+
+//modal
+#produtos{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.addItem {
+  width: 150px;
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: solid gray 1px;
+  border-radius: 12px;
+
+  ion-button {
+    --padding-start: 5px;
+    --padding-end: 5px;
+  }
+
+  input {
+    background: transparent;
+    border: none;
+    width: 60px;
+    text-align: center;
+  }
+}

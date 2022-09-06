@@ -22,7 +22,7 @@
     <ion-header>
       <ion-toolbar color="dark" style="height: auto">
         <ion-buttons slot="start">
-          <ion-button routerLink="/home/estoque" routerDirection="back"><ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon></ion-button>
+          <ion-button routerLink="/home/caixa-movel" routerDirection="back"><ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon></ion-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
@@ -40,6 +40,43 @@
     </form>
   </div>
 </ion-content>
+<ion-modal
+    [isOpen]="modalProdIsOpen"
+    [canDismiss]="true"
+    swipe-to-close="true"
+  >
+    <ng-template>
+      <ion-header style="background: var(--ion-color-dark) !important">
+        <ion-toolbar color="dark">
+          <ion-title>produto</ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <div class="produtos">
+          <ion-item class="produto" lines="full">
+            <ion-label>
+              {{produtos['nome']}}
+              <p>Cod: {{produtos['cod']}}</p>
+              <p>QntMax: {{produtos['qntMax']}}</p>
+              <p>medida: {{produtos['medida']}}</p>
+              <div style="display: flex;align-items: baseline;justify-content: flex-start;">
+                <div class="addItem">
+                  <ion-button (click)="produtos['qnt'] = changeQnt(produtos['qnt'], 'sub');totalCar();" expand="block" fill="clear" shape="round"><ion-icon slot="icon-only" name="remove-outline"></ion-icon></ion-button>
+                  <input [value]="produtos['qnt']" (input)="produtos['qnt'] = toIntQnt($event.target['value']);totalCar();" onkeypress="return event.charCode >= 48 && event.charCode <= 57" type = "text" maxlength = "6" inputmode="numeric" pattern="[0-9]+">
+                  <ion-button (click)="produtos['qnt'] = changeQnt(produtos['qnt'], 'add');totalCar();" expand="block" fill="clear" shape="round"><ion-icon slot="icon-only" name="add-outline"></ion-icon></ion-button>
+                </div>
+              </div>
+            </ion-label>
+            <ion-label slot="end">{{convertReal(produtos['valor']*produtos['qnt'])}}</ion-label>
+          </ion-item>
+          <div style="display: flex;align-items: baseline;justify-content: center;margin-top: 10px;">
+            <ion-button color="danger" style="margin-right: 30px;">Cancelar</ion-button>
+            <ion-button >Adicionar</ion-button>
+          </div>
+        </div>
+      </ion-content>
+    </ng-template>
+</ion-modal>
 <div id="scan" *ngIf="!telaEspelho">
   <div id="backUp">
     <ion-header>

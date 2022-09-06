@@ -16,12 +16,12 @@ const routes: Routes = [
       {
         path: 'faturamento',
         loadChildren: () => import('./rotas/faturamento/faturamento.module').then( m => m.FaturamentoPageModule)
-      },
-      {
-        path: 'caixa-movel',
-        loadChildren: () => import('./rotas/caixa-movel/caixa-movel.module').then( m => m.CaixaMovelPageModule)
       }
     ]
+  },
+  {
+    path: 'caixa-movel',
+    loadChildren: () => import('./rotas/caixa-movel/caixa-movel.module').then( m => m.CaixaMovelPageModule)
   },
   {
     path: 'estoque',
