@@ -1,3 +1,6 @@
+ion-button {
+  --border-radius: 10px;
+}
 ion-toolbar {
   --ion-color-base: transparent !important;
   --border-width: 0 0 0 !important;
@@ -13,7 +16,29 @@ ion-toolbar {
   #backUp {
     width: 100%;
     height: 35%;
-    background-color: rgba(0, 0, 0, 0.695);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: rgba(0, 0, 0, 0.845);
+
+    #btnsDigCodeAndFast {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-end;
+      justify-content: space-evenly;
+      margin-bottom: 10px;
+
+      ion-button {
+        width: 185px;
+        margin: 0;
+
+        ion-checkbox {
+          --size: 20px;
+          margin: 0;
+          margin-top: 5px;
+        }
+      }
+    }
   }
 
   #line {
@@ -25,10 +50,55 @@ ion-toolbar {
   #backDown {
     width: 100%;
     height: 35%;
-    background-color: rgba(0, 0, 0, 0.695);
+    background-color: rgba(0, 0, 0, 0.845);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+
+    ion-button {
+      margin-top: 20px;
+    }
+  }
+}
+#footer {
+  width: 100%;
+  height: 135px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+
+  #total {
+    margin: 0 0 10px 0;
+    padding: 0 20px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: solid rgb(176, 176, 176) 1px;
+
+    h3 {
+      font-family: robotoBold;
+      color: white;
+    }
+
+    p {
+      font-family: robotoLight;
+      font-size: 1.1rem;
+      color: white;
+    }
+  }
+
+  #btns {
+    padding: 0 20px;
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
+
+    ion-button {
+      width: 130px;
+      margin: 0 10px;
+    }
   }
 }
 

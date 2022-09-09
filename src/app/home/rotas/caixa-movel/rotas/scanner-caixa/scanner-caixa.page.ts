@@ -18,6 +18,7 @@ import { EstoqueService } from '../../../estoque/services/estoque/estoque.servic
 export class ScannerCaixaPage implements OnInit {
   @ViewChild('inputCodeScanner') inputCodeScanner!: ElementRef;
 
+  public modoRapido: boolean;
   public pordutoScanneado: any;
   public flashIsSwitchedOn = false;
   public telaEspelho = true;
@@ -30,12 +31,12 @@ export class ScannerCaixaPage implements OnInit {
   private idEmpBird: any;
 
   constructor(
+    public toastController: ToastController,
     private storage: Storage,
     private storageService: StorageService,
     private screenOrientation: ScreenOrientation,
     private estoqueService: EstoqueService,
     private flashlight: Flashlight,
-    public toastController: ToastController,
     private navCtrl: NavController,
     private route: ActivatedRoute
   ) {}
@@ -52,6 +53,8 @@ export class ScannerCaixaPage implements OnInit {
       valor: null
     };
     this.caixaMovelStorage = await this.storage.get('caixa-movel');
+    this.somaTotalCarrinho();
+    this.modoRapido = false;
     this.route.queryParamMap.subscribe((params: any) => {
       if (params) {
         this.idEmpBird = params.params.id1;
@@ -61,7 +64,7 @@ export class ScannerCaixaPage implements OnInit {
 
     setTimeout(() => {
       this.telaEspelho = false;
-    }, 500);
+    }, 700);
     this.reloadScan();
     /*setTimeout(() => {
       const codeBar = '7899838806976';
@@ -160,9 +163,22 @@ export class ScannerCaixaPage implements OnInit {
       this.caixaMovelStorage.vendas.carrinho.push(this.pordutoScanneado);
     }
     this.storage.set('caixa-movel', this.caixaMovelStorage);
+    this.somaTotalCarrinho();
   }
 
+  somaTotalCarrinho(){
+    const valores = [];
+    for (const produto of this.caixaMovelStorage.vendas.carrinho) {
+      valores.push(produto['valor']*produto['qnt']);
+      this.totalCarrinho = this.convertReal(valores.reduce((a, b) => a + b, 0));
+    }
+  }
 
+  goToCar(){
+    this.navCtrl.navigateForward('/home/caixa-movel/carrinho', {
+      queryParams: { id1: this.idEmpBird, id2: this.idCc}
+    });
+  }
 
   /*
 
@@ -223,14 +239,6 @@ export class ScannerCaixaPage implements OnInit {
       style: 'currency',
       currency: 'BRL',
     });
-  }
-
-  somaTotalCarrinho(){
-    const valores = [];
-    /*for (const produto of this.carrinho) {
-      valores.push(produto['valor']*produto['qnt']);
-      this.totalCarrinho = this.convertReal(valores.reduce((a, b) => a + b, 0));
-    }*/
   }
 
   verificaEstoque(qnt, qntEstoque){

@@ -12,10 +12,31 @@
           </ion-buttons>
         </ion-toolbar>
       </ion-header>
+      <div id="btnsDigCodeAndFast">
+        <ion-button color="dark" (click)="modoRapido = !modoRapido">
+          <ion-checkbox [checked]="modoRapido" slot="start"></ion-checkbox>
+          <ion-label>Modo Rápido</ion-label>
+        </ion-button>
+        <ion-button color="dark" (click)="telaDigCodigo = !telaDigCodigo; telaEspelho = true;stopScan();">Digite o código</ion-button>
+      </div>
     </div>
     <div id="line"></div>
     <div id="backDown">
-      <ion-button (click)="telaDigCodigo = !telaDigCodigo; telaEspelho = true;stopScan();">Digite o código</ion-button>
+      <div id="footer">
+        <div id="total">
+          <h3>Total:</h3>
+          <p>{{totalCarrinho}}</p>
+        </div>
+        <div id="btns">
+          <ion-button color="danger">
+            Cancelar
+          </ion-button>
+          <ion-button color="dark" (click)="goToCar()">
+            <ion-icon slot="start" name="cart-outline"></ion-icon>
+            Carrinho
+          </ion-button>
+        </div>
+      </div>
     </div>
   </div>
   <div id="code" *ngIf="telaDigCodigo">
@@ -37,7 +58,7 @@
       <div id="btnConsultar">
         <ion-button type="submit">Consultar</ion-button>
         <span style="margin: 10px 0;">ou</span>
-        <ion-button (click)="telaDigCodigo = !telaDigCodigo; telaEspelho = false;reloadScan();"><ion-icon size="large" slot="start" style="color: white;" name="barcode-outline"></ion-icon>Scanner</ion-button>
+        <ion-button color="dark" (click)="telaDigCodigo = !telaDigCodigo; telaEspelho = false;reloadScan();"><ion-icon size="large" slot="start" style="color: white;" name="barcode-outline"></ion-icon>Scanner</ion-button>
       </div>
     </form>
   </div>
@@ -63,9 +84,9 @@
               <p>medida: {{pordutoScanneado['medida']}}</p>
               <div style="display: flex;align-items: baseline;justify-content: flex-start;">
                 <div class="addItem">
-                  <ion-button (click)="pordutoScanneado['qnt'] = verificaEstoque(changeQnt(pordutoScanneado['qnt'], 'sub'), pordutoScanneado['qntMax']);somaTotalCarrinho();" expand="block" fill="clear" shape="round"><ion-icon slot="icon-only" name="remove-outline"></ion-icon></ion-button>
-                  <input [value]="pordutoScanneado['qnt']" (input)="pordutoScanneado['qnt'] = verificaEstoque(toIntQnt($event.target['value']), pordutoScanneado['qntMax']);somaTotalCarrinho();" onkeypress="return event.charCode >= 48 && event.charCode <= 57" type = "text" maxlength = "6" inputmode="numeric" pattern="[0-9]+">
-                  <ion-button (click)="pordutoScanneado['qnt'] = verificaEstoque(changeQnt(pordutoScanneado['qnt'], 'add'), pordutoScanneado['qntMax']);somaTotalCarrinho();" expand="block" fill="clear" shape="round"><ion-icon slot="icon-only" name="add-outline"></ion-icon></ion-button>
+                  <ion-button (click)="pordutoScanneado['qnt'] = verificaEstoque(changeQnt(pordutoScanneado['qnt'], 'sub'), pordutoScanneado['qntMax']);" expand="block" fill="clear" shape="round"><ion-icon slot="icon-only" name="remove-outline"></ion-icon></ion-button>
+                  <input [value]="pordutoScanneado['qnt']" (input)="pordutoScanneado['qnt'] = verificaEstoque(toIntQnt($event.target['value']), pordutoScanneado['qntMax']);" onkeypress="return event.charCode >= 48 && event.charCode <= 57" type = "text" maxlength = "6" inputmode="numeric" pattern="[0-9]+">
+                  <ion-button (click)="pordutoScanneado['qnt'] = verificaEstoque(changeQnt(pordutoScanneado['qnt'], 'add'), pordutoScanneado['qntMax']);" expand="block" fill="clear" shape="round"><ion-icon slot="icon-only" name="add-outline"></ion-icon></ion-button>
                 </div>
               </div>
             </ion-label>
@@ -73,7 +94,7 @@
           </ion-item>
           <div style="display: flex;align-items: baseline;justify-content: center;margin-top: 10px;">
             <ion-button (click)="modalProdIsOpen = false" color="danger" style="margin-right: 30px;">Cancelar</ion-button>
-            <ion-button (click)="adicionaCarrinho();!modalProdIsOpen = false">Adicionar</ion-button>
+            <ion-button (click)="adicionaCarrinho();!modalProdIsOpen = false;">Adicionar</ion-button>
           </div>
         </div>
       </ion-content>
@@ -92,9 +113,30 @@
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
+    <div id="btnsDigCodeAndFast">
+      <ion-button color="dark" (click)="modoRapido = !modoRapido">
+        <ion-checkbox [checked]="modoRapido" slot="start"></ion-checkbox>
+        <ion-label>Modo Rápido</ion-label>
+      </ion-button>
+      <ion-button color="dark" (click)="telaDigCodigo = !telaDigCodigo; telaEspelho = true;stopScan();">Digite o código</ion-button>
+    </div>
   </div>
   <div id="line"></div>
   <div id="backDown">
-    <ion-button (click)="telaDigCodigo = !telaDigCodigo; telaEspelho = true;stopScan();">Digite o código</ion-button>
+    <div id="footer">
+      <div id="total">
+        <h3>Total:</h3>
+        <p>{{totalCarrinho}}</p>
+      </div>
+      <div id="btns">
+        <ion-button color="danger">
+          Cancelar
+        </ion-button>
+        <ion-button color="dark" (click)="goToCar()">
+          <ion-icon slot="start" name="cart-outline"></ion-icon>
+          Carrinho
+        </ion-button>
+      </div>
+    </div>
   </div>
 </div>
