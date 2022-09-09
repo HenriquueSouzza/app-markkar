@@ -32,10 +32,12 @@
     <form #f="ngForm" (ngSubmit)="consultarProd(f)">
       <ion-item lines="full">
         <ion-label position="stacked">código de barras</ion-label>
-        <ion-input ngModel name="codeProd" inputmode="numeric"></ion-input>
+        <ion-input #inputCodeScanner ngModel name="codeProd" inputmode="numeric"></ion-input>
       </ion-item>
       <div id="btnConsultar">
         <ion-button type="submit">Consultar</ion-button>
+        <span style="margin: 10px 0;">ou</span>
+        <ion-button (click)="telaDigCodigo = !telaDigCodigo; telaEspelho = false;reloadScan();"><ion-icon size="large" slot="start" style="color: white;" name="barcode-outline"></ion-icon>Scanner</ion-button>
       </div>
     </form>
   </div>
@@ -55,23 +57,23 @@
         <div class="produtos">
           <ion-item class="produto" lines="full">
             <ion-label>
-              {{produtos['nome']}}
-              <p>Cod: {{produtos['cod']}}</p>
-              <p>QntMax: {{produtos['qntMax']}}</p>
-              <p>medida: {{produtos['medida']}}</p>
+              {{pordutoScanneado['nome']}}
+              <p>Cod: {{pordutoScanneado['cod']}}</p>
+              <p>QntMax: {{pordutoScanneado['qntMax']}}</p>
+              <p>medida: {{pordutoScanneado['medida']}}</p>
               <div style="display: flex;align-items: baseline;justify-content: flex-start;">
                 <div class="addItem">
-                  <ion-button (click)="produtos['qnt'] = changeQnt(produtos['qnt'], 'sub');totalCar();" expand="block" fill="clear" shape="round"><ion-icon slot="icon-only" name="remove-outline"></ion-icon></ion-button>
-                  <input [value]="produtos['qnt']" (input)="produtos['qnt'] = toIntQnt($event.target['value']);totalCar();" onkeypress="return event.charCode >= 48 && event.charCode <= 57" type = "text" maxlength = "6" inputmode="numeric" pattern="[0-9]+">
-                  <ion-button (click)="produtos['qnt'] = changeQnt(produtos['qnt'], 'add');totalCar();" expand="block" fill="clear" shape="round"><ion-icon slot="icon-only" name="add-outline"></ion-icon></ion-button>
+                  <ion-button (click)="pordutoScanneado['qnt'] = verificaEstoque(changeQnt(pordutoScanneado['qnt'], 'sub'), pordutoScanneado['qntMax']);somaTotalCarrinho();" expand="block" fill="clear" shape="round"><ion-icon slot="icon-only" name="remove-outline"></ion-icon></ion-button>
+                  <input [value]="pordutoScanneado['qnt']" (input)="pordutoScanneado['qnt'] = verificaEstoque(toIntQnt($event.target['value']), pordutoScanneado['qntMax']);somaTotalCarrinho();" onkeypress="return event.charCode >= 48 && event.charCode <= 57" type = "text" maxlength = "6" inputmode="numeric" pattern="[0-9]+">
+                  <ion-button (click)="pordutoScanneado['qnt'] = verificaEstoque(changeQnt(pordutoScanneado['qnt'], 'add'), pordutoScanneado['qntMax']);somaTotalCarrinho();" expand="block" fill="clear" shape="round"><ion-icon slot="icon-only" name="add-outline"></ion-icon></ion-button>
                 </div>
               </div>
             </ion-label>
-            <ion-label slot="end">{{convertReal(produtos['valor']*produtos['qnt'])}}</ion-label>
+            <ion-label slot="end">{{convertReal(pordutoScanneado['valor']*pordutoScanneado['qnt'])}}</ion-label>
           </ion-item>
           <div style="display: flex;align-items: baseline;justify-content: center;margin-top: 10px;">
-            <ion-button color="danger" style="margin-right: 30px;">Cancelar</ion-button>
-            <ion-button >Adicionar</ion-button>
+            <ion-button (click)="modalProdIsOpen = false" color="danger" style="margin-right: 30px;">Cancelar</ion-button>
+            <ion-button (click)="adicionaCarrinho();!modalProdIsOpen = false">Adicionar</ion-button>
           </div>
         </div>
       </ion-content>

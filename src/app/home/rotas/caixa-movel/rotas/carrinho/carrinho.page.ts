@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/dot-notation */
 import { Component, OnInit } from '@angular/core';
+import { Storage } from '@ionic/storage-angular';
+import { StorageService } from 'src/app/services/storage/storage.service';
 
 @Component({
   selector: 'app-carrinho',
@@ -10,11 +12,16 @@ export class CarrinhoPage implements OnInit {
 
   public produtos: Array<object>;
   public totalCarrinho: string;
+  private caixaMovelStorage: any;
 
-  constructor() { }
+  constructor(
+    private storage: Storage,
+    private storageService: StorageService
+  ) { }
 
-  ngOnInit() {
-    this.produtos = [{nome: 'teste', id: 1, cod: 2123, qnt: 5, valor: 18}, {nome: 'teste2', id: 5, cod: 2323, qnt: 3, valor: 52}];
+  async ngOnInit() {
+    this.caixaMovelStorage = await this.storage.get('caixa-movel');
+    this.produtos = this.caixaMovelStorage.vendas.carrinho;
     this.totalCar();
   }
 

@@ -1,12 +1,14 @@
 /* eslint-disable @typescript-eslint/dot-notation */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef} from '@angular/core';
 import { NavController, ToastController } from '@ionic/angular';
 import { BarcodeScanner } from '@capacitor-community/barcode-scanner';
 import { ScreenOrientation } from '@awesome-cordova-plugins/screen-orientation/ngx';
 import { Flashlight } from '@awesome-cordova-plugins/flashlight/ngx';
-import { EstoqueService } from '../../../estoque/services/estoque/estoque.service';
 import { ActivatedRoute } from '@angular/router';
 import { NgForm } from '@angular/forms';
+import { Storage } from '@ionic/storage-angular';
+import { StorageService } from 'src/app/services/storage/storage.service';
+import { EstoqueService } from '../../../estoque/services/estoque/estoque.service';
 
 @Component({
   selector: 'app-scanner-caixa',
@@ -14,17 +16,22 @@ import { NgForm } from '@angular/forms';
   styleUrls: ['./scanner-caixa.page.scss'],
 })
 export class ScannerCaixaPage implements OnInit {
-  public produtos: any;
+  @ViewChild('inputCodeScanner') inputCodeScanner!: ElementRef;
+
+  public pordutoScanneado: any;
   public flashIsSwitchedOn = false;
   public telaEspelho = true;
   public telaDigCodigo = false;
   public modalProdIsOpen = false;
   public totalCarrinho: string;
+  private caixaMovelStorage: any;
   private scanIsRun = false;
   private idCc: string;
   private idEmpBird: any;
 
   constructor(
+    private storage: Storage,
+    private storageService: StorageService,
     private screenOrientation: ScreenOrientation,
     private estoqueService: EstoqueService,
     private flashlight: Flashlight,
@@ -33,7 +40,18 @@ export class ScannerCaixaPage implements OnInit {
     private route: ActivatedRoute
   ) {}
 
-  ngOnInit() {
+
+  async ngOnInit() {
+    this.pordutoScanneado = {
+      nome: null,
+      id: null,
+      cod: null,
+      qnt: null,
+      qntMax: null,
+      medida: null,
+      valor: null
+    };
+    this.caixaMovelStorage = await this.storage.get('caixa-movel');
     this.route.queryParamMap.subscribe((params: any) => {
       if (params) {
         this.idEmpBird = params.params.id1;
@@ -44,11 +62,11 @@ export class ScannerCaixaPage implements OnInit {
     setTimeout(() => {
       this.telaEspelho = false;
     }, 500);
-    //this.reloadScan();
-    setTimeout(() => {
+    this.reloadScan();
+    /*setTimeout(() => {
       const codeBar = '7899838806976';
-      this.openModalProd(codeBar);
-    }, 2000);
+      this.mostrarModalProdutoScaneado(codeBar);
+    }, 500);*/
   }
 
   /*
@@ -66,10 +84,8 @@ export class ScannerCaixaPage implements OnInit {
     const result = await BarcodeScanner.startScan(); // start scanning and wait for a result
     // if the result has content
     if (result.hasContent) {
-      this.navCtrl.navigateForward('/home/estoque/produtos', {
-        queryParams: { id1: this.idEmpBird, id2: this.idCc, code: result.content, nome: ''}
-      });
-      //result.content log the raw scanned content
+      const codeBar: string = result.content; //result.content log the raw scanned content
+      this.mostrarModalProdutoScaneado(codeBar);
     }
   }
 
@@ -116,21 +132,47 @@ export class ScannerCaixaPage implements OnInit {
     toast.present();
   }
 
-  async consultarProd(form: NgForm){
-    this.navCtrl.navigateForward('/home/caixa-movel/produtos', {
-      queryParams: { id1: this.idEmpBird, id2: this.idCc, code: form.value.codeProd, nome: ''}
-    });
+  consultarProd(form: NgForm){
+    this.inputCodeScanner['value'] = '';
+    this.mostrarModalProdutoScaneado(form.value.codeProd);
   }
 
   /*
 
   #
-  # Modal e carrinho
+  # carrinho
   #
 
   */
 
-  openModalProd(codeBar){
+  adicionaCarrinho(){
+    if(this.caixaMovelStorage.vendas.carrinho.length > 0){
+      let i = -1;
+      for(const produto of this.caixaMovelStorage.vendas.carrinho){
+        i++;
+        if(produto.id === this.pordutoScanneado.id){
+          this.caixaMovelStorage.vendas.carrinho[i].qnt = this.pordutoScanneado.qnt;
+        } else {
+          this.caixaMovelStorage.vendas.carrinho.push(this.pordutoScanneado);
+        }
+      }
+    } else {
+      this.caixaMovelStorage.vendas.carrinho.push(this.pordutoScanneado);
+    }
+    this.storage.set('caixa-movel', this.caixaMovelStorage);
+  }
+
+
+
+  /*
+
+  #
+  # Modal
+  #
+
+  */
+
+  mostrarModalProdutoScaneado(codeBar){
     this.modalProdIsOpen = true;
     this.estoqueService.consultaProduto({
       codeEmp: this.idEmpBird,
@@ -139,7 +181,7 @@ export class ScannerCaixaPage implements OnInit {
       nome: ''
     }).subscribe(async (res: any) => {
       const produtos = Object.values(res.produtos);
-      this.produtos = {
+      this.pordutoScanneado = {
         nome: produtos[0]['NOME_PRODUTO'],
         id: produtos[0]['COD_PRODUTO'],
         cod: produtos[0]['COD_BARRA'],
@@ -183,11 +225,19 @@ export class ScannerCaixaPage implements OnInit {
     });
   }
 
-  totalCar(){
+  somaTotalCarrinho(){
     const valores = [];
-    for (const produto of this.produtos) {
+    /*for (const produto of this.carrinho) {
       valores.push(produto['valor']*produto['qnt']);
       this.totalCarrinho = this.convertReal(valores.reduce((a, b) => a + b, 0));
+    }*/
+  }
+
+  verificaEstoque(qnt, qntEstoque){
+    if(qnt > qntEstoque){
+      return qntEstoque;
+    } else {
+      return qnt;
     }
   }
 }
