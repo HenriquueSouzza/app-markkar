@@ -907,8 +907,8 @@ export class FaturamentoPage implements OnInit {
     this.ngOnInit();
     const verfyComplete = setInterval(() => {
       if (
-        this.unidadesFat !== [] &&
-        this.unidadesHeader !== [] &&
+        this.unidadesFat.length !== 0 &&
+        this.unidadesHeader.length !== 0 &&
         this.somaMargemTotal !== ''
       ) {
         this.contentLoader = true;
