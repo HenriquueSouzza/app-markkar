@@ -15,9 +15,9 @@
         <p>Cod: {{produto['cod']}}</p>
         <div style="display: flex;align-items: baseline;justify-content: flex-start;">
           <div class="addItem">
-            <ion-button (click)="produto['qnt'] = changeQnt(produto['qnt'], 'sub');totalCar();" expand="block" fill="clear" shape="round"><ion-icon slot="icon-only" name="remove-outline"></ion-icon></ion-button>
-            <input [value]="produto['qnt']" (input)="produto['qnt'] = toIntQnt($event.target['value']);totalCar();" onkeypress="return event.charCode >= 48 && event.charCode <= 57" type = "text" maxlength = "6" inputmode="numeric" pattern="[0-9]+">
-            <ion-button (click)="produto['qnt'] = changeQnt(produto['qnt'], 'add');totalCar();" expand="block" fill="clear" shape="round"><ion-icon slot="icon-only" name="add-outline"></ion-icon></ion-button>
+            <ion-button (click)="produto['qnt'] = verificaEstoque(changeQnt(produto['qnt'], 'sub'), produto['qntMax']);totalCar();" expand="block" fill="clear" shape="round"><ion-icon slot="icon-only" name="remove-outline"></ion-icon></ion-button>
+            <input [value]="produto['qnt']" (input)="produto['qnt'] = verificaEstoque(toIntQnt($event.target['value']), produto['qntMax']);totalCar();setCarrinhoStorage()" onkeypress="return event.charCode >= 48 && event.charCode <= 57" type = "text" maxlength = "6" inputmode="numeric" pattern="[0-9]+">
+            <ion-button (click)="produto['qnt'] = verificaEstoque(changeQnt(produto['qnt'], 'add'), produto['qntMax']);totalCar();" expand="block" fill="clear" shape="round"><ion-icon slot="icon-only" name="add-outline"></ion-icon></ion-button>
           </div>
           <ion-button (click)="remove(produto)" expand="block" fill="clear" shape="round" style="margin-left: 7px;--padding-start: 7px; --padding-end: 7px;"><ion-icon slot="icon-only" color="danger" name="trash-outline"></ion-icon></ion-button>
         </div>
@@ -31,7 +31,7 @@
       <p>{{totalCarrinho}}</p>
     </div>
     <div id="btns">
-      <ion-button color="danger">
+      <ion-button color="danger" (click)="cancelarCarrinho()">
         Cancelar
       </ion-button>
       <ion-button>

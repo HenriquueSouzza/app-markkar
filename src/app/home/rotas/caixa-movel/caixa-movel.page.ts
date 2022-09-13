@@ -33,7 +33,7 @@ export class CaixaMovelPage implements OnInit {
 
   async ngOnInit() {
     if(await this.storage.get('caixa-movel') === null){
-      await this.storage.set('caixa-movel', {vendas: {carrinho: []}});
+      await this.storage.set('caixa-movel', {vendas: {carrinho: [], configuracoes: { modoRapido: false }}});
     };
     this.conectServidor();
   }
