@@ -74,6 +74,12 @@ export class ScannerCaixaPage implements OnInit {
     }, 500);*/
   }
 
+  ionViewWillLeave() {
+    this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
+    this.telaEspelho = true;
+    this.stopScan();
+  }
+
   async setCaixaMovel(){
     await this.storage.set('caixa-movel', this.caixaMovelStorage);
   }
@@ -109,11 +115,6 @@ export class ScannerCaixaPage implements OnInit {
 
   reloadScan() {
     this.startScan();
-  }
-
-  ionViewWillLeave() {
-    this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
-    this.telaEspelho = true;
   }
 
   switchFlashLight() {
