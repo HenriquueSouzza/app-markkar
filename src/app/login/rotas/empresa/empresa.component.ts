@@ -22,6 +22,7 @@ colorTOKEN: string;
 loader = false;
 keyHeight = false;
 keyHeightM = false;
+private auth: any;
 
 // eslint-disable-next-line max-len
 constructor(
@@ -56,42 +57,45 @@ async ngOnInit() {
   if(!isPlatform('mobileweb') && isPlatform('android')){
     StatusBar.setBackgroundColor({color: '#141518'});
   }
-  const valCnpj = await this.storage.get('cnpj');
-  const valToken = await this.storage.get('token');
-  const validatefLogin = {cnpj: valCnpj, token: valToken};
-  if(valCnpj !== null && valToken !== null){
-    this.service.firstlogin(validatefLogin).subscribe(async response =>{
-      if(response['status'] === 'success'){
-        const alert = await this.alertController.create({
-          cssClass: 'my-custom-class',
-          header: 'Você já possui uma empresa salva.',
-          message: 'Deseja logar com' + ' ' + response['empresa'] + ' ' + '?',
-          buttons: [
-            {
-              text: 'NÃO',
-              role: 'cancel',
-              cssClass: 'secondary',
-              id: 'cancel-button',
-              handler: () => {
+  this.auth = await this.storage.get('auth');
+  if(this.auth.hasOwnProperty('empresa')) {
+    const valCnpj = this.auth.empresa.cnpj;
+    const valToken = this.auth.empresa.token;
+    const validatefLogin = {cnpj: valCnpj, token: valToken};
+    if(valCnpj !== null && valToken !== null){
+      this.service.firstlogin(validatefLogin).subscribe(async response =>{
+        if(response['status'] === 'success'){
+          const alert = await this.alertController.create({
+            cssClass: 'my-custom-class',
+            header: 'Você já possui uma empresa salva.',
+            message: 'Deseja logar com' + ' ' + response['empresa'] + ' ' + '?',
+            buttons: [
+              {
+                text: 'NÃO',
+                role: 'cancel',
+                cssClass: 'secondary',
+                id: 'cancel-button',
+                handler: () => {
+                }
+              },
+              {
+                text: 'SIM',
+                id: 'confirm-button',
+                handler: () => {
+                  this.router.navigateByUrl('/login/usuario', { replaceUrl: true });
+                }
               }
-            },
-            {
-              text: 'SIM',
-              id: 'confirm-button',
-              handler: () => {
-                this.router.navigateByUrl('/login/usuario', { replaceUrl: true });
-              }
-            }
-          ]
-        });
-        await alert.present();
-      }
-      else if(response['status'] === 'errDB'){
-        this.error('serverdb');
-      }
-    }, async error => {
-      this.error('server');
-    });
+            ]
+          });
+          await alert.present();
+        }
+        else if(response['status'] === 'errDB'){
+          this.error('serverdb');
+        }
+      }, async error => {
+        this.error('server');
+      });
+    }
   }
 }
 colorReset(){
@@ -132,26 +136,35 @@ async enviarLogin(form: NgForm){
         this.err = null;
         this.colorTOKEN = 'white';
         this.colorCnpj = 'white';
-        await this.storageService.set('fOpen', false);
-        await this.storageService.set('cnpj', login.cnpj);
-        await this.storageService.set('token', login.token);
-        await this.storageService.set('idToken', response['id_token']);
-        const empresas = await this.storage.get('empresas');
-        let icone = null;
-        if(response['icone'] === null || response['icone'] === ''){
-          icone = 'business-outline';
-        }
-        empresas[response['id_token']] = {
-          empresa: response['empresa'],
-          cnpj: login.cnpj,
-          token: login.token,
-          idToken: response['id_token'],
-          icon: icone,
-          telefone: response['telefone'],
-          email: response['email']
-        };
-        await this.storage.set('empresas', empresas);
-        await this.storage.set('empresaAtual', response['empresa']);
+        let auth = this.auth;
+          if(auth === null){
+            auth = {};
+            auth.empresa = {
+              cnpj: login.cnpj,
+              token: login.token,
+              id: response['id_token']
+            };
+          } else {
+            auth.empresa = {
+              cnpj: login.cnpj,
+              token: login.token,
+              id: response['id_token']
+            };
+          }
+          await this.storageService.set('auth', auth);
+          const multiEmpresa = await this.storage.get('multiEmpresa');
+          multiEmpresa.empresas[response['id_token']] = {
+            empresa: response['empresa'],
+            cnpj: login.cnpj,
+            idToken: response['id_token'],
+            telefone: response['telefone'],
+            email: response['email']
+          };
+          await this.storage.set('multiEmpresa', multiEmpresa);
+          const appConfig = await this.storage.get('appConfig');
+          appConfig.firstOpen = false;
+          appConfig.empresaAtual = response['empresa'];
+          await this.storage.set('appConfig', appConfig);
         this.loader = false;
         this.router.navigateByUrl('/login/usuario', { replaceUrl: true });
       }

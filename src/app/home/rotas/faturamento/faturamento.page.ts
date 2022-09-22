@@ -137,6 +137,12 @@ export class FaturamentoPage implements OnInit {
   dateTimeInit: any;
   displayIntervalUnid: string;
 
+  // storage
+  private auth: any;
+  private faturamentoStorage: any;
+  private multiEmpresaStorage: any;
+  private appConfigStorage: any;
+
   constructor(
     private lojas: FaturamentoService,
     private service: LoginService,
@@ -150,6 +156,11 @@ export class FaturamentoPage implements OnInit {
   ) {}
 
   async ngOnInit() {
+    //loadStorage
+    this.auth = await this.storage.get('auth');
+    this.faturamentoStorage = await this.storage.get('faturamento');
+    this.multiEmpresaStorage = await this.storage.get('multiEmpresa');
+    this.appConfigStorage = await this.storage.get('appConfig');
     //Set Menu
     this.menu.enable(true, 'homeMenu');
     this.displayUnidades = false;
@@ -158,40 +169,44 @@ export class FaturamentoPage implements OnInit {
     this.dateLoaderTotal = false;
     this.contentLoader = false;
     //Error Prevention
-    if ((await this.storage.get('unidadesCheck')) === null) {
-      await this.storage.set('unidadesCheck', {});
+    if (this.faturamentoStorage.configuracoes.unidadesCheck === undefined) {
+      this.faturamentoStorage.configuracoes.unidadesCheck = {};
     }
-    if ((await this.storage.get('multiempresa')) === null) {
-      await this.storage.set('multiempresa', {});
-    }
-    if (
-      (await this.storage.get('intervalHeader')) === null ||
-      (await this.storage.get('intervalHeader')) === '' ||
-      (await this.storage.get('intervalHeader')) === 'on'
-    ) {
-      await this.storage.set('intervalHeader', 'month');
+    if ((await this.storage.get('multiEmpresa')) === null) {
+      await this.storage.set('multiEmpresa', {empresas: {}});
     }
     if (
-      (await this.storage.get('interval')) === null ||
-      (await this.storage.get('interval')) === '' ||
-      (await this.storage.get('interval')) === 'on'
+      this.faturamentoStorage.configuracoes.header.intervalo === undefined ||
+      this.faturamentoStorage.configuracoes.header.intervalo === null ||
+      this.faturamentoStorage.configuracoes.header.intervalo === '' ||
+      this.faturamentoStorage.configuracoes.header.intervalo === 'on'
     ) {
-      await this.storage.set('interval', 'day');
+      this.faturamentoStorage.configuracoes.header.intervalo = 'month';
+      await this.storage.set('faturamento', this.faturamentoStorage);
+    }
+    if (
+      this.faturamentoStorage.configuracoes.centrodecustos.intervalo === undefined ||
+      this.faturamentoStorage.configuracoes.centrodecustos.intervalo === null ||
+      this.faturamentoStorage.configuracoes.centrodecustos.intervalo === '' ||
+      this.faturamentoStorage.configuracoes.centrodecustos.intervalo === 'on'
+    ) {
+      this.faturamentoStorage.configuracoes.centrodecustos.intervalo = 'day';
+      await this.storage.set('faturamento', this.faturamentoStorage);
     }
     //Set CheckBox
-    this.unidadesCheck = await this.storage.get('unidadesCheck');
-    this.multiempresa = await this.storage.get('multiempresa');
-    this.empresa = await this.storage.get('empresaAtual');
+    this.unidadesCheck = this.faturamentoStorage.unidadesCheck;
+    this.multiempresa = this.multiEmpresaStorage;
+    this.empresa = this.appConfigStorage.empresaAtual;
     //Set Preferences
-    this.mask = await this.storage.get('mask');
-    this.cmvPerc = await this.storage.get('cmvPerc');
+    this.mask = this.faturamentoStorage.configuracoes.gerais.mask;
+    this.cmvPerc = this.faturamentoStorage.configuracoes.gerais.cmvPerc;
     if (this.cmvPerc === true) {
       this.perc = '%';
     }
     if (this.cmvPerc === false) {
       this.perc = '';
     }
-    this.intervalHeader = await this.storage.get('intervalHeader');
+    this.intervalHeader = this.faturamentoStorage.configuracoes.header.intervalo;
     if (this.intervalHeader === 'day') {
       this.fatHeaderTime = 'diario';
     } else if (this.intervalHeader === 'month') {
@@ -204,7 +219,7 @@ export class FaturamentoPage implements OnInit {
     } else {
       this.fatHeaderTime = '';
     }
-    this.valueGraficoInterval = await this.storage.get('intervalGrafico');
+    this.valueGraficoInterval = this.faturamentoStorage.configuracoes.grafico.intervalo;
     this.valueGraficoIntervalFilter = this.valueGraficoInterval;
     //Set Dates and Filter Default
     this.interval = 'day';
@@ -220,12 +235,12 @@ export class FaturamentoPage implements OnInit {
     this.dateValueFinishFormat = format(parseISO(this.maxDate), 'dd/MM/yyyy');
     this.dateValueDayFormat = format(parseISO(this.maxDate), 'dd/MM/yyyy');
     //Login Validation
-    this.valFLogin = await this.storage.get('fOpen');
-    this.valCnpj = await this.storage.get('cnpj');
-    this.valToken = await this.storage.get('token');
-    this.valIdToken = await this.storage.get('idToken');
-    this.valLogin = await this.storage.get('login');
-    this.valSenhaLogin = await this.storage.get('senha');
+    this.valFLogin = this.appConfigStorage.firstOpen;
+    this.valCnpj = this.auth.empresa.cnpj;
+    this.valToken = this.auth.empresa.token;
+    this.valIdToken = this.auth.empresa.id;
+    this.valLogin = this.auth.usuario.login;
+    this.valSenhaLogin = this.auth.usuario.senha;
     const validateLogin = {
       user: this.valLogin,
       senha: this.valSenhaLogin,
@@ -234,7 +249,7 @@ export class FaturamentoPage implements OnInit {
     };
     const validateLoginEmp = { cnpj: this.valCnpj, token: this.valToken };
     if (this.valFLogin !== false) {
-      this.router.navigateByUrl('/login', { replaceUrl: true });
+      //this.router.navigateByUrl('/login', { replaceUrl: true });
     } else if (
       this.valLogin !== null &&
       this.valSenhaLogin !== null &&
@@ -289,7 +304,7 @@ export class FaturamentoPage implements OnInit {
         );
     }
   }
-  async ionViewWillEnter() {
+  /*async ionViewWillEnter() {
     this.menu.enable(true, 'homeMenu');
     const verfyComplete = setInterval(() => {
       setTimeout(async () => {
@@ -345,7 +360,7 @@ export class FaturamentoPage implements OnInit {
     if (!isPlatform('mobileweb') && isPlatform('android')) {
       StatusBar.setBackgroundColor({ color: '#222428' });
     }
-  }
+  }*/
 
   //Faturamento
   headerFat(interval) {
@@ -499,7 +514,8 @@ export class FaturamentoPage implements OnInit {
               display: 'block',
             };
             this.unidadesCheck[this.valIdToken] = unidadesCheck;
-            await this.storage.set('unidadesCheck', this.unidadesCheck);
+            this.faturamentoStorage.unidadesCheck = this.unidadesCheck;
+            await this.storage.set('faturamento', this.faturamentoStorage);
           }
         } else {
           let n = 1;
@@ -537,10 +553,10 @@ export class FaturamentoPage implements OnInit {
               uf: unidade['uf'],
               ultimaExportacao: unidade['ultimaExportacao'],
               check: true,
-              display: 'block',
+              display: 'block'
             };
-            this.multiempresa[this.valIdToken] = multiempresa;
-            await this.storage.set('multiempresa', this.multiempresa);
+            this.multiempresa.empresas[this.valIdToken].centrodecustos = multiempresa;
+            await this.storage.set('multiEmpresa', this.multiempresa);
           }
         }
         const unidadesTotalBillingId = {};
@@ -740,7 +756,8 @@ export class FaturamentoPage implements OnInit {
     this.unidadesCheck[this.valIdToken][id]['unidade'] = id;
     this.unidadesCheck[this.valIdToken][id]['check'] = event;
     this.unidadesCheck[this.valIdToken][id]['display'] = display;
-    await this.storage.set('unidadesCheck', this.unidadesCheck);
+    this.faturamentoStorage.unidadesCheck = this.unidadesCheck;
+    await this.storage.set('faturamento', this.faturamentoStorage);
     this.dateLoaderTotal = true;
     this.unidadeFatTotal();
   }

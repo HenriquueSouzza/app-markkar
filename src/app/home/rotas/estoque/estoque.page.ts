@@ -21,6 +21,10 @@ export class EstoquePage implements OnInit {
   public recentesExist = false;
   private estoqueStorage: any;
 
+  // storage
+  private auth: any;
+  private multiEmpresaStorage: any;
+
   constructor(
     private estoqueService: EstoqueService,
     private storage: Storage,
@@ -32,6 +36,8 @@ export class EstoquePage implements OnInit {
   ) {}
 
   async ngOnInit() {
+    this.auth = await this.storage.get('auth');
+    this.multiEmpresaStorage = await this.storage.get('multiEmpresa');
     this.conectServidor();
   }
 
@@ -40,10 +46,7 @@ export class EstoquePage implements OnInit {
       message: 'Conectando ao servidor, aguarde...'
     });
     await loading.present();
-    this.idEmpBird = await this.storage.get('multiempresa');
-    this.idEmpBird = Object.values(
-      this.idEmpBird[await this.storage.get('idToken')]
-    )[0]['idEmpBird'];
+    this.idEmpBird = Object.values(this.multiEmpresaStorage.empresas[this.auth.empresa.id].centrodecustos)[0]['idEmpBird'];
     this.estoqueService
       .consultaCC({ codeEmp: this.idEmpBird })
       .pipe(timeout(5000))

@@ -146,7 +146,6 @@
                   deleteEmp(
                     empresa['empresa'],
                     empresa['cnpj'],
-                    empresa['token'],
                     empresa['idToken']
                   )
                 "
@@ -182,11 +181,11 @@
             </div>
             <div class="informacaoUnids">
               <h2 style="font-family: 'robotoBold'; text-transform: uppercase">
-                unidades:
+                centro de custos:
               </h2>
               <div
                 class="unids"
-                *ngFor="let unidade of forUnids(unidades[empresa['idToken']])"
+                *ngFor="let unidade of forUnids(unidades[empresa['idToken']]['centrodecustos'])"
               >
                 <h2 style="color: var(--ion-color-primary)">
                   {{ unidade["unidade"].toLowerCase() }}:

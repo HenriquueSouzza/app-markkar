@@ -13,11 +13,17 @@ export class HomeGuard implements CanActivate {
   async canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Promise<boolean> {
-    const valIdToken = await this.storage.get('idToken');
-    const valLogin = await this.storage.get('login');
-    const valSenhaLogin = await this.storage.get('senha');
-    if(valLogin !== null && valSenhaLogin !== null && valIdToken !== null){
-      return true;
+    const auth = await this.storage.get('auth');
+    if(auth.hasOwnProperty('usuario')) {
+      const valIdToken = auth.empresa.token;
+      const valLogin = auth.usuario.login;
+      const valSenhaLogin = auth.usuario.senha;
+      if(valLogin !== null && valSenhaLogin !== null && valIdToken !== null){
+        return true;
+      } else {
+        this.router.navigateByUrl('/login', { replaceUrl: true });
+        return false;
+      }
     } else {
       this.router.navigateByUrl('/login', { replaceUrl: true });
       return false;

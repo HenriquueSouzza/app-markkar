@@ -1,11 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  LoadingController,
-  MenuController,
-  AlertController,
-} from '@ionic/angular';
 import { Storage } from '@ionic/storage-angular';
-import { Router } from '@angular/router';
 import { StorageService } from 'src/app/services/storage/storage.service';
 
 @Component({
@@ -19,43 +13,49 @@ export class PreferenciasPage implements OnInit {
   mask: boolean;
   cmvPerc: boolean;
 
+  // storage
+  private faturamentoStorage: any;
+
   constructor(
-    private menu: MenuController,
-    private router: Router,
     private storage: Storage,
     private storageService: StorageService
   ) {}
 
   async ngOnInit() {
-    if ((await this.storage.get('intervalHeader')) === 'on') {
-      await this.storage.set('intervalHeader', 'month');
+    this.faturamentoStorage = await this.storage.get('faturamento');
+    if (this.faturamentoStorage.configuracoes.header.intervalo === 'on') {
+      this.faturamentoStorage.configuracoes.header.intervalo = 'month';
     }
-    if ((await this.storage.get('intervalGrafico')) === 'on') {
-      await this.storage.set('intervalGrafico', 'lastFourMonths');
+    if (this.faturamentoStorage.configuracoes.grafico.intervalo === 'on') {
+      this.faturamentoStorage.configuracoes.grafico.intervalo = 'lastFourMonths';
     }
-    if ((await this.storage.get('mask')) === null) {
-      await this.storage.set('mask', true);
+    if (this.faturamentoStorage.configuracoes.gerais.mask === null) {
+      this.faturamentoStorage.configuracoes.gerais.mask = true;
     }
-    if ((await this.storage.get('cmvPerc')) === null) {
-      await this.storage.set('cmvPerc', true);
+    if (this.faturamentoStorage.configuracoes.gerais.cmvPerc === null) {
+      this.faturamentoStorage.configuracoes.gerais.cmvPerc = true;
     }
-    this.valueInterval = await this.storage.get('intervalHeader');
-    this.valueGraficoInterval = await this.storage.get('intervalGrafico');
-    this.mask = await this.storage.get('mask');
-    this.cmvPerc = await this.storage.get('cmvPerc');
+    this.valueInterval = this.faturamentoStorage.configuracoes.header.intervalo;
+    this.valueGraficoInterval = this.faturamentoStorage.configuracoes.grafico.intervalo;
+    this.mask = this.faturamentoStorage.configuracoes.gerais.mask;
+    this.cmvPerc = this.faturamentoStorage.configuracoes.gerais.cmvPerc;
   }
 
   async setInterval(event) {
-    await this.storage.set('intervalHeader', event.detail.value);
+    this.faturamentoStorage.configuracoes.header.intervalo = event.detail.value;
+    await this.storage.set('faturamento', this.faturamentoStorage);
   }
   async setMask(event) {
-    await this.storage.set('mask', event.detail.checked);
+    this.faturamentoStorage.configuracoes.gerais.mask = event.detail.checked;
+    await this.storage.set('faturamento', this.faturamentoStorage);
   }
   async setCMV(event) {
-    await this.storage.set('cmvPerc', event.detail.checked);
+    this.faturamentoStorage.configuracoes.gerais.cmvPerc = event.detail.checked;
+    await this.storage.set('faturamento', this.faturamentoStorage);
   }
   async setGraficoInterval(event) {
-    await this.storage.set('intervalGrafico', event.detail.value);
+    this.faturamentoStorage.configuracoes.grafico.intervalo = event.detail.value;
+    await this.storage.set('faturamento', this.faturamentoStorage);
   }
   blank() {}
 }

@@ -19,9 +19,8 @@ export class UsuarioComponent implements OnInit {
   colorInput = 'white';
   keyHeight = false;
   keyHeightM = false;
-
-  //strings html span
   errLogin: string;
+  private auth: any;
 
   constructor(
     private menu: MenuController,
@@ -51,50 +50,54 @@ export class UsuarioComponent implements OnInit {
      }
 
   async ngOnInit() {
-    const login = await this.storage.get('login');
-    this.empAtual = await this.storage.get('empresaAtual');
-    const valIdToken = await this.storage.get('idToken');
-    const valLogin = await this.storage.get('login');
-    const valSenhaLogin = await this.storage.get('senha');
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const valLogins = {user: valLogin, senha: valSenhaLogin, id_token: valIdToken};
-    if(valIdToken !== null && valLogin !== null && valSenhaLogin !== null){
-      this.service.login(valLogins).subscribe(async response =>{
-        if(response['status'] === 'success'){
-          this.errLogin = null;
-          const alert = await this.alertController.create({
-            cssClass: 'my-custom-class',
-            header: 'Você já possui um login salvo.',
-            message: 'Deseja logar com' + ' ' + login.toUpperCase() + ' ' + '?',
-            buttons: [
-              {
-                text: 'NÃO',
-                role: 'cancel',
-                cssClass: 'secondary',
-                id: 'cancel-button',
-                handler: () => {
-                // navigator['app'].exitApp();
+    const appConfig = await this.storage.get('appConfig');
+    this.auth = await this.storage.get('auth');
+    this.empAtual = appConfig.empresaAtual;
+    if(this.auth.hasOwnProperty('usuario')) {
+      const login = this.auth.usuario.login;
+      const valIdToken = this.auth.empresa.token;
+      const valLogin = this.auth.usuario.login;
+      const valSenhaLogin = this.auth.usuario.senha;
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      const valLogins = {user: valLogin, senha: valSenhaLogin, id_token: valIdToken};
+      if(valIdToken !== null && valLogin !== null && valSenhaLogin !== null){
+        this.service.login(valLogins).subscribe(async response =>{
+          if(response['status'] === 'success'){
+            this.errLogin = null;
+            const alert = await this.alertController.create({
+              cssClass: 'my-custom-class',
+              header: 'Você já possui um login salvo.',
+              message: 'Deseja logar com' + ' ' + login.toUpperCase() + ' ' + '?',
+              buttons: [
+                {
+                  text: 'NÃO',
+                  role: 'cancel',
+                  cssClass: 'secondary',
+                  id: 'cancel-button',
+                  handler: () => {
+                  // navigator['app'].exitApp();
+                  }
+                },
+                {
+                  text: 'SIM',
+                  id: 'confirm-button',
+                  handler: () => {
+                    this.router.navigateByUrl('/home/faturamento', { replaceUrl: true });
+                  }
                 }
-              },
-              {
-                text: 'SIM',
-                id: 'confirm-button',
-                handler: () => {
-                  this.router.navigateByUrl('/home/faturamento', { replaceUrl: true });
-                }
-              }
-            ]
-          });
-          await alert.present();
-        }
-        else if(response['status'] === 'failed'){
-        }
-        else if(response['status'] === 'errDB'){
-          this.errLogin = 'Não foi possivel conectar com o servidor de dados';
-        }
-      }, async error => {
-        this.errLogin ='falha ao conectar com o servidor';
-      });
+              ]
+            });
+            await alert.present();
+          }
+          else if(response['status'] === 'failed'){
+          }
+          else if(response['status'] === 'errDB'){
+            this.errLogin = 'Não foi possivel conectar com o servidor de dados';
+          }
+        }, async error => {
+          this.errLogin ='falha ao conectar com o servidor';
+        });
+      }
     }
   }
   change(){
@@ -121,8 +124,19 @@ export class UsuarioComponent implements OnInit {
       this.service.login(login).subscribe(async response =>{
         if(response['status'] === 'success'){
           this.errLogin = null;
-          await this.storageService.set('login', login.user);
-          await this.storageService.set('senha', login.senha);
+          if(this.auth === null){
+            this.auth = {};
+            this.auth.usuario = {
+              login: login.user,
+              senha: login.senha
+            };
+          } else {
+            this.auth.usuario = {
+              login: login.user,
+              senha: login.senha
+            };
+          }
+          await this.storageService.set('auth', this.auth);
           await loading.dismiss();
           this.router.navigateByUrl('/home/faturamento', { replaceUrl: true });
         }

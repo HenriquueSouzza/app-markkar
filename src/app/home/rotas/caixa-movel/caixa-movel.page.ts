@@ -21,6 +21,10 @@ export class CaixaMovelPage implements OnInit {
   public idCc: string;
   public recentesExist = false;
 
+  // storage
+  private auth: any;
+  private multiEmpresaStorage: any;
+
   constructor(
     private estoqueService: EstoqueService,
     private storage: Storage,
@@ -32,6 +36,8 @@ export class CaixaMovelPage implements OnInit {
   ) {}
 
   async ngOnInit() {
+    this.auth = await this.storage.get('auth');
+    this.multiEmpresaStorage = await this.storage.get('multiEmpresa');
     if(await this.storage.get('caixa-movel') === null){
       await this.storage.set('caixa-movel', {vendas: {carrinho: [], configuracoes: { modoRapido: false }}});
     };
@@ -43,10 +49,7 @@ export class CaixaMovelPage implements OnInit {
       message: 'Conectando ao servidor, aguarde...'
     });
     await loading.present();
-    this.idEmpBird = await this.storage.get('multiempresa');
-    this.idEmpBird = Object.values(
-      this.idEmpBird[await this.storage.get('idToken')]
-    )[0]['idEmpBird'];
+    this.idEmpBird = Object.values(this.multiEmpresaStorage.empresas[this.auth.empresa.id].centrodecustos)[0]['idEmpBird'];
     this.estoqueService
       .consultaCC({ codeEmp: this.idEmpBird })
       .pipe(timeout(5000))

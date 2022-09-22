@@ -1,15 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  LoadingController,
-  MenuController,
-  AlertController,
-  Platform,
-  NavController,
-  ToastController,
-} from '@ionic/angular';
-import { Storage } from '@ionic/storage-angular';
-import { Router } from '@angular/router';
-import { StorageService } from 'src/app/services/storage/storage.service';
+import { NavController, ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-configuracoes',
@@ -20,21 +10,14 @@ export class ConfiguracoesPage implements OnInit {
   name: string;
 
   constructor(
-    private menu: MenuController,
-    private router: Router,
-    private storage: Storage,
-    private storageService: StorageService,
-    private platform: Platform,
     private navCtrl: NavController,
     public toastController: ToastController
   ) { }
 
-  async ngOnInit() {
-    this.name = await this.storage.get('login');
-  }
+  ngOnInit() { }
 
   redirect() {
-    this.router.navigateByUrl('/home/configuracoes/preferencias');
+    this.navCtrl.navigateForward('/home/configuracoes/preferencias');
   }
 
   async presentToast(men) {
