@@ -55,14 +55,14 @@ export class UsuarioComponent implements OnInit {
     this.empAtual = appConfig.empresaAtual;
     if(this.auth.hasOwnProperty('usuario')) {
       const login = this.auth.usuario.login;
-      const valIdToken = this.auth.empresa.token;
+      const valIdToken = this.auth.empresa.id;
       const valLogin = this.auth.usuario.login;
       const valSenhaLogin = this.auth.usuario.senha;
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      const valLogins = {user: valLogin, senha: valSenhaLogin, id_token: valIdToken};
+      const valLogins = {user: valLogin, senha: valSenhaLogin, id_token: valIdToken, cnpj: this.auth.empresa.cnpj};
       if(valIdToken !== null && valLogin !== null && valSenhaLogin !== null){
-        this.service.login(valLogins).subscribe(async response =>{
-          if(response['status'] === 'success'){
+        this.service.login(valLogins).subscribe(async (response: any) =>{
+          if(response.connection['status'] === 'success'){
             this.errLogin = null;
             const alert = await this.alertController.create({
               cssClass: 'my-custom-class',
@@ -89,9 +89,9 @@ export class UsuarioComponent implements OnInit {
             });
             await alert.present();
           }
-          else if(response['status'] === 'failed'){
+          else if(response.connection['status'] === 'failed'){
           }
-          else if(response['status'] === 'errDB'){
+          else if(response.connection['status'] === 'errDB'){
             this.errLogin = 'Não foi possivel conectar com o servidor de dados';
           }
         }, async error => {
@@ -120,32 +120,35 @@ export class UsuarioComponent implements OnInit {
     }
     else{
       login.user = login.user.trim();
-      login.id_token = await this.storage.get('idToken');
-      this.service.login(login).subscribe(async response =>{
-        if(response['status'] === 'success'){
+      login.id_token = this.auth.empresa.id;
+      login.cnpj = this.auth.empresa.cnpj;
+      this.service.login(login).subscribe(async (response: any) =>{
+        if(response.connection['status'] === 'success'){
           this.errLogin = null;
           if(this.auth === null){
             this.auth = {};
             this.auth.usuario = {
               login: login.user,
-              senha: login.senha
+              senha: login.senha,
+              token: response.token
             };
           } else {
             this.auth.usuario = {
               login: login.user,
-              senha: login.senha
+              senha: login.senha,
+              token: response.token
             };
           }
           await this.storageService.set('auth', this.auth);
           await loading.dismiss();
           this.router.navigateByUrl('/home/faturamento', { replaceUrl: true });
         }
-        else if(response['status'] === 'failed'){
+        else if(response.connection['status'] === 'failed'){
           this.colorInput = 'red';
           this.errLogin = 'Login ou Senha não encontrados';
           await loading.dismiss();
         }
-        else if(response['status'] === 'errDB'){
+        else if(response.connection['status'] === 'errDB'){
           this.errLogin = 'Não foi possivel conectar com o servidor de dados';
           await loading.dismiss();
         }

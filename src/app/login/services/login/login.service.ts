@@ -17,8 +17,11 @@ export interface Login{
   providedIn: 'root',
 })
 export class LoginService {
-  private flurl = 'https://api.markkar.com.br/Login-Empresarial';
-  private lurl = 'https://api.markkar.com.br/Login';
+  private flurl = 'https://api.markkar.com.br/app/auth/loginEmpresarial';
+  private lurl = 'https://api.markkar.com.br/app/auth/login';
+
+  /*private flurl = 'http://192.168.1.11/app/auth/loginEmpresarial';
+  private lurl = 'http://192.168.1.11/app/auth/login';*/
 
   constructor(private http: HttpClient) { }
 

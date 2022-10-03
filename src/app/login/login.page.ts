@@ -96,8 +96,9 @@ export class LoginPage implements OnInit {
         valIdToken !== null
       ) {
         this.service.login(validateLogin).subscribe(
-          async (response) => {
-            if (response['status'] === 'success') {
+          async (response: any) => {
+            console.log(response);
+            if (response.connection['status'] === 'success') {
               this.btn = 'block';
               this.router.navigateByUrl('/home/faturamento', { replaceUrl: true });
               setTimeout(() => {
@@ -110,12 +111,12 @@ export class LoginPage implements OnInit {
               if (!isPlatform('mobileweb') && isPlatform('ios')) {
                 StatusBar.setStyle({ style: StatusBarStyle.Dark });
               }
-            } else if (response['status'] === 'failed') {
+            } else if (response.connection['status'] === 'failed') {
               this.router.navigateByUrl('/login/usuario', { replaceUrl: true });
               setTimeout(() => {
                 SplashScreen.hide();
               }, 2000);
-            } else if (response['status'] === 'errDB') {
+            } else if (response.connection['status'] === 'errDB') {
               this.btn = 'block';
               setTimeout(() => {
                 SplashScreen.hide();
@@ -133,23 +134,23 @@ export class LoginPage implements OnInit {
         );
       } else if (valCnpj !== null && valToken !== null) {
         this.service.firstlogin(validatefLogin).subscribe(
-          async (response) => {
-            if (response['status'] === 'failed') {
+          async (response: any) => {
+            if (response.connection['status'] === 'failed') {
               this.router.navigateByUrl('/login/empresa', { replaceUrl: true });
               setTimeout(() => {
                 SplashScreen.hide();
               }, 2000);
-            } else if (response['status'] === 'blocked') {
+            } else if (response.connection['status'] === 'blocked') {
               this.router.navigateByUrl('/login/tokenBlock', { replaceUrl: true });
               setTimeout(() => {
                 SplashScreen.hide();
               }, 2000);
-            } else if (response['status'] === 'success') {
+            } else if (response.connection['status'] === 'success') {
               this.router.navigateByUrl('/login/usuario', { replaceUrl: true });
               setTimeout(() => {
                 SplashScreen.hide();
               }, 2000);
-            } else if (response['status'] === 'errDB') {
+            } else if (response.connection['status'] === 'errDB') {
               this.btn = 'block';
               setTimeout(() => {
                 SplashScreen.hide();

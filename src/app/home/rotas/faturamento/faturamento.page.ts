@@ -246,6 +246,7 @@ export class FaturamentoPage implements OnInit {
       senha: this.valSenhaLogin,
       // eslint-disable-next-line @typescript-eslint/naming-convention
       id_token: this.valIdToken,
+      cnpj: this.valCnpj
     };
     const validateLoginEmp = { cnpj: this.valCnpj, token: this.valToken };
     if (this.valFLogin !== false) {
@@ -261,22 +262,22 @@ export class FaturamentoPage implements OnInit {
         .firstlogin(validateLoginEmp)
         .pipe(timeout(15000))
         .subscribe(
-          async (response) => {
-            if (response['status'] === 'failed') {
+          async (response: any) => {
+            if (response.connection['status'] === 'failed') {
               this.error('errLogEmp');
-            } else if (response['status'] === 'blocked') {
+            } else if (response.connection['status'] === 'blocked') {
               this.router.navigateByUrl('/login/tokenBlock', {
                 replaceUrl: true,
               });
-            } else if (response['status'] === 'success') {
+            } else if (response.connection['status'] === 'success') {
               this.service.login(validateLogin).subscribe(
-                async (res) => {
-                  if (res['status'] === 'success') {
+                async (res: any) => {
+                  if (res.connection['status'] === 'success') {
                     this.headerFat(this.intervalHeader);
                     this.unidadeFatTotal();
-                  } else if (res['status'] === 'failed') {
+                  } else if (res.connection['status'] === 'failed') {
                     this.error('errLog');
-                  } else if (res['status'] === 'errDB') {
+                  } else if (res.connection['status'] === 'errDB') {
                     this.error('serverdb');
                   }
                 },
@@ -284,7 +285,7 @@ export class FaturamentoPage implements OnInit {
                   this.error('server');
                 }
               );
-            } else if (response['status'] === 'errDB') {
+            } else if (response.connection['status'] === 'errDB') {
               this.error('serverdb');
             }
           },

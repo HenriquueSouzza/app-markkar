@@ -63,12 +63,12 @@ async ngOnInit() {
     const valToken = this.auth.empresa.token;
     const validatefLogin = {cnpj: valCnpj, token: valToken};
     if(valCnpj !== null && valToken !== null){
-      this.service.firstlogin(validatefLogin).subscribe(async response =>{
-        if(response['status'] === 'success'){
+      this.service.firstlogin(validatefLogin).subscribe(async (response: any) =>{
+        if(response.connection['status'] === 'success'){
           const alert = await this.alertController.create({
             cssClass: 'my-custom-class',
             header: 'Você já possui uma empresa salva.',
-            message: 'Deseja logar com' + ' ' + response['empresa'] + ' ' + '?',
+            message: 'Deseja logar com' + ' ' + response.loginInformation['empresa'] + ' ' + '?',
             buttons: [
               {
                 text: 'NÃO',
@@ -89,7 +89,7 @@ async ngOnInit() {
           });
           await alert.present();
         }
-        else if(response['status'] === 'errDB'){
+        else if(response.connection['status'] === 'errDB'){
           this.error('serverdb');
         }
       }, async error => {
@@ -120,19 +120,19 @@ async enviarLogin(form: NgForm){
   else{
     this.err = null;
     this.cnpjErr = null;
-    this.service.firstlogin(login).subscribe(async response =>{
-      if(response['status'] === 'failed'){
+    this.service.firstlogin(login).subscribe(async (response: any) =>{
+      if(response.connection['status'] === 'failed'){
         this.colorTOKEN = 'red';
         this.colorCnpj = 'red';
         this.err = 'CNPJ ou TOKEN invalido';
         this.loader = false;
       }
-      else if(response['status'] === 'blocked'){
+      else if(response.connection['status'] === 'blocked'){
         this.colorTOKEN = 'red';
         this.err = 'TOKEN bloqueado';
         this.loader = false;
       }
-      else if(response['status'] === 'success'){
+      else if(response.connection['status'] === 'success'){
         this.err = null;
         this.colorTOKEN = 'white';
         this.colorCnpj = 'white';
@@ -142,33 +142,33 @@ async enviarLogin(form: NgForm){
             auth.empresa = {
               cnpj: login.cnpj,
               token: login.token,
-              id: response['id_token']
+              id: response.loginInformation['id_token']
             };
           } else {
             auth.empresa = {
               cnpj: login.cnpj,
               token: login.token,
-              id: response['id_token']
+              id: response.loginInformation['id_token']
             };
           }
           await this.storageService.set('auth', auth);
           const multiEmpresa = await this.storage.get('multiEmpresa');
-          multiEmpresa.empresas[response['id_token']] = {
-            empresa: response['empresa'],
+          multiEmpresa.empresas[response.loginInformation['id_token']] = {
+            empresa: response.loginInformation['empresa'],
             cnpj: login.cnpj,
-            idToken: response['id_token'],
-            telefone: response['telefone'],
-            email: response['email']
+            idToken: response.loginInformation['id_token'],
+            telefone: response.loginInformation['telefone'],
+            email: response.loginInformation['email']
           };
           await this.storage.set('multiEmpresa', multiEmpresa);
           const appConfig = await this.storage.get('appConfig');
           appConfig.firstOpen = false;
-          appConfig.empresaAtual = response['empresa'];
+          appConfig.empresaAtual = response.loginInformation['empresa'];
           await this.storage.set('appConfig', appConfig);
         this.loader = false;
         this.router.navigateByUrl('/login/usuario', { replaceUrl: true });
       }
-      else if(response['status'] === 'errDB'){
+      else if(response.connection['status'] === 'errDB'){
         this.loader = false;
         this.err ='falha ao conectar com o servidor de dados';
       }
