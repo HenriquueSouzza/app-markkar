@@ -88,6 +88,7 @@ export class LoginPage implements OnInit {
         senha: auth.usuario.senha,
         // eslint-disable-next-line @typescript-eslint/naming-convention
         id_token: auth.empresa.id,
+        cnpj: auth.empresa.cnpj
       };
       const validatefLogin = { cnpj: auth.empresa.cnpj, token: auth.empresa.token };
       if (
@@ -97,7 +98,6 @@ export class LoginPage implements OnInit {
       ) {
         this.service.login(validateLogin).subscribe(
           async (response: any) => {
-            console.log(response);
             if (response.connection['status'] === 'success') {
               this.btn = 'block';
               this.router.navigateByUrl('/home/faturamento', { replaceUrl: true });
@@ -125,6 +125,7 @@ export class LoginPage implements OnInit {
             }
           },
           async (error) => {
+            console.log(error);
             this.btn = 'block';
             setTimeout(() => {
               SplashScreen.hide();
