@@ -16,8 +16,8 @@ export interface InterfaceConsultaCentrosCustos {
 })
 export class EstoqueService {
 
-  private urlProdutos = 'http://192.168.1.6/app/estoque/produtos';
-  private urlcentroscustos = 'http://192.168.1.6/app/estoque/centroscustos';
+  private urlProdutos = 'http://192.168.1.11/app/estoque/produtos';
+  private urlcentroscustos = 'http://192.168.1.11/app/estoque/centroscustos';
 
   constructor(private http: HttpClient) { }
 
