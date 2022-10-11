@@ -24,7 +24,7 @@ export class FaturamentoService {
 
   faturamento(intFat: interfaceFaturamento, token: string) {
     return this.http.post(this.url, intFat,{
-      headers: { Authorization: token},
+      headers: { Authorization: token },
     });
   }
 }

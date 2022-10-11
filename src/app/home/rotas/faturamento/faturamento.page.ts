@@ -260,51 +260,8 @@ export class FaturamentoPage implements OnInit {
       this.valToken !== null &&
       this.valIdToken !== null
     ) {
-      this.service
-        .firstlogin(validateLoginEmp)
-        .pipe(timeout(15000))
-        .subscribe(
-          async (response: any) => {
-            if (response.connection['status'] === 'failed') {
-              this.error('errLogEmp');
-            } else if (response.connection['status'] === 'blocked') {
-              this.router.navigateByUrl('/login/tokenBlock', {
-                replaceUrl: true,
-              });
-            } else if (response.connection['status'] === 'success') {
-              this.service.login(validateLogin).subscribe(
-                async (res: any) => {
-                  if (res.connection['status'] === 'success') {
-                    this.headerFat(this.intervalHeader);
-                    this.unidadeFatTotal();
-                  } else if (res.connection['status'] === 'failed') {
-                    this.error('errLog');
-                  } else if (res.connection['status'] === 'errDB') {
-                    this.error('serverdb');
-                  }
-                },
-                async (error) => {
-                  this.error('server');
-                }
-              );
-            } else if (response.connection['status'] === 'errDB') {
-              this.error('serverdb');
-            }
-          },
-          async (error) => {
-            if (error.name === 'TimeoutError') {
-              this.tryies = ++this.tryies;
-              if (this.tryies <= 3) {
-                this.ngOnInit();
-              }
-              if (this.tryies > 3) {
-                this.error('server');
-              }
-            } else {
-              this.error('server');
-            }
-          }
-        );
+      this.headerFat(this.intervalHeader);
+      this.unidadeFatTotal();
     }
   }
   /*async ionViewWillEnter() {
@@ -382,7 +339,9 @@ export class FaturamentoPage implements OnInit {
       (response: any) => {
         if(response.connection.error === 'invalidToken'){
           this.error('invalidToken');
-        } else {
+        }else if(response.connection.error === 'databaseError'){
+          this.error('serverdb');
+        } else if(response.connection.status === 'success'){
           const grafico = response['MonthlyBillingForFourMonths'];
           this.unidadesHeader = Object.values(response['totalBilling']);
           const unidades = this.unidadesHeader;
@@ -475,9 +434,17 @@ export class FaturamentoPage implements OnInit {
             }
             this.contentLoader = true;
           }
+        } else {
+          this.error('');
         }
       },
-      async (error) => {}
+      async (error) => {
+        if (typeof error.error.connection == 'undefined') {
+          this.error(error.error);
+        } else {
+          this.error('');
+        }
+      }
     );
   }
   async unidadeFatTotal() {
@@ -491,7 +458,7 @@ export class FaturamentoPage implements OnInit {
     };
     this.lojas.faturamento(dayFat, this.auth.usuario.token).subscribe(
       async (response: any) => {
-        if(response.connection.error !== 'invalidToken'){
+        if(response.connection.status === 'success'){
           const unidades = response;
           this.unidadesFat = Object.values(response['totalBilling']);
           const unidadesFat = this.unidadesFat;
@@ -665,13 +632,7 @@ export class FaturamentoPage implements OnInit {
           }
         }
       },
-      async (error) => {
-        if (typeof error.error.connection == 'undefined') {
-          this.error(error.error);
-        } else {
-          this.error(error.error.connection.status);
-        }
-      }
+      async (error) => { }
     );
   }
   async dateChangeInit(value) {
