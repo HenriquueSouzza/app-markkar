@@ -1,36 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { ScreenOrientation } from '@awesome-cordova-plugins/screen-orientation/ngx';
-import { NavController } from '@ionic/angular';
-import { Storage } from '@ionic/storage-angular';
-import { StorageService } from './services/storage/storage.service';
+import { ControleVersaoService } from './services/controleVersao/controle-versao.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
 })
-export class AppComponent implements OnInit{
+export class AppComponent {
 
   constructor(
     private screenOrientation: ScreenOrientation,
-    private storage: Storage,
-    private storageService: StorageService,
-    private navCtrl: NavController,
+    private controleVersao: ControleVersaoService
     ){
     this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
-  }
-
-  async ngOnInit(){
-    const appConfig = await this.storage.get('appConfig');
-    const verificaVersao = await this.storage.get('valUpdateReset');
-    if(verificaVersao !== null && verificaVersao !== '1.15.3'){
-      await this.storage.clear();
-      this.navCtrl.navigateForward('/', { replaceUrl: true });
-    } else if(appConfig !== null && appConfig.hasOwnProperty('updateCritico') && appConfig.hasOwnProperty('firstOpen')) {
-      if(verificaVersao === null && appConfig.updateCritico !== '1.15.3' && appConfig.firstOpen === false){
-        await this.storage.clear();
-        this.navCtrl.navigateForward('/', { replaceUrl: true });
-      }
-    }
+    this.controleVersao.check();
   }
 }

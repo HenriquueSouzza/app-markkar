@@ -16,6 +16,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { ScreenOrientation } from '@awesome-cordova-plugins/screen-orientation/ngx';
 import { Flashlight } from '@awesome-cordova-plugins/flashlight/ngx';
+import { AppVersion } from '@awesome-cordova-plugins/app-version/ngx';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,7 @@ import { Flashlight } from '@awesome-cordova-plugins/flashlight/ngx';
       registrationStrategy: 'registerWhenStable:30000'
     })
   ],
-  providers: [ScreenOrientation, Flashlight, { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+  providers: [ScreenOrientation, Flashlight, AppVersion, { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
