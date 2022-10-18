@@ -6,6 +6,7 @@ import { AppVersion } from '@awesome-cordova-plugins/app-version/ngx';
 import { StorageService } from '../storage/storage.service';
 import { Storage } from '@ionic/storage-angular';
 import { NavController } from '@ionic/angular';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,7 @@ export class ControleVersaoService {
   constructor(
     private http: HttpClient,
     private storage: Storage,
+    private router: Router,
     private storageService: StorageService,
     private navCtrl: NavController,
     private appVersion: AppVersion
@@ -25,6 +27,7 @@ export class ControleVersaoService {
       const versaoAtual = res.versao;
       const versaoApp = await this.appVersion.getVersionCode();
       if(versaoAtual > versaoApp){
+        this.router.navigateByUrl('/login/updateApp', { replaceUrl: true });
         this.showDialog();
       } else {
         this.checkReset();
@@ -37,11 +40,11 @@ export class ControleVersaoService {
     const verificaVersao = await this.storage.get('valUpdateReset');
     if(verificaVersao !== null && verificaVersao !== '1.15.3'){
       await this.storage.clear();
-      this.navCtrl.navigateForward('/login', { replaceUrl: true });
+      this.router.navigateByUrl('/login', { replaceUrl: true });
     } else if(appConfig !== null && appConfig.hasOwnProperty('updateCritico') && appConfig.hasOwnProperty('firstOpen')) {
       if(verificaVersao === null && appConfig.updateCritico !== '1.15.3' && appConfig.firstOpen === false){
         await this.storage.clear();
-        this.navCtrl.navigateForward('/login', { replaceUrl: true });
+        this.router.navigateByUrl('/login', { replaceUrl: true });
       }
     }
   }
@@ -60,5 +63,8 @@ export class ControleVersaoService {
     const urlAndroid = 'https://play.google.com/store/apps/details?id=br.com.markkar.portal';
 
     await Browser.open({ url: urlAndroid, toolbarColor: '#222428' });
+    await Browser.addListener('browserFinished', () => {
+      this.check();
+    });
   };
 }

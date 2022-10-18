@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { isPlatform } from '@ionic/angular';
 import { ScreenOrientation } from '@awesome-cordova-plugins/screen-orientation/ngx';
 import { ControleVersaoService } from './services/controleVersao/controle-versao.service';
 
@@ -8,12 +9,10 @@ import { ControleVersaoService } from './services/controleVersao/controle-versao
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
-
-  constructor(
-    private screenOrientation: ScreenOrientation,
-    private controleVersao: ControleVersaoService
-    ){
-    this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
+  constructor(private controleVersao: ControleVersaoService, private screenOrientation: ScreenOrientation) {
+    if (!isPlatform('mobileweb')) {
+      this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
+    }
     this.controleVersao.check();
   }
 }

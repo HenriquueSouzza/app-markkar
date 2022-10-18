@@ -40,7 +40,9 @@ export class LoginPage implements OnInit {
     private service: LoginService,
     public loadingController: LoadingController,
     public toastController: ToastController
-  ) {this.btn = 'none';}
+  ) {
+    this.btn = 'none';
+  }
 
   async ngOnInit() {
     // storage
@@ -125,7 +127,6 @@ export class LoginPage implements OnInit {
             }
           },
           async (error) => {
-            console.log(error);
             this.btn = 'block';
             setTimeout(() => {
               SplashScreen.hide();
