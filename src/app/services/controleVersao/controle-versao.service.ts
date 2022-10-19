@@ -7,6 +7,7 @@ import { StorageService } from '../storage/storage.service';
 import { Storage } from '@ionic/storage-angular';
 import { NavController } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { isPlatform } from '@ionic/angular';
 
 @Injectable({
   providedIn: 'root'
@@ -23,16 +24,20 @@ export class ControleVersaoService {
     ) { }
 
   async check(){
-    this.http.get('http://192.168.1.11/versaoAppControl.json').subscribe(async (res: any) => {
-      const versaoAtual = res.versao;
-      const versaoApp = await this.appVersion.getVersionCode();
-      if(versaoAtual > versaoApp){
-        this.router.navigateByUrl('/login/updateApp', { replaceUrl: true });
-        this.showDialog();
-      } else {
-        this.checkReset();
-      }
-    });
+    if (!isPlatform('mobileweb')) {
+      this.http.get('http://192.168.1.11/versaoAppControl.json').subscribe(async (res: any) => {
+        const versaoAtual = res.versao;
+        const versaoApp = await this.appVersion.getVersionCode();
+        if(versaoAtual > versaoApp){
+          this.router.navigateByUrl('/login/updateApp', { replaceUrl: true });
+          this.showDialog();
+        } else {
+          this.checkReset();
+        }
+      });
+    } else {
+      this.checkReset();
+    }
   }
 
   async checkReset(){

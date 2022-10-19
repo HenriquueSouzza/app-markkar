@@ -141,6 +141,7 @@ export class BemVindoComponent implements OnInit {
           multiEmpresa.empresas[response.loginInformation['id_token']] = {
             empresa: response.loginInformation['empresa'],
             cnpj: login.cnpj,
+            token: login.token,
             idToken: response.loginInformation['id_token'],
             telefone: response.loginInformation['telefone'],
             email: response.loginInformation['email']
