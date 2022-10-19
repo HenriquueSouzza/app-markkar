@@ -60,24 +60,30 @@ export class UsuarioComponent implements OnInit {
       const login = this.auth.usuario.login;
       const valIdToken = this.auth.empresa.id;
       const valLogin = this.auth.usuario.login;
-      const valSenhaLogin = this.auth.usuario.senha;
+      const valTokenUser = this.auth.usuario.token;
       const valLogins = {
         user: valLogin,
-        senha: valSenhaLogin,
         // eslint-disable-next-line @typescript-eslint/naming-convention
         id_token: valIdToken,
         cnpj: this.auth.empresa.cnpj,
       };
-      if (valIdToken !== null && valLogin !== null && valSenhaLogin !== null) {
-        this.service.login(valLogins).subscribe(
+      if (
+        valIdToken !== null &&
+        valLogin !== null &&
+        valTokenUser !== null &&
+        valIdToken !== undefined &&
+        valLogin !== undefined &&
+        valTokenUser !== undefined
+      ) {
+        this.service.vAtapp(valTokenUser).subscribe(
           async (response: any) => {
             if (response.connection['status'] === 'success') {
               this.errLogin = null;
               const alert = await this.alertController.create({
                 cssClass: 'my-custom-class',
-                header: 'Você já possui um login salvo.',
+                header: 'Você já possui uma sessão aberta.',
                 message:
-                  'Deseja logar com' + ' ' + login.toUpperCase() + ' ' + '?',
+                  'Deseja retornar com' + ' ' + login.toUpperCase() + ' ' + '?',
                 buttons: [
                   {
                     text: 'NÃO',
@@ -92,8 +98,6 @@ export class UsuarioComponent implements OnInit {
                     text: 'SIM',
                     id: 'confirm-button',
                     handler: async () => {
-                      this.auth.usuario.token = response.token;
-                      await this.storageService.set('auth', this.auth);
                       this.router.navigateByUrl('/home/faturamento', {
                         replaceUrl: true,
                       });
@@ -142,13 +146,11 @@ export class UsuarioComponent implements OnInit {
               this.auth = {};
               this.auth.usuario = {
                 login: login.user,
-                senha: login.senha,
                 token: response.token,
               };
             } else {
               this.auth.usuario = {
                 login: login.user,
-                senha: login.senha,
                 token: response.token,
               };
             }

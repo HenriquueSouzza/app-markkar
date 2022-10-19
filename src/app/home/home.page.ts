@@ -50,6 +50,7 @@ export class HomePage implements OnInit {
     this.auth.empresa.cnpj = cnpj;
     this.auth.empresa.token = token;
     this.auth.empresa.id = idToken;
+    this.auth.usuario.token = null;
     this.appConfigStorage.empresaAtual = empresa;
     await this.storageService.set('auth', this.auth);
     await this.storageService.set('appConfig', this.appConfigStorage);

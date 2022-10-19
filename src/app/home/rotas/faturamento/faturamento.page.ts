@@ -110,6 +110,7 @@ export class FaturamentoPage implements OnInit {
   valIdToken: string;
   valLogin: string;
   valSenhaLogin: string;
+  valTokenUsuario: string;
   empresa: string;
 
   //Faturamento
@@ -242,7 +243,7 @@ export class FaturamentoPage implements OnInit {
     this.valToken = this.auth.empresa.token;
     this.valIdToken = this.auth.empresa.id;
     this.valLogin = this.auth.usuario.login;
-    this.valSenhaLogin = this.auth.usuario.senha;
+    this.valTokenUsuario = this.auth.usuario.token;
     const validateLogin = {
       user: this.valLogin,
       senha: this.valSenhaLogin,
@@ -251,8 +252,8 @@ export class FaturamentoPage implements OnInit {
       cnpj: this.valCnpj
     };
     const validateLoginEmp = { cnpj: this.valCnpj, token: this.valToken };
-    if (this.valFLogin !== false) {
-      //this.router.navigateByUrl('/login', { replaceUrl: true });
+    if (this.valFLogin !== false || this.valTokenUsuario === null || this.valTokenUsuario === undefined ) {
+      this.router.navigateByUrl('/login', { replaceUrl: true });
     } else if (
       this.valLogin !== null &&
       this.valSenhaLogin !== null &&
@@ -335,7 +336,7 @@ export class FaturamentoPage implements OnInit {
       dateFinish: null,
       fourMonths: this.valueGraficoInterval,
     };
-    this.lojas.faturamento(interfaceHFat, this.auth.usuario.token).subscribe(
+    this.lojas.faturamento(interfaceHFat, this.valTokenUsuario).subscribe(
       (response: any) => {
         if(response.connection.error === 'invalidToken'){
           this.error('invalidToken');
@@ -456,7 +457,7 @@ export class FaturamentoPage implements OnInit {
       dateFinish: this.dateValueFinish,
       fourMonths: this.valueGraficoInterval,
     };
-    this.lojas.faturamento(dayFat, this.auth.usuario.token).subscribe(
+    this.lojas.faturamento(dayFat, this.valTokenUsuario).subscribe(
       async (response: any) => {
         if(response.connection.status === 'success'){
           const unidades = response;

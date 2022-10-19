@@ -47,6 +47,9 @@ export class LoginPage implements OnInit {
   async ngOnInit() {
     // storage
     this.auth = await this.storage.get('auth');
+    if(this.auth === null || this.auth === undefined){
+      this.router.navigateByUrl('/login', { replaceUrl: true });
+    }
     this.faturamentoStorage = await this.storage.get('faturamento');
     this.multiEmpresaStorage = await this.storage.get('multiEmpresa');
     this.appConfigStorage = await this.storage.get('appConfig');
@@ -84,7 +87,7 @@ export class LoginPage implements OnInit {
       const valToken = this.auth.empresa.token;
       const valIdToken = this.auth.empresa.id;
       const valLogin = this.auth.usuario.login;
-      const valSenhaLogin = this.auth.usuario.senha;
+      const valTokenUser = this.auth.usuario.token;
       const validateLogin = {
         user: auth.usuario.login,
         senha: auth.usuario.senha,
@@ -93,12 +96,17 @@ export class LoginPage implements OnInit {
         cnpj: auth.empresa.cnpj
       };
       const validatefLogin = { cnpj: auth.empresa.cnpj, token: auth.empresa.token };
+
+      // Primeira verificacao auth
       if (
         valLogin !== null &&
-        valSenhaLogin !== null &&
-        valIdToken !== null
+        valTokenUser !== null &&
+        valIdToken !== null &&
+        valIdToken !== undefined &&
+        valLogin !== undefined &&
+        valTokenUser !== undefined
       ) {
-        this.service.login(validateLogin).subscribe(
+        this.service.vAtapp(valTokenUser).subscribe(
           async (response: any) => {
             if (response.connection['status'] === 'success') {
               this.btn = 'block';
@@ -118,15 +126,10 @@ export class LoginPage implements OnInit {
               setTimeout(() => {
                 SplashScreen.hide();
               }, 2000);
-            } else if (response.connection['status'] === 'errDB') {
-              this.btn = 'block';
-              setTimeout(() => {
-                SplashScreen.hide();
-              }, 2000);
-              this.presentToast('Falha ao conectar com o servidor de dados');
             }
           },
           async (error) => {
+            console.log(error);
             this.btn = 'block';
             setTimeout(() => {
               SplashScreen.hide();
@@ -172,8 +175,8 @@ export class LoginPage implements OnInit {
         valCnpj === null ||
         valToken === null ||
         valLogin === null ||
-        valSenhaLogin === null ||
-        valIdToken === null
+        valIdToken === null ||
+        valTokenUser === null
       ) {
         this.router.navigateByUrl('/login/empresa', { replaceUrl: true });
         setTimeout(() => {
