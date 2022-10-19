@@ -16,7 +16,7 @@ export interface interfaceFaturamento {
   providedIn: 'root'
 })
 export class FaturamentoService {
-  private url = 'http://192.168.1.11/app/faturamento/unidades';
+  private url = 'https://api.markkar.com.br/app/faturamento/unidades';
 
   constructor(
     private http: HttpClient

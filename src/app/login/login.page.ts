@@ -102,10 +102,6 @@ export class LoginPage implements OnInit {
           async (response: any) => {
             if (response.connection['status'] === 'success') {
               this.btn = 'block';
-              this.router.navigateByUrl('/home/faturamento', { replaceUrl: true });
-              setTimeout(() => {
-                SplashScreen.hide();
-              }, 2000);
               if (!isPlatform('mobileweb') && isPlatform('android')) {
                 const optsBck: BackgroundColorOptions = { color: '#222428' };
                 StatusBar.setBackgroundColor(optsBck);
@@ -113,6 +109,10 @@ export class LoginPage implements OnInit {
               if (!isPlatform('mobileweb') && isPlatform('ios')) {
                 StatusBar.setStyle({ style: StatusBarStyle.Dark });
               }
+              this.router.navigateByUrl('/home/faturamento', { replaceUrl: true });
+              setTimeout(() => {
+                SplashScreen.hide();
+              }, 2000);
             } else if (response.connection['status'] === 'failed') {
               this.router.navigateByUrl('/login/usuario', { replaceUrl: true });
               setTimeout(() => {
