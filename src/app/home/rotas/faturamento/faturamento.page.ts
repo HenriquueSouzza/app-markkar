@@ -109,7 +109,6 @@ export class FaturamentoPage implements OnInit {
   valToken: string;
   valIdToken: string;
   valLogin: string;
-  valSenhaLogin: string;
   valTokenUsuario: string;
   empresa: string;
 
@@ -158,9 +157,16 @@ export class FaturamentoPage implements OnInit {
     public toastController: ToastController
   ) {}
 
-  async ngOnInit() {
+  ngOnInit() { }
+
+  async ionViewWillEnter() {
+    this.menu.enable(true, 'homeMenu');
     //loadStorage
     this.auth = await this.storage.get('auth');
+    if(this.auth === null || this.auth === undefined){
+      this.navCtrl.pop();
+      this.router.navigateByUrl('/login', { replaceUrl: true});
+    }
     this.faturamentoStorage = await this.storage.get('faturamento');
     this.multiEmpresaStorage = await this.storage.get('multiEmpresa');
     this.appConfigStorage = await this.storage.get('appConfig');
@@ -244,19 +250,11 @@ export class FaturamentoPage implements OnInit {
     this.valIdToken = this.auth.empresa.id;
     this.valLogin = this.auth.usuario.login;
     this.valTokenUsuario = this.auth.usuario.token;
-    const validateLogin = {
-      user: this.valLogin,
-      senha: this.valSenhaLogin,
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      id_token: this.valIdToken,
-      cnpj: this.valCnpj
-    };
-    const validateLoginEmp = { cnpj: this.valCnpj, token: this.valToken };
     if (this.valFLogin !== false || this.valTokenUsuario === null || this.valTokenUsuario === undefined ) {
       this.router.navigateByUrl('/login', { replaceUrl: true });
     } else if (
       this.valLogin !== null &&
-      this.valSenhaLogin !== null &&
+      this.valTokenUsuario !== null &&
       this.valCnpj !== null &&
       this.valToken !== null &&
       this.valIdToken !== null
@@ -265,63 +263,6 @@ export class FaturamentoPage implements OnInit {
       this.unidadeFatTotal();
     }
   }
-  /*async ionViewWillEnter() {
-    this.menu.enable(true, 'homeMenu');
-    const verfyComplete = setInterval(() => {
-      setTimeout(async () => {
-        if (this.valSenhaLogin !== null) {
-          clearInterval(verfyComplete);
-          if (
-            this.mask !== (await this.storage.get('mask')) ||
-            this.cmvPerc !== (await this.storage.get('cmvPerc')) ||
-            this.intervalHeader !==
-              (await this.storage.get('intervalHeader')) ||
-            this.valueGraficoInterval !==
-              (await this.storage.get('intervalGrafico'))
-          ) {
-            if ((await this.storage.get('intervalHeader')) === 'day') {
-              this.fatHeaderTime = 'diario';
-            } else if ((await this.storage.get('intervalHeader')) === 'month') {
-              this.fatHeaderTime = 'Mensal';
-            } else if ((await this.storage.get('intervalHeader')) === 'year') {
-              this.fatHeaderTime = 'Anual';
-              this.displayInterval = 'none';
-            } else if ((await this.storage.get('intervalHeader')) === 'all') {
-              this.fatHeaderTime = 'Todos';
-            } else {
-              this.fatHeaderTime = '';
-            }
-            this.mask = await this.storage.get('mask');
-            this.cmvPerc = await this.storage.get('cmvPerc');
-            this.valueGraficoInterval = await this.storage.get(
-              'intervalGrafico'
-            );
-            if (this.cmvPerc === true) {
-              this.perc = '%';
-            }
-            if (this.cmvPerc === false) {
-              this.perc = '';
-            }
-            this.headerFat(await this.storage.get('intervalHeader'));
-            this.unidadeFatTotal();
-          }
-          if (this.valCnpj !== (await this.storage.get('cnpj'))) {
-            this.unidadesFat = [];
-            this.unidadesHeader = [];
-            this.somaFatHeader = '';
-            this.somaMargemHeader = '';
-            this.somaFatTotal = '';
-            this.somaMargemTotal = '';
-            this.contentLoader = false;
-            this.ngOnInit();
-          }
-        }
-      }, 500);
-    }, 100);
-    if (!isPlatform('mobileweb') && isPlatform('android')) {
-      StatusBar.setBackgroundColor({ color: '#222428' });
-    }
-  }*/
 
   //Faturamento
   headerFat(interval) {
@@ -906,7 +847,7 @@ export class FaturamentoPage implements OnInit {
     this.somaFatTotal = '';
     this.somaMargemTotal = '';
     this.contentLoader = false;
-    this.ngOnInit();
+    this.ionViewWillEnter();
     const verfyComplete = setInterval(() => {
       if (
         this.unidadesFat.length !== 0 &&

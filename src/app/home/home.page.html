@@ -89,7 +89,7 @@
           <ion-buttons slot="end" *ngIf="!platform">
             <ion-button
               slot="start"
-              (click)="redirect(); modalOpCl = false"
+              (click)="addEmp(); modalOpCl = false"
               expand="block"
               fill="clear"
               shape="round"
@@ -118,7 +118,7 @@
           <ion-buttons slot="start" *ngIf="platform">
             <ion-button
               mode="ios"
-              (click)="redirect(); modalOpCl = false"
+              (click)="addEmp(); modalOpCl = false"
               expand="block"
               fill="clear"
               shape="round"
@@ -185,7 +185,7 @@
               </h2>
               <div
                 class="unids"
-                *ngFor="let unidade of forUnids(unidades[empresa['idToken']]['centrodecustos'])"
+                *ngFor="let unidade of forUnids(unidades[empresa['idToken']])"
               >
                 <h2 style="color: var(--ion-color-primary)">
                   {{ unidade["unidade"].toLowerCase() }}:

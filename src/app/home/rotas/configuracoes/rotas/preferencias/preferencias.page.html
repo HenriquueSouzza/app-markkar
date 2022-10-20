@@ -24,7 +24,6 @@
     <ion-item [detail]="false" lines="none" color="secondary">
       <ion-label style="text-transform: none;">Intervalo de Faturamento</ion-label>
       <ion-select cancel-text="cancelar" value="{{valueInterval}}" ok-text="confirmar" interface="popover" (ionChange)="setInterval($event)" placeholder="Selecione">
-        <ion-select-option value="all">Todos</ion-select-option>
         <ion-select-option value="year">Anual</ion-select-option>
         <ion-select-option value="month">Mensal</ion-select-option>
         <ion-select-option value="day">Diário</ion-select-option>

@@ -16,6 +16,10 @@ const routes: Routes = [
       {
         path: 'faturamento',
         loadChildren: () => import('./rotas/faturamento/faturamento.module').then( m => m.FaturamentoPageModule)
+      },
+      {
+        path: 'configuracoes',
+        loadChildren: () => import('./rotas/configuracoes/configuracoes.module').then( m => m.ConfiguracoesPageModule)
       }
     ]
   },
@@ -26,10 +30,6 @@ const routes: Routes = [
   {
     path: 'estoque',
     loadChildren: () => import('./rotas/estoque/estoque.module').then( m => m.EstoquePageModule)
-  },
-  {
-    path: 'configuracoes',
-    loadChildren: () => import('./rotas/configuracoes/configuracoes.module').then( m => m.ConfiguracoesPageModule)
   },
   {
     path: '**',

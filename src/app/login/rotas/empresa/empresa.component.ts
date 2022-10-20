@@ -58,7 +58,7 @@ async ngOnInit() {
     StatusBar.setBackgroundColor({color: '#141518'});
   }
   this.auth = await this.storage.get('auth');
-  if(this.auth.hasOwnProperty('empresa')) {
+  if(this.auth !== null && this.auth.hasOwnProperty('empresa')) {
     const valCnpj = this.auth.empresa.cnpj;
     const valToken = this.auth.empresa.token;
     const validatefLogin = {cnpj: valCnpj, token: valToken};

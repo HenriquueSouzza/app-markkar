@@ -5,6 +5,7 @@ import {
   AlertController,
   isPlatform,
   LoadingController,
+  NavController,
   Platform,
 } from '@ionic/angular';
 import { Storage } from '@ionic/storage-angular';
@@ -33,6 +34,7 @@ export class UsuarioComponent implements OnInit {
     private storage: Storage,
     private storageService: StorageService,
     private router: Router,
+    private navCtrl: NavController,
     public alertController: AlertController,
     private platform: Platform
   ) {

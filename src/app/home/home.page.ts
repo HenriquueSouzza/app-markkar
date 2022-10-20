@@ -1,11 +1,9 @@
 /* eslint-disable @typescript-eslint/dot-notation */
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { isPlatform, ToastController, AlertController } from '@ionic/angular';
+import { isPlatform, ToastController, AlertController, NavController } from '@ionic/angular';
 import { Storage } from '@ionic/storage-angular';
 import { StorageService } from '../services/storage/storage.service';
-
-
 
 @Component({
   selector: 'app-home',
@@ -30,6 +28,7 @@ export class HomePage implements OnInit {
     private storageService: StorageService,
     private router: Router,
     public toastController: ToastController,
+    private navCtrl: NavController,
     public alertController: AlertController
   ) {}
 
@@ -57,7 +56,10 @@ export class HomePage implements OnInit {
     this.router.navigateByUrl('/login/usuario', { replaceUrl: true });
   }
 
-  redirect() {
+  async addEmp() {
+    this.auth.usuario.token = null;
+    await this.storageService.set('auth', this.auth);
+    this.navCtrl.pop();
     this.router.navigateByUrl('/login/empresa', { replaceUrl: false });
   }
 
@@ -89,7 +91,9 @@ export class HomePage implements OnInit {
             await this.storage.set('multiEmpresa', this.multiEmpresaStorage);
             await this.storage.set('faturamento', this.faturamentoStorage);
             this.modalOpCl = false;
-            const empresaReset = Object.values(this.multiEmpresaStorage.empresas);
+            const empresaReset = Object.values(
+              this.multiEmpresaStorage.empresas
+            );
             if (
               empresa === this.empresaAtual &&
               cnpj === this.auth.empresa.cnpj &&
@@ -97,7 +101,7 @@ export class HomePage implements OnInit {
             ) {
               if (!empresaReset.hasOwnProperty(0)) {
                 await this.storage.remove('auth');
-                this.ngOnInit();
+                this.navCtrl.pop();
                 this.router.navigateByUrl('/login/empresa', {
                   replaceUrl: true,
                 });
@@ -106,18 +110,11 @@ export class HomePage implements OnInit {
                 this.auth.empresa.token = empresaReset[0]['token'];
                 this.auth.empresa.id = empresaReset[0]['idToken'];
                 this.appConfigStorage.empresaAtual = empresaReset[0]['empresa'];
-                await this.storageService.set(
-                  'auth',
-                  this.auth
-                );
-                await this.storageService.set(
-                  'appConfig',
-                  this.appConfigStorage
-                );
-                this.ngOnInit();
-                this.router.navigateByUrl('/login/empresa', {
-                  replaceUrl: true,
-                });
+                this.auth.usuario.token = null;
+                await this.storageService.set('auth', this.auth);
+                await this.storageService.set('appConfig', this.appConfigStorage);
+                this.navCtrl.pop();
+                this.router.navigateByUrl('/login/empresa', { replaceUrl: true, });
               }
             } else {
               this.ngOnInit();
@@ -162,6 +159,8 @@ export class HomePage implements OnInit {
   }
 
   forUnids(val) {
-    return Object.values(val);
+    if(val !== undefined){
+      return Object.values(val['centrodecustos']);
+    }
   }
 }

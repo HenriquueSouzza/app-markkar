@@ -46,7 +46,7 @@ export class CaixaMovelPage implements OnInit {
 
   async conectServidor(){
     const loading = await this.loadingController.create({
-      message: 'Conectando ao servidor, aguarde...'
+      message: 'Conectando ao servidor local, aguarde...'
     });
     await loading.present();
     this.idEmpBird = Object.values(this.multiEmpresaStorage.empresas[this.auth.empresa.id].centrodecustos)[0]['idEmpBird'];
@@ -57,11 +57,10 @@ export class CaixaMovelPage implements OnInit {
         this.centroscustos = res.centrosCustos;
         await loading.dismiss();
       }, async (error) => {
-        console.error(`Falha ao comunicar com o servidor: ${error.name}`);
         await loading.dismiss();
         const alert = await this.alertController.create({
           cssClass: 'my-custom-class',
-          header: 'Falha ao conectar com o servidor',
+          header: 'Falha ao conectar com o servidor local',
           message: 'Deseja tentar novamente ?',
           backdropDismiss: false,
           buttons: [

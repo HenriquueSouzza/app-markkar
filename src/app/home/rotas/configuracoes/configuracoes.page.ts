@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController, ToastController } from '@ionic/angular';
+import { MenuController, NavController, ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-configuracoes',
@@ -11,10 +11,15 @@ export class ConfiguracoesPage implements OnInit {
 
   constructor(
     private navCtrl: NavController,
+    private menu: MenuController,
     public toastController: ToastController
   ) { }
 
   ngOnInit() { }
+
+  ionViewWillEnter() {
+    this.menu.enable(false, 'homeMenu');
+  }
 
   redirect() {
     this.navCtrl.navigateForward('/home/configuracoes/preferencias');
