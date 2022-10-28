@@ -448,10 +448,10 @@ export class FaturamentoPage implements OnInit {
                 'ultimaExportacao'
               ]
           ) {
+            somaFatArray = [];
+            somaMargemArray = [];
+            somaCMVrray = [];
             for (const unidade of unidadesFat) {
-              somaFatArray = [];
-              somaMargemArray = [];
-              somaCMVrray = [];
               somaFatArray.push(parseFloat(unidade['somaFat']));
               somaMargemArray.push(parseFloat(unidade['somaMargem']));
               somaCMVrray.push(parseFloat(unidade['cmv_vlr']));
