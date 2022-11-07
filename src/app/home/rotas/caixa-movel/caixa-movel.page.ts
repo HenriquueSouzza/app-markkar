@@ -101,6 +101,14 @@ export class CaixaMovelPage implements OnInit {
     }
   }
 
+  navigateRelatorios() {
+    if (this.idCc === undefined) {
+      this.presentToast('Escolha o centro de custo');
+    } else {
+      this.navCtrl.navigateForward('/home/caixa-movel/relatorios');
+    }
+  }
+
   async presentToast(men) {
     const toast = await this.toastController.create({
       message: men,

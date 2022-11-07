@@ -21,6 +21,10 @@ const routes: Routes = [
     loadChildren: () => import('./rotas/produtos/produtos.module').then( m => m.ProdutosPageModule)
   },
   {
+    path: 'relatorios',
+    loadChildren: () => import('./rotas/relatorios/relatorios.module').then( m => m.RelatoriosPageModule)
+  },
+  {
     path: '**',
     redirectTo: '/home/caixa-movel',
     pathMatch: 'full'

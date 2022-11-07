@@ -1,0 +1,19 @@
+#wrpRelatorios {
+
+  ion-item {
+    border-radius: 12px;
+    margin: 30px 15px;
+    box-shadow: 0px 0px 12px 0px rgba(0, 0, 0, 0.196);
+
+    ion-label {
+      h2 {
+        font-size: 1rem;
+        font-weight: bold;
+      }
+      p {
+        font-size: .8rem;
+        color: gray;
+      }
+    }
+  }
+}

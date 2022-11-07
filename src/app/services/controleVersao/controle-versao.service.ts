@@ -25,7 +25,7 @@ export class ControleVersaoService {
 
   async check(){
     if (!isPlatform('mobileweb')) {
-      this.http.get('https://api.markkar.com.br/versaoAppControl.json').subscribe(async (res: any) => {
+      this.http.get('http://192.168.1.8/versaoAppControl.json').subscribe(async (res: any) => {
         const versaoAtual = res.versao;
         const versaoApp = await this.appVersion.getVersionCode();
         if(versaoAtual > versaoApp){

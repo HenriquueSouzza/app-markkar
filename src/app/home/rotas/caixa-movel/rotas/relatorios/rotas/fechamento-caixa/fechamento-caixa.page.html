@@ -1,0 +1,24 @@
+<ion-header>
+  <ion-toolbar color="dark">
+    <ion-buttons slot="start">
+      <ion-back-button
+        defaultHref="/home/caixa-movel/relatorios"
+      ></ion-back-button>
+    </ion-buttons>
+    <ion-title>Fechamento de caixa</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div id="wrpRelatorios">
+    <ion-item (click)="abrirRelatorio()" [button]="true" lines="none" color="dark">
+      <ion-icon size="large" slot="end" name="document-outline"></ion-icon>
+      <ion-label>
+        <h2>00/00/0000 - 00/00/0000</h2>
+        <br>
+        <p>Usuario: teste</p>
+        <p>Cod: 3648</p>
+      </ion-label>
+    </ion-item>
+  </div>
+</ion-content>
