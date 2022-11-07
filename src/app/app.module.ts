@@ -17,6 +17,8 @@ import { environment } from '../environments/environment';
 import { ScreenOrientation } from '@awesome-cordova-plugins/screen-orientation/ngx';
 import { Flashlight } from '@awesome-cordova-plugins/flashlight/ngx';
 import { AppVersion } from '@awesome-cordova-plugins/app-version/ngx';
+import { File } from '@awesome-cordova-plugins/file/ngx';
+import { FileOpener } from '@awesome-cordova-plugins/file-opener/ngx';
 
 @NgModule({
   declarations: [
@@ -38,7 +40,7 @@ import { AppVersion } from '@awesome-cordova-plugins/app-version/ngx';
       registrationStrategy: 'registerWhenStable:30000'
     })
   ],
-  providers: [ScreenOrientation, Flashlight, AppVersion, { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+  providers: [ScreenOrientation, Flashlight, AppVersion, File, FileOpener, { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
