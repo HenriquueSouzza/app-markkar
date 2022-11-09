@@ -23,9 +23,9 @@ export class LoginService {
   private lurl = 'https://api.markkar.com.br/app/auth/login';
   private vAtappurl = 'https://api.markkar.com.br/app/auth/vAtapp';*/
 
-  private flurl = 'http://192.168.1.8/app/auth/loginEmpresarial';
-  private lurl = 'http://192.168.1.8/app/auth/login';
-  private vAtappurl = 'http://192.168.1.8/app/auth/vAtapp';
+  private flurl = 'http://192.168.1.30/app/auth/loginEmpresarial';
+  private lurl = 'http://192.168.1.30/app/auth/login';
+  private vAtappurl = 'http://192.168.1.30/app/auth/vAtapp';
 
   constructor(private http: HttpClient) { }
 
