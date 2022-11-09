@@ -9,7 +9,6 @@ import { isPlatform } from '@ionic/angular';
   templateUrl: './fechamento-caixa.page.html',
   styleUrls: ['./fechamento-caixa.page.scss'],
 })
-
 export class FechamentoCaixaPage implements OnInit {
   constructor(private file: File, private opener: FileOpener) {}
 
@@ -26,11 +25,13 @@ export class FechamentoCaixaPage implements OnInit {
       downloadLink.click();
     };
 
-    if (isPlatform('mobileweb') || isPlatform('pwa') || isPlatform('desktop')) {
-      alert('download');
+    if (
+      isPlatform('mobileweb') ||
+      isPlatform('pwa') ||
+      (isPlatform('desktop') && !isPlatform('android') && !isPlatform('ios'))
+    ) {
       downloadPDF(data);
     } else {
-      alert('open');
       this.saveAndOpenPdf(data, 'teste');
     }
   }
@@ -47,20 +48,11 @@ export class FechamentoCaixaPage implements OnInit {
         { replace: true }
       )
       .then(async () => {
-        if (isPlatform('android')) {
-          await Browser.open({
-            url: writeDirectory + filename,
-            toolbarColor: '#222428',
-          }).catch(() => {
+        this.opener
+          .open(writeDirectory + filename, 'application/pdf')
+          .catch(() => {
             alert('Error opening pdf file');
           });
-        } else {
-          this.opener
-            .open(writeDirectory + filename, 'application/pdf')
-            .catch(() => {
-              alert('Error opening pdf file');
-            });
-        }
       })
       .catch(() => {
         console.error('Error writing pdf file');

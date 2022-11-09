@@ -16,7 +16,7 @@ export interface interfaceFaturamento {
   providedIn: 'root'
 })
 export class FaturamentoService {
-  private url = 'http://192.168.1.30/app/faturamento/unidades';
+  private url = 'https://apimarkkar.igrejabatistamundial.com/app/faturamento/unidades';
 
   constructor(
     private http: HttpClient

@@ -1,18 +1,31 @@
 #wrpRelatorios {
 
-  ion-item {
-    border-radius: 12px;
-    margin: 30px 15px;
-    box-shadow: 0px 0px 12px 0px rgba(0, 0, 0, 0.196);
+  .relatorios {
 
-    ion-label {
-      h2 {
-        font-size: 1rem;
-        font-weight: bold;
-      }
-      p {
-        font-size: .8rem;
-        color: gray;
+    .dataRelatorios {
+      margin-left: 10px;
+      margin-top: 20px;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    .relatorio {
+
+      ion-item {
+        border-radius: 12px;
+        margin: 30px 15px;
+        box-shadow: 0px 0px 12px 0px rgba(0, 0, 0, 0.196);
+
+        ion-label {
+          h2 {
+            font-size: 1rem;
+            font-weight: bold;
+          }
+          p {
+            font-size: .8rem;
+            color: gray;
+          }
+        }
       }
     }
   }

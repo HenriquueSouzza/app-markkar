@@ -51,6 +51,7 @@
     "date-fns": "^2.29.3",
     "es6-promise-plugin": "^4.2.2",
     "ionicons": "^6.0.3",
+    "jetifier": "^2.0.0",
     "ng2-charts": "^4.0.1",
     "npm": "^8.19.3",
     "rxjs": "~7.5.7",

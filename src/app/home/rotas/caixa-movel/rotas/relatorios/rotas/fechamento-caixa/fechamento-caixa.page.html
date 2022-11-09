@@ -11,14 +11,55 @@
 
 <ion-content>
   <div id="wrpRelatorios">
-    <ion-item (click)="abrirRelatorio()" [button]="true" lines="none" color="dark">
-      <ion-icon size="large" slot="end" name="document-outline"></ion-icon>
-      <ion-label>
-        <h2>00/00/0000 - 00/00/0000</h2>
-        <br>
-        <p>Usuario: teste</p>
-        <p>Cod: 3648</p>
-      </ion-label>
-    </ion-item>
+    <div class="relatorios">
+      <h2 class="dataRelatorios">Dia 00/00/000</h2>
+      <div class="relatorio">
+        <ion-item [detail]="false" (click)="abrirRelatorio()" [button]="true" lines="none" color="dark">
+          <ion-icon size="large" slot="end" name="document-outline"></ion-icon>
+          <ion-label>
+            <h2>Cod.: 32459</h2>
+            <br>
+            <p>Usuario: teste</p>
+            <p>Fechamento: 00/00/0000</p>
+          </ion-label>
+        </ion-item>
+      </div>
+      <div class="relatorio">
+        <ion-item [detail]="false" (click)="abrirRelatorio()" [button]="true" lines="none" color="dark">
+          <ion-icon size="large" slot="end" name="document-outline"></ion-icon>
+          <ion-label>
+            <h2>Cod.: 32459</h2>
+            <br>
+            <p>Usuario: teste</p>
+            <p>Fechamento: 00/00/0000</p>
+          </ion-label>
+        </ion-item>
+      </div>
+    </div>
+    <div class="relatorios">
+      <h2 class="dataRelatorios">Dia 00/00/000</h2>
+      <div class="relatorio">
+        <ion-item [detail]="false" (click)="abrirRelatorio()" [button]="true" lines="none" color="dark">
+          <ion-icon size="large" slot="end" name="document-outline"></ion-icon>
+          <ion-label>
+            <h2>Cod.: 32459</h2>
+            <br>
+            <p>Usuario: teste</p>
+            <p>Fechamento: 00/00/0000</p>
+          </ion-label>
+        </ion-item>
+      </div>
+      <div class="relatorio">
+        <ion-item [detail]="false" (click)="abrirRelatorio()" [button]="true" lines="none" color="dark">
+          <ion-icon size="large" slot="end" name="document-outline"></ion-icon>
+          <ion-label>
+            <h2>Cod.: 32459</h2>
+            <br>
+            <p>Usuario: teste</p>
+            <p>Fechamento: 00/00/0000</p>
+          </ion-label>
+        </ion-item>
+      </div>
+    </div>
   </div>
 </ion-content>
