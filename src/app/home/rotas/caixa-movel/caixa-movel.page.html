@@ -10,7 +10,7 @@
 <ion-content no-bounce has-bouncing="false" forceOverscroll="false">
   <ion-item lines="none">
     <ion-label>Centro de custo:</ion-label>
-    <ion-select
+    <ion-select *ngIf="conectadoServeLocal"
       (ionChange)="centroscustosChange($event)"
       interface="popover"
       placeholder="Selecione"
@@ -19,15 +19,24 @@
         >{{cc.nome}}</ion-select-option
       >
     </ion-select>
+    <ion-select *ngIf="!conectadoServeLocal"
+      (ionChange)="centroscustosChange($event)"
+      interface="popover"
+      placeholder="Selecione"
+    >
+      <ion-select-option *ngFor="let cc of centroscustos" [value]="cc.idCentroCusto"
+        >{{cc.unidade}}</ion-select-option
+      >
+    </ion-select>
   </ion-item>
   <div id="venda">
-    <ion-button color="dark" (click)="navigateScanner()">
+    <ion-button [disabled]="btnServerLocal" color="dark" (click)="navigateScanner()">
       <div>
         <ion-icon name="cash-outline"></ion-icon>
         Vender
       </div>
     </ion-button>
-    <ion-button color="dark">
+    <ion-button [disabled]="btnServerLocal" color="dark">
       <div>
         <ion-icon name="swap-vertical-outline"></ion-icon>
         Trocas
@@ -39,19 +48,19 @@
         Relatórios
       </div>
     </ion-button>
-    <ion-button color="dark">
+    <ion-button [disabled]="true" color="dark">
       <div>
         <ion-icon name="extension-puzzle-outline"></ion-icon>
         Em Breve...
       </div>
     </ion-button>
-    <ion-button color="dark">
+    <ion-button [disabled]="true" color="dark">
       <div>
         <ion-icon name="extension-puzzle-outline"></ion-icon>
         Em Breve...
       </div>
     </ion-button>
-    <ion-button color="dark">
+    <ion-button [disabled]="true" color="dark">
       <div>
         <ion-icon name="extension-puzzle-outline"></ion-icon>
         Em Breve...

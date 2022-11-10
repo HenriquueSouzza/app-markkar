@@ -14,6 +14,8 @@ import { EstoqueService } from '../estoque/services/estoque/estoque.service';
 })
 export class CaixaMovelPage implements OnInit {
 
+  public conectadoServeLocal = false;
+  public btnServerLocal = true;
   public centroscustos: Array<any>;
   public consultaNome = false;
   public estoqueStorageHist: any;
@@ -55,13 +57,15 @@ export class CaixaMovelPage implements OnInit {
       .pipe(timeout(5000))
       .subscribe(async (res: any) => {
         this.centroscustos = res.centrosCustos;
+        this.btnServerLocal = false;
+        this.conectadoServeLocal = true;
         await loading.dismiss();
       }, async (error) => {
         await loading.dismiss();
         const alert = await this.alertController.create({
           cssClass: 'my-custom-class',
           header: 'Falha ao conectar com o servidor local',
-          message: 'Deseja tentar novamente ?',
+          message: 'Algumas funcionalidades ficarão desativadas. <br> <br> Deseja continuar ?',
           backdropDismiss: false,
           buttons: [
             {
@@ -77,7 +81,8 @@ export class CaixaMovelPage implements OnInit {
               text: 'SIM',
               id: 'confirm-button',
               handler: () => {
-                this.conectServidor();
+                this.centroscustos = Object.values(this.multiEmpresaStorage.empresas[this.auth.empresa.id].centrodecustos);
+                //this.conectServidor();
               },
             },
           ],
@@ -105,7 +110,10 @@ export class CaixaMovelPage implements OnInit {
     if (this.idCc === undefined) {
       this.presentToast('Escolha o centro de custo');
     } else {
-      this.navCtrl.navigateForward('/home/caixa-movel/relatorios');
+      this.navCtrl.navigateForward('/home/caixa-movel/relatorios', {
+        queryParams: { id: this.idCc },
+        queryParamsHandling: 'merge',
+      });
     }
   }
 

@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { File } from '@awesome-cordova-plugins/file/ngx';
 import { FileOpener } from '@awesome-cordova-plugins/file-opener/ngx';
-import { isPlatform } from '@ionic/angular';
+import { isPlatform, LoadingController } from '@ionic/angular';
+import { ActivatedRoute } from '@angular/router';
+import { format, parseISO } from 'date-fns';
 import { FechamentoCaixaService } from './services/fechamentoCaixa/fechamento-caixa.service';
 
 @Component({
@@ -11,20 +13,36 @@ import { FechamentoCaixaService } from './services/fechamentoCaixa/fechamento-ca
 })
 export class FechamentoCaixaPage implements OnInit {
 
-  constructor(private file: File, private opener: FileOpener, private relatoriosService: FechamentoCaixaService) {}
+  public relatorios: any;
+  public relatoriosData: any;
+  public semRelatorio = false;
+  private idCc: string;
+
+  constructor(
+    private file: File,
+    private opener: FileOpener,
+    private relatoriosService: FechamentoCaixaService,
+    public loadingController: LoadingController,
+    private route: ActivatedRoute
+  ) {}
+
+  //falta passar o token e tirar da api local
 
   ngOnInit() {
-    this.relatoriosService.get('31').subscribe((response) => {
-      console.log(response);
+    this.route.queryParamMap.subscribe((params: any) => {
+      if (params) {
+        this.idCc = params.params.id;
+      }
     });
+    this.baixarPDF();
   }
 
-  abrirRelatorio() {
-    const data = '';
+  abrirRelatorio(pdf, nome) {
+    const data = pdf;
     const downloadPDF = async (href) => {
       const downloadLink = document.createElement('a');
       downloadLink.href = href;
-      downloadLink.download = 'teste.pdf';
+      downloadLink.download = nome;
       downloadLink.click();
     };
 
@@ -35,7 +53,7 @@ export class FechamentoCaixaPage implements OnInit {
     ) {
       downloadPDF(data);
     } else {
-      this.saveAndOpenPdf(data, 'teste');
+      this.saveAndOpenPdf(data, nome);
     }
   }
 
@@ -79,5 +97,28 @@ export class FechamentoCaixaPage implements OnInit {
       byteArrays.push(byteArray);
     }
     return new Blob(byteArrays, { type: contentType });
+  }
+
+  formartarData(data){
+    return format(parseISO(data), 'dd/MM/yyyy');
+  }
+
+  async baixarPDF(){
+    const loading = await this.loadingController.create({
+      message: 'Buscando aguarde...'
+    });
+    await loading.present();
+    this.relatoriosService.get(this.idCc).subscribe(async (response: any) => {
+      if(response.connection.status === 'success') {
+        await loading.dismiss();
+        this.relatoriosData = Object.keys(response.relatorios);
+        this.relatorios = Object.values(response.relatorios);
+      } else {
+        this.relatoriosData = [];
+        this.relatorios = [];
+        this.semRelatorio = true;
+        await loading.dismiss();
+      }
+    });
   }
 }

@@ -465,6 +465,7 @@ export class FaturamentoPage implements OnInit {
               somaCMVrray.push(parseFloat(unidade['cmv_vlr']));
               multiempresa[unidade['idCentroCusto']] = {
                 unidade: unidade['unidade'],
+                idCentroCusto: unidade['idCentroCusto'],
                 idEmpBird: unidade['idEmpBird'],
                 telefone: unidade['telefone'],
                 cep: unidade['cep'],

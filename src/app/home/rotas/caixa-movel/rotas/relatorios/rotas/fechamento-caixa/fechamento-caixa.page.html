@@ -11,55 +11,26 @@
 
 <ion-content>
   <div id="wrpRelatorios">
-    <div class="relatorios">
-      <h2 class="dataRelatorios">Dia 00/00/000</h2>
-      <div class="relatorio">
-        <ion-item [detail]="false" (click)="abrirRelatorio()" [button]="true" lines="none" color="dark">
+    <div *ngFor="let relatorio of relatorios; let index = index" class="relatorios">
+      <h2 class="dataRelatorios">{{formartarData(relatoriosData[index])}}</h2>
+      <div *ngFor="let info of relatorio" class="relatorio">
+        <ion-item [detail]="false" (click)="abrirRelatorio(info['fecha_cx_pdf'], info['cod_vnd_caixa']+'_'+info['dt_fecha'])" [button]="true" lines="none" color="dark">
           <ion-icon size="large" slot="end" name="document-outline"></ion-icon>
           <ion-label>
-            <h2>Cod.: 32459</h2>
+            <h2>Cod. caixa: {{info['cod_vnd_caixa']}}</h2>
             <br>
-            <p>Usuario: teste</p>
-            <p>Fechamento: 00/00/0000</p>
-          </ion-label>
-        </ion-item>
-      </div>
-      <div class="relatorio">
-        <ion-item [detail]="false" (click)="abrirRelatorio()" [button]="true" lines="none" color="dark">
-          <ion-icon size="large" slot="end" name="document-outline"></ion-icon>
-          <ion-label>
-            <h2>Cod.: 32459</h2>
-            <br>
-            <p>Usuario: teste</p>
-            <p>Fechamento: 00/00/0000</p>
+            <p>Usuario: {{info['usuario']}}</p>
+            <p>Fechamento: {{info['dt_fecha']}}</p>
           </ion-label>
         </ion-item>
       </div>
     </div>
-    <div class="relatorios">
-      <h2 class="dataRelatorios">Dia 00/00/000</h2>
-      <div class="relatorio">
-        <ion-item [detail]="false" (click)="abrirRelatorio()" [button]="true" lines="none" color="dark">
-          <ion-icon size="large" slot="end" name="document-outline"></ion-icon>
-          <ion-label>
-            <h2>Cod.: 32459</h2>
-            <br>
-            <p>Usuario: teste</p>
-            <p>Fechamento: 00/00/0000</p>
-          </ion-label>
-        </ion-item>
+    <div *ngIf="semRelatorio" id="not">
+      <div id="icon">
+        <ion-icon id="paper" name="document-outline"></ion-icon>
+        <ion-icon id="close" name="close-outline"></ion-icon>
       </div>
-      <div class="relatorio">
-        <ion-item [detail]="false" (click)="abrirRelatorio()" [button]="true" lines="none" color="dark">
-          <ion-icon size="large" slot="end" name="document-outline"></ion-icon>
-          <ion-label>
-            <h2>Cod.: 32459</h2>
-            <br>
-            <p>Usuario: teste</p>
-            <p>Fechamento: 00/00/0000</p>
-          </ion-label>
-        </ion-item>
-      </div>
+      <h2>Nenhum relatório exportado</h2>
     </div>
   </div>
 </ion-content>
