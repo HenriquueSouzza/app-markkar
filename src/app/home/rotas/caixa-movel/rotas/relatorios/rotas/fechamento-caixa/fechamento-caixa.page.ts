@@ -119,6 +119,12 @@ export class FechamentoCaixaPage implements OnInit {
         this.semRelatorio = true;
         await loading.dismiss();
       }
+    }, async (error) => {
+      this.relatoriosData = [];
+      this.relatorios = [];
+      this.semRelatorio = true;
+      await loading.dismiss();
+      alert('Falha ao conectar ao servidor');
     });
   }
 }
