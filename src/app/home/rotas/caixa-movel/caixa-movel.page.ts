@@ -16,10 +16,11 @@ export class CaixaMovelPage implements OnInit {
 
   public conectadoServeLocal = false;
   public btnServerLocal = true;
-  public centroscustos: Array<any>;
+  public centroscustos = [];
   public consultaNome = false;
   public estoqueStorageHist: any;
   public idEmpBird: any;
+  public idCcSql: string;
   public idCc: string;
   public recentesExist = false;
 
@@ -52,11 +53,18 @@ export class CaixaMovelPage implements OnInit {
     });
     await loading.present();
     this.idEmpBird = Object.values(this.multiEmpresaStorage.empresas[this.auth.empresa.id].centrodecustos)[0]['idEmpBird'];
+    const ccStorage = Object.values(this.multiEmpresaStorage.empresas[this.auth.empresa.id].centrodecustos);
     this.estoqueService
       .consultaCC({ codeEmp: this.idEmpBird })
       .pipe(timeout(5000))
       .subscribe(async (res: any) => {
-        this.centroscustos = res.centrosCustos;
+        for(const cc of res.centrosCustos){
+          for(const ccs of ccStorage){
+            if(cc.nome === ccs['unidade']){
+              this.centroscustos.push({nome: cc.nome, ccIdFb: cc.id, ccIdSql: ccs['idCentroCusto']});
+            }
+          }
+        }
         this.btnServerLocal = false;
         this.conectadoServeLocal = true;
         await loading.dismiss();
@@ -82,7 +90,6 @@ export class CaixaMovelPage implements OnInit {
               id: 'confirm-button',
               handler: () => {
                 this.centroscustos = Object.values(this.multiEmpresaStorage.empresas[this.auth.empresa.id].centrodecustos);
-                //this.conectServidor();
               },
             },
           ],
@@ -92,7 +99,12 @@ export class CaixaMovelPage implements OnInit {
   }
 
   centroscustosChange(cc) {
-    this.idCc = cc.detail.value;
+    if(this.conectadoServeLocal){
+      this.idCc = cc.detail.value.fire;
+      this.idCcSql = cc.detail.value.sql;
+    } else {
+      this.idCcSql = cc.detail.value;
+    }
   }
 
   navigateScanner() {
@@ -107,11 +119,11 @@ export class CaixaMovelPage implements OnInit {
   }
 
   navigateRelatorios() {
-    if (this.idCc === undefined) {
+    if (this.idCcSql === undefined) {
       this.presentToast('Escolha o centro de custo');
     } else {
       this.navCtrl.navigateForward('/home/caixa-movel/relatorios', {
-        queryParams: { id: this.idCc },
+        queryParams: { id: this.idCcSql },
         queryParamsHandling: 'merge',
       });
     }

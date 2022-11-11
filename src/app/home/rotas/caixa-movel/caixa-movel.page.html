@@ -15,7 +15,7 @@
       interface="popover"
       placeholder="Selecione"
     >
-      <ion-select-option *ngFor="let cc of centroscustos" [value]="cc.id"
+      <ion-select-option *ngFor="let cc of centroscustos" [value]="{fire: cc.ccIdFb, sql: cc.ccIdSql}"
         >{{cc.nome}}</ion-select-option
       >
     </ion-select>
