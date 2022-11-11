@@ -14,13 +14,19 @@ export class UsuarioGuard implements CanActivate {
  async canActivate(
    route: ActivatedRouteSnapshot,
    state: RouterStateSnapshot): Promise<boolean> {
-    const valCnpj = await this.storage.get('cnpj');
-    const valToken = await this.storage.get('token');
-    if(valCnpj !== null && valToken !== null){
-      return true;
+     const auth = await this.storage.get('auth');
+     if(auth.hasOwnProperty('empresa')) {
+      const valCnpj = auth.empresa.cnpj;
+      const valToken = auth.empresa.token;
+      if(valCnpj !== null && valToken !== null){
+        return true;
+      } else {
+        this.router.navigateByUrl('/login/empresa', { replaceUrl: true });
+        return false;
+      }
     } else {
       this.router.navigateByUrl('/login/empresa', { replaceUrl: true });
-      return false;
+        return false;
     }
   }
 }

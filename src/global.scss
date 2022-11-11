@@ -112,15 +112,15 @@ h1, h2, h3, h4, h5, h6 {
   padding-bottom: 0 !important;
 }
 html{
-  background: var(--ion-color-dark2);
+  background: var(--ion-background-color);
   min-height: 100vh !important
 }
 html.md{
-  background: var(--ion-color-dark2);
+  background: var(--ion-background-color) ;
   min-height: 100vh !important
 }
 html.ios{
-  background: var(--ion-color-dark2);
+  background: var(--ion-background-color)  ;
   min-height: 100vh !important
 }
 .datetime-size-fixed{
@@ -138,6 +138,7 @@ html.ios{
   color: white !important;
   --color: white !important;
   --background-focused-opacity: 0.8 !important;
+  --background-focused: transparent;
 }
 .inner-scroll {
   background: var(--ion-color-dark2) !important;
@@ -199,4 +200,7 @@ ion-modal{
 }
 body {
   background: transparent !important;
+}
+*:focus {
+  outline: none;
 }

@@ -24,6 +24,7 @@ export class BemVindoComponent implements OnInit {
   colorTOKEN: string;
   keyHeight = false;
   keyHeightM = false;
+  private auth: any;
 
   constructor(
     private service: LoginService,
@@ -63,11 +64,13 @@ export class BemVindoComponent implements OnInit {
     }
 
   async ngOnInit() {
-    this.menu.enable(false, 'homeMenu');
-    const valCnpj = await this.storage.get('cnpj');
-    const valToken = await this.storage.get('token');
-    if(valCnpj !== null && valToken !== null){
-      this.router.navigateByUrl('/login/usuario', { replaceUrl: true });
+    this.auth = await this.storage.get('auth');
+    if(this.auth.hasOwnProperty('empresa')) {
+      const valCnpj = this.auth.empresa.cnpj;
+      const valToken = this.auth.empresa.token;
+      if(valCnpj !== null && valToken !== null){
+        this.router.navigateByUrl('/login/usuario', { replaceUrl: true });
+      }
     }
     if(!isPlatform('mobileweb') && isPlatform('android')){
       StatusBar.setBackgroundColor({color: '#141518'});
@@ -102,42 +105,52 @@ export class BemVindoComponent implements OnInit {
       this.cnpjErr = null;
       this.colorTOKEN = null;
       this.colorCnpj = null;
-      this.service.firstlogin(login).subscribe(async response =>{
-        if(response['status'] === 'failed'){
+      this.service.firstlogin(login).subscribe(async (response: any) =>{
+        if(response.connection['status'] === 'failed'){
           this.colorTOKEN = 'danger';
           this.colorCnpj = 'danger';
           this.err = 'CNPJ ou TOKEN invalido';
           await loading.dismiss();
         }
-        else if(response['status'] === 'blocked'){
+        else if(response.connection['status'] === 'blocked'){
           this.colorTOKEN = 'danger';
           this.err = 'TOKEN bloqueado';
           await loading.dismiss();
         }
-        else if(response['status'] === 'success'){
+        else if(response.connection['status'] === 'success'){
           this.err = null;
           this.colorTOKEN = null;
           this.colorCnpj = null;
-          await this.storageService.set('fOpen', false);
-          await this.storageService.set('cnpj', login.cnpj);
-          await this.storageService.set('token', login.token);
-          await this.storageService.set('idToken', response['id_token']);
-          const empresas = await this.storage.get('empresas');
-          let icone = null;
-          if(response['icone'] === null || response['icone'] === ''){
-            icone = 'business-outline';
+          let auth = this.auth;
+          if(auth === null){
+            auth = {};
+            auth.empresa = {
+              cnpj: login.cnpj,
+              token: login.token,
+              id: response.loginInformation['id_token']
+            };
+          } else {
+            auth.empresa = {
+              cnpj: login.cnpj,
+              token: login.token,
+              id: response.loginInformation['id_token']
+            };
           }
-          empresas[response['id_token']] = {
-            empresa: response['empresa'],
+          await this.storageService.set('auth', auth);
+          const multiEmpresa = await this.storage.get('multiEmpresa');
+          multiEmpresa.empresas[response.loginInformation['id_token']] = {
+            empresa: response.loginInformation['empresa'],
             cnpj: login.cnpj,
             token: login.token,
-            idToken: response['id_token'],
-            icon: icone,
-            telefone: response['telefone'],
-            email: response['email']
+            idToken: response.loginInformation['id_token'],
+            telefone: response.loginInformation['telefone'],
+            email: response.loginInformation['email']
           };
-          await this.storage.set('empresas', empresas);
-          await this.storage.set('empresaAtual', response['empresa']);
+          await this.storage.set('multiEmpresa', multiEmpresa);
+          const appConfig = await this.storage.get('appConfig');
+          appConfig.firstOpen = false;
+          appConfig.empresaAtual = response.loginInformation['empresa'];
+          await this.storage.set('appConfig', appConfig);
           await loading.dismiss();
           this.router.navigateByUrl('/login/usuario', { replaceUrl: true });
         }

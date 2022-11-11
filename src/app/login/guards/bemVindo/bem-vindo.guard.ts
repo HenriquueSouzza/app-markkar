@@ -14,7 +14,8 @@ export class BemVindoGuard implements CanActivate {
   async canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Promise<boolean > {
-    const valFLogin = await this.storage.get('fOpen');
+    const appConfig = await this.storage.get('appConfig');
+    const valFLogin = appConfig.firstOpen;
     if (valFLogin !== false) {
       return true;
     } else {

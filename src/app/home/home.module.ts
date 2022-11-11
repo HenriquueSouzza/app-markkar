@@ -10,6 +10,7 @@ import { HomePageRoutingModule } from './home-routing.module';
 import { HomePage } from './home.page';
 import { NgChartsModule } from 'ng2-charts';
 
+
 @NgModule({
   imports: [
     CommonModule,

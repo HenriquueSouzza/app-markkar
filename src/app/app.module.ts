@@ -14,6 +14,11 @@ import { Drivers } from '@ionic/storage';
 import { IonicStorageModule } from '@ionic/storage-angular';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
+import { ScreenOrientation } from '@awesome-cordova-plugins/screen-orientation/ngx';
+import { Flashlight } from '@awesome-cordova-plugins/flashlight/ngx';
+import { AppVersion } from '@awesome-cordova-plugins/app-version/ngx';
+import { File } from '@awesome-cordova-plugins/file/ngx';
+import { FileOpener } from '@awesome-cordova-plugins/file-opener/ngx';
 
 @NgModule({
   declarations: [
@@ -35,7 +40,7 @@ import { environment } from '../environments/environment';
       registrationStrategy: 'registerWhenStable:30000'
     })
   ],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+  providers: [ScreenOrientation, Flashlight, AppVersion, File, FileOpener, { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

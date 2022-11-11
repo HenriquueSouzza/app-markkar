@@ -18,18 +18,18 @@ const routes: Routes = [
         loadChildren: () => import('./rotas/faturamento/faturamento.module').then( m => m.FaturamentoPageModule)
       },
       {
-        path: 'estoque',
-        loadChildren: () => import('./rotas/estoque/estoque.module').then( m => m.EstoquePageModule)
-      },
-      {
-        path: 'caixa-movel',
-        loadChildren: () => import('./rotas/caixa-movel/caixa-movel.module').then( m => m.CaixaMovelPageModule)
+        path: 'configuracoes',
+        loadChildren: () => import('./rotas/configuracoes/configuracoes.module').then( m => m.ConfiguracoesPageModule)
       }
     ]
   },
   {
-    path: 'configuracoes',
-    loadChildren: () => import('./rotas/configuracoes/configuracoes.module').then( m => m.ConfiguracoesPageModule)
+    path: 'caixa-movel',
+    loadChildren: () => import('./rotas/caixa-movel/caixa-movel.module').then( m => m.CaixaMovelPageModule)
+  },
+  {
+    path: 'estoque',
+    loadChildren: () => import('./rotas/estoque/estoque.module').then( m => m.EstoquePageModule)
   },
   {
     path: '**',

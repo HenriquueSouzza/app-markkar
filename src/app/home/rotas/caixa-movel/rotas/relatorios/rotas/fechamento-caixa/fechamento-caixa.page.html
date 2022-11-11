@@ -1,0 +1,41 @@
+<ion-header>
+  <ion-toolbar color="dark">
+    <ion-buttons slot="start">
+      <ion-back-button
+        defaultHref="/home/caixa-movel/relatorios"
+      ></ion-back-button>
+    </ion-buttons>
+    <ion-title>Fechamento de caixa</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div id="wrpRelatorios">
+    <div *ngFor="let relatorio of relatorios; let index = index" class="relatorios">
+      <h2 class="dataRelatorios">{{formartarData(relatoriosData[index])}}</h2>
+      <div *ngFor="let info of relatorio" class="relatorio">
+        <ion-item [detail]="false" (click)="abrirRelatorio(info['fecha_cx_pdf'], info['cod_vnd_caixa']+'_'+info['dt_fecha'])" [button]="true" lines="none" color="dark">
+          <ion-icon size="large" slot="end" name="document-outline"></ion-icon>
+          <ion-label>
+            <h2>Cod. caixa: {{info['cod_vnd_caixa']}}</h2>
+            <br>
+            <p>Usuario: {{info['usuario']}}</p>
+            <p>Fechamento: {{info['dt_fecha']}}</p>
+          </ion-label>
+        </ion-item>
+      </div>
+    </div>
+    <div *ngIf="semRelatorio" id="not">
+      <div id="icon">
+        <ion-icon id="paper" name="document-outline"></ion-icon>
+        <ion-icon id="close" name="close-outline"></ion-icon>
+      </div>
+      <div id="divBtn">
+        <h2>Nenhum relatório exportado</h2>
+        <ion-button (click)="baixarPDF()" color="dark">
+          Tentar Novamente
+        </ion-button>
+      </div>
+    </div>
+  </div>
+</ion-content>

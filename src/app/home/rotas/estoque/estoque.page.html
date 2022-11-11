@@ -1,9 +1,68 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>estoque</ion-title>
+  <ion-toolbar color="dark" style="height: auto">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title mode="ios">estoque</ion-title>
   </ion-toolbar>
 </ion-header>
-
-<ion-content>
-
+<ion-content no-bounce has-bouncing="false" forceOverscroll="false">
+  <ion-item lines="none">
+    <ion-label style="font-weight: 700; text-transform: uppercase"
+      >Consulta:</ion-label
+    >
+  </ion-item>
+  <form #f="ngForm" (ngSubmit)="consultarNome(f)">
+    <ion-item lines="none">
+      <ion-label>Centro de custo:</ion-label>
+      <ion-select
+        (ionChange)="centroscustosChange($event)"
+        interface="popover"
+        placeholder="Selecione"
+      >
+        <ion-select-option *ngFor="let cc of centroscustos" [value]="cc.id"
+          >{{cc.nome}}</ion-select-option
+        >
+      </ion-select>
+    </ion-item>
+    <div id="pesquisa">
+      <ion-searchbar
+        (ionChange)="verificaSearchbar($event)"
+        ngModel
+        name="nomeProd"
+        placeholder="Consulta por nome..."
+      ></ion-searchbar>
+      <span *ngIf="!consultaNome">ou</span>
+      <ion-button
+        *ngIf="!consultaNome"
+        color="dark"
+        (click)="navigateScanner()"
+      >
+        <ion-icon slot="start" name="barcode-outline"></ion-icon>
+        Scanner
+      </ion-button>
+      <ion-button *ngIf="consultaNome" color="dark" type="submit">
+        <ion-icon name="search-outline"></ion-icon>
+        Consultar
+      </ion-button>
+    </div>
+  </form>
+  <div id="recentes">
+    <ion-item lines="none">
+      <ion-label style="font-weight: 700; text-transform: uppercase"
+        >Consultas Recentes:</ion-label
+      >
+    </ion-item>
+    <ion-item *ngIf="!recentesExist"  lines="none">
+      <ion-label style="color: gray;">sem consultas recentes</ion-label>
+    </ion-item>
+    <ion-list *ngIf="recentesExist"  lines="none">
+      <ion-item *ngFor="let produtos of estoqueStorageHist" [button]="true" (click)="redirectHist(produtos.codeBar)">
+        <ion-label>
+          {{produtos.nome}}
+          <p>Cod: {{produtos.codeBar}}</p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+  </div>
 </ion-content>

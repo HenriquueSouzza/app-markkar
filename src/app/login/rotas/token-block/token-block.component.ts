@@ -26,24 +26,23 @@ export class TokenBlockComponent implements OnInit {
     private storage: Storage) { }
 
   async ngOnInit() {
-    this.menu.enable(false, 'homeMenu');
     const valCnpj = await this.storage.get('cnpj');
     const valToken = await this.storage.get('token');
     const validatefLogin = {cnpj: valCnpj, token: valToken};
     if(valCnpj !== null && valToken !== null){
-      this.service.firstlogin(validatefLogin).subscribe(async response =>{
-        if(response['status'] === 'failed'){
+      this.service.firstlogin(validatefLogin).subscribe(async (response: any) =>{
+        if(response.connection['status'] === 'failed'){
           this.loader = false;
           this.router.navigateByUrl('/login/empresa', { replaceUrl: true });
         }
-        else if(response['status'] === 'blocked'){
+        else if(response.connection['status'] === 'blocked'){
           this.loader = false;
         }
-        else if(response['status'] === 'success'){
+        else if(response.connection['status'] === 'success'){
           this.loader = false;
           this.router.navigateByUrl('/login/usuario', { replaceUrl: true });
         }
-        else if(response['status'] === 'errDB'){
+        else if(response.connection['status'] === 'errDB'){
           this.loader = false;
           alert('falha ao conectar com o servidor de dados');
         }

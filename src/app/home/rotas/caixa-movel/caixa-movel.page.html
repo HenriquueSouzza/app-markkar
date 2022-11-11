@@ -1,9 +1,71 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>caixaMovel</ion-title>
+  <ion-toolbar color="dark">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home/faturamento"></ion-back-button>
+    </ion-buttons>
+    <ion-title>caixa Movel</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content no-bounce has-bouncing="false" forceOverscroll="false">
+  <ion-item lines="none">
+    <ion-label>Centro de custo:</ion-label>
+    <ion-select *ngIf="conectadoServeLocal"
+      (ionChange)="centroscustosChange($event)"
+      interface="popover"
+      placeholder="Selecione"
+    >
+      <ion-select-option *ngFor="let cc of centroscustos" [value]="{fire: cc.ccIdFb, sql: cc.ccIdSql}"
+        >{{cc.nome}}</ion-select-option
+      >
+    </ion-select>
+    <ion-select *ngIf="!conectadoServeLocal"
+      (ionChange)="centroscustosChange($event)"
+      interface="popover"
+      placeholder="Selecione"
+    >
+      <ion-select-option *ngFor="let cc of centroscustos" [value]="cc.idCentroCusto"
+        >{{cc.unidade}}</ion-select-option
+      >
+    </ion-select>
+  </ion-item>
+  <div id="venda">
+    <ion-button [disabled]="btnServerLocal" color="dark" (click)="navigateScanner()">
+      <div>
+        <ion-icon name="cash-outline"></ion-icon>
+        Vender
+      </div>
+    </ion-button>
+    <ion-button [disabled]="btnServerLocal" color="dark">
+      <div>
+        <ion-icon name="swap-vertical-outline"></ion-icon>
+        Trocas
+      </div>
+    </ion-button>
+    <ion-button (click)="navigateRelatorios()" color="dark">
+      <div>
+        <ion-icon name="reader-outline"></ion-icon>
+        Relatórios
+      </div>
+    </ion-button>
+    <ion-button [disabled]="true" color="dark">
+      <div>
+        <ion-icon name="extension-puzzle-outline"></ion-icon>
+        Em Breve...
+      </div>
+    </ion-button>
+    <ion-button [disabled]="true" color="dark">
+      <div>
+        <ion-icon name="extension-puzzle-outline"></ion-icon>
+        Em Breve...
+      </div>
+    </ion-button>
+    <ion-button [disabled]="true" color="dark">
+      <div>
+        <ion-icon name="extension-puzzle-outline"></ion-icon>
+        Em Breve...
+      </div>
+    </ion-button>
 
+  </div>
 </ion-content>

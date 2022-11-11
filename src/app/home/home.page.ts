@@ -1,11 +1,9 @@
 /* eslint-disable @typescript-eslint/dot-notation */
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { isPlatform, ToastController, AlertController } from '@ionic/angular';
+import { isPlatform, ToastController, AlertController, NavController } from '@ionic/angular';
 import { Storage } from '@ionic/storage-angular';
 import { StorageService } from '../services/storage/storage.service';
-
-
 
 @Component({
   selector: 'app-home',
@@ -19,40 +17,57 @@ export class HomePage implements OnInit {
   name: string;
   modalOpCl = false;
   platform = isPlatform('ios');
+  // storage
+  private auth: any;
+  private faturamentoStorage: any;
+  private multiEmpresaStorage: any;
+  private appConfigStorage: any;
 
   constructor(
     private storage: Storage,
     private storageService: StorageService,
     private router: Router,
     public toastController: ToastController,
+    private navCtrl: NavController,
     public alertController: AlertController
   ) {}
 
   async ngOnInit() {
     //this.searchStreet('22725030');
-    this.empresaAtual = await this.storage.get('empresaAtual');
-    this.empresas = Object.values(await this.storage.get('empresas'));
-    this.unidades = await this.storage.get('multiempresa');
-    this.name = await this.storage.get('login');
+    //loadStorage
+    this.auth = await this.storage.get('auth');
+    this.faturamentoStorage = await this.storage.get('faturamento');
+    this.multiEmpresaStorage = await this.storage.get('multiEmpresa');
+    this.appConfigStorage = await this.storage.get('appConfig');
+    this.empresaAtual = this.appConfigStorage.empresaAtual;
+    this.empresas = Object.values(this.multiEmpresaStorage.empresas);
+    this.unidades = this.multiEmpresaStorage.empresas;
+    this.name = this.auth.usuario.login;
   }
 
   async changeEmpresa(empresa, cnpj, token, idToken) {
-    await this.storageService.set('cnpj', cnpj);
-    await this.storageService.set('token', token);
-    await this.storageService.set('idToken', idToken);
-    await this.storageService.set('empresaAtual', empresa);
+    this.auth.empresa.cnpj = cnpj;
+    this.auth.empresa.token = token;
+    this.auth.empresa.id = idToken;
+    this.auth.usuario.token = null;
+    this.appConfigStorage.empresaAtual = empresa;
+    await this.storageService.set('auth', this.auth);
+    await this.storageService.set('appConfig', this.appConfigStorage);
     this.router.navigateByUrl('/login/usuario', { replaceUrl: true });
   }
 
-  redirect() {
+  async addEmp() {
+    this.auth.usuario.token = null;
+    await this.storageService.set('auth', this.auth);
+    this.navCtrl.pop();
     this.router.navigateByUrl('/login/empresa', { replaceUrl: false });
   }
 
-  async deleteEmp(empresa, cnpj, token, idToken) {
+  async deleteEmp(empresa, cnpj, idToken) {
     const alert = await this.alertController.create({
       cssClass: 'my-custom-class',
       header: 'Remover Empresa',
-      message: 'Você realmente deseja remover essa empresa do multiempresa ?',
+      message: `Você realmente deseja remover essa empresa do multiempresa ?`,
       buttons: [
         {
           text: 'NÃO',
@@ -67,52 +82,39 @@ export class HomePage implements OnInit {
           text: 'SIM',
           id: 'confirm-button',
           handler: async () => {
-            const empresas = await this.storage.get('empresas');
-            const multiempresa = await this.storage.get('multiempresa');
-            const unidadesCheck = await this.storage.get('unidadesCheck');
-            delete empresas[idToken];
+            const multiempresa = this.multiEmpresaStorage.empresas;
+            const unidadesCheck = this.faturamentoStorage.unidadesCheck;
             delete multiempresa[idToken];
             delete unidadesCheck[idToken];
-            await this.storage.set('empresas', empresas);
-            await this.storage.set('multiempresa', multiempresa);
-            await this.storage.set('unidadesCheck', unidadesCheck);
+            this.multiEmpresaStorage.empresas = multiempresa;
+            this.faturamentoStorage.unidadesCheck = unidadesCheck;
+            await this.storage.set('multiEmpresa', this.multiEmpresaStorage);
+            await this.storage.set('faturamento', this.faturamentoStorage);
             this.modalOpCl = false;
             const empresaReset = Object.values(
-              await this.storage.get('empresas')
+              this.multiEmpresaStorage.empresas
             );
             if (
-              empresa === (await this.storage.get('empresaAtual')) &&
-              cnpj === (await this.storage.get('cnpj')) &&
-              token === (await this.storage.get('token')) &&
-              idToken === (await this.storage.get('idToken'))
+              empresa === this.empresaAtual &&
+              cnpj === this.auth.empresa.cnpj &&
+              idToken === this.auth.empresa.id
             ) {
               if (!empresaReset.hasOwnProperty(0)) {
-                await this.storageService.set('cnpj', null);
-                await this.storageService.set('token', null);
-                await this.storageService.set('idToken', null);
-                await this.storageService.set('empresaAtual', null);
-                this.ngOnInit();
+                await this.storage.remove('auth');
+                this.navCtrl.pop();
                 this.router.navigateByUrl('/login/empresa', {
                   replaceUrl: true,
                 });
               } else {
-                await this.storageService.set('cnpj', empresaReset[0]['cnpj']);
-                await this.storageService.set(
-                  'token',
-                  empresaReset[0]['token']
-                );
-                await this.storageService.set(
-                  'idToken',
-                  empresaReset[0]['idToken']
-                );
-                await this.storageService.set(
-                  'empresaAtual',
-                  empresaReset[0]['empresa']
-                );
-                this.ngOnInit();
-                this.router.navigateByUrl('/login/empresa', {
-                  replaceUrl: true,
-                });
+                this.auth.empresa.cnpj = empresaReset[0]['cnpj'];
+                this.auth.empresa.token = empresaReset[0]['token'];
+                this.auth.empresa.id = empresaReset[0]['idToken'];
+                this.appConfigStorage.empresaAtual = empresaReset[0]['empresa'];
+                this.auth.usuario.token = null;
+                await this.storageService.set('auth', this.auth);
+                await this.storageService.set('appConfig', this.appConfigStorage);
+                this.navCtrl.pop();
+                this.router.navigateByUrl('/login/empresa', { replaceUrl: true, });
               }
             } else {
               this.ngOnInit();
@@ -157,6 +159,8 @@ export class HomePage implements OnInit {
   }
 
   forUnids(val) {
-    return Object.values(val);
+    if(val !== undefined){
+      return Object.values(val['centrodecustos']);
+    }
   }
 }

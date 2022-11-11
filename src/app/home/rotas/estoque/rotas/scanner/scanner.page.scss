@@ -1,0 +1,53 @@
+ion-toolbar {
+  --ion-color-base: transparent !important;
+  --border-width: 0 0 0 !important;
+}
+#scan {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+
+  #backUp {
+    width: 100%;
+    height: 35%;
+    background-color: rgba(0, 0, 0, 0.695);
+  }
+
+  #line {
+    width: 100%;
+    height: 2px;
+    background-color: red;
+  }
+
+  #backDown {
+    width: 100%;
+    height: 35%;
+    background-color: rgba(0, 0, 0, 0.695);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+#code {
+
+  #titleCode {
+    font-size: 1.5rem;
+  }
+
+  #btnConsultar {
+    margin-top: 20px;
+    width: 100%;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    ion-button {
+      width: 40%;
+    }
+  }
+}

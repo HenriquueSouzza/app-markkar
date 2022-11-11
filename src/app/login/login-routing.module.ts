@@ -37,9 +37,13 @@ const routes: Routes = [
     component: TokenBlockComponent
   },
   {
+    path: 'updateApp',
+    loadChildren: () => import('./rotas/update-app/update-app.module').then( m => m.UpdateAppPageModule)
+  },
+  {
     path: '**',
     redirectTo: ''
-  }
+  },
 ];
 
 @NgModule({

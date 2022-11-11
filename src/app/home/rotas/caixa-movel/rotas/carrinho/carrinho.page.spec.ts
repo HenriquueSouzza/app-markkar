@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { BarcodeTestPage } from './barcode-test.page';
+import { CarrinhoPage } from './carrinho.page';
 
-describe('BarcodeTestPage', () => {
-  let component: BarcodeTestPage;
-  let fixture: ComponentFixture<BarcodeTestPage>;
+describe('CarrinhoPage', () => {
+  let component: CarrinhoPage;
+  let fixture: ComponentFixture<CarrinhoPage>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ BarcodeTestPage ],
+      declarations: [ CarrinhoPage ],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(BarcodeTestPage);
+    fixture = TestBed.createComponent(CarrinhoPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));
