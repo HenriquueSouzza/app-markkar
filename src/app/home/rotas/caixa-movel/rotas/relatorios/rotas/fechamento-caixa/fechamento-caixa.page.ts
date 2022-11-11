@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { File } from '@awesome-cordova-plugins/file/ngx';
 import { FileOpener } from '@awesome-cordova-plugins/file-opener/ngx';
-import { isPlatform, LoadingController } from '@ionic/angular';
-import { ActivatedRoute } from '@angular/router';
+import { AlertController, isPlatform, LoadingController, NavController } from '@ionic/angular';
+import { Storage } from '@ionic/storage-angular';
+import { ActivatedRoute, Router } from '@angular/router';
 import { format, parseISO } from 'date-fns';
 import { FechamentoCaixaService } from './services/fechamentoCaixa/fechamento-caixa.service';
+import { StorageService } from 'src/app/services/storage/storage.service';
 
 @Component({
   selector: 'app-fechamento-caixa',
@@ -17,24 +19,43 @@ export class FechamentoCaixaPage implements OnInit {
   public relatoriosData: any;
   public semRelatorio = false;
   private idCc: string;
+  private auth: any;
+  private valTokenUsuario: string;
 
   constructor(
+    public loadingController: LoadingController,
+    public alertController: AlertController,
     private file: File,
     private opener: FileOpener,
     private relatoriosService: FechamentoCaixaService,
-    public loadingController: LoadingController,
+    private storage: Storage,
+    private storageService: StorageService,
+    private navCtrl: NavController,
+    private router: Router,
     private route: ActivatedRoute
   ) {}
 
-  //falta passar o token e tirar da api local
+  async ngOnInit() {
+    //loadStorage
+    this.auth = await this.storage.get('auth');
 
-  ngOnInit() {
-    this.route.queryParamMap.subscribe((params: any) => {
-      if (params) {
-        this.idCc = params.params.id;
-      }
-    });
-    this.baixarPDF();
+    //verifyLogin
+    this.valTokenUsuario = this.auth.usuario.token;
+    if (this.valTokenUsuario === null || this.valTokenUsuario === undefined) {
+      this.router.navigateByUrl('/login', { replaceUrl: true });
+    }
+    else if (this.valTokenUsuario !== null) {
+
+      //getParam
+      this.route.queryParamMap.subscribe((params: any) => {
+        if (params) {
+          this.idCc = params.params.id;
+        }
+      });
+
+      //querySQL
+      this.baixarPDF();
+    }
   }
 
   abrirRelatorio(pdf, nome) {
@@ -108,8 +129,27 @@ export class FechamentoCaixaPage implements OnInit {
       message: 'Buscando aguarde...'
     });
     await loading.present();
-    this.relatoriosService.get(this.idCc).subscribe(async (response: any) => {
-      if(response.connection.status === 'success') {
+    this.relatoriosService.get(this.idCc, this.valTokenUsuario).subscribe(async (response: any) => {
+      if (response.connection.error === 'invalidToken') {
+        const alert = await this.alertController.create({
+          cssClass: 'my-custom-class',
+          header: 'Sua sessão se expirou',
+          message: 'Faça o login novamente para continuar.',
+          backdropDismiss: false,
+          buttons: [
+            {
+              text: 'OK',
+              id: 'confirm-button',
+              handler: () => {
+                this.navCtrl.pop();
+                this.router.navigateByUrl('/login/usuario', { replaceUrl: true });
+              },
+            },
+          ],
+        });
+        await alert.present();
+      } else if(response.connection.status === 'success') {
+        this.semRelatorio = false;
         await loading.dismiss();
         this.relatoriosData = Object.keys(response.relatorios);
         this.relatorios = Object.values(response.relatorios);

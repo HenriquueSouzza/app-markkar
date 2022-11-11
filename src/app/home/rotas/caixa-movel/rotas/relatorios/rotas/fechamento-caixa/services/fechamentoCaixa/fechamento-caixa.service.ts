@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
@@ -10,7 +11,9 @@ export class FechamentoCaixaService {
 
   constructor(private http: HttpClient) { }
 
-  get(idCentroCusto: string){
-    return this.http.get(this.url+idCentroCusto);
+  get(idCentroCusto: string, token: string){
+    return this.http.get(this.url+idCentroCusto,{
+      headers: { Authorization: token },
+    });
   }
 }

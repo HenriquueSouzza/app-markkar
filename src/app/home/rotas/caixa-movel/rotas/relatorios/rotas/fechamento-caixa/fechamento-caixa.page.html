@@ -30,7 +30,12 @@
         <ion-icon id="paper" name="document-outline"></ion-icon>
         <ion-icon id="close" name="close-outline"></ion-icon>
       </div>
-      <h2>Nenhum relatório exportado</h2>
+      <div id="divBtn">
+        <h2>Nenhum relatório exportado</h2>
+        <ion-button (click)="baixarPDF()" color="dark">
+          Tentar Novamente
+        </ion-button>
+      </div>
     </div>
   </div>
 </ion-content>
