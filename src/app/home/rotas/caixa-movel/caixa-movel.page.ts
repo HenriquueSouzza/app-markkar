@@ -5,7 +5,7 @@ import { Storage } from '@ionic/storage-angular';
 import { StorageService } from 'src/app/services/storage/storage.service';
 import { AlertController, LoadingController, NavController, ToastController } from '@ionic/angular';
 import { timeout } from 'rxjs/operators';
-import { EstoqueService } from '../estoque/services/estoque/estoque.service';
+import { EstoqueService } from './rotas/estoque/services/estoque/estoque.service';
 
 @Component({
   selector: 'app-caixa-movel',
@@ -124,6 +124,17 @@ export class CaixaMovelPage implements OnInit {
     } else {
       this.navCtrl.navigateForward('/home/caixa-movel/relatorios', {
         queryParams: { id: this.idCcSql },
+        queryParamsHandling: 'merge',
+      });
+    }
+  }
+
+  navigateEstoque() {
+    if (this.idCc === undefined) {
+      this.presentToast('Escolha o centro de custo');
+    } else {
+      this.navCtrl.navigateForward('/home/caixa-movel/estoque', {
+        queryParams: { id1: this.idEmpBird, id2: this.idCc },
         queryParamsHandling: 'merge',
       });
     }

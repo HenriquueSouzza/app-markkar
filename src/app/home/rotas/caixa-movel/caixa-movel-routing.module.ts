@@ -9,26 +9,22 @@ const routes: Routes = [
     component: CaixaMovelPage
   },
   {
-    path: 'carrinho',
-    loadChildren: () => import('./rotas/carrinho/carrinho.module').then( m => m.CarrinhoPageModule)
-  },
-  {
-    path: 'scanner-caixa',
-    loadChildren: () => import('./rotas/scanner-caixa/scanner-caixa.module').then( m => m.ScannerCaixaPageModule)
-  },
-  {
-    path: 'produtos',
-    loadChildren: () => import('./rotas/produtos/produtos.module').then( m => m.ProdutosPageModule)
-  },
-  {
     path: 'relatorios',
     loadChildren: () => import('./rotas/relatorios/relatorios.module').then( m => m.RelatoriosPageModule)
+  },
+  {
+    path: 'sistema-vendas',
+    loadChildren: () => import('./rotas/vender/vender.module').then( m => m.VenderPageModule)
+  },
+  {
+    path: 'estoque',
+    loadChildren: () => import('./rotas/estoque/estoque.module').then( m => m.EstoquePageModule)
   },
   {
     path: '**',
     redirectTo: '/home/caixa-movel',
     pathMatch: 'full'
-  }
+  },
 ];
 
 @NgModule({

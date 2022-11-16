@@ -42,16 +42,16 @@
         Trocas
       </div>
     </ion-button>
-    <ion-button (click)="navigateRelatorios()" color="dark">
+    <ion-button color="dark" (click)="navigateRelatorios()">
       <div>
         <ion-icon name="reader-outline"></ion-icon>
         Relatórios
       </div>
     </ion-button>
-    <ion-button [disabled]="true" color="dark">
+    <ion-button [disabled]="btnServerLocal" color="dark" (click)="navigateEstoque()">
       <div>
-        <ion-icon name="extension-puzzle-outline"></ion-icon>
-        Em Breve...
+        <ion-icon slot="start" name="pie-chart-outline"></ion-icon>
+        Estoque
       </div>
     </ion-button>
     <ion-button [disabled]="true" color="dark">

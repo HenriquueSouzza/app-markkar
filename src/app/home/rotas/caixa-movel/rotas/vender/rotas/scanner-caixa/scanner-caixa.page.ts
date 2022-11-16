@@ -147,8 +147,9 @@ export class ScannerCaixaPage implements OnInit {
   }
 
   consultarProd(form: NgForm){
-    this.inputCodeScanner['value'] = '';
-    this.mostrarProdutoScaneado(form.value.codeProd);
+    if(form.value.codeProd !== ''){
+      this.mostrarProdutoScaneado(form.value.codeProd);
+    }
   }
 
   setModoRapido(){
@@ -244,21 +245,27 @@ export class ScannerCaixaPage implements OnInit {
       nome: ''
     }).subscribe(async (res: any) => {
       const produtos = Object.values(res.produtos);
-      this.pordutoScanneado = {
-        nome: produtos[0]['NOME_PRODUTO'],
-        id: produtos[0]['COD_PRODUTO'],
-        cod: produtos[0]['COD_BARRA'],
-        qnt: 1,
-        qntMax: produtos[0]['QTD_ESTOQUE'],
-        medida: produtos[0]['UNIDADE'],
-        valor: produtos[0]['VALOR']
-      };
-      if(this.modoRapido){
-        // eslint-disable-next-line max-len
-        this.presentToast(`PRODUTO ADICIONADO:<br><br>produto: ${this.pordutoScanneado.nome} <br>Cod: ${this.pordutoScanneado.cod}<br>QntMax: ${this.pordutoScanneado.qntMax}<br>Medida: ${this.pordutoScanneado.medida}<br><br>VALOR: ${this.convertReal(this.pordutoScanneado.valor)}`, 'middle');
-        this.adicionaCarrinho();
+      if(produtos.length !== 0){
+        this.inputCodeScanner['value'] = '';
+        this.pordutoScanneado = {
+          nome: produtos[0]['NOME_PRODUTO'],
+          id: produtos[0]['COD_PRODUTO'],
+          cod: produtos[0]['COD_BARRA'],
+          qnt: produtos[0]['QTD_ESTOQUE'] === '0' ? 0 : 1,
+          qntMax: produtos[0]['QTD_ESTOQUE'],
+          medida: produtos[0]['UNIDADE'],
+          valor: produtos[0]['VALOR']
+        };
+        console.log(this.pordutoScanneado);
+        if(this.modoRapido){
+          // eslint-disable-next-line max-len
+          this.presentToast(`PRODUTO ADICIONADO:<br><br>produto: ${this.pordutoScanneado.nome} <br>Cod: ${this.pordutoScanneado.cod}<br>QntMax: ${this.pordutoScanneado.qntMax}<br>Medida: ${this.pordutoScanneado.medida}<br><br>VALOR: ${this.convertReal(this.pordutoScanneado.valor)}`, 'middle');
+          this.adicionaCarrinho();
+        } else {
+          this.modalProdIsOpen = true;
+        }
       } else {
-        this.modalProdIsOpen = true;
+        this.presentToast('Nenhum produto encontrado', 'bottom');
       }
     }
     //{nome: 'teste', id: 1, cod: 2123, qnt: 5, valor: 18}
