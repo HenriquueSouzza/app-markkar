@@ -124,4 +124,8 @@ export class CarrinhoPage implements OnInit {
     });
     await alert.present();
   }
+
+  goPagamento(){
+    this.navCtrl.navigateForward('/home/caixa-movel/sistema-vendas/pagamento');
+  }
 }

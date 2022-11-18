@@ -204,7 +204,7 @@ export class ScannerCaixaPage implements OnInit {
   }
 
   goToCar(){
-    this.navCtrl.navigateForward('/home/caixa-movel/carrinho', {
+    this.navCtrl.navigateForward('/home/caixa-movel/sistema-vendas/carrinho', {
       queryParams: { id1: this.idEmpBird, id2: this.idCc}
     });
   }

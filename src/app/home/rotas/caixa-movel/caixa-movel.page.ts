@@ -111,7 +111,7 @@ export class CaixaMovelPage implements OnInit {
     if (this.idCc === undefined) {
       this.presentToast('Escolha o centro de custo');
     } else {
-      this.navCtrl.navigateForward('/home/caixa-movel/scanner-caixa', {
+      this.navCtrl.navigateForward('/home/caixa-movel/sistema-vendas', {
         queryParams: { id1: this.idEmpBird, id2: this.idCc },
         queryParamsHandling: 'merge',
       });
