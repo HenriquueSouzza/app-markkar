@@ -62,7 +62,7 @@ export class FechamentoCaixaPage implements OnInit {
     const data = pdf;
     const downloadPDF = async (href) => {
       const downloadLink = document.createElement('a');
-      downloadLink.href = href;
+      downloadLink.href = 'data:application/pdf;base64,' + href;
       downloadLink.download = nome;
       downloadLink.click();
     };
@@ -73,6 +73,7 @@ export class FechamentoCaixaPage implements OnInit {
       (isPlatform('desktop') && !isPlatform('android') && !isPlatform('ios'))
     ) {
       downloadPDF(data);
+      console.log('teste');
     } else {
       this.saveAndOpenPdf(data, nome);
     }
@@ -126,7 +127,7 @@ export class FechamentoCaixaPage implements OnInit {
 
   async baixarPDF(){
     const loading = await this.loadingController.create({
-      message: 'Buscando aguarde...'
+      message: 'Gerando os PDFs aguarde...'
     });
     await loading.present();
     this.relatoriosService.get(this.idCc, this.valTokenUsuario).subscribe(async (response: any) => {

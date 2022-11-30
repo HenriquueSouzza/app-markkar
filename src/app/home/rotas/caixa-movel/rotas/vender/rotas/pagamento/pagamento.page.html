@@ -1,41 +1,175 @@
 <ion-header>
   <ion-toolbar color="dark">
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/home/caixa-movel/sistema-vendas/produtos"></ion-back-button>
+      <ion-back-button
+        defaultHref="/home/caixa-movel/sistema-vendas/produtos"
+      ></ion-back-button>
     </ion-buttons>
     <ion-title>pagamento</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <div id="header">
-    <h2>R$ 312,00</h2>
-    <h1>Metodos de pagamento</h1>
-  </div>
-  <div id="metodosPg">
-    <ion-button color="dark">
-      <div>
-        <ion-icon name="card-outline"></ion-icon>
-        Cartão Debito
+  <swiper
+    id="swiper"
+    #swiper
+    [config]="{initialSlide: 1, speed: 400, allowTouchMove: true}"
+  >
+    <ng-template swiperSlide>
+      <div id="metodosPg">
+        <div class="headerSlide">
+          <ion-button
+            (click)="slidePrev()"
+            expand="block"
+            fill="clear"
+            shape="round"
+          >
+            <ion-icon slot="icon-only" style="color: var(--ion-color-dark2)" name="arrow-back-outline"></ion-icon>
+          </ion-button>
+          <h2>Formas de pagamento</h2>
+          <ion-button
+            (click)="slideNext()"
+            expand="block"
+            fill="clear"
+            shape="round"
+          >
+            <ion-icon slot="icon-only" name="arrow-forward-outline"></ion-icon>
+          </ion-button>
+        </div>
+        <ion-button class="selectBtn" (click)="slideNext()" color="dark">
+          <div>
+            <ion-icon name="card-outline"></ion-icon>
+            Cartão Debito
+          </div>
+        </ion-button>
+        <ion-button class="selectBtn" color="dark">
+          <div>
+            <ion-icon name="card-outline"></ion-icon>
+            Cartão Credito
+          </div>
+        </ion-button>
+        <ion-button class="selectBtn" color="dark">
+          <div>
+            <img src="assets/img/logoPix.png" alt="" />
+            Pix
+          </div>
+        </ion-button>
+        <ion-button class="selectBtn" color="dark">
+          <div>
+            <ion-icon name="wallet-outline"></ion-icon>
+            Dinheiro
+          </div>
+        </ion-button>
       </div>
-    </ion-button>
-    <ion-button color="dark">
-      <div>
-        <ion-icon name="card-outline"></ion-icon>
-        Cartão Credito
+    </ng-template>
+    <ng-template swiperSlide>
+      <div id="metodosPg">
+        <div class="headerSlide">
+          <ion-button
+            (click)="slidePrev()"
+            expand="block"
+            fill="clear"
+            shape="round"
+          >
+            <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+          </ion-button>
+          <h2>Bandeiras</h2>
+          <ion-button
+            (click)="slideNext()"
+            expand="block"
+            fill="clear"
+            shape="round"
+          >
+            <ion-icon slot="icon-only" name="arrow-forward-outline"></ion-icon>
+          </ion-button>
+        </div>
+        <ion-button class="selectBtn" (click)="slideNext()" color="dark">
+          <div>
+            Visa
+          </div>
+        </ion-button>
+        <ion-button class="selectBtn" color="dark">
+          <div>
+            Mastercard
+          </div>
+        </ion-button>
+        <ion-button class="selectBtn" color="dark">
+          <div>
+            Maestro
+          </div>
+        </ion-button>
       </div>
-    </ion-button>
-    <ion-button color="dark">
-      <div>
-        <img src="../../../../../../../../assets/img/logoPix.png" alt="">
-        Pix
+    </ng-template>
+    <ng-template swiperSlide>
+      <div id="parcelas">
+        <div class="headerSlide">
+          <ion-button
+            (click)="slidePrev()"
+            expand="block"
+            fill="clear"
+            shape="round"
+          >
+            <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+          </ion-button>
+          <div>
+            <h2>Parcelas</h2>
+            <p style="color: gray; font-size: .7rem; margin: 0;">*Juros não calculado</p>
+          </div>
+          <ion-button
+            (click)="slideNext()"
+            expand="block"
+            fill="clear"
+            shape="round"
+          >
+            <ion-icon slot="icon-only" name="arrow-forward-outline"></ion-icon>
+          </ion-button>
+        </div>
+        <ion-button class="selectBtn" color="dark">
+          <h2>1x de {{convertReal(totalCarrinhoNum)}}</h2>
+        </ion-button>
+        <ion-button class="selectBtn" color="dark">
+          <h2>2x de {{convertReal(2*totalCarrinhoNum)}}</h2>
+        </ion-button>
+        <ion-button class="selectBtn" color="dark">
+          <h2>3x de {{convertReal(3*totalCarrinhoNum)}}</h2>
+        </ion-button>
+        <ion-button class="selectBtn" color="dark">
+          <h2>4x de {{convertReal(4*totalCarrinhoNum)}}</h2>
+        </ion-button>
       </div>
-    </ion-button>
-    <ion-button color="dark">
-      <div>
-        <ion-icon name="wallet-outline"></ion-icon>
-        Dinheiro
+    </ng-template>
+  </swiper>
+  <div id="footer">
+    <div id="wrpTop" style="width: 100%">
+      <ion-progress-bar [value]=".1"></ion-progress-bar>
+      <div class="opcao">
+        <h3>Forma de pagamento:</h3>
+        <p>Dinheiro</p>
       </div>
-    </ion-button>
+      <div class="opcao">
+        <h3>Bandeira:</h3>
+        <p>mastercard</p>
+      </div>
+      <div class="opcao">
+        <h3>Parcelas:</h3>
+        <p>9x</p>
+      </div>
+      <div class="opcao">
+        <h3>Qtn de produtos:</h3>
+        <p>39 UN</p>
+      </div>
+    </div>
+    <div id="wrpBot" style="width: 100%">
+      <div id="total">
+        <h3>Total:</h3>
+        <p>{{totalCarrinho}}</p>
+      </div>
+      <div id="btns">
+        <ion-button color="danger" (click)="cancelarCarrinho()">
+          Cancelar
+        </ion-button>
+        <ion-button [disabled]="true"> Finalizar </ion-button>
+      </div>
+    </div>
   </div>
 </ion-content>
