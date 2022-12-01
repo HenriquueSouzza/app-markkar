@@ -1,9 +1,11 @@
 /* eslint-disable @typescript-eslint/dot-notation */
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { AlertController, NavController } from '@ionic/angular';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AlertController, ModalController, NavController } from '@ionic/angular';
 import { Storage } from '@ionic/storage-angular';
 import { StorageService } from 'src/app/services/storage/storage.service';
 import { SwiperComponent } from 'swiper/angular';
+import { Platform } from '@ionic/angular';
+import { BemVindoComponent } from 'src/app/login/rotas/bem-vindo/bem-vindo.component';
 
 @Component({
   selector: 'app-pagamento',
@@ -13,16 +15,20 @@ import { SwiperComponent } from 'swiper/angular';
 export class PagamentoPage implements OnInit {
 
   @ViewChild('swiper') swiper: SwiperComponent;
+  @ViewChild('modal') modal: any;
 
   public produtos: Array<object>;
   public totalCarrinho: string;
   public totalCarrinhoNum: any;
+  public heightW: any;
   private caixaMovelStorage: any;
 
   constructor(
     private storage: Storage,
     public alertController: AlertController,
     private navCtrl: NavController,
+    private modalCtrl: ModalController,
+    private platform: Platform,
     private storageService: StorageService
   ) { }
 
@@ -37,9 +43,23 @@ export class PagamentoPage implements OnInit {
 
 //code
   async ngOnInit() {
+    this.heightW = this.platform.height();
     this.caixaMovelStorage = await this.storage.get('caixa-movel');
     this.produtos = this.caixaMovelStorage.vendas.carrinho;
     this.totalCar();
+  }
+
+  ionViewWillLeave(){
+    this.closeModal();
+  }
+
+  teste(){
+    console.log(this.modal);
+    this.modal.setCurrentBreakpoint(this.heightW > 785 ? 0.35 : 0.8);
+  }
+
+  closeModal(){
+    this.modal.dismiss();
   }
 
   convertReal(valor){

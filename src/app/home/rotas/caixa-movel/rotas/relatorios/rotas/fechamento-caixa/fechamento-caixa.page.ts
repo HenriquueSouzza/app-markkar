@@ -64,7 +64,9 @@ export class FechamentoCaixaPage implements OnInit {
       const downloadLink = document.createElement('a');
       downloadLink.href = 'data:application/pdf;base64,' + href;
       downloadLink.download = nome;
+      document.body.appendChild(downloadLink);
       downloadLink.click();
+      document.body.removeChild(downloadLink);
     };
 
     if (
