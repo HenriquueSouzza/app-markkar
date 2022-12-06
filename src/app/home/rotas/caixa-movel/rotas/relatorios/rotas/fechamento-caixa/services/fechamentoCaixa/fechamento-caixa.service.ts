@@ -7,7 +7,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class FechamentoCaixaService {
 
-  private url = 'https://apimarkkar.igrejabatistamundial.com/app/caixaMovel/relatorios/fechamentoCaixa?id=';
+  private url = 'https://api.markkar.com.br/app/caixaMovel/relatorios/fechamentoCaixa?id=';
 
   constructor(private http: HttpClient) { }
 

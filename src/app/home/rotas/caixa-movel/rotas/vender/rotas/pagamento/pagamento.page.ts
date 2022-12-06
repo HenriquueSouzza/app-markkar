@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-inferrable-types */
 /* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/dot-notation */
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { AlertController, ModalController, NavController } from '@ionic/angular';
+import { AlertController, IonContent, ModalController, NavController } from '@ionic/angular';
 import { Storage } from '@ionic/storage-angular';
 import { StorageService } from 'src/app/services/storage/storage.service';
 import { SwiperComponent } from 'swiper/angular';
@@ -17,7 +18,9 @@ export class PagamentoPage implements OnInit {
 
   @ViewChild('swiper') swiper: SwiperComponent;
   @ViewChild('modal') modal: any;
+  @ViewChild(IonContent) content: IonContent;
 
+  public porcLoad: number = 0;
   public produtos: Array<object>;
   public totalCarrinho: string;
   public totalCarrinhoNum: any;
@@ -26,6 +29,11 @@ export class PagamentoPage implements OnInit {
   public bandeiras: Array<string> = [];
   public redeAutoriza: Array<string> = [];
   public opcsCard = {debito: false, credito: false, parcelas: 0};
+  public metodoPg: string = 'Não selecionado';
+  public bandeiraPg: string = 'Não selecionado';
+  public redeAutorizaPg: string = 'Não selecionado';
+  public tipoCartaoPg: string;
+  public parcelasPg: number;
   private allPagMetods: any;
   private caixaMovelStorage: any;
 
@@ -41,7 +49,10 @@ export class PagamentoPage implements OnInit {
 
 //swiper
   slideNext(){
-      this.swiper.swiperRef.slideNext();
+    this.swiper.swiperRef.slideNext();
+    setTimeout(() => {
+      this.scrollToTop();
+      }, 300);
     }
 
   slidePrev(){
@@ -84,8 +95,7 @@ export class PagamentoPage implements OnInit {
     this.closeModal();
   }
 
-  teste(){
-    console.log(this.modal);
+  subirModal(){
     this.modal.setCurrentBreakpoint(this.heightW > 785 ? 0.35 : 0.8);
   }
 
@@ -140,6 +150,10 @@ export class PagamentoPage implements OnInit {
       ],
     });
     await alert.present();
+  }
+
+  scrollToTop() {
+    this.content.scrollToTop(300);
   }
 
 }

@@ -133,6 +133,7 @@ export class FechamentoCaixaPage implements OnInit {
     });
     await loading.present();
     this.relatoriosService.get(this.idCc, this.valTokenUsuario).subscribe(async (response: any) => {
+      console.log(response);
       if (response.connection.error === 'invalidToken') {
         const alert = await this.alertController.create({
           cssClass: 'my-custom-class',
