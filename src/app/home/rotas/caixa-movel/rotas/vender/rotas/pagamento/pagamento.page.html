@@ -39,28 +39,12 @@
           </ion-button>
         </div>
         <div class="opcoes">
-          <ion-button class="selectBtn" color="dark">
+          <ion-button *ngFor="let formpg of formsPg" class="selectBtn" color="dark">
             <div>
-              <ion-icon name="card-outline"></ion-icon>
-              Cartão Debito
-            </div>
-          </ion-button>
-          <ion-button class="selectBtn" color="dark">
-            <div>
-              <ion-icon name="card-outline"></ion-icon>
-              Cartão Credito
-            </div>
-          </ion-button>
-          <ion-button class="selectBtn" color="dark">
-            <div>
-              <img src="assets/img/logoPix.png" alt="" />
-              Pix
-            </div>
-          </ion-button>
-          <ion-button class="selectBtn" color="dark">
-            <div>
-              <ion-icon name="wallet-outline"></ion-icon>
-              Dinheiro
+              <ion-icon *ngIf="formpg === 'CARTÃO'" name="card-outline"></ion-icon>
+              <img *ngIf="formpg === 'PIX'" src="assets/img/logoPix.png" alt="LogoPix"/>
+              <ion-icon *ngIf="formpg === 'DINHEIRO'" name="wallet-outline"></ion-icon>
+              {{formpg}}
             </div>
           </ion-button>
         </div>
@@ -90,19 +74,41 @@
           </ion-button>
         </div>
         <div class="opcoes">
-          <ion-button class="selectBtn" color="dark">
+          <ion-button *ngFor="let bandeira of bandeiras" class="selectBtn" color="dark">
             <div>
-              Visa
+              {{bandeira}}
             </div>
           </ion-button>
-          <ion-button class="selectBtn" color="dark">
-            <div>
-              Mastercard
-            </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template class="slide" swiperSlide>
+      <div id="metodosPg">
+        <div class="headerSlide">
+          <ion-button
+            (click)="slidePrev()"
+            mode="ios"
+            expand="block"
+            fill="clear"
+            shape="round"
+          >
+            <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
           </ion-button>
-          <ion-button class="selectBtn" color="dark">
+          <h2>Rede Autoriza</h2>
+          <ion-button
+            (click)="slideNext()"
+            mode="ios"
+            expand="block"
+            fill="clear"
+            shape="round"
+          >
+            <ion-icon slot="icon-only" name="arrow-forward-outline"></ion-icon>
+          </ion-button>
+        </div>
+        <div class="opcoes">
+          <ion-button *ngFor="let rede of redeAutoriza" class="selectBtn" color="dark">
             <div>
-              Maestro
+              {{rede}}
             </div>
           </ion-button>
         </div>

@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/dot-notation */
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { AlertController, ModalController, NavController } from '@ionic/angular';
@@ -5,7 +6,7 @@ import { Storage } from '@ionic/storage-angular';
 import { StorageService } from 'src/app/services/storage/storage.service';
 import { SwiperComponent } from 'swiper/angular';
 import { Platform } from '@ionic/angular';
-import { BemVindoComponent } from 'src/app/login/rotas/bem-vindo/bem-vindo.component';
+import { PagamentoService } from './services/pagamento/pagamento.service';
 
 @Component({
   selector: 'app-pagamento',
@@ -21,6 +22,11 @@ export class PagamentoPage implements OnInit {
   public totalCarrinho: string;
   public totalCarrinhoNum: any;
   public heightW: any;
+  public formsPg: Array<string> = [];
+  public bandeiras: Array<string> = [];
+  public redeAutoriza: Array<string> = [];
+  public opcsCard = {debito: false, credito: false, parcelas: 0};
+  private allPagMetods: any;
   private caixaMovelStorage: any;
 
   constructor(
@@ -29,7 +35,8 @@ export class PagamentoPage implements OnInit {
     private navCtrl: NavController,
     private modalCtrl: ModalController,
     private platform: Platform,
-    private storageService: StorageService
+    private storageService: StorageService,
+    private pagamentoService: PagamentoService
   ) { }
 
 //swiper
@@ -43,6 +50,30 @@ export class PagamentoPage implements OnInit {
 
 //code
   async ngOnInit() {
+    this.pagamentoService.all('1').subscribe((res: any) => {
+      this.allPagMetods = res.formasPagamento;
+      console.log(this.allPagMetods);
+      let i = -1;
+      for(const formspg of this.allPagMetods){
+        i++;
+        if (!this.formsPg.includes(formspg['FORMA_PG'])) {
+          this.formsPg.push(formspg['FORMA_PG']);
+        }
+        if (!this.bandeiras.includes(formspg['BANDEIRA']) && formspg['BANDEIRA'] !== '') {
+          this.bandeiras.push(formspg['BANDEIRA']);
+        }
+        if (!this.redeAutoriza.includes(formspg['REDE_AUTORIZA']) && formspg['REDE_AUTORIZA'] !== '') {
+          this.redeAutoriza.push(formspg['REDE_AUTORIZA']);
+        }
+        if (formspg['FORMA_PG'] === 'CARTÃO' && formspg['BANDEIRA'] === 'HIPERCARD' && formspg['REDE_AUTORIZA'] === 'REDECARD') {
+          this.opcsCard.debito = this.allPagMetods[i]['DEBITO_CREDITO'] === 'D' ? true : this.opcsCard.debito;
+          this.opcsCard.credito = this.allPagMetods[i]['DEBITO_CREDITO'] === 'C' ? true : this.opcsCard.credito;
+          this.opcsCard.parcelas = this.allPagMetods[i]['PARCELAS'] > this.opcsCard.parcelas ? this.allPagMetods[i]['PARCELAS'] : this.opcsCard.parcelas;
+          console.log(i);
+        }
+        console.log(this.formsPg);
+      }
+    });
     this.heightW = this.platform.height();
     this.caixaMovelStorage = await this.storage.get('caixa-movel');
     this.produtos = this.caixaMovelStorage.vendas.carrinho;
