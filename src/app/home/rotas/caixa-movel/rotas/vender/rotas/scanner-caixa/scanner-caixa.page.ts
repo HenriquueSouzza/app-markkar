@@ -68,10 +68,10 @@ export class ScannerCaixaPage implements OnInit {
       this.telaEspelho = false;
     }, 700);
     this.reloadScan();
-    /*setTimeout(() => {
+    setTimeout(() => {
       const codeBar = '7899838806976';
       this.mostrarProdutoScaneado(codeBar);
-    }, 500);*/
+    }, 500);
   }
 
   ionViewWillLeave() {
@@ -246,7 +246,9 @@ export class ScannerCaixaPage implements OnInit {
     }).subscribe(async (res: any) => {
       const produtos = Object.values(res.produtos);
       if(produtos.length !== 0){
-        this.inputCodeScanner['value'] = '';
+        if(this.telaDigCodigo){
+          this.inputCodeScanner['value'] = '';
+        }
         this.pordutoScanneado = {
           nome: produtos[0]['NOME_PRODUTO'],
           id: produtos[0]['COD_PRODUTO'],
@@ -256,7 +258,6 @@ export class ScannerCaixaPage implements OnInit {
           medida: produtos[0]['UNIDADE'],
           valor: produtos[0]['VALOR']
         };
-        console.log(this.pordutoScanneado);
         if(this.modoRapido){
           // eslint-disable-next-line max-len
           this.presentToast(`PRODUTO ADICIONADO:<br><br>produto: ${this.pordutoScanneado.nome} <br>Cod: ${this.pordutoScanneado.cod}<br>QntMax: ${this.pordutoScanneado.qntMax}<br>Medida: ${this.pordutoScanneado.medida}<br><br>VALOR: ${this.convertReal(this.pordutoScanneado.valor)}`, 'middle');
