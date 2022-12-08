@@ -40,7 +40,7 @@
           </ion-button>
         </div>
         <div class="opcoes">
-          <ion-button (click)="metodoPg = formpg; metodoPg === 'DINHEIRO' || metodoPg === 'PIX' ? subirModal() : slideNext(); metodoPg === 'DINHEIRO' || metodoPg === 'PIX' ? porcLoad = 1 : porcLoad = .2" *ngFor="let formpg of formsPg" class="selectBtn" color="dark">
+          <ion-button (click)="changeFormaPagamento(formpg)" *ngFor="let formpg of formsPg" class="selectBtn" color="dark">
             <div>
               <ion-icon *ngIf="formpg === 'CARTÃO'" name="card-outline"></ion-icon>
               <img *ngIf="formpg === 'PIX'" src="assets/img/logoPix.png" alt="LogoPix"/>
@@ -76,7 +76,7 @@
           </ion-button>
         </div>
         <div class="opcoes">
-          <ion-button (click)="bandeiraPg = bandeira;slideNext();porcLoad = .4" *ngFor="let bandeira of bandeiras" class="selectBtn" color="dark">
+          <ion-button (click)="changeBandeira(bandeira)" *ngFor="let bandeira of bandeiras" class="selectBtn" color="dark">
             <div>
               {{bandeira}}
             </div>
@@ -109,9 +109,47 @@
           </ion-button>
         </div>
         <div class="opcoes">
-          <ion-button (click)="redeAutorizaPg = rede;slideNext();porcLoad = .6"  *ngFor="let rede of redeAutoriza" class="selectBtn" color="dark">
+          <ion-button (click)="changeRedeAutoriza(rede)"  *ngFor="let rede of redeAutoriza" class="selectBtn" color="dark">
             <div>
               {{rede}}
+            </div>
+          </ion-button>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template class="slide" swiperSlide>
+      <div id="metodosPg">
+        <div class="headerSlide">
+          <ion-button
+            (click)="slidePrev()"
+            mode="ios"
+            expand="block"
+            fill="clear"
+            shape="round"
+          >
+            <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+          </ion-button>
+          <h2>tipo de pagamento: <p style="margin: 6px 0 0 0 ; font-size: 1rem; color: gray;">{{debitOrCreditPg}}</p></h2>
+          <ion-button
+            [disabled]="debitOrCreditPg === 'Não selecionado' ? true : false"
+            (click)="slideNext()"
+            mode="ios"
+            expand="block"
+            fill="clear"
+            shape="round"
+          >
+            <ion-icon slot="icon-only" name="arrow-forward-outline"></ion-icon>
+          </ion-button>
+        </div>
+        <div class="opcoes">
+          <ion-button (click)="changeDebitOrCredit('DÉBITO')" [disabled]="opcsCard.bloqDebito" class="selectBtn" color="dark">
+            <div>
+              DÉBITO
+            </div>
+          </ion-button>
+          <ion-button (click)="changeDebitOrCredit('CRÉDITO')" [disabled]="opcsCard.bloqCredito" class="selectBtn" color="dark">
+            <div>
+              CRÉDITO
             </div>
           </ion-button>
         </div>
@@ -135,6 +173,7 @@
           </div>
           <ion-button
             (click)="slideNext()"
+            style="color: var(--ion-color-dark2)"
             mode="ios"
             expand="block"
             fill="clear"
@@ -144,17 +183,8 @@
           </ion-button>
         </div>
         <div class="opcoes">
-          <ion-button class="selectBtn" color="dark">
-            <h2>1x de {{convertReal(totalCarrinhoNum)}}</h2>
-          </ion-button>
-          <ion-button class="selectBtn" color="dark">
-            <h2>2x de {{convertReal(2*totalCarrinhoNum)}}</h2>
-          </ion-button>
-          <ion-button class="selectBtn" color="dark">
-            <h2>3x de {{convertReal(3*totalCarrinhoNum)}}</h2>
-          </ion-button>
-          <ion-button class="selectBtn" color="dark">
-            <h2>4x de {{convertReal(4*totalCarrinhoNum)}}</h2>
+          <ion-button (click)="changeParcelas(parcela)" *ngFor="let parcela of parcelas" class="selectBtn" color="dark">
+            <h2>{{parcela}}</h2>
           </ion-button>
         </div>
       </div>
@@ -182,12 +212,16 @@
                 <p>{{bandeiraPg}}</p>
               </div>
               <div class="opcao">
-                <h3>Parcelas:</h3>
-                <p>9x</p>
+                <h3>Rede Autoriza:</h3>
+                <p>{{redeAutorizaPg}}</p>
               </div>
               <div class="opcao">
-                <h3>Qtn de produtos:</h3>
-                <p>39 UN</p>
+                <h3>Tipo de pagamento:</h3>
+                <p>{{debitOrCreditPg}}</p>
+              </div>
+              <div class="opcao">
+                <h3>Parcelas:</h3>
+                <p>{{parcelasPg}}</p>
               </div>
             </div>
             <div id="wrpBot" style="width: 100%">

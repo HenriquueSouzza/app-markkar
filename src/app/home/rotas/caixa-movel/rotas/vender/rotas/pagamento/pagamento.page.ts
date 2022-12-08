@@ -2,7 +2,7 @@
 /* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/dot-notation */
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { AlertController, IonContent, ModalController, NavController } from '@ionic/angular';
+import { AlertController, IonContent, LoadingController, ModalController, NavController } from '@ionic/angular';
 import { Storage } from '@ionic/storage-angular';
 import { StorageService } from 'src/app/services/storage/storage.service';
 import { SwiperComponent } from 'swiper/angular';
@@ -28,12 +28,14 @@ export class PagamentoPage implements OnInit {
   public formsPg: Array<string> = [];
   public bandeiras: Array<string> = [];
   public redeAutoriza: Array<string> = [];
-  public opcsCard = {debito: false, credito: false, parcelas: 0};
+  public parcelas: Array<string> = [];
+  public opcsCard = {bloqDebito: true, bloqCredito: true, parcelasMax: 0};
   public metodoPg: string = 'Não selecionado';
   public bandeiraPg: string = 'Não selecionado';
   public redeAutorizaPg: string = 'Não selecionado';
+  public debitOrCreditPg: string = 'Não selecionado';
   public tipoCartaoPg: string;
-  public parcelasPg: number;
+  public parcelasPg: string = 'Não selecionado';;
   private allPagMetods: any;
   private caixaMovelStorage: any;
 
@@ -42,6 +44,7 @@ export class PagamentoPage implements OnInit {
     public alertController: AlertController,
     private navCtrl: NavController,
     private modalCtrl: ModalController,
+    public loadingController: LoadingController,
     private platform: Platform,
     private storageService: StorageService,
     private pagamentoService: PagamentoService
@@ -59,32 +62,9 @@ export class PagamentoPage implements OnInit {
     this.swiper.swiperRef.slidePrev();
   }
 
-//code
+//main
   async ngOnInit() {
-    this.pagamentoService.all('1').subscribe((res: any) => {
-      this.allPagMetods = res.formasPagamento;
-      console.log(this.allPagMetods);
-      let i = -1;
-      for(const formspg of this.allPagMetods){
-        i++;
-        if (!this.formsPg.includes(formspg['FORMA_PG'])) {
-          this.formsPg.push(formspg['FORMA_PG']);
-        }
-        if (!this.bandeiras.includes(formspg['BANDEIRA']) && formspg['BANDEIRA'] !== '') {
-          this.bandeiras.push(formspg['BANDEIRA']);
-        }
-        if (!this.redeAutoriza.includes(formspg['REDE_AUTORIZA']) && formspg['REDE_AUTORIZA'] !== '') {
-          this.redeAutoriza.push(formspg['REDE_AUTORIZA']);
-        }
-        if (formspg['FORMA_PG'] === 'CARTÃO' && formspg['BANDEIRA'] === 'HIPERCARD' && formspg['REDE_AUTORIZA'] === 'REDECARD') {
-          this.opcsCard.debito = this.allPagMetods[i]['DEBITO_CREDITO'] === 'D' ? true : this.opcsCard.debito;
-          this.opcsCard.credito = this.allPagMetods[i]['DEBITO_CREDITO'] === 'C' ? true : this.opcsCard.credito;
-          this.opcsCard.parcelas = this.allPagMetods[i]['PARCELAS'] > this.opcsCard.parcelas ? this.allPagMetods[i]['PARCELAS'] : this.opcsCard.parcelas;
-          console.log(i);
-        }
-        console.log(this.formsPg);
-      }
-    });
+    this.getMetodosPag();
     this.heightW = this.platform.height();
     this.caixaMovelStorage = await this.storage.get('caixa-movel');
     this.produtos = this.caixaMovelStorage.vendas.carrinho;
@@ -95,6 +75,90 @@ export class PagamentoPage implements OnInit {
     this.closeModal();
   }
 
+  scrollToTop() {
+    this.content.scrollToTop(300);
+  }
+
+  async getMetodosPag(){
+    const loading = await this.loadingController.create({
+      message: 'Aguarde...'
+    });
+    await loading.present();
+    this.pagamentoService.all('1').subscribe(async (res: any) => {
+      this.allPagMetods = res.formasPagamento;
+      console.log(this.allPagMetods);
+      for(const formspg of this.allPagMetods){
+        if (!this.formsPg.includes(formspg['FORMA_PG'])) {
+          this.formsPg.push(formspg['FORMA_PG']);
+        }
+        if (!this.bandeiras.includes(formspg['BANDEIRA']) && formspg['BANDEIRA'] !== '') {
+          this.bandeiras.push(formspg['BANDEIRA']);
+        }
+      }
+      await loading.dismiss();
+    });
+  }
+
+  changeFormaPagamento(formPg: string){
+    this.metodoPg = formPg;
+    if(this.metodoPg === 'DINHEIRO' || this.metodoPg === 'PIX'){
+      this.subirModal();
+    } else {
+      this.slideNext();
+    }
+    this.porcLoad = this.metodoPg === 'DINHEIRO' || this.metodoPg === 'PIX' ? 1 : .2;
+  }
+
+  changeBandeira(bandeira: string){
+    this.redeAutoriza = [];
+    this.bandeiraPg = bandeira;
+    for(const formspg of this.allPagMetods){
+      if (!this.redeAutoriza.includes(formspg['REDE_AUTORIZA']) && formspg['FORMA_PG'] === 'CARTÃO' && formspg['BANDEIRA'] === this.bandeiraPg ) {
+        this.redeAutoriza.push(formspg['REDE_AUTORIZA']);
+      }
+    }
+    this.porcLoad = .4;
+    this.slideNext();
+  }
+
+  changeRedeAutoriza(rede){
+    this.opcsCard = {bloqDebito: true, bloqCredito: true, parcelasMax: 0};
+    this.redeAutorizaPg = rede;
+    let i = -1;
+    for(const formspg of this.allPagMetods){
+      i++;
+      if (formspg['FORMA_PG'] === 'CARTÃO' && formspg['BANDEIRA'] === this.bandeiraPg && formspg['REDE_AUTORIZA'] === this.redeAutorizaPg ) {
+        this.opcsCard.bloqDebito = this.allPagMetods[i]['DEBITO_CREDITO'] === 'D' ? false : this.opcsCard.bloqDebito;
+        this.opcsCard.bloqCredito = this.allPagMetods[i]['DEBITO_CREDITO'] === 'C' ? false : this.opcsCard.bloqCredito;
+        this.opcsCard.parcelasMax = this.allPagMetods[i]['PARCELAS'] > this.opcsCard.parcelasMax ? this.allPagMetods[i]['PARCELAS'] : this.opcsCard.parcelasMax;
+      }
+    }
+    this.porcLoad = .6;
+    this.slideNext();
+  }
+
+  changeDebitOrCredit(opc){
+    this.debitOrCreditPg = opc;
+    if(opc === 'DÉBITO'){
+      this.porcLoad = 1;
+      this.subirModal();
+    } else {
+      this.parcelas = [];
+      for(let i = 1; i <= this.opcsCard.parcelasMax; i++){
+        this.parcelas.push(i+'x de '+this.convertReal(i*this.totalCarrinhoNum));
+        console.log(this.parcelas);
+      }
+      this.slideNext();
+    }
+  }
+
+  changeParcelas(parcela){
+    this.parcelasPg = parcela;
+    this.porcLoad = 1;
+    this.subirModal();
+  }
+
+//modal
   subirModal(){
     this.modal.setCurrentBreakpoint(this.heightW > 785 ? 0.35 : 0.8);
   }
@@ -103,6 +167,7 @@ export class PagamentoPage implements OnInit {
     this.modal.dismiss();
   }
 
+//total-carrinho
   convertReal(valor){
     return parseFloat(valor).toLocaleString('pt-br', {
       style: 'currency',
@@ -151,9 +216,4 @@ export class PagamentoPage implements OnInit {
     });
     await alert.present();
   }
-
-  scrollToTop() {
-    this.content.scrollToTop(300);
-  }
-
 }
