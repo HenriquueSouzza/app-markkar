@@ -148,6 +148,7 @@ export class PagamentoPage implements OnInit {
         this.parcelas.push(i+'x de '+this.convertReal(i*this.totalCarrinhoNum));
         console.log(this.parcelas);
       }
+      this.porcLoad = .8;
       this.slideNext();
     }
   }
@@ -159,6 +160,19 @@ export class PagamentoPage implements OnInit {
   }
 
 //modal
+
+  verificaModal(){
+    this.modal.getCurrentBreakpoint().then((value) => {
+      if(value !== 0.07){
+        this.descerModal();
+      };
+    });
+  }
+
+  descerModal(){
+    this.modal.setCurrentBreakpoint(0.07);
+  }
+
   subirModal(){
     this.modal.setCurrentBreakpoint(this.heightW > 785 ? 0.35 : 0.8);
   }

@@ -11,6 +11,7 @@
 
 <ion-content no-bounce has-bouncing="false" forceOverscroll="false">
   <swiper
+    (click)="verificaModal()"
     id="swiper"
     #swiper
     [config]="{initialSlide: 0, speed: 400, allowTouchMove: false}"
@@ -196,7 +197,7 @@
       [initialBreakpoint]="0.07"
       [breakpoints]="[0.07, heightW > 785 ? 0.35 : 0.8]"
       [backdropDismiss]="false"
-      [backdropBreakpoint]="0.08"
+      [backdropBreakpoint]="1"
     >
       <ng-template>
         <ion-content no-bounce has-bouncing="false" forceOverscroll="false">
