@@ -13,4 +13,8 @@ export class PagamentoService {
   all(idEmp: string) {
     return this.http.get(this.url + idEmp);
   }
+
+  pgmtDetalhe(idEmp: string, forms) {
+    return this.http.post(this.url + idEmp, forms);
+  }
 }

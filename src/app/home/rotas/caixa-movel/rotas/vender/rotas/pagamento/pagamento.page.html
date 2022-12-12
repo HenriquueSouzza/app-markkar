@@ -11,7 +11,7 @@
 
 <ion-content no-bounce has-bouncing="false" forceOverscroll="false">
   <swiper
-    (click)="verificaModal()"
+    (click)="downModalIfOpen()"
     id="swiper"
     #swiper
     [config]="{initialSlide: 0, speed: 400, allowTouchMove: false}"
@@ -130,9 +130,9 @@
           >
             <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
           </ion-button>
-          <h2>tipo de pagamento: <p style="margin: 6px 0 0 0 ; font-size: 1rem; color: gray;">{{debitOrCreditPg}}</p></h2>
+          <h2>Tipo de pagamento: <p style="margin: 6px 0 0 0 ; font-size: 1rem; color: gray;">{{debitOrCreditPg}}</p></h2>
           <ion-button
-            [disabled]="debitOrCreditPg === 'Não selecionado' ? true : false"
+            [disabled]="debitOrCreditPg === 'Não selecionado' ? true : debitOrCreditPg === 'DÉBITO' ? true : false"
             (click)="slideNext()"
             mode="ios"
             expand="block"
@@ -184,7 +184,7 @@
           </ion-button>
         </div>
         <div class="opcoes">
-          <ion-button (click)="changeParcelas(parcela)" *ngFor="let parcela of parcelas" class="selectBtn" color="dark">
+          <ion-button (click)="changeParcelas(parcela, i)" *ngFor="let parcela of parcelas; let i = index" class="selectBtn" color="dark">
             <h2>{{parcela}}</h2>
           </ion-button>
         </div>
@@ -203,7 +203,7 @@
         <ion-content no-bounce has-bouncing="false" forceOverscroll="false">
           <div id="footer">
             <div id="wrpTop" style="width: 100%">
-              <ion-progress-bar [value]="porcLoad"></ion-progress-bar>
+              <ion-progress-bar [buffer]="porcLoad" [value]="porcLoad"></ion-progress-bar>
               <div class="opcao">
                 <h3>Forma de pagamento:</h3>
                 <p>{{metodoPg}}</p>
@@ -234,7 +234,7 @@
                 <ion-button color="danger" (click)="cancelarCarrinho()">
                   Cancelar
                 </ion-button>
-                <ion-button [disabled]="true"> Finalizar </ion-button>
+                <ion-button [disabled]="bloqFinishPg" (click)="finalizaPg()">Finalizar</ion-button>
               </div>
             </div>
           </div>

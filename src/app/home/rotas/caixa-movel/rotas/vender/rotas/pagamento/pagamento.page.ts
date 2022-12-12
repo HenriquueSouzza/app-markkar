@@ -35,7 +35,9 @@ export class PagamentoPage implements OnInit {
   public redeAutorizaPg: string = 'Não selecionado';
   public debitOrCreditPg: string = 'Não selecionado';
   public tipoCartaoPg: string;
-  public parcelasPg: string = 'Não selecionado';;
+  public parcelasPg: string = 'Não selecionado';
+  public parcelasPgNum: string = 'Não selecionado';
+  public bloqFinishPg: boolean = true;
   private allPagMetods: any;
   private caixaMovelStorage: any;
 
@@ -49,18 +51,6 @@ export class PagamentoPage implements OnInit {
     private storageService: StorageService,
     private pagamentoService: PagamentoService
   ) { }
-
-//swiper
-  slideNext(){
-    this.swiper.swiperRef.slideNext();
-    setTimeout(() => {
-      this.scrollToTop();
-      }, 300);
-    }
-
-  slidePrev(){
-    this.swiper.swiperRef.slidePrev();
-  }
 
 //main
   async ngOnInit() {
@@ -100,16 +90,28 @@ export class PagamentoPage implements OnInit {
   }
 
   changeFormaPagamento(formPg: string){
+    this.bloqFinishPg = true;
+    this.bandeiraPg = 'Não selecionado';
+    this.debitOrCreditPg = 'Não selecionado';
+    this.redeAutorizaPg = 'Não selecionado';
+    this.parcelasPg = 'Não selecionado';
     this.metodoPg = formPg;
     if(this.metodoPg === 'DINHEIRO' || this.metodoPg === 'PIX'){
+      this.bloqFinishPg = false;
       this.subirModal();
     } else {
       this.slideNext();
     }
-    this.porcLoad = this.metodoPg === 'DINHEIRO' || this.metodoPg === 'PIX' ? 1 : .2;
+    setTimeout(() => {
+      this.porcLoad = this.metodoPg === 'DINHEIRO' || this.metodoPg === 'PIX' ? 1 : .2;
+    }, 250);
   }
 
   changeBandeira(bandeira: string){
+    this.bloqFinishPg = true;
+    this.debitOrCreditPg = 'Não selecionado';
+    this.redeAutorizaPg = 'Não selecionado';
+    this.parcelasPg = 'Não selecionado';
     this.redeAutoriza = [];
     this.bandeiraPg = bandeira;
     for(const formspg of this.allPagMetods){
@@ -117,11 +119,16 @@ export class PagamentoPage implements OnInit {
         this.redeAutoriza.push(formspg['REDE_AUTORIZA']);
       }
     }
-    this.porcLoad = .4;
+    setTimeout(() => {
+      this.porcLoad = .4;
+    }, 250);
     this.slideNext();
   }
 
   changeRedeAutoriza(rede){
+    this.bloqFinishPg = true;
+    this.debitOrCreditPg = 'Não selecionado';
+    this.parcelasPg = 'Não selecionado';
     this.opcsCard = {bloqDebito: true, bloqCredito: true, parcelasMax: 0};
     this.redeAutorizaPg = rede;
     let i = -1;
@@ -133,14 +140,21 @@ export class PagamentoPage implements OnInit {
         this.opcsCard.parcelasMax = this.allPagMetods[i]['PARCELAS'] > this.opcsCard.parcelasMax ? this.allPagMetods[i]['PARCELAS'] : this.opcsCard.parcelasMax;
       }
     }
-    this.porcLoad = .6;
+    setTimeout(() => {
+      this.porcLoad = .6;
+    }, 250);
     this.slideNext();
   }
 
   changeDebitOrCredit(opc){
     this.debitOrCreditPg = opc;
+    this.bloqFinishPg = true;
     if(opc === 'DÉBITO'){
-      this.porcLoad = 1;
+      this.parcelasPg = 'Não selecionado';
+      setTimeout(() => {
+        this.porcLoad = 1;
+      }, 250);
+      this.bloqFinishPg = false;
       this.subirModal();
     } else {
       this.parcelas = [];
@@ -148,20 +162,58 @@ export class PagamentoPage implements OnInit {
         this.parcelas.push(i+'x de '+this.convertReal(i*this.totalCarrinhoNum));
         console.log(this.parcelas);
       }
-      this.porcLoad = .8;
+      setTimeout(() => {
+        this.porcLoad = .8;
+      }, 250);
       this.slideNext();
     }
   }
 
-  changeParcelas(parcela){
+  changeParcelas(parcela, index){
     this.parcelasPg = parcela;
-    this.porcLoad = 1;
+    this.parcelasPgNum = index + 1;
+    setTimeout(() => {
+      this.porcLoad = 1;
+    }, 250);
+    this.bloqFinishPg = false;
     this.subirModal();
   }
 
-//modal
+  finalizaPg(){
+    let formPg = {};
+    if (this.metodoPg === 'PIX') {
+      let i = -1;
+      for(const formspg of this.allPagMetods){
+        i++;
+        if (formspg['FORMA_PG'] === this.metodoPg) {
+          formPg = {
+            idEmp: 1,
+            sigla: formspg['SIGLA'],
+            dc: formspg['DEBITO_CREDITO'],
+            parcelas: formspg['PARCELAS'],
+            bandeira: formspg['BANDEIRA'],
+            redeAutoriza: formspg['REDE_AUTORIZA']
+          };
+          console.log(formspg);
+        }
+      }
+    } else {
+      formPg = {
+        idEmp: 1,
+        sigla: this.metodoPg === 'DINHEIRO' ? 'DIN' : this.metodoPg === 'CARTÃO' ? 'CRT' : this.metodoPg,
+        dc: this.debitOrCreditPg === 'DÉBITO' ? 'D' : this.debitOrCreditPg === 'CRÉDITO' ? 'C' : null,
+        parcelas: this.parcelasPg === 'Não selecionado' ? 0 : this.parcelasPgNum,
+        bandeira: this.bandeiraPg === 'Não selecionado' ? null : this.bandeiraPg,
+        redeAutoriza: this.redeAutorizaPg === 'Não selecionado' ? null : this.redeAutorizaPg
+      };
+    }
+    this.pagamentoService.pgmtDetalhe('1', formPg).subscribe((res) => {
+      console.log(res);
+    });
+  }
 
-  verificaModal(){
+//modal
+  downModalIfOpen(){
     this.modal.getCurrentBreakpoint().then((value) => {
       if(value !== 0.07){
         this.descerModal();
@@ -229,5 +281,17 @@ export class PagamentoPage implements OnInit {
       ],
     });
     await alert.present();
+  }
+
+//swiper
+  slideNext(){
+    this.swiper.swiperRef.slideNext();
+    setTimeout(() => {
+      this.scrollToTop();
+      }, 300);
+    }
+
+  slidePrev(){
+    this.swiper.swiperRef.slidePrev();
   }
 }

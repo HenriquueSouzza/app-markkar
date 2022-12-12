@@ -55,16 +55,19 @@ ion-item{
 
     input{
       border: var(--ion-color-primary) solid 1px;
+      background: var(--ion-color-dark2);
       outline: 0;
       border-radius: 10px;
       padding: 5px;
       width: 80%;
+      max-width: 600px;
       min-height: 36px;
       margin-bottom: 10px;
-      background: transparent;
     }
     ion-button{
       width: 80%;
+      max-width: 600px;
+      font-size: .9rem;
       --border-radius: 10px;
     }
   }
