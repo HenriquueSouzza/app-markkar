@@ -44,6 +44,7 @@ export class ProdutosPage implements OnInit {
           nome: this.nome
         })
         .subscribe(async (res: any) => {
+          console.log(res);
           this.produtos = Object.values(res.produtos);
           if(res.produtos.length === 1){
             if (this.estoqueStorage.historico.length > 4){

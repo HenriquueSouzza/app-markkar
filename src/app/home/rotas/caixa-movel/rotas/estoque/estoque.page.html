@@ -1,30 +1,13 @@
 <ion-header>
   <ion-toolbar color="dark" style="height: auto">
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/home"></ion-back-button>
+      <ion-back-button defaultHref="/home/caixa-movel"></ion-back-button>
     </ion-buttons>
-    <ion-title mode="ios">estoque</ion-title>
+    <ion-title mode="ios">consultar estoque</ion-title>
   </ion-toolbar>
 </ion-header>
 <ion-content no-bounce has-bouncing="false" forceOverscroll="false">
-  <ion-item lines="none">
-    <ion-label style="font-weight: 700; text-transform: uppercase"
-      >Consulta:</ion-label
-    >
-  </ion-item>
   <form #f="ngForm" (ngSubmit)="consultarNome(f)">
-    <ion-item lines="none">
-      <ion-label>Centro de custo:</ion-label>
-      <ion-select
-        (ionChange)="centroscustosChange($event)"
-        interface="popover"
-        placeholder="Selecione"
-      >
-        <ion-select-option *ngFor="let cc of centroscustos" [value]="cc.id"
-          >{{cc.nome}}</ion-select-option
-        >
-      </ion-select>
-    </ion-item>
     <div id="pesquisa">
       <ion-searchbar
         (ionChange)="verificaSearchbar($event)"

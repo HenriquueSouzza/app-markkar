@@ -6,8 +6,7 @@ import { VenderPage } from './vender.page';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'scanner-caixa',
-    pathMatch: 'full'
+    component: VenderPage
   },
   {
     path: 'carrinho',

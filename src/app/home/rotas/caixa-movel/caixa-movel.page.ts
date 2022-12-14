@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/dot-notation */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Storage } from '@ionic/storage-angular';
 import { StorageService } from 'src/app/services/storage/storage.service';
@@ -14,6 +14,10 @@ import { EstoqueService } from './rotas/estoque/services/estoque/estoque.service
 })
 export class CaixaMovelPage implements OnInit {
 
+  @ViewChild('popOver') popOver: any;
+  @ViewChild('ionSelect') ionSelect: any;
+  @ViewChild('ionSelectOff') ionSelectOff: any;
+
   public conectadoServeLocal = false;
   public btnServerLocal = true;
   public centroscustos = [];
@@ -27,6 +31,7 @@ export class CaixaMovelPage implements OnInit {
   // storage
   private auth: any;
   private multiEmpresaStorage: any;
+  private caixaMovelStorage: any;
 
   constructor(
     private estoqueService: EstoqueService,
@@ -42,8 +47,15 @@ export class CaixaMovelPage implements OnInit {
     this.auth = await this.storage.get('auth');
     this.multiEmpresaStorage = await this.storage.get('multiEmpresa');
     if(await this.storage.get('caixa-movel') === null){
-      await this.storage.set('caixa-movel', {vendas: {carrinho: [], configuracoes: { modoRapido: false }}});
-    };
+      await this.storage.set('caixa-movel',
+        {
+          sistemaVendas: {carrinho: [], configuracoes: {modoRapido: false}},
+          configuracoes: {slectedIds: {firebirdIdEmp: null, fireBirdIdCc: null, sqlIdCc: null }}}
+        );
+      this.caixaMovelStorage = await this.storage.get('caixa-movel');
+    } else {
+      this.caixaMovelStorage = await this.storage.get('caixa-movel');
+    }
     this.conectServidor();
   }
 
@@ -98,54 +110,49 @@ export class CaixaMovelPage implements OnInit {
       });
   }
 
-  centroscustosChange(cc) {
+  async centroscustosChange(cc) {
     if(this.conectadoServeLocal){
       this.idCc = cc.detail.value.fire;
       this.idCcSql = cc.detail.value.sql;
     } else {
       this.idCcSql = cc.detail.value;
     }
+    console.log(this.caixaMovelStorage);
+    this.caixaMovelStorage.configuracoes.slectedIds.firebirdIdEmp = this.idEmpBird;
+    this.caixaMovelStorage.configuracoes.slectedIds.fireBirdIdCc = this.idCc === undefined ? 'localServerOff' : this.idCc;
+    this.caixaMovelStorage.configuracoes.slectedIds.sqlIdCc = this.idCcSql;
+    await this.storage.set('caixa-movel', this.caixaMovelStorage);
   }
 
   navigateScanner() {
     if (this.idCc === undefined) {
-      this.presentToast('Escolha o centro de custo');
+      this.popOver.present();
     } else {
-      this.navCtrl.navigateForward('/home/caixa-movel/sistema-vendas', {
-        queryParams: { id1: this.idEmpBird, id2: this.idCc },
-        queryParamsHandling: 'merge',
-      });
+      this.navCtrl.navigateForward('/home/caixa-movel/sistema-vendas');
     }
   }
 
   navigateRelatorios() {
     if (this.idCcSql === undefined) {
-      this.presentToast('Escolha o centro de custo');
+      this.popOver.present();
     } else {
-      this.navCtrl.navigateForward('/home/caixa-movel/relatorios', {
-        queryParams: { id: this.idCcSql },
-        queryParamsHandling: 'merge',
-      });
+      this.navCtrl.navigateForward('/home/caixa-movel/relatorios');
     }
   }
 
   navigateEstoque() {
     if (this.idCc === undefined) {
-      this.presentToast('Escolha o centro de custo');
+      this.popOver.present();
     } else {
-      this.navCtrl.navigateForward('/home/caixa-movel/estoque', {
-        queryParams: { id1: this.idEmpBird, id2: this.idCc },
-        queryParamsHandling: 'merge',
-      });
+      this.navCtrl.navigateForward('/home/caixa-movel/estoque');
     }
   }
 
-  async presentToast(men) {
-    const toast = await this.toastController.create({
-      message: men,
-      duration: 2000,
-      color: 'dark',
-    });
-    toast.present();
+  popOverCloseEvent(){
+    if(this.conectadoServeLocal){
+      this.ionSelect.open();
+    } else {
+      this.ionSelectOff.open();
+    }
   }
 }

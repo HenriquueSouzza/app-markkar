@@ -4,8 +4,7 @@ import { NgForm } from '@angular/forms';
 import { EstoqueService } from './services/estoque/estoque.service';
 import { Storage } from '@ionic/storage-angular';
 import { StorageService } from 'src/app/services/storage/storage.service';
-import { AlertController, LoadingController, NavController, ToastController } from '@ionic/angular';
-import { timeout } from 'rxjs/operators';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-estoque',
@@ -22,131 +21,60 @@ export class EstoquePage implements OnInit {
   private estoqueStorage: any;
 
   // storage
-  private auth: any;
-  private multiEmpresaStorage: any;
+  private caixaMovelStorage: any;
 
   constructor(
-    private estoqueService: EstoqueService,
     private storage: Storage,
     private storageService: StorageService,
     private navCtrl: NavController,
-    public loadingController: LoadingController,
-    public alertController: AlertController,
-    public toastController: ToastController
   ) {}
 
-  async ngOnInit() {
-    this.auth = await this.storage.get('auth');
-    this.multiEmpresaStorage = await this.storage.get('multiEmpresa');
-    this.conectServidor();
-  }
+  ngOnInit() { }
 
-  async conectServidor(){
-    const loading = await this.loadingController.create({
-      message: 'Conectando ao servidor local, aguarde...'
-    });
-    await loading.present();
-    this.idEmpBird = Object.values(this.multiEmpresaStorage.empresas[this.auth.empresa.id].centrodecustos)[0]['idEmpBird'];
-    this.estoqueService
-      .consultaCC({ codeEmp: this.idEmpBird })
-      .pipe(timeout(5000))
-      .subscribe(async (res: any) => {
-        this.centroscustos = res.centrosCustos;
-        await loading.dismiss();
-      }, async (error) => {
-        await loading.dismiss();
-        const alert = await this.alertController.create({
-          cssClass: 'my-custom-class',
-          header: 'Falha ao conectar com o servidor local',
-          message: 'Deseja tentar novamente ?',
-          backdropDismiss: false,
-          buttons: [
-            {
-              text: 'voltar',
-              role: 'cancel',
-              cssClass: 'secondary',
-              id: 'cancel-button',
-              handler: () => {
-                this.navCtrl.navigateBack('/home/faturamento');
-              },
-            },
-            {
-              text: 'SIM',
-              id: 'confirm-button',
-              handler: () => {
-                this.conectServidor();
-              },
-            },
-          ],
-        });
-        await alert.present();
-      });
-  }
-
-  async ionViewWillEnter(){
+  async ionViewWillEnter() {
     this.estoqueStorage = await this.storage.get('estoque');
-    if (this.estoqueStorage === null){
-      await this.storage.set('estoque', {historico: []});
+    if (this.estoqueStorage === null) {
+      await this.storage.set('estoque', { historico: [] });
       this.estoqueStorage = await this.storage.get('estoque');
     }
     this.estoqueStorageHist = this.estoqueStorage.historico;
-    if(this.estoqueStorageHist.length > 0) {
+    if (this.estoqueStorageHist.length > 0) {
       this.recentesExist = true;
     } else {
       this.recentesExist = false;
-      this.estoqueStorage.historico = {nome: '', codeBar: ''};
+      this.estoqueStorage.historico = { nome: '', codeBar: '' };
     }
-  }
-
-  centroscustosChange(cc) {
-    this.idCc = cc.detail.value;
+    this.caixaMovelStorage = await this.storage.get('caixa-movel');
+    this.idEmpBird = this.caixaMovelStorage.configuracoes.slectedIds.fireBirdIdCc;
+    this.idCc = this.caixaMovelStorage.configuracoes.slectedIds.firebirdIdEmp;
   }
 
   navigateScanner() {
-    if (this.idCc === undefined) {
-      this.presentToast('Escolha o centro de custo');
-    } else {
-      this.navCtrl.navigateForward('/home/estoque/scanner', {
-        queryParams: { id1: this.idEmpBird, id2: this.idCc },
-        queryParamsHandling: 'merge',
-      });
-    }
+    this.navCtrl.navigateForward('/home/estoque/scanner');
   }
 
-  async presentToast(men) {
-    const toast = await this.toastController.create({
-      message: men,
-      duration: 2000,
-      color: 'dark',
+  async consultarNome(form: NgForm) {
+    this.navCtrl.navigateForward('/home/caixa-movel/estoque/produtos', {
+      queryParams: {
+        id1: this.idEmpBird,
+        id2: this.idCc,
+        code: '',
+        nome: form.value.nomeProd,
+      },
     });
-    toast.present();
   }
 
-  async consultarNome(form: NgForm){
-    if (this.idCc === undefined) {
-      this.presentToast('Escolha o centro de custo');
-    } else {
-      this.navCtrl.navigateForward('/home/estoque/produtos', {
-        queryParams: { id1: this.idEmpBird, id2: this.idCc, code: '', nome: form.value.nomeProd}
-      });
-    }
-  }
-
-  verificaSearchbar(event){
-    if(event.detail.value.length > 0){
+  verificaSearchbar(event) {
+    if (event.detail.value.length > 0) {
       this.consultaNome = true;
     } else {
       this.consultaNome = false;
     }
   }
 
-  redirectHist(code){
-    if (this.idCc === undefined) {
-      this.presentToast('Escolha o centro de custo');
-    } else {
-      this.navCtrl.navigateForward('/home/estoque/produtos', {
-        queryParams: { id1: this.idEmpBird, id2: this.idCc, code, nome: ''}
-      });
-    }
+  redirectHist(code) {
+    this.navCtrl.navigateForward('/home/estoque/produtos', {
+      queryParams: { id1: this.idEmpBird, id2: this.idCc, code, nome: '' },
+    });
   }
 }

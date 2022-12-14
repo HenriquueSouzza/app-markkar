@@ -9,10 +9,14 @@
 
 <ion-content no-bounce has-bouncing="false" forceOverscroll="false">
   <ion-item lines="none">
-    <ion-label>Centro de custo:</ion-label>
-    <ion-select *ngIf="conectadoServeLocal"
+    <ion-label style="text-transform: initial;">Centro de custo:</ion-label>
+    <ion-select
+      #ionSelect
+      *ngIf="conectadoServeLocal"
       (ionChange)="centroscustosChange($event)"
-      interface="popover"
+      interface="alert"
+      cancelText="Voltar"
+      okText="Confirmar"
       placeholder="Selecione"
     >
       <ion-select-option *ngFor="let cc of centroscustos" [value]="{fire: cc.ccIdFb, sql: cc.ccIdSql}"
@@ -20,8 +24,9 @@
       >
     </ion-select>
     <ion-select *ngIf="!conectadoServeLocal"
+      #ionSelectOff
       (ionChange)="centroscustosChange($event)"
-      interface="popover"
+      interface="alert"
       placeholder="Selecione"
     >
       <ion-select-option *ngFor="let cc of centroscustos" [value]="cc.idCentroCusto"
@@ -29,6 +34,12 @@
       >
     </ion-select>
   </ion-item>
+  <div style="width: 100%" id="span"></div>
+  <ion-popover #popOver mode="ios" dismissOnSelect="true" arrow="true" (didDismiss)="popOverCloseEvent()" reference="trigger" trigger="span" side="bottom" alignment="end">
+    <ng-template>
+      <ion-content no-bounce has-bouncing="false" forceOverscroll="false">Escolha o <br>centro de custo</ion-content>
+    </ng-template>
+  </ion-popover>
   <div id="venda">
     <ion-button [disabled]="btnServerLocal" color="dark" (click)="navigateScanner()">
       <div>
@@ -36,7 +47,13 @@
         Vender
       </div>
     </ion-button>
-    <ion-button [disabled]="btnServerLocal" color="dark">
+    <ion-button [disabled]="btnServerLocal" color="dark" (click)="navigateEstoque()">
+      <div>
+        <ion-icon slot="start" name="pie-chart-outline"></ion-icon>
+        Estoque
+      </div>
+    </ion-button>
+    <ion-button [disabled]="true" color="dark">
       <div>
         <ion-icon name="swap-vertical-outline"></ion-icon>
         Trocas
@@ -46,12 +63,6 @@
       <div>
         <ion-icon name="reader-outline"></ion-icon>
         Relatórios
-      </div>
-    </ion-button>
-    <ion-button [disabled]="btnServerLocal" color="dark" (click)="navigateEstoque()">
-      <div>
-        <ion-icon slot="start" name="pie-chart-outline"></ion-icon>
-        Estoque
       </div>
     </ion-button>
     <ion-button [disabled]="true" color="dark">
