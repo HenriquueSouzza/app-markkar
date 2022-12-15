@@ -3,8 +3,6 @@ import { Component, OnInit, ViewChild, ElementRef} from '@angular/core';
 import { AlertController, NavController, ToastController } from '@ionic/angular';
 import { BarcodeScanner } from '@capacitor-community/barcode-scanner';
 import { ScreenOrientation } from '@awesome-cordova-plugins/screen-orientation/ngx';
-import { Flashlight } from '@awesome-cordova-plugins/flashlight/ngx';
-import { ActivatedRoute } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { Storage } from '@ionic/storage-angular';
 import { StorageService } from 'src/app/services/storage/storage.service';
@@ -36,10 +34,8 @@ export class ScannerCaixaPage implements OnInit {
     private storageService: StorageService,
     private screenOrientation: ScreenOrientation,
     private estoqueService: EstoqueService,
-    private flashlight: Flashlight,
     public alertController: AlertController,
     private navCtrl: NavController,
-    private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
@@ -57,13 +53,9 @@ export class ScannerCaixaPage implements OnInit {
     };
     this.caixaMovelStorage = await this.storage.get('caixa-movel');
     this.somaTotalCarrinho();
-    this.modoRapido = this.caixaMovelStorage.vendas.configuracoes.modoRapido;
-    this.route.queryParamMap.subscribe((params: any) => {
-      if (params) {
-        this.idEmpBird = params.params.id1;
-        this.idCc = params.params.id2;
-      }
-    });
+    this.modoRapido = this.caixaMovelStorage.sistemaVendas.configuracoes.modoRapido;
+    this.idEmpBird = this.caixaMovelStorage.configuracoes.slectedIds.firebirdIdEmp;
+    this.idCc = this.caixaMovelStorage.configuracoes.slectedIds.fireBirdIdCc;
     setTimeout(() => {
       this.telaEspelho = false;
     }, 700);
@@ -126,7 +118,7 @@ export class ScannerCaixaPage implements OnInit {
     this.stopScan();
     this.telaEspelho = true;
     setTimeout(() => {
-      this.navCtrl.navigateBack('/home/caixa-movel');
+      this.navCtrl.navigateBack('/home/caixa-movel/sistema-vendas');
     }, 500);
   }
 
@@ -154,7 +146,7 @@ export class ScannerCaixaPage implements OnInit {
 
   setModoRapido(){
     this.modoRapido = !this.modoRapido;
-    this.caixaMovelStorage.vendas.configuracoes.modoRapido = this.modoRapido;
+    this.caixaMovelStorage.sistemaVendas.configuracoes.modoRapido = this.modoRapido;
     this.setCaixaMovel();
   }
 
@@ -167,25 +159,25 @@ export class ScannerCaixaPage implements OnInit {
   */
 
   adicionaCarrinho(){
-    if(this.caixaMovelStorage.vendas.carrinho.length > 0){
+    if(this.caixaMovelStorage.sistemaVendas.carrinho.length > 0){
       let i = -1;
-      for(const produto of this.caixaMovelStorage.vendas.carrinho){
+      for(const produto of this.caixaMovelStorage.sistemaVendas.carrinho){
         i++;
         if(produto.id === this.pordutoScanneado.id){
           if(this.modoRapido){
-            ++this.caixaMovelStorage.vendas.carrinho[i].qnt;
-            if(this.caixaMovelStorage.vendas.carrinho[i].qnt > this.caixaMovelStorage.vendas.carrinho[i].qntMax){
-              this.caixaMovelStorage.vendas.carrinho[i].qnt = this.caixaMovelStorage.vendas.carrinho[i].qntMax;
+            ++this.caixaMovelStorage.sistemaVendas.carrinho[i].qnt;
+            if(this.caixaMovelStorage.sistemaVendas.carrinho[i].qnt > this.caixaMovelStorage.sistemaVendas.carrinho[i].qntMax){
+              this.caixaMovelStorage.sistemaVendas.carrinho[i].qnt = this.caixaMovelStorage.sistemaVendas.carrinho[i].qntMax;
             }
           } else {
-            this.caixaMovelStorage.vendas.carrinho[i].qnt = this.pordutoScanneado.qnt;
+            this.caixaMovelStorage.sistemaVendas.carrinho[i].qnt = this.pordutoScanneado.qnt;
           }
         } else {
-          this.caixaMovelStorage.vendas.carrinho.push(this.pordutoScanneado);
+          this.caixaMovelStorage.sistemaVendas.carrinho.push(this.pordutoScanneado);
         }
       }
     } else {
-      this.caixaMovelStorage.vendas.carrinho.push(this.pordutoScanneado);
+      this.caixaMovelStorage.sistemaVendas.carrinho.push(this.pordutoScanneado);
     }
     this.storage.set('caixa-movel', this.caixaMovelStorage);
     this.somaTotalCarrinho();
@@ -193,10 +185,10 @@ export class ScannerCaixaPage implements OnInit {
 
   somaTotalCarrinho(){
     const valores = [];
-    if(this.caixaMovelStorage.vendas.carrinho.length === 0){
+    if(this.caixaMovelStorage.sistemaVendas.carrinho.length === 0){
       this.totalCarrinho = this.convertReal(0);
     } else {
-      for (const produto of this.caixaMovelStorage.vendas.carrinho) {
+      for (const produto of this.caixaMovelStorage.sistemaVendas.carrinho) {
         valores.push(produto['valor']*produto['qnt']);
         this.totalCarrinho = this.convertReal(valores.reduce((a, b) => a + b, 0));
       }
@@ -204,9 +196,7 @@ export class ScannerCaixaPage implements OnInit {
   }
 
   goToCar(){
-    this.navCtrl.navigateForward('/home/caixa-movel/sistema-vendas/carrinho', {
-      queryParams: { id1: this.idEmpBird, id2: this.idCc}
-    });
+    this.navCtrl.navigateForward('/home/caixa-movel/sistema-vendas/carrinho');
   }
 
   async cancelarCarrinho(){
@@ -226,7 +216,7 @@ export class ScannerCaixaPage implements OnInit {
           text: 'SIM',
           id: 'confirm-button',
           handler: async () => {
-            this.caixaMovelStorage.vendas.carrinho = [];
+            this.caixaMovelStorage.sistemaVendas.carrinho = [];
             this.somaTotalCarrinho();
             await this.storage.set('caixa-movel', this.caixaMovelStorage);
             this.navigateBack();

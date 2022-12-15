@@ -24,7 +24,7 @@ export class CarrinhoPage implements OnInit {
 
   async ngOnInit() {
     this.caixaMovelStorage = await this.storage.get('caixa-movel');
-    this.produtos = this.caixaMovelStorage.vendas.carrinho;
+    this.produtos = this.caixaMovelStorage.sistemaVendas.carrinho;
     this.totalCar();
   }
 
@@ -60,7 +60,7 @@ export class CarrinhoPage implements OnInit {
   }
 
   async setCarrinhoStorage(){
-    this.caixaMovelStorage.vendas.carrinho = this.produtos;
+    this.caixaMovelStorage.sistemaVendas.carrinho = this.produtos;
     await this.storage.set('caixa-movel', this.caixaMovelStorage);
   }
 
@@ -90,7 +90,7 @@ export class CarrinhoPage implements OnInit {
       if(produto['id'] === prodEvent['id']){
         this.produtos.splice(i);
         this.totalCar();
-        this.caixaMovelStorage.vendas.carrinho = this.produtos;
+        this.caixaMovelStorage.sistemaVendas.carrinho = this.produtos;
         await this.storage.set('caixa-movel', this.caixaMovelStorage);
       }
     }
@@ -115,7 +115,7 @@ export class CarrinhoPage implements OnInit {
           handler: async () => {
             this.produtos = [];
             this.totalCar();
-            this.caixaMovelStorage.vendas.carrinho = this.produtos;
+            this.caixaMovelStorage.sistemaVendas.carrinho = this.produtos;
             await this.storage.set('caixa-movel', this.caixaMovelStorage);
             this.navCtrl.navigateBack('/home/caixa-movel');
           },

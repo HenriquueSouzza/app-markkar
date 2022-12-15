@@ -5,7 +5,7 @@
       <img slot="start" src="assets/img/m-markkar.png" alt="MarkkarLogo">
       <ion-label>Seja Bem-vindo, <br> {{empAtual}}.</ion-label>
     </ion-item>
-    <form #f="ngForm" (ngSubmit)="enviarLogin(f)">
+    <form #f="ngForm" (ngSubmit)="enviarLogin(f)" (keyup.enter)="enviarLogin(f)">
       <input (click)="colorReset()" [ngStyle]="{'color': colorInput}" ngModel name="user" autocomplete="off" type="text" placeholder="Digite o seu usuário...">
       <input (click)="colorReset()" [ngStyle]="{'color': colorInput}" ngModel name="senha" type="password" placeholder="Digite a sua senha...">
       <span style="z-index: 10; color: red;font-family: 'robotoBold'; text-transform: uppercase;">{{ errLogin }}</span>

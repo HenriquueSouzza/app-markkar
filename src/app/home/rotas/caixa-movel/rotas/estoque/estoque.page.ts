@@ -45,12 +45,12 @@ export class EstoquePage implements OnInit {
       this.estoqueStorage.historico = { nome: '', codeBar: '' };
     }
     this.caixaMovelStorage = await this.storage.get('caixa-movel');
-    this.idEmpBird = this.caixaMovelStorage.configuracoes.slectedIds.fireBirdIdCc;
-    this.idCc = this.caixaMovelStorage.configuracoes.slectedIds.firebirdIdEmp;
+    this.idEmpBird = this.caixaMovelStorage.configuracoes.slectedIds.firebirdIdEmp;
+    this.idCc = this.caixaMovelStorage.configuracoes.slectedIds.fireBirdIdCc;
   }
 
   navigateScanner() {
-    this.navCtrl.navigateForward('/home/estoque/scanner');
+    this.navCtrl.navigateForward('/home/caixa-movel/estoque/scanner');
   }
 
   async consultarNome(form: NgForm) {
@@ -73,7 +73,7 @@ export class EstoquePage implements OnInit {
   }
 
   redirectHist(code) {
-    this.navCtrl.navigateForward('/home/estoque/produtos', {
+    this.navCtrl.navigateForward('/home/caixa-movel/estoque/produtos', {
       queryParams: { id1: this.idEmpBird, id2: this.idCc, code, nome: '' },
     });
   }
