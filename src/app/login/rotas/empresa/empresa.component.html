@@ -5,7 +5,7 @@
       <img style="z-index: 10;"src="assets/img/logoMarkkar.png" alt="MarkkarLogo">
       <h1 style="z-index: 10;">Portal Markkar</h1>
     </div>
-    <form style="z-index: 10;" #f="ngForm" (ngSubmit)="enviarLogin(f)">
+    <form style="z-index: 10;" #f="ngForm" (ngSubmit)="enviarLogin(f)" (keyup.enter)="enviarLogin(f)">
       <input (click)="colorReset()" [ngStyle]="{'color': colorCnpj}" style="z-index: 10;" ngModel name="cnpj" maxlength="14" type="tel" placeholder="Digite o CNPJ...">
       <span style="z-index: 10; color: red; font-family: 'robotoBold'; text-transform: uppercase; margin-bottom: 5px;">{{ cnpjErr }}</span>
       <input (click)="colorReset()" [ngStyle]="{'color': colorTOKEN}" style="z-index: 10;" ngModel name="token" type="text" placeholder="Digite seu Token...">

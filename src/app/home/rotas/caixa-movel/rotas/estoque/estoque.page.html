@@ -15,21 +15,23 @@
         name="nomeProd"
         placeholder="Consulta por nome..."
       ></ion-searchbar>
-      <span *ngIf="!consultaNome">ou</span>
-      <ion-button
-        *ngIf="!consultaNome"
-        color="dark"
-        (click)="navigateScanner()"
-      >
-        <ion-icon slot="start" name="barcode-outline"></ion-icon>
-        Scanner
-      </ion-button>
       <ion-button *ngIf="consultaNome" color="dark" type="submit">
         <ion-icon name="search-outline"></ion-icon>
         Consultar
       </ion-button>
     </div>
   </form>
+  <div style="display: flex; flex-direction: column; align-items: center;justify-content: center; margin-bottom: 30px;">
+    <span style="margin: 10px 0;" *ngIf="!consultaNome">ou</span>
+    <ion-button
+      *ngIf="!consultaNome"
+      color="dark"
+      (click)="navigateScanner()"
+    >
+      <ion-icon slot="start" name="barcode-outline"></ion-icon>
+      Scanner
+    </ion-button>
+  </div>
   <div id="recentes">
     <ion-item lines="none">
       <ion-label style="font-weight: 700; text-transform: uppercase"

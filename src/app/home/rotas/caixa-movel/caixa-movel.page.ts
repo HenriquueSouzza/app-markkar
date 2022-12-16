@@ -34,13 +34,13 @@ export class CaixaMovelPage implements OnInit {
   private caixaMovelStorage: any;
 
   constructor(
+    public loadingController: LoadingController,
+    public alertController: AlertController,
+    public toastController: ToastController,
     private estoqueService: EstoqueService,
     private storage: Storage,
     private storageService: StorageService,
     private navCtrl: NavController,
-    public loadingController: LoadingController,
-    public alertController: AlertController,
-    public toastController: ToastController
   ) {}
 
   async ngOnInit() {
@@ -80,6 +80,7 @@ export class CaixaMovelPage implements OnInit {
         this.btnServerLocal = false;
         this.conectadoServeLocal = true;
         await loading.dismiss();
+        console.log(this.ionSelect);
       }, async (error) => {
         await loading.dismiss();
         const alert = await this.alertController.create({
@@ -124,7 +125,7 @@ export class CaixaMovelPage implements OnInit {
     await this.storage.set('caixa-movel', this.caixaMovelStorage);
   }
 
-  navigateScanner() {
+  navigateSistemaVendas() {
     if (this.idCc === undefined) {
       this.popOver.present();
     } else {

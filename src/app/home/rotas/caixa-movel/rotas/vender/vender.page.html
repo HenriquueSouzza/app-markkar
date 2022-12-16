@@ -9,7 +9,7 @@
 
 <ion-content>
   <div id="tiposVenda">
-    <ion-button routerLink="/home/caixa-movel/sistema-vendas/scanner" routerDirection="forward" color="dark">
+    <ion-button (click)="verificaNovaVenda()" color="dark">
       <div>
         <ion-icon name="add-outline"></ion-icon>
         Nova Venda
@@ -19,12 +19,6 @@
       <div>
         <ion-icon name="reload-outline"></ion-icon>
         Vendas anteriores
-      </div>
-    </ion-button>
-    <ion-button color="dark">
-      <div>
-        <ion-icon name="information-outline"></ion-icon>
-        Caixas abertos
       </div>
     </ion-button>
     <ion-button color="dark">

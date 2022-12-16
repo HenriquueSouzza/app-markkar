@@ -26,6 +26,9 @@ import { FaturamentoService } from 'src/app/home/services/faturamento/faturament
   styleUrls: ['./faturamento.page.scss'],
 })
 export class FaturamentoPage implements OnInit {
+
+  @ViewChild(BaseChartDirective) chart: BaseChartDirective;
+
   //Chart configs
   public chartData: ChartDataset[] = [];
   public chartType: ChartType = 'bar';
@@ -67,8 +70,6 @@ export class FaturamentoPage implements OnInit {
       },
     },
   };
-  // eslint-disable-next-line @typescript-eslint/member-ordering
-  @ViewChild(BaseChartDirective) chart: BaseChartDirective;
 
   month = [
     'Janeiro',
