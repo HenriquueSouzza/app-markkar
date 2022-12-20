@@ -26,12 +26,11 @@ import { FaturamentoService } from 'src/app/home/services/faturamento/faturament
   styleUrls: ['./faturamento.page.scss'],
 })
 export class FaturamentoPage implements OnInit {
-
   @ViewChild(BaseChartDirective) chart: BaseChartDirective;
 
   //Chart configs
   public chartData: ChartDataset[] = [];
-  public chartType: ChartType = 'bar';
+  public chartType: ChartType;
   public chartlabels: string[] = [];
   public chartOptions: ChartOptions = {
     locale: 'pt-BR',
@@ -59,7 +58,7 @@ export class FaturamentoPage implements OnInit {
     scales: {
       y: {
         beginAtZero: true,
-        display: false,
+        display: null,
         ticks: {
           callback: (value) =>
             value.toLocaleString('pt-br', {
@@ -158,8 +157,7 @@ export class FaturamentoPage implements OnInit {
     public toastController: ToastController
   ) {}
 
-  ngOnInit() {
-}
+  ngOnInit() {}
 
   async ionViewWillEnter() {
     this.menu.enable(true, 'homeMenu');
@@ -210,6 +208,14 @@ export class FaturamentoPage implements OnInit {
     this.multiempresa = this.multiEmpresaStorage;
     this.empresa = this.appConfigStorage.empresaAtual;
     //Set Preferences
+    this.chartType =
+      this.faturamentoStorage.configuracoes.grafico.formato === undefined
+        ? 'bar'
+        : this.faturamentoStorage.configuracoes.grafico.formato;
+    this.chartOptions.scales.y.display =
+      this.faturamentoStorage.configuracoes.grafico.y === undefined
+        ? false
+        : this.faturamentoStorage.configuracoes.grafico.y;
     this.mask = this.faturamentoStorage.configuracoes.gerais.mask;
     this.cmvPerc = this.faturamentoStorage.configuracoes.gerais.cmvPerc;
     if (this.cmvPerc === true) {

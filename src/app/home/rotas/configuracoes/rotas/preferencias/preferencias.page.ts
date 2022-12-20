@@ -8,10 +8,12 @@ import { StorageService } from 'src/app/services/storage/storage.service';
   styleUrls: ['./preferencias.page.scss'],
 })
 export class PreferenciasPage implements OnInit {
-  valueInterval: string;
-  valueGraficoInterval: string;
-  mask: boolean;
-  cmvPerc: boolean;
+  public valueInterval: string;
+  public valueGraficoInterval: string;
+  public mask: boolean;
+  public cmvPerc: boolean;
+  public chartType: string;
+  public chartY: boolean;
 
   // storage
   private faturamentoStorage: any;
@@ -39,6 +41,15 @@ export class PreferenciasPage implements OnInit {
     this.valueGraficoInterval = this.faturamentoStorage.configuracoes.grafico.intervalo;
     this.mask = this.faturamentoStorage.configuracoes.gerais.mask;
     this.cmvPerc = this.faturamentoStorage.configuracoes.gerais.cmvPerc;
+    this.chartType =
+      this.faturamentoStorage.configuracoes.grafico.formato === undefined
+        ? 'bar'
+        : this.faturamentoStorage.configuracoes.grafico.formato;
+    this.chartY =
+      this.faturamentoStorage.configuracoes.grafico.y === undefined
+        ? false
+        : this.faturamentoStorage.configuracoes.grafico.y;
+
   }
 
   async setInterval(event) {
@@ -55,6 +66,14 @@ export class PreferenciasPage implements OnInit {
   }
   async setGraficoInterval(event) {
     this.faturamentoStorage.configuracoes.grafico.intervalo = event.detail.value;
+    await this.storage.set('faturamento', this.faturamentoStorage);
+  }
+  async setGraficoFormat(event) {
+    this.faturamentoStorage.configuracoes.grafico.formato = event.detail.value;
+    await this.storage.set('faturamento', this.faturamentoStorage);
+  }
+  async setGraficoY(event) {
+    this.faturamentoStorage.configuracoes.grafico.y = event.detail.checked;
     await this.storage.set('faturamento', this.faturamentoStorage);
   }
   blank() {}

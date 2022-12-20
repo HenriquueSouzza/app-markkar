@@ -1,5 +1,5 @@
 <ion-content no-bounce has-bouncing="false" forceOverscroll="false">
-  <form #f="ngForm" (ngSubmit)="enviarLogin(f)">
+  <form #f="ngForm" (ngSubmit)="enviarLogin(f)" (keyup.enter)="enviarLogin(f)">
     <swiper id="swiper" #swiper [config]="{initialSlide: 0,speed: 400,allowTouchMove: false}">
       <ng-template swiperSlide>
         <img class="imgSlide" src="../../assets/img/backgW/1.png" alt="">
