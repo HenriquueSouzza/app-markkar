@@ -7,12 +7,14 @@ import { IonicModule } from '@ionic/angular';
 import { VenderPageRoutingModule } from './vender-routing.module';
 
 import { VenderPage } from './vender.page';
+import { SwiperModule } from 'swiper/angular';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
+    SwiperModule,
     VenderPageRoutingModule
   ],
   declarations: [VenderPage]

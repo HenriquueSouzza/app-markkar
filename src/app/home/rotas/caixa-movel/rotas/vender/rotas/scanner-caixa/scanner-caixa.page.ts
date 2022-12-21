@@ -61,7 +61,7 @@ export class ScannerCaixaPage implements OnInit {
     }, 700);
     this.reloadScan();
     setTimeout(() => {
-      const codeBar = '7899838806976';
+      const codeBar = '6972520252921';
       this.mostrarProdutoScaneado(codeBar);
     }, 500);
   }
