@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AlertController, LoadingController, NavController } from '@ionic/angular';
 import { Storage } from '@ionic/storage-angular';
@@ -16,7 +17,11 @@ export class VenderPage implements OnInit {
   @ViewChild('swiper') swiper: SwiperComponent;
   @ViewChild('modalCliente') modalCliente: any;
 
+  public bloqBtnSubInpNome = true;
+  public bloqBtnSubInpCpf = true;
   public identificarClientSld = false;
+  public somenteCpfClientSld = false;
+  public clientesList: Array<any>;
   private caixaMovelStorage: any;
 
   constructor(
@@ -94,8 +99,13 @@ export class VenderPage implements OnInit {
     await alert.present();
   }
 
-  //identificar cliente
+  //somente cpf
+  selecionarSomenteCpf(form: NgForm){
+    console.log(form.value.cpf);
+    this.novaVenda(form.value.cpf);
+  }
 
+  //identificar cliente
   identificarCliente(){
     console.log(this.modalCliente);
     this.modalCliente.present();
@@ -103,13 +113,35 @@ export class VenderPage implements OnInit {
 
   buscarCliente(form: NgForm){
     const inputs = form.value;
-    console.log();
-    this.clientesService.getClientes(inputs.nome, inputs.cpf).subscribe((res) => {
-      console.log(res);
+    this.clientesService.getClientes(inputs.nome, inputs.cpf).subscribe((res: any) => {
+      console.log(res.clientes);
+      this.clientesList = res.clientes === null ? [{NOME_CLIENTE: 'Não encontrado', DOCUMENTO: ''}] : res.clientes;
     });
   }
 
-//swiper
+  selecionarCliente(idCliente){
+    this.novaVenda(null, idCliente);
+  }
+
+  changeInpNome(event){
+    if(event.detail.value.length > 2){
+      this.bloqBtnSubInpNome = false;
+    } else {
+      this.bloqBtnSubInpNome = true;
+    }
+  }
+
+  changeInpCpf(event){
+    if(event.detail.value.length === 11){
+      this.bloqBtnSubInpCpf = false;
+    } else {
+      this.bloqBtnSubInpCpf = true;
+    }
+  }
+
+
+  //slides
+
   slideNext(){
     this.swiper.swiperRef.slideNext();
   }
@@ -118,10 +150,31 @@ export class VenderPage implements OnInit {
     this.swiper.swiperRef.slidePrev();
   }
 
+  toSomenteCpfSld(){
+    this.somenteCpfClientSld = true;
+    setTimeout(() => {
+      this.slideNext();
+    }, 200);
+  }
+
+  backSomenteCpfSld(){
+    this.slidePrev();
+    setTimeout(() => {
+      this.somenteCpfClientSld = false;
+    }, 200);
+  }
+
   toIdentSld(){
     this.identificarClientSld = true;
     setTimeout(() => {
       this.slideNext();
+    }, 200);
+  }
+  backIdentSld(){
+    this.clientesList = [];
+    this.slidePrev();
+    setTimeout(() => {
+      this.identificarClientSld = false;
     }, 200);
   }
 }
