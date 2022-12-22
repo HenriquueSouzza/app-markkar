@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class ClientesService {
 
-  private url = 'http://localhost:8080/app/caixaMovel/venda/procurarCliente';
+  private url = 'http://192.168.0.15:8080/app/caixaMovel/venda/procurarCliente';
 
   constructor(private http: HttpClient) { }
 
