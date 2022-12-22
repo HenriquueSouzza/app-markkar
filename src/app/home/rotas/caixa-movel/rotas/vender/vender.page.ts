@@ -101,20 +101,17 @@ export class VenderPage implements OnInit {
 
   //somente cpf
   selecionarSomenteCpf(form: NgForm){
-    console.log(form.value.cpf);
     this.novaVenda(form.value.cpf);
   }
 
   //identificar cliente
   identificarCliente(){
-    console.log(this.modalCliente);
     this.modalCliente.present();
   }
 
   buscarCliente(form: NgForm){
     const inputs = form.value;
     this.clientesService.getClientes(inputs.nome, inputs.cpf).subscribe((res: any) => {
-      console.log(res.clientes);
       this.clientesList = res.clientes === null ? [{NOME_CLIENTE: 'Não encontrado', DOCUMENTO: ''}] : res.clientes;
     });
   }
