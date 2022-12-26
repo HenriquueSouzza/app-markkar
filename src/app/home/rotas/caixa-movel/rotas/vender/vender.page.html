@@ -9,7 +9,7 @@
 
 <ion-content>
   <div id="tiposVenda">
-    <ion-button (click)="identificarCliente()" color="dark">
+    <ion-button (click)="verificaNovaVenda()" color="dark">
       <div>
         <ion-icon name="add-outline"></ion-icon>
         Nova Venda
@@ -33,6 +33,9 @@
   <ng-template>
     <ion-header style="background: var(--ion-color-dark) !important">
       <ion-toolbar color="dark">
+        <ion-buttons slot="end">
+          <ion-button color="danger" (click)="fecharModalIdentificarCliente()">Cancelar</ion-button>
+        </ion-buttons>
         <ion-title>Identificar Cliente</ion-title>
       </ion-toolbar>
     </ion-header>

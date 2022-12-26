@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/dot-notation */
 import { Component, OnInit } from '@angular/core';
-import { AlertController, NavController } from '@ionic/angular';
+import { AlertController, LoadingController, NavController } from '@ionic/angular';
 import { Storage } from '@ionic/storage-angular';
 import { StorageService } from 'src/app/services/storage/storage.service';
+import { VendaService } from '../../services/venda/venda.service';
 
 @Component({
   selector: 'app-carrinho',
@@ -16,15 +17,20 @@ export class CarrinhoPage implements OnInit {
   private caixaMovelStorage: any;
 
   constructor(
-    private storage: Storage,
     public alertController: AlertController,
+    public loadingController: LoadingController,
+    private vendaService: VendaService,
+    private storage: Storage,
     private navCtrl: NavController,
     private storageService: StorageService
   ) { }
 
   async ngOnInit() {
     this.caixaMovelStorage = await this.storage.get('caixa-movel');
-    this.produtos = this.caixaMovelStorage.sistemaVendas.carrinho;
+    if (this.caixaMovelStorage.sistemaVendas.vendaAtual === null) {
+      this.navCtrl.navigateBack('/home/caixa-movel/sistema-vendas');
+    }
+    this.produtos = this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList;
     this.totalCar();
   }
 
@@ -60,7 +66,7 @@ export class CarrinhoPage implements OnInit {
   }
 
   async setCarrinhoStorage(){
-    this.caixaMovelStorage.sistemaVendas.carrinho = this.produtos;
+    this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList = this.produtos;
     await this.storage.set('caixa-movel', this.caixaMovelStorage);
   }
 
@@ -90,7 +96,7 @@ export class CarrinhoPage implements OnInit {
       if(produto['id'] === prodEvent['id']){
         this.produtos.splice(i);
         this.totalCar();
-        this.caixaMovelStorage.sistemaVendas.carrinho = this.produtos;
+        this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList = this.produtos;
         await this.storage.set('caixa-movel', this.caixaMovelStorage);
       }
     }
@@ -100,7 +106,6 @@ export class CarrinhoPage implements OnInit {
     const alert = await this.alertController.create({
       cssClass: 'my-custom-class',
       header: 'Você deseja cancelar a venda?',
-      message: 'Ao cancelar todo carrinho será deletado.',
       backdropDismiss: false,
       buttons: [
         {
@@ -113,11 +118,22 @@ export class CarrinhoPage implements OnInit {
           text: 'SIM',
           id: 'confirm-button',
           handler: async () => {
-            this.produtos = [];
-            this.totalCar();
-            this.caixaMovelStorage.sistemaVendas.carrinho = this.produtos;
-            await this.storage.set('caixa-movel', this.caixaMovelStorage);
-            this.navCtrl.navigateBack('/home/caixa-movel');
+            const loading = await this.loadingController.create({
+              message: 'Cancelando venda, aguarde...'
+            });
+            await loading.present();
+            this.vendaService.cancelar(this.caixaMovelStorage.sistemaVendas.vendaAtual.selectIds.vendaId).subscribe(async (res: any) => {
+              await loading.dismiss();
+              if (res.status === 'OK' || res.status.toLowerCase() === 'a venda já foi cancelada'){
+                this.caixaMovelStorage.sistemaVendas.vendaAtual = null;
+                await this.storage.set('caixa-movel', this.caixaMovelStorage);
+                this.navCtrl.navigateBack('/home/caixa-movel/sistema-vendas');;
+              } else {
+                this.erroAlert('Erro ao cancelar a venda:', res.status.toLowerCase());
+              };
+            }, (err) => {
+              this.erroAlert('Erro ao cancelar a venda:', 'Erro ao conectar com o servidor local');
+            });
           },
         },
       ],
@@ -127,5 +143,22 @@ export class CarrinhoPage implements OnInit {
 
   goPagamento(){
     this.navCtrl.navigateForward('/home/caixa-movel/sistema-vendas/pagamento');
+  }
+
+  // erros
+  async erroAlert(title, men){
+    const alert = await this.alertController.create({
+      cssClass: 'my-custom-class',
+      header: title,
+      message: men,
+      backdropDismiss: false,
+      buttons: [
+        {
+          text: 'Fechar',
+          id: 'confirm-button'
+        },
+      ],
+    });
+    await alert.present();
   }
 }

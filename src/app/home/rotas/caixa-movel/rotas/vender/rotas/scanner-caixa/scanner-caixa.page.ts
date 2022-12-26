@@ -1,12 +1,14 @@
+/* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/dot-notation */
 import { Component, OnInit, ViewChild, ElementRef} from '@angular/core';
-import { AlertController, NavController, ToastController } from '@ionic/angular';
+import { AlertController, LoadingController, NavController, ToastController } from '@ionic/angular';
 import { BarcodeScanner } from '@capacitor-community/barcode-scanner';
 import { ScreenOrientation } from '@awesome-cordova-plugins/screen-orientation/ngx';
 import { NgForm } from '@angular/forms';
 import { Storage } from '@ionic/storage-angular';
 import { StorageService } from 'src/app/services/storage/storage.service';
 import { EstoqueService } from '../../../estoque/services/estoque/estoque.service';
+import { VendaService } from '../../services/venda/venda.service';
 
 @Component({
   selector: 'app-scanner-caixa',
@@ -30,11 +32,13 @@ export class ScannerCaixaPage implements OnInit {
 
   constructor(
     public toastController: ToastController,
+    public loadingController: LoadingController,
+    public alertController: AlertController,
     private storage: Storage,
+    private vendaService: VendaService,
     private storageService: StorageService,
     private screenOrientation: ScreenOrientation,
     private estoqueService: EstoqueService,
-    public alertController: AlertController,
     private navCtrl: NavController,
   ) {}
 
@@ -42,6 +46,10 @@ export class ScannerCaixaPage implements OnInit {
   }
 
   async ionViewWillEnter(){
+    this.caixaMovelStorage = await this.storage.get('caixa-movel');
+    if (this.caixaMovelStorage.sistemaVendas.vendaAtual === null) {
+      this.navigateBack();
+    }
     this.pordutoScanneado = {
       nome: null,
       id: null,
@@ -51,7 +59,6 @@ export class ScannerCaixaPage implements OnInit {
       medida: null,
       valor: null
     };
-    this.caixaMovelStorage = await this.storage.get('caixa-movel');
     this.somaTotalCarrinho();
     this.modoRapido = this.caixaMovelStorage.sistemaVendas.configuracoes.modoRapido;
     this.idEmpBird = this.caixaMovelStorage.configuracoes.slectedIds.firebirdIdEmp;
@@ -159,25 +166,25 @@ export class ScannerCaixaPage implements OnInit {
   */
 
   adicionaCarrinho(){
-    if(this.caixaMovelStorage.sistemaVendas.carrinho.length > 0){
+    if(this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList.length > 0){
       let i = -1;
-      for(const produto of this.caixaMovelStorage.sistemaVendas.carrinho){
+      for(const produto of this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList){
         i++;
         if(produto.id === this.pordutoScanneado.id){
           if(this.modoRapido){
-            ++this.caixaMovelStorage.sistemaVendas.carrinho[i].qnt;
-            if(this.caixaMovelStorage.sistemaVendas.carrinho[i].qnt > this.caixaMovelStorage.sistemaVendas.carrinho[i].qntMax){
-              this.caixaMovelStorage.sistemaVendas.carrinho[i].qnt = this.caixaMovelStorage.sistemaVendas.carrinho[i].qntMax;
+            ++this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList[i].qnt;
+            if(this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList[i].qnt > this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList[i].qntMax){
+              this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList[i].qnt = this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList[i].qntMax;
             }
           } else {
-            this.caixaMovelStorage.sistemaVendas.carrinho[i].qnt = this.pordutoScanneado.qnt;
+            this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList[i].qnt = this.pordutoScanneado.qnt;
           }
         } else {
-          this.caixaMovelStorage.sistemaVendas.carrinho.push(this.pordutoScanneado);
+          this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList.push(this.pordutoScanneado);
         }
       }
     } else {
-      this.caixaMovelStorage.sistemaVendas.carrinho.push(this.pordutoScanneado);
+      this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList.push(this.pordutoScanneado);
     }
     this.storage.set('caixa-movel', this.caixaMovelStorage);
     this.somaTotalCarrinho();
@@ -185,10 +192,10 @@ export class ScannerCaixaPage implements OnInit {
 
   somaTotalCarrinho(){
     const valores = [];
-    if(this.caixaMovelStorage.sistemaVendas.carrinho.length === 0){
+    if(this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList.length === 0){
       this.totalCarrinho = this.convertReal(0);
     } else {
-      for (const produto of this.caixaMovelStorage.sistemaVendas.carrinho) {
+      for (const produto of this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList) {
         valores.push(produto['valor']*produto['qnt']);
         this.totalCarrinho = this.convertReal(valores.reduce((a, b) => a + b, 0));
       }
@@ -203,7 +210,6 @@ export class ScannerCaixaPage implements OnInit {
     const alert = await this.alertController.create({
       cssClass: 'my-custom-class',
       header: 'Você deseja cancelar a venda?',
-      message: 'Ao cancelar todo carrinho será deletado.',
       backdropDismiss: false,
       buttons: [
         {
@@ -216,10 +222,22 @@ export class ScannerCaixaPage implements OnInit {
           text: 'SIM',
           id: 'confirm-button',
           handler: async () => {
-            this.caixaMovelStorage.sistemaVendas.carrinho = [];
-            this.somaTotalCarrinho();
-            await this.storage.set('caixa-movel', this.caixaMovelStorage);
-            this.navigateBack();
+            const loading = await this.loadingController.create({
+              message: 'Cancelando venda, aguarde...'
+            });
+            await loading.present();
+            this.vendaService.cancelar(this.caixaMovelStorage.sistemaVendas.vendaAtual.selectIds.vendaId).subscribe(async (res: any) => {
+              await loading.dismiss();
+              if (res.status === 'OK' || res.status.toLowerCase() === 'a venda já foi cancelada'){
+                this.caixaMovelStorage.sistemaVendas.vendaAtual = null;
+                await this.storage.set('caixa-movel', this.caixaMovelStorage);
+                this.navigateBack();
+              } else {
+                this.erroAlert('Erro ao cancelar a venda:', res.status.toLowerCase());
+              };
+            }, (err) => {
+              this.erroAlert('Erro ao cancelar a venda:', 'Erro ao conectar com o servidor local');
+            });
           },
         },
       ],
@@ -308,5 +326,22 @@ export class ScannerCaixaPage implements OnInit {
     } else {
       return qnt;
     }
+  }
+
+   // erros
+   async erroAlert(title, men){
+    const alert = await this.alertController.create({
+      cssClass: 'my-custom-class',
+      header: title,
+      message: men,
+      backdropDismiss: false,
+      buttons: [
+        {
+          text: 'Fechar',
+          id: 'confirm-button'
+        },
+      ],
+    });
+    await alert.present();
   }
 }
