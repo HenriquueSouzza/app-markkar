@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class PagamentoService {
-  private url = 'http://192.168.1.30/app/caixaMovel/venda/formasPagamento?id=';
+  private url = 'http://192.168.0.15:8080/app/caixaMovel/venda/pagamento/formas?id=';
 
   constructor(private http: HttpClient) { }
 

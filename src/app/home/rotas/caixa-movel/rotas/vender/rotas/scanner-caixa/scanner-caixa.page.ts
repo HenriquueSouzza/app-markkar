@@ -203,7 +203,7 @@ export class ScannerCaixaPage implements OnInit {
   }
 
   goToCar(){
-    this.navCtrl.navigateForward('/home/caixa-movel/sistema-vendas/carrinho');
+    this.navCtrl.navigateForward('/home/caixa-movel/sistema-vendas/lista-itens');
   }
 
   async cancelarCarrinho(){

@@ -57,7 +57,7 @@ export class PagamentoPage implements OnInit {
     this.getMetodosPag();
     this.heightW = this.platform.height();
     this.caixaMovelStorage = await this.storage.get('caixa-movel');
-    this.produtos = this.caixaMovelStorage.vendas.carrinho;
+    this.produtos = this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList;
     this.totalCar();
   }
 
@@ -273,7 +273,7 @@ export class PagamentoPage implements OnInit {
           handler: async () => {
             this.produtos = [];
             this.totalCar();
-            this.caixaMovelStorage.vendas.carrinho = this.produtos;
+            this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList = this.produtos;
             await this.storage.set('caixa-movel', this.caixaMovelStorage);
             this.navCtrl.navigateBack('/home/caixa-movel');
           },

@@ -9,7 +9,7 @@ const routes: Routes = [
     component: VenderPage
   },
   {
-    path: 'carrinho',
+    path: 'lista-itens',
     loadChildren: () => import('./rotas/carrinho/carrinho.module').then( m => m.CarrinhoPageModule)
   },
   {
@@ -20,6 +20,11 @@ const routes: Routes = [
     path: 'pagamento',
     loadChildren: () => import('./rotas/pagamento/pagamento.module').then( m => m.PagamentoPageModule)
   },
+  {
+    path: '**',
+    redirectTo: '/home/caixa-movel/sistema-vendas',
+    pathMatch: 'full'
+  }
 ];
 
 @NgModule({
