@@ -1,3 +1,4 @@
+/* eslint-disable no-var */
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 /* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/dot-notation */
@@ -18,6 +19,7 @@ export class PagamentoPage implements OnInit {
 
   @ViewChild('swiper') swiper: SwiperComponent;
   @ViewChild('modal') modal: any;
+  @ViewChild('inputValor') inputValor: any;
   @ViewChild(IonContent) content: IonContent;
 
   public porcLoad: number = 0;
@@ -30,6 +32,7 @@ export class PagamentoPage implements OnInit {
   public redeAutoriza: Array<string> = [];
   public parcelas: Array<string> = [];
   public opcsCard = {bloqDebito: true, bloqCredito: true, parcelasMax: 0};
+  public valorPg: number = 0;
   public metodoPg: string = 'Não selecionado';
   public bandeiraPg: string = 'Não selecionado';
   public redeAutorizaPg: string = 'Não selecionado';
@@ -40,13 +43,14 @@ export class PagamentoPage implements OnInit {
   public bloqFinishPg: boolean = true;
   private allPagMetods: any;
   private caixaMovelStorage: any;
+  private empId: string;
 
   constructor(
-    private storage: Storage,
+    public loadingController: LoadingController,
     public alertController: AlertController,
+    private storage: Storage,
     private navCtrl: NavController,
     private modalCtrl: ModalController,
-    public loadingController: LoadingController,
     private platform: Platform,
     private storageService: StorageService,
     private pagamentoService: PagamentoService
@@ -58,6 +62,7 @@ export class PagamentoPage implements OnInit {
     this.heightW = this.platform.height();
     this.caixaMovelStorage = await this.storage.get('caixa-movel');
     this.produtos = this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList;
+    this.empId = this.caixaMovelStorage.sistemaVendas.vendaAtual.selectIds.fireBirdIdEmp;
     this.totalCar();
   }
 
@@ -74,7 +79,7 @@ export class PagamentoPage implements OnInit {
       message: 'Aguarde...'
     });
     await loading.present();
-    this.pagamentoService.all('1').subscribe(async (res: any) => {
+    this.pagamentoService.all(this.empId).subscribe(async (res: any) => {
       this.allPagMetods = res.formasPagamento;
       console.log(this.allPagMetods);
       for(const formspg of this.allPagMetods){
@@ -89,8 +94,30 @@ export class PagamentoPage implements OnInit {
     });
   }
 
+  changeValorPagamento(e){
+    this.bloqFinishPg = true;
+    this.bandeiraPg = 'Não selecionado';
+    this.debitOrCreditPg = 'Não selecionado';
+    this.redeAutorizaPg = 'Não selecionado';
+    this.parcelasPg = 'Não selecionado';
+    this.valorPg = e.detail.value === '' ? 0 : e.detail.value;
+  }
+
+  aplicaValorPagamento(valorTotal: boolean){
+    if(valorTotal === true){
+      this.valorPg = this.totalCarrinhoNum;
+      this.inputValor.value = this.valorPg;
+    } else {
+      if(this.valorPg !== 0){
+        this.slideNext();
+      }
+    }
+    console.log(this.valorPg);
+  }
+
   changeFormaPagamento(formPg: string){
     this.bloqFinishPg = true;
+    this.metodoPg = 'Não selecionado';
     this.bandeiraPg = 'Não selecionado';
     this.debitOrCreditPg = 'Não selecionado';
     this.redeAutorizaPg = 'Não selecionado';
@@ -187,19 +214,19 @@ export class PagamentoPage implements OnInit {
         i++;
         if (formspg['FORMA_PG'] === this.metodoPg) {
           formPg = {
-            idEmp: 1,
+            idEmp: this.empId,
             sigla: formspg['SIGLA'],
             dc: formspg['DEBITO_CREDITO'],
             parcelas: formspg['PARCELAS'],
             bandeira: formspg['BANDEIRA'],
-            redeAutoriza: formspg['REDE_AUTORIZA']
+            redeAutoriza: formspg['REDE_AUTORIZA'],
           };
           console.log(formspg);
         }
       }
     } else {
       formPg = {
-        idEmp: 1,
+        idEmp: this.empId,
         sigla: this.metodoPg === 'DINHEIRO' ? 'DIN' : this.metodoPg === 'CARTÃO' ? 'CRT' : this.metodoPg,
         dc: this.debitOrCreditPg === 'DÉBITO' ? 'D' : this.debitOrCreditPg === 'CRÉDITO' ? 'C' : null,
         parcelas: this.parcelasPg === 'Não selecionado' ? 0 : this.parcelasPgNum,
@@ -207,8 +234,30 @@ export class PagamentoPage implements OnInit {
         redeAutoriza: this.redeAutorizaPg === 'Não selecionado' ? null : this.redeAutorizaPg
       };
     }
-    this.pagamentoService.pgmtDetalhe('1', formPg).subscribe((res) => {
-      console.log(res);
+    this.pagamentoService.pgmtDetalhe(this.empId, formPg).subscribe((res: any) => {
+      if(res.codigosPg.err === '' || res.codigosPg.err === null){
+        const pagIds = res.codigosPg;
+        delete pagIds.err;
+        pagIds.valor = this.valorPg;
+        pagIds.empId = this.empId;
+        //verifica se existe no array
+        let i = 0;
+        var pagExist = false;
+        for(const pagamento of this.caixaMovelStorage.sistemaVendas.vendaAtual.pagList){
+          i++;
+          if(pagamento.codFormaPag === pagIds.codFormaPag && pagamento.codTipoPag === pagIds.codTipoPag && pagamento.valor === pagIds.valor){
+            pagExist = true;
+            console.log('pagamento');
+          }
+          if(this.caixaMovelStorage.sistemaVendas.vendaAtual.pagList.length === i && pagExist === false){
+            console.log('no pagamento');
+            this.caixaMovelStorage.sistemaVendas.vendaAtual.pagList.push(pagIds);
+            this.storage.set('caixa-movel', this.caixaMovelStorage);
+          }
+        }
+      } else {
+        console.log('error:',res.codigosPg.err);
+      }
     });
   }
 
@@ -226,7 +275,7 @@ export class PagamentoPage implements OnInit {
   }
 
   subirModal(){
-    this.modal.setCurrentBreakpoint(this.heightW > 785 ? 0.35 : 0.8);
+    this.modal.setCurrentBreakpoint(this.heightW > 785 ? 0.48 : 0.8);
   }
 
   closeModal(){

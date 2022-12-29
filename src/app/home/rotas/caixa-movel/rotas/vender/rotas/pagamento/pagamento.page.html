@@ -26,9 +26,64 @@
             fill="clear"
             shape="round"
           >
-            <ion-icon slot="icon-only" style="color: var(--ion-color-dark2)" name="arrow-back-outline"></ion-icon>
+            <ion-icon
+              slot="icon-only"
+              style="color: var(--ion-color-dark2)"
+              name="arrow-back-outline"
+            ></ion-icon>
           </ion-button>
-          <h2>Forma de pagamento: <p style="margin: 6px 0 0 0 ; font-size: 1rem; color: gray;">{{metodoPg}}</p></h2>
+          <h2>
+            Informe o valor:
+            <p style="margin: 6px 0 0 0; font-size: 1rem; color: gray">
+              {{convertReal(valorPg)}}
+            </p>
+          </h2>
+          <ion-button
+            [disabled]="valorPg === 0 ? true : false"
+            (click)="slideNext()"
+            mode="ios"
+            expand="block"
+            fill="clear"
+            shape="round"
+          >
+            <ion-icon slot="icon-only" name="arrow-forward-outline"></ion-icon>
+          </ion-button>
+        </div>
+        <div class="opcoes">
+          <ion-item>
+            <ion-label>R$:</ion-label>
+            <ion-input #inputValor (ionChange)="changeValorPagamento($event)" type="text" placeholder="0,00" oninput="this.value = this.value.replace(',', '').replace(/\D/g, '');"></ion-input>
+          </ion-item>
+          <ion-button (click)="aplicaValorPagamento(true)" expand="block" fill="clear" shape="round">
+            valor total
+          </ion-button>
+          <ion-button [disabled]="valorPg === 0 ? true : false" (click)="aplicaValorPagamento(false)" expand="block" fill="clear" shape="round">
+            confirmar
+          </ion-button>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template class="slide" swiperSlide>
+      <div id="metodosPg">
+        <div class="headerSlide">
+          <ion-button
+            (click)="slidePrev()"
+            mode="ios"
+            expand="block"
+            fill="clear"
+            shape="round"
+          >
+            <ion-icon
+              slot="icon-only"
+              name="arrow-back-outline"
+            ></ion-icon>
+          </ion-button>
+          <h2>
+            Forma de pagamento:
+            <p style="margin: 6px 0 0 0; font-size: 1rem; color: gray">
+              {{metodoPg}}
+            </p>
+          </h2>
           <ion-button
             [disabled]="metodoPg === 'Não selecionado' ? true : metodoPg === 'DINHEIRO' || metodoPg === 'PIX' ? true : false"
             (click)="slideNext()"
@@ -41,11 +96,26 @@
           </ion-button>
         </div>
         <div class="opcoes">
-          <ion-button (click)="changeFormaPagamento(formpg)" *ngFor="let formpg of formsPg" class="selectBtn" color="dark">
+          <ion-button
+            (click)="changeFormaPagamento(formpg)"
+            *ngFor="let formpg of formsPg"
+            class="selectBtn"
+            color="dark"
+          >
             <div>
-              <ion-icon *ngIf="formpg === 'CARTÃO'" name="card-outline"></ion-icon>
-              <img *ngIf="formpg === 'PIX'" src="assets/img/logoPix.png" alt="LogoPix"/>
-              <ion-icon *ngIf="formpg === 'DINHEIRO'" name="wallet-outline"></ion-icon>
+              <ion-icon
+                *ngIf="formpg === 'CARTÃO'"
+                name="card-outline"
+              ></ion-icon>
+              <img
+                *ngIf="formpg === 'PIX'"
+                src="assets/img/logoPix.png"
+                alt="LogoPix"
+              />
+              <ion-icon
+                *ngIf="formpg === 'DINHEIRO'"
+                name="wallet-outline"
+              ></ion-icon>
               {{formpg}}
             </div>
           </ion-button>
@@ -64,7 +134,12 @@
           >
             <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
           </ion-button>
-          <h2>Bandeira: <p style="margin: 6px 0 0 0 ; font-size: 1rem; color: gray;">{{bandeiraPg}}</p></h2>
+          <h2>
+            Bandeira:
+            <p style="margin: 6px 0 0 0; font-size: 1rem; color: gray">
+              {{bandeiraPg}}
+            </p>
+          </h2>
           <ion-button
             [disabled]="bandeiraPg === 'Não selecionado' ? true : false"
             (click)="slideNext()"
@@ -77,10 +152,13 @@
           </ion-button>
         </div>
         <div class="opcoes">
-          <ion-button (click)="changeBandeira(bandeira)" *ngFor="let bandeira of bandeiras" class="selectBtn" color="dark">
-            <div>
-              {{bandeira}}
-            </div>
+          <ion-button
+            (click)="changeBandeira(bandeira)"
+            *ngFor="let bandeira of bandeiras"
+            class="selectBtn"
+            color="dark"
+          >
+            <div>{{bandeira}}</div>
           </ion-button>
         </div>
       </div>
@@ -97,7 +175,12 @@
           >
             <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
           </ion-button>
-          <h2>Rede Autoriza <p style="margin: 6px 0 0 0 ; font-size: 1rem; color: gray;">{{redeAutorizaPg}}</p></h2>
+          <h2>
+            Rede Autoriza
+            <p style="margin: 6px 0 0 0; font-size: 1rem; color: gray">
+              {{redeAutorizaPg}}
+            </p>
+          </h2>
           <ion-button
             [disabled]="redeAutorizaPg === 'Não selecionado' ? true : false"
             (click)="slideNext()"
@@ -110,10 +193,13 @@
           </ion-button>
         </div>
         <div class="opcoes">
-          <ion-button (click)="changeRedeAutoriza(rede)"  *ngFor="let rede of redeAutoriza" class="selectBtn" color="dark">
-            <div>
-              {{rede}}
-            </div>
+          <ion-button
+            (click)="changeRedeAutoriza(rede)"
+            *ngFor="let rede of redeAutoriza"
+            class="selectBtn"
+            color="dark"
+          >
+            <div>{{rede}}</div>
           </ion-button>
         </div>
       </div>
@@ -130,7 +216,12 @@
           >
             <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
           </ion-button>
-          <h2>Tipo de pagamento: <p style="margin: 6px 0 0 0 ; font-size: 1rem; color: gray;">{{debitOrCreditPg}}</p></h2>
+          <h2>
+            Tipo de pagamento:
+            <p style="margin: 6px 0 0 0; font-size: 1rem; color: gray">
+              {{debitOrCreditPg}}
+            </p>
+          </h2>
           <ion-button
             [disabled]="debitOrCreditPg === 'Não selecionado' ? true : debitOrCreditPg === 'DÉBITO' ? true : false"
             (click)="slideNext()"
@@ -143,15 +234,21 @@
           </ion-button>
         </div>
         <div class="opcoes">
-          <ion-button (click)="changeDebitOrCredit('DÉBITO')" [disabled]="opcsCard.bloqDebito" class="selectBtn" color="dark">
-            <div>
-              DÉBITO
-            </div>
+          <ion-button
+            (click)="changeDebitOrCredit('DÉBITO')"
+            [disabled]="opcsCard.bloqDebito"
+            class="selectBtn"
+            color="dark"
+          >
+            <div>DÉBITO</div>
           </ion-button>
-          <ion-button (click)="changeDebitOrCredit('CRÉDITO')" [disabled]="opcsCard.bloqCredito" class="selectBtn" color="dark">
-            <div>
-              CRÉDITO
-            </div>
+          <ion-button
+            (click)="changeDebitOrCredit('CRÉDITO')"
+            [disabled]="opcsCard.bloqCredito"
+            class="selectBtn"
+            color="dark"
+          >
+            <div>CRÉDITO</div>
           </ion-button>
         </div>
       </div>
@@ -170,7 +267,9 @@
           </ion-button>
           <div>
             <h2>Parcelas</h2>
-            <p style="color: gray; font-size: .7rem; margin: 0;">*Juros não calculado</p>
+            <p style="color: gray; font-size: 0.7rem; margin: 0">
+              *Juros não calculado
+            </p>
           </div>
           <ion-button
             (click)="slideNext()"
@@ -184,7 +283,12 @@
           </ion-button>
         </div>
         <div class="opcoes">
-          <ion-button (click)="changeParcelas(parcela, i)" *ngFor="let parcela of parcelas; let i = index" class="selectBtn" color="dark">
+          <ion-button
+            (click)="changeParcelas(parcela, i)"
+            *ngFor="let parcela of parcelas; let i = index"
+            class="selectBtn"
+            color="dark"
+          >
             <h2>{{parcela}}</h2>
           </ion-button>
         </div>
@@ -192,53 +296,66 @@
     </ng-template>
   </swiper>
   <ion-modal
-      #modal
-      [isOpen]="true"
-      [initialBreakpoint]="0.07"
-      [breakpoints]="[0.07, heightW > 785 ? 0.35 : 0.8]"
-      [backdropDismiss]="false"
-      [backdropBreakpoint]="1"
-    >
-      <ng-template>
-        <ion-content no-bounce has-bouncing="false" forceOverscroll="false">
-          <div id="footer">
-            <div id="wrpTop" style="width: 100%">
-              <ion-progress-bar [buffer]="porcLoad" [value]="porcLoad"></ion-progress-bar>
-              <div class="opcao">
-                <h3>Forma de pagamento:</h3>
-                <p>{{metodoPg}}</p>
-              </div>
-              <div class="opcao">
-                <h3>Bandeira:</h3>
-                <p>{{bandeiraPg}}</p>
-              </div>
-              <div class="opcao">
-                <h3>Rede Autoriza:</h3>
-                <p>{{redeAutorizaPg}}</p>
-              </div>
-              <div class="opcao">
-                <h3>Tipo de pagamento:</h3>
-                <p>{{debitOrCreditPg}}</p>
-              </div>
-              <div class="opcao">
-                <h3>Parcelas:</h3>
-                <p>{{parcelasPg}}</p>
-              </div>
+    #modal
+    [isOpen]="true"
+    [initialBreakpoint]="0.07"
+    [breakpoints]="[0.07, heightW > 785 ? 0.48 : 0.8]"
+    [backdropDismiss]="false"
+    [backdropBreakpoint]="1"
+  >
+    <ng-template>
+      <ion-content no-bounce has-bouncing="false" forceOverscroll="false">
+        <div id="footer">
+          <div id="wrpTop" style="width: 100%">
+            <ion-progress-bar
+              [buffer]="porcLoad"
+              [value]="porcLoad"
+            ></ion-progress-bar>
+            <div class="opcao">
+              <h3>Forma de pagamento:</h3>
+              <p>{{metodoPg}}</p>
             </div>
-            <div id="wrpBot" style="width: 100%">
-              <div id="total">
-                <h3>Total:</h3>
-                <p>{{totalCarrinho}}</p>
-              </div>
-              <div id="btns">
-                <ion-button color="danger" (click)="cancelarCarrinho()">
-                  Cancelar
-                </ion-button>
-                <ion-button [disabled]="bloqFinishPg" (click)="finalizaPg()">Finalizar</ion-button>
-              </div>
+            <div class="opcao">
+              <h3>Bandeira:</h3>
+              <p>{{bandeiraPg}}</p>
+            </div>
+            <div class="opcao">
+              <h3>Rede Autoriza:</h3>
+              <p>{{redeAutorizaPg}}</p>
+            </div>
+            <div class="opcao">
+              <h3>Tipo de pagamento:</h3>
+              <p>{{debitOrCreditPg}}</p>
+            </div>
+            <div class="opcao">
+              <h3>Parcelas:</h3>
+              <p>{{parcelasPg}}</p>
             </div>
           </div>
-        </ion-content>
-      </ng-template>
-    </ion-modal>
+          <div id="wrpBot" style="width: 100%">
+            <div class="total" style="border-top: solid rgb(61, 61, 61) 1px;">
+              <h3>Total:</h3>
+              <p>{{totalCarrinho}}</p>
+            </div>
+            <div class="total">
+              <h3>Valor pago:</h3>
+              <p>{{convertReal(valorPg)}}</p>
+            </div>
+            <div class="total">
+              <h3>Valor restante:</h3>
+              <p>{{convertReal(totalCarrinhoNum-valorPg < 0 ? 0 : totalCarrinhoNum-valorPg)}}</p>
+            </div>
+            <div id="btns">
+              <ion-button (click)="finalizaPg()">
+                Adicionar
+              </ion-button>
+              <ion-button [disabled]="bloqFinishPg" (click)="finalizaPg()"
+                >Finalizar</ion-button
+              >
+            </div>
+          </div>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
 </ion-content>

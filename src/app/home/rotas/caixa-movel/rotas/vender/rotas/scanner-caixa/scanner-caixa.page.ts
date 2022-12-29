@@ -61,8 +61,8 @@ export class ScannerCaixaPage implements OnInit {
     };
     this.somaTotalCarrinho();
     this.modoRapido = this.caixaMovelStorage.sistemaVendas.configuracoes.modoRapido;
-    this.idEmpBird = this.caixaMovelStorage.configuracoes.slectedIds.firebirdIdEmp;
-    this.idCc = this.caixaMovelStorage.configuracoes.slectedIds.fireBirdIdCc;
+    this.idEmpBird = this.caixaMovelStorage.sistemaVendas.vendaAtual.selectIds.fireBirdIdEmp;
+    this.idCc = this.caixaMovelStorage.sistemaVendas.vendaAtual.selectIds.fireBirdIdCc;
     setTimeout(() => {
       this.telaEspelho = false;
     }, 700);
