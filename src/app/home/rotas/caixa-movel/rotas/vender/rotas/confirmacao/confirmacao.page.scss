@@ -1,0 +1,38 @@
+div{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  ul{
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    width: 90%;
+    background-color: #19271c94;
+
+    li {
+      margin: 12px 0;
+    }
+ }
+}
+.opcao {
+  height: 30px;
+  padding: 0 20px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  h3 {
+    color: rgb(181, 181, 181);
+    font-size: 1rem;
+    font-family: robotoBold;
+  }
+  p {
+    color: rgb(181, 181, 181);
+    font-size: 0.8rem;
+  }
+}

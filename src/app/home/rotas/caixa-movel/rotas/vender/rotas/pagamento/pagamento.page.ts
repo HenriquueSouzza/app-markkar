@@ -59,6 +59,7 @@ export class PagamentoPage implements OnInit {
   ) { }
 
 //main
+
   async ngOnInit() {
     this.getMetodosPag();
     this.heightW = this.platform.height();
@@ -68,6 +69,10 @@ export class PagamentoPage implements OnInit {
     this.totalCar();
     this.verificaValorTotal();
     this.inputValor.value = 0;
+  }
+
+  ionViewDidEnter() {
+    this.openModal();
   }
 
   ionViewWillLeave(){
@@ -330,6 +335,10 @@ export class PagamentoPage implements OnInit {
 
   closeModal(){
     this.modal.dismiss();
+  }
+
+  openModal(){
+    this.modal.present();
   }
 
 //total-carrinho
