@@ -21,6 +21,10 @@ const routes: Routes = [
     loadChildren: () => import('./rotas/pagamento/pagamento.module').then( m => m.PagamentoPageModule)
   },
   {
+    path: 'confirmacao',
+    loadChildren: () => import('./rotas/confirmacao/confirmacao.module').then( m => m.ConfirmacaoPageModule)
+  },
+  {
     path: '**',
     redirectTo: '/home/caixa-movel/sistema-vendas',
     pathMatch: 'full'

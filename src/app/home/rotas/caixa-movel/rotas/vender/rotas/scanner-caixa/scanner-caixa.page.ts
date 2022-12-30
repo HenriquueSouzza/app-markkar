@@ -165,7 +165,7 @@ export class ScannerCaixaPage implements OnInit {
 
   */
 
-  adicionaCarrinho(){
+  async adicionaCarrinho(){
     if(this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList.length > 0){
       let i = -1;
       for(const produto of this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList){
@@ -186,7 +186,7 @@ export class ScannerCaixaPage implements OnInit {
     } else {
       this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList.push(this.pordutoScanneado);
     }
-    this.storage.set('caixa-movel', this.caixaMovelStorage);
+    await this.storage.set('caixa-movel', this.caixaMovelStorage);
     this.somaTotalCarrinho();
   }
 

@@ -9,7 +9,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content no-bounce has-bouncing="false" forceOverscroll="false">
+<ion-content>
   <swiper
     (click)="downModalIfOpen()"
     id="swiper"
@@ -52,7 +52,7 @@
         <div class="opcoes">
           <ion-item>
             <ion-label>R$:</ion-label>
-            <ion-input #inputValor (ionChange)="changeValorPagamento($event)" type="text" placeholder="0,00" oninput="this.value = this.value.replace(',', '').replace(/\D/g, '');"></ion-input>
+            <ion-input maxlength="9" #inputValor (ionChange)="changeValorPagamento($event)" type="text" placeholder="0,00"></ion-input>
           </ion-item>
           <ion-button (click)="aplicaValorPagamento(true)" expand="block" fill="clear" shape="round">
             valor total
@@ -299,7 +299,7 @@
     #modal
     [isOpen]="true"
     [initialBreakpoint]="0.07"
-    [breakpoints]="[0.07, heightW > 785 ? 0.48 : 0.8]"
+    [breakpoints]="[0.07, heightW > 785 ? 0.50 : 0.8]"
     [backdropDismiss]="false"
     [backdropBreakpoint]="1"
   >
@@ -311,6 +311,10 @@
               [buffer]="porcLoad"
               [value]="porcLoad"
             ></ion-progress-bar>
+            <div class="opcao">
+              <h3>Valor do pagamento:</h3>
+              <p>{{convertReal(valorPg)}}</p>
+            </div>
             <div class="opcao">
               <h3>Forma de pagamento:</h3>
               <p>{{metodoPg}}</p>
@@ -339,17 +343,17 @@
             </div>
             <div class="total">
               <h3>Valor pago:</h3>
-              <p>{{convertReal(valorPg)}}</p>
+              <p>{{convertReal(totalPagoCliente)}}</p>
             </div>
             <div class="total">
               <h3>Valor restante:</h3>
-              <p>{{convertReal(totalCarrinhoNum-valorPg < 0 ? 0 : totalCarrinhoNum-valorPg)}}</p>
+              <p>{{convertReal(totalCarrinhoNum-totalPagoCliente < 0 ? 0 : totalCarrinhoNum-totalPagoCliente)}}</p>
             </div>
             <div id="btns">
-              <ion-button (click)="finalizaPg()">
+              <ion-button (click)="addPg()">
                 Adicionar
               </ion-button>
-              <ion-button [disabled]="bloqFinishPg" (click)="finalizaPg()"
+              <ion-button [disabled]="bloqFinishPg" routerLink="home/caixa-movel/sistema-vendas/confimacao"
                 >Finalizar</ion-button
               >
             </div>
