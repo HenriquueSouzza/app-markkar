@@ -48,9 +48,13 @@ export class VenderPage implements OnInit {
 
   //nova venda
 
-  novaVenda(cpfCliente = null, idCliente = null){
+  novaVenda(cpfCliente = null, idCliente = null, nomeCliente = null, somenteCpf = false){
+    let cpf = cpfCliente;
     this.fecharModalIdentificarCliente();
-    this.vendaService.iniciar(this.idEmpBird, this.idCc, '3', cpfCliente, idCliente).subscribe(async (res: any) => {
+    if(!somenteCpf){
+      cpf = null;
+    }
+    this.vendaService.iniciar(this.idEmpBird, this.idCc, '3', cpf, idCliente).subscribe(async (res: any) => {
       console.log(res.novaVenda);
       if (res.novaVenda['COD_VENDA'] === '-1'){
         this.erroAlert('Erro ao iniciar a venda:', res.novaVenda['STATUS'].toLowerCase());
@@ -59,14 +63,17 @@ export class VenderPage implements OnInit {
           dataInicio: new Date().getTime(),
           produtosList: [],
           pagList: [],
+          clienteInfo: {
+            cpf: cpfCliente,
+            id: idCliente,
+            nome: nomeCliente
+          },
           selectIds: {
             fireBirdIdEmp: this.idEmpBird,
             fireBirdIdCc: this.idCc,
             userId: '3',
             vendaId: res.novaVenda['COD_VENDA'],
-            caixaId: res.novaVenda['COD_CAIXA'],
-            cpfCliente,
-            idCliente
+            caixaId: res.novaVenda['COD_CAIXA']
           }
         };
         await this.storage.set('caixa-movel', this.caixaMovelStorage);
@@ -122,11 +129,6 @@ export class VenderPage implements OnInit {
     }
   }
 
-  //somente cpf
-  selecionarSomenteCpf(form: NgForm){
-    this.novaVenda(form.value.cpf);
-  }
-
   //identificar cliente
   abrirModalIdentificarCliente(){
     this.modalCliente.present();
@@ -143,8 +145,12 @@ export class VenderPage implements OnInit {
     });
   }
 
-  selecionarCliente(idCliente){
-    this.novaVenda(null, idCliente);
+  selecionarCliente(idCliente, nome, cpf){
+    this.novaVenda(cpf, idCliente, nome, false);
+  }
+
+  selecionarSomenteCpf(form: NgForm){
+    this.novaVenda(form.value.cpf, null, null, true);
   }
 
   changeInpNome(event){

@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/dot-notation */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { AlertController, LoadingController, NavController } from '@ionic/angular';
 import { StorageService } from 'src/app/services/storage/storage.service';
 import { Storage } from '@ionic/storage-angular';
 import { VendaService } from '../../services/venda/venda.service';
+import { CaixaService } from './services/caixa/caixa.service';
 
 @Component({
   selector: 'app-confirmacao',
@@ -12,8 +13,15 @@ import { VendaService } from '../../services/venda/venda.service';
 })
 export class ConfirmacaoPage implements OnInit {
 
+  @ViewChild('selectCaixa') selectCaixa: any;
+
   public produtos: Array<object>;
+  public pagamentos: Array<object>;
   public totalCarrinho: string;
+  public clienteNome: string;
+  public clienteCPF: string;
+  public caixasAbertos: Array<object>;
+  public caixaSelecionado: string;
   private caixaMovelStorage: any;
 
   constructor(
@@ -22,7 +30,8 @@ export class ConfirmacaoPage implements OnInit {
     private vendaService: VendaService,
     private storage: Storage,
     private navCtrl: NavController,
-    private storageService: StorageService) { }
+    private storageService: StorageService,
+    private caixaService: CaixaService) { }
 
   async ngOnInit() {
     this.caixaMovelStorage = await this.storage.get('caixa-movel');
@@ -30,8 +39,17 @@ export class ConfirmacaoPage implements OnInit {
       this.navCtrl.navigateBack('/home/caixa-movel/sistema-vendas');
     }
     this.produtos = this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList;
-    console.log(this.produtos);
+    this.pagamentos = this.caixaMovelStorage.sistemaVendas.vendaAtual.pagList;
+    this.clienteNome = this.caixaMovelStorage.sistemaVendas.vendaAtual.clienteInfo.nome.toLowerCase();
+    this.clienteCPF = this.caixaMovelStorage.sistemaVendas.vendaAtual.clienteInfo.cpf;
+    this.caixaSelecionado = this.caixaMovelStorage.sistemaVendas.vendaAtual.selectIds.caixaId;
     this.totalCar();
+    this.caixaService.buscar(this.caixaMovelStorage.sistemaVendas.vendaAtual.selectIds.vendaId).subscribe((res: any)=>{
+      this.caixasAbertos = res.caixasAbertos;
+      this.selectCaixa.value = this.caixaSelecionado;
+    }, (error) => {
+      console.log(error);
+    });
   }
 
   totalCar(){

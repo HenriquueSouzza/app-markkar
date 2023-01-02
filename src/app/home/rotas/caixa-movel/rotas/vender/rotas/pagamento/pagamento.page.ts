@@ -243,6 +243,7 @@ export class PagamentoPage implements OnInit {
         delete pagIds.err;
         pagIds.valor = this.valorPg;
         pagIds.empId = this.empId;
+        pagIds.formaPg = formPg;
         //verifica se existe no array
         let i = 0;
         var pagExist = false;

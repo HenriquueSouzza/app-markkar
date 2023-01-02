@@ -2,7 +2,7 @@
   <ion-toolbar color="dark">
     <ion-buttons slot="start">
       <ion-back-button
-        defaultHref="/home/caixa-movel/sistema-vendas/produtos"
+        defaultHref="/home/caixa-movel/sistema-vendas/pagamento"
       ></ion-back-button>
     </ion-buttons>
     <ion-title>Confirme sua venda</ion-title>
@@ -11,12 +11,47 @@
 
 <ion-content>
   <div class="lista">
+    <h2 class="title">Produtos</h2>
     <ul>
       <li *ngFor="let produto of produtos">
-        <h2>{{produto['nome']}}aaaaaaaaaaaa</h2>
-        <p>X{{produto['qnt']}} ---------------- {{convertReal(produto['valor'])}}</p>
+        <h2 style="font-weight: bold;">{{produto['nome']}}</h2>
+        <p>X{{produto['qnt']}} ========== {{convertReal(produto['valor'])}}</p>
       </li>
     </ul>
   </div>
-
+  <div class="lista">
+    <h2 class="title">Pagamentos</h2>
+    <ul>
+      <li *ngFor="let pagamento of pagamentos">
+        <h2 style="font-weight: bold;">{{pagamento['formaPg']['sigla']}}: {{convertReal(pagamento['valor'])}}</h2>
+        <p style="margin-top: 10px;" *ngIf="pagamento['formaPg']['sigla'] === 'CRT'">- Bandeira: {{ pagamento['formaPg']['bandeira'] === null ? 'Não Selecionado' : pagamento['formaPg']['bandeira'] }}</p>
+        <p *ngIf="pagamento['formaPg']['sigla'] === 'CRT'">- Rede Autoriza: {{ pagamento['formaPg']['redeAutoriza'] === null ? 'Não Selecionado' : pagamento['formaPg']['redeAutoriza'] }}</p>
+        <p *ngIf="pagamento['formaPg']['sigla'] === 'CRT'">- Tipo de pagamento: {{ pagamento['formaPg']['dc'] === 'C' ? 'Crédito' : pagamento['formaPg']['dc'] === 'D' ? 'Débito' : 'Não Selecionado' }}</p>
+        <p *ngIf="pagamento['formaPg']['sigla'] === 'CRT'">- Parcelas: {{ pagamento['formaPg']['parcelas'] === null ? 'Não Selecionado' : pagamento['formaPg']['parcelas'] }}</p>
+      </li>
+    </ul>
+  </div>
+  <div class="lista">
+    <h2 class="title">Cliente</h2>
+    <div id="cliente">
+      <h2>Nome: {{clienteNome}}</h2>
+      <p>CPF: {{clienteCPF}}</p>
+    </div>
+  </div>
+  <div class="lista">
+    <h2 class="title">Caixa</h2>
+    <ion-item lines="none">
+      <ion-select #selectCaixa placeholder="Selecione o caixa">
+        <ion-select-option *ngFor="let caixa of caixasAbertos" value="{{caixa['COD_VND_CAIXA']}}">{{caixa['COD_VND_CAIXA']+'-'+caixa['APELIDO']}}</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <div id="btnsFinal">
+      <ion-button color="danger">
+        Cancelar
+      </ion-button>
+      <ion-button>
+        Confirmar
+      </ion-button>
+    </div>
+  </div>
 </ion-content>

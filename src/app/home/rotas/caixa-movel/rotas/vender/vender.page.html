@@ -182,7 +182,7 @@
             <div id="wrpClientesBtn">
               <span style="width: 100%;" *ngFor="let cliente of clientesList">
                 <ion-button
-                (click)="selecionarCliente(cliente['COD_CLIENTE'])"
+                (click)="selecionarCliente(cliente['COD_CLIENTE'], cliente['NOME_CLIENTE'], cliente['DOCUMENTO'])"
                   [disabled]="cliente['NOME_CLIENTE'] === 'Não encontrado' ? true : false"
                   class="clientesBtn"
                   color="dark"
