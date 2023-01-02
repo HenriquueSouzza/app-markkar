@@ -17,7 +17,7 @@
     [config]="{initialSlide: 0, speed: 400, allowTouchMove: false}"
   >
     <ng-template class="slide" swiperSlide>
-      <div id="metodosPg">
+      <div class="metodosPg">
         <div class="headerSlide">
           <ion-button
             (click)="slidePrev()"
@@ -49,22 +49,24 @@
             <ion-icon slot="icon-only" name="arrow-forward-outline"></ion-icon>
           </ion-button>
         </div>
-        <div class="opcoes">
+        <div class="opcoes valor">
           <ion-item>
             <ion-label>R$:</ion-label>
             <ion-input maxlength="9" #inputValor (ionChange)="changeValorPagamento($event)" type="text" placeholder="0,00"></ion-input>
           </ion-item>
-          <ion-button (click)="aplicaValorPagamento(true)" expand="block" fill="clear" shape="round">
-            valor total
-          </ion-button>
-          <ion-button [disabled]="valorPg === 0 ? true : false" (click)="aplicaValorPagamento(false)" expand="block" fill="clear" shape="round">
-            confirmar
-          </ion-button>
+         <div style="width: 100%; display: flex;">
+            <ion-button (click)="aplicaValorPagamento(true)" expand="block" fill="clear" shape="round">
+              valor total
+            </ion-button>
+            <ion-button [disabled]="valorPg === 0 ? true : false" (click)="aplicaValorPagamento(false)" expand="block" fill="clear" shape="round">
+              confirmar
+            </ion-button>
+         </div>
         </div>
       </div>
     </ng-template>
     <ng-template class="slide" swiperSlide>
-      <div id="metodosPg">
+      <div class="metodosPg">
         <div class="headerSlide">
           <ion-button
             (click)="slidePrev()"
@@ -123,7 +125,7 @@
       </div>
     </ng-template>
     <ng-template class="slide" swiperSlide>
-      <div id="metodosPg">
+      <div class="metodosPg">
         <div class="headerSlide">
           <ion-button
             (click)="slidePrev()"
@@ -151,7 +153,7 @@
             <ion-icon slot="icon-only" name="arrow-forward-outline"></ion-icon>
           </ion-button>
         </div>
-        <div class="opcoes">
+        <div class="opcoes" style="height: 70vh; overflow-y: scroll;align-items: flex-start;">
           <ion-button
             (click)="changeBandeira(bandeira)"
             *ngFor="let bandeira of bandeiras"
@@ -164,7 +166,7 @@
       </div>
     </ng-template>
     <ng-template class="slide" swiperSlide>
-      <div id="metodosPg">
+      <div class="metodosPg">
         <div class="headerSlide">
           <ion-button
             (click)="slidePrev()"
@@ -205,7 +207,7 @@
       </div>
     </ng-template>
     <ng-template class="slide" swiperSlide>
-      <div id="metodosPg">
+      <div class="metodosPg">
         <div class="headerSlide">
           <ion-button
             (click)="slidePrev()"

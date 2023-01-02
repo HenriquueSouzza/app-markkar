@@ -10,47 +10,13 @@
 </ion-header>
 
 <ion-content>
-  <div>
+  <div class="lista">
     <ul>
-      <li>produto teste ----------------------- R$0.00</li>
-      <li>produto teste ----------------------- R$0.00</li>
-      <li>produto teste ----------------------- R$0.00</li>
-      <li>produto teste ----------------------- R$0.00</li>
-      <li>TOTAL --------------------------------- R$0.00</li>
+      <li *ngFor="let produto of produtos">
+        <h2>{{produto['nome']}}aaaaaaaaaaaa</h2>
+        <p>X{{produto['qnt']}} ---------------- {{convertReal(produto['valor'])}}</p>
+      </li>
     </ul>
   </div>
-  <div id="wrpTop" style="width: 100%; display: flex;flex-direction: column;">
-    <div class="opcao">
-      <h3>Valor do pagamento:</h3>
-      <p>00</p>
-    </div>
-    <div class="opcao">
-      <h3>Forma de pagamento:</h3>
-      <p>**</p>
-    </div>
-    <div class="opcao">
-      <h3>Bandeira:</h3>
-      <p>**</p>
-    </div>
-    <div class="opcao">
-      <h3>Rede Autoriza:</h3>
-      <p>**</p>
-    </div>
-    <div class="opcao">
-      <h3>Tipo de pagamento:</h3>
-      <p>**</p>
-    </div>
-    <div class="opcao">
-      <h3>Parcelas:</h3>
-      <p>**</p>
-    </div>
-  </div>
-  <ion-item>
-    <ion-label>Caixa</ion-label>
-    <ion-select value="teste" multiple="true" placeholder="Select Pizza">
-      <ion-select-option value="teste">teste</ion-select-option>
-      <ion-select-option value="teste2">teste2</ion-select-option>
-    </ion-select>
-  </ion-item>
-  <ion-button> Confirmar </ion-button>
+
 </ion-content>

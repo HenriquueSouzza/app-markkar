@@ -68,7 +68,7 @@ export class PagamentoPage implements OnInit {
     this.empId = this.caixaMovelStorage.sistemaVendas.vendaAtual.selectIds.fireBirdIdEmp;
     this.totalCar();
     this.verificaValorTotal();
-    this.inputValor.value = 0;
+    this.inputValor.value = '0,00';
   }
 
   ionViewDidEnter() {
@@ -103,23 +103,15 @@ export class PagamentoPage implements OnInit {
     });
   }
 
-  changeValorPagamento(e){
+  changeValorPagamento(event){
     this.metodoPg = 'Não selecionado';
     this.bandeiraPg = 'Não selecionado';
     this.debitOrCreditPg = 'Não selecionado';
     this.redeAutorizaPg = 'Não selecionado';
     this.parcelasPg = 'Não selecionado';
-    var valor = e.detail.value === '' ? 0 : e.detail.value;
-    valor = valor + '';
-    valor = parseInt(valor.replace(/[\D]+/g, ''), 10);
-    valor = valor + '';
-    valor = valor.replace(/([0-9]{2})$/g, ',$1');
-
-    if (valor.length > 6) {
-        valor = valor.replace(/([0-9]{3}),([0-9]{2}$)/g, '.$1,$2');
-    }
-    this.inputValor.value = valor;
-    this.valorPg = valor.replace(',', '.').replace('.', '') / 100;
+    const inputMask = this.maskMoney(event.detail.value);
+    this.inputValor.value = inputMask;
+    this.valorPg = parseFloat(inputMask.replace('.', '').replace(',', '.'));
   }
 
   aplicaValorPagamento(valorTotal: boolean){
@@ -342,6 +334,34 @@ export class PagamentoPage implements OnInit {
   }
 
 //total-carrinho
+
+  maskMoney(inputValue){
+    /* GET INPUT VALUE AND REPLACE ALL CHARACTERS OTHER THAN NUMBERS */
+    if(inputValue === ''){
+      inputValue = 0;
+    }
+    inputValue = inputValue + '';
+    inputValue = parseInt(inputValue.replace(/[\D]+/g, ''), 10);
+    inputValue = inputValue + '';
+
+    /* ADD ',' */
+    if(inputValue.length === 1){
+      inputValue = inputValue.replace(/([0-9]{1})$/g, '0,0$1');
+    }else if(inputValue.length === 2){
+      inputValue = inputValue.replace(/([0-9]{2})$/g, '0,$1');
+    } else {
+      inputValue = inputValue.replace(/([0-9]{2})$/g, ',$1');
+    }
+
+    /* ADD '.' */
+    if (inputValue.length > 6) {
+      inputValue = inputValue.replace(/([0-9]{3}),([0-9]{2}$)/g, '.$1,$2');
+    }
+
+    /* RETURN INPUT WITH THE MASK */
+    return inputValue;
+  }
+
   convertReal(valor){
     return parseFloat(valor).toLocaleString('pt-br', {
       style: 'currency',
