@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
 import { StorageService } from 'src/app/services/storage/storage.service';
 
@@ -8,6 +8,9 @@ import { StorageService } from 'src/app/services/storage/storage.service';
   styleUrls: ['./preferencias.page.scss'],
 })
 export class PreferenciasPage implements OnInit {
+
+  @ViewChild('graficoYtoggle') graficoYtoggle: any;
+
   public valueInterval: string;
   public valueGraficoInterval: string;
   public mask: boolean;

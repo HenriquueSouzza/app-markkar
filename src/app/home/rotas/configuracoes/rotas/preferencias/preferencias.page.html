@@ -20,7 +20,7 @@
     </ion-item>
     <ion-item [detail]="false" (click)="mask = !mask" [button]="true" lines="none" color="secondary">
       <ion-label style="text-transform: none;">Exibir Máscara Monetaria <p class="p">Os valores exibirão uma máscara. Ex: R$, US$...</p></ion-label>
-      <ion-toggle #setMaskToggle checked="{{ mask }}" (ionChange)="setMask($event)"></ion-toggle>
+      <ion-toggle checked="{{ mask }}" (ionChange)="setMask($event)"></ion-toggle>
     </ion-item>
     <ion-item [detail]="false" lines="none" [disabled]="mask === true ? false : true" color="secondary">
       <ion-label style="text-transform: none;">Moeda<p class="p">Altera a máscara dos valores</p></ion-label>
@@ -30,7 +30,7 @@
     </ion-item>
     <ion-item [detail]="false" (click)="cmvPerc = !cmvPerc" [button]="true" lines="none" color="secondary">
       <ion-label style="text-transform: none;">CMV Porcentual<p class="p">Os valores de CMV serão convertidos para porcentegem.</p></ion-label>
-      <ion-toggle #setMaskToggle checked="{{ cmvPerc }}" (ionChange)="setCMV($event)"></ion-toggle>
+      <ion-toggle checked="{{ cmvPerc }}" (ionChange)="setCMV($event)"></ion-toggle>
     </ion-item>
   </ion-item-group>
   <ion-item-group>
@@ -64,9 +64,9 @@
         <ion-select-option value="bar">Barras</ion-select-option>
       </ion-select>
     </ion-item>
-    <ion-item [detail]="false" [button]="true" lines="none" color="secondary">
+    <ion-item [detail]="false" (click)="graficoYtoggle.checked = !graficoYtoggle.checked" [button]="true" lines="none" color="secondary">
       <ion-label style="text-transform: none;">Exibir valores verticais<p class="p">Será adicionado uma escala na lateral do gráfico</p></ion-label>
-      <ion-toggle #setMaskToggle checked="{{ chartY }}" (ionChange)="setGraficoY($event)"></ion-toggle>
+      <ion-toggle #graficoYtoggle checked="{{ chartY }}" (ionChange)="setGraficoY($event)"></ion-toggle>
     </ion-item>
   </ion-item-group>
 </ion-content>
