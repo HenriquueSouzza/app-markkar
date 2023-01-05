@@ -19,4 +19,8 @@ export class VendaService {
   cancelar(vendaId: string){
     return this.http.put('http://192.168.0.15:8080/app/caixaMovel/venda/cancelar', {vendaId});
   }
+
+  buscarCaixasAbertos(vendaId: string){
+    return this.http.get('http://192.168.0.15:8080/app/caixaMovel/venda/caixa/buscar?idVenda=' + vendaId);
+  }
 }

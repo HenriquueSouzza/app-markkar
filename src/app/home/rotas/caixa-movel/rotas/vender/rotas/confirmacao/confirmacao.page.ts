@@ -4,7 +4,7 @@ import { AlertController, LoadingController, NavController } from '@ionic/angula
 import { StorageService } from 'src/app/services/storage/storage.service';
 import { Storage } from '@ionic/storage-angular';
 import { VendaService } from '../../services/venda/venda.service';
-import { CaixaService } from './services/caixa/caixa.service';
+import { ConfirmacaoService } from './services/confirmacao/confirmacao.service';
 
 @Component({
   selector: 'app-confirmacao',
@@ -28,10 +28,10 @@ export class ConfirmacaoPage implements OnInit {
     public alertController: AlertController,
     public loadingController: LoadingController,
     private vendaService: VendaService,
+    private confirmacaoService: ConfirmacaoService,
     private storage: Storage,
     private navCtrl: NavController,
-    private storageService: StorageService,
-    private caixaService: CaixaService) { }
+    private storageService: StorageService) { }
 
   async ngOnInit() {
     this.caixaMovelStorage = await this.storage.get('caixa-movel');
@@ -40,11 +40,13 @@ export class ConfirmacaoPage implements OnInit {
     }
     this.produtos = this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList;
     this.pagamentos = this.caixaMovelStorage.sistemaVendas.vendaAtual.pagList;
-    this.clienteNome = this.caixaMovelStorage.sistemaVendas.vendaAtual.clienteInfo.nome.toLowerCase();
-    this.clienteCPF = this.caixaMovelStorage.sistemaVendas.vendaAtual.clienteInfo.cpf;
+    this.clienteNome = this.caixaMovelStorage.sistemaVendas.vendaAtual.clienteInfo.nome === null ?
+      'Não informado.' : this.caixaMovelStorage.sistemaVendas.vendaAtual.clienteInfo.nome.toLowerCase();
+    this.clienteCPF = this.caixaMovelStorage.sistemaVendas.vendaAtual.clienteInfo.cpf === null ?
+      'Não informado.': this.caixaMovelStorage.sistemaVendas.vendaAtual.clienteInfo.cpf;
     this.caixaSelecionado = this.caixaMovelStorage.sistemaVendas.vendaAtual.selectIds.caixaId;
     this.totalCar();
-    this.caixaService.buscar(this.caixaMovelStorage.sistemaVendas.vendaAtual.selectIds.vendaId).subscribe((res: any)=>{
+    this.vendaService.buscarCaixasAbertos(this.caixaMovelStorage.sistemaVendas.vendaAtual.selectIds.vendaId).subscribe((res: any)=>{
       this.caixasAbertos = res.caixasAbertos;
       this.selectCaixa.value = this.caixaSelecionado;
     }, (error) => {
@@ -68,6 +70,13 @@ export class ConfirmacaoPage implements OnInit {
     return parseFloat(valor).toLocaleString('pt-br', {
       style: 'currency',
       currency: 'BRL',
+    });
+  }
+
+  finalizarVenda(){
+    console.log(this.caixaMovelStorage.sistemaVendas.vendaAtual);
+    this.confirmacaoService.finalizar(this.caixaMovelStorage.sistemaVendas.vendaAtual).subscribe(async (res: any) => {
+      console.log(res);
     });
   }
 }

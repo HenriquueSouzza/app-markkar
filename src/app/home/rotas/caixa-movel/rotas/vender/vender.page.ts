@@ -55,7 +55,6 @@ export class VenderPage implements OnInit {
       cpf = null;
     }
     this.vendaService.iniciar(this.idEmpBird, this.idCc, '3', cpf, idCliente).subscribe(async (res: any) => {
-      console.log(res.novaVenda);
       if (res.novaVenda['COD_VENDA'] === '-1'){
         this.erroAlert('Erro ao iniciar a venda:', res.novaVenda['STATUS'].toLowerCase());
       } else {
@@ -111,7 +110,11 @@ export class VenderPage implements OnInit {
               await loading.present();
               this.vendaService.cancelar(this.caixaMovelStorage.sistemaVendas.vendaAtual.selectIds.vendaId).subscribe(async (res: any)=> {
                 await loading.dismiss();
-                if (res.status === 'OK' || res.status.toLowerCase() === 'a venda já foi cancelada'){
+                if (res.status === 'OK' ||
+                res.status.toLowerCase() === 'a venda já foi cancelada' ||
+                res.status.toLowerCase() === 'a venda já foi fechada'){
+                  this.caixaMovelStorage.sistemaVendas.vendaAtual = null;
+                  await this.storage.set('caixa-movel', this.caixaMovelStorage);
                   this.abrirModalIdentificarCliente();
                 } else {
                   this.erroAlert('Erro ao cancelar a venda:', res.status.toLowerCase());
