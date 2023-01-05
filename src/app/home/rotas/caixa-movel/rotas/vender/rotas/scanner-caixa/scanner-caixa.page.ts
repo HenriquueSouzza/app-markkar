@@ -67,10 +67,10 @@ export class ScannerCaixaPage implements OnInit {
       this.telaEspelho = false;
     }, 700);
     this.reloadScan();
-    setTimeout(() => {
+    /*setTimeout(() => {
       const codeBar = '6972520252921';
       this.mostrarProdutoScaneado(codeBar);
-    }, 500);
+    }, 500);*/
   }
 
   ionViewWillLeave() {

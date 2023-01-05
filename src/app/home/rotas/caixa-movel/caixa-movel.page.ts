@@ -49,12 +49,20 @@ export class CaixaMovelPage implements OnInit {
     if(await this.storage.get('caixa-movel') === null){
       await this.storage.set('caixa-movel',
         {
-          sistemaVendas: {carrinho: [], configuracoes: {modoRapido: false}},
+          sistemaVendas: {vendaAtual: null, configuracoes: {modoRapido: false}},
           configuracoes: {slectedIds: {firebirdIdEmp: null, fireBirdIdCc: null, sqlIdCc: null }}}
         );
       this.caixaMovelStorage = await this.storage.get('caixa-movel');
     } else {
       this.caixaMovelStorage = await this.storage.get('caixa-movel');
+      if(this.caixaMovelStorage.sistemaVendas === undefined ||this.caixaMovelStorage.sistemaVendas === null){
+        await this.storage.set('caixa-movel',
+          {
+            sistemaVendas: {vendaAtual: null, configuracoes: {modoRapido: false}},
+            configuracoes: {slectedIds: {firebirdIdEmp: null, fireBirdIdCc: null, sqlIdCc: null }}}
+          );
+          this.caixaMovelStorage = await this.storage.get('caixa-movel');
+      }
     }
     this.conectServidor();
   }
