@@ -33,7 +33,9 @@ export class ConfirmacaoPage implements OnInit {
     private navCtrl: NavController,
     private storageService: StorageService) { }
 
-  async ngOnInit() {
+  ngOnInit() { }
+
+  async ionViewWillEnter(){
     this.caixaMovelStorage = await this.storage.get('caixa-movel');
     if (this.caixaMovelStorage.sistemaVendas.vendaAtual === null) {
       this.navCtrl.navigateBack('/home/caixa-movel/sistema-vendas');
@@ -73,10 +75,45 @@ export class ConfirmacaoPage implements OnInit {
     });
   }
 
-  finalizarVenda(){
-    console.log(this.caixaMovelStorage.sistemaVendas.vendaAtual);
+  async finalizarVenda(){
+    const loading = await this.loadingController.create({
+      message: 'Finalizando a venda, Aguarde...'
+    });
+    await loading.present();
     this.confirmacaoService.finalizar(this.caixaMovelStorage.sistemaVendas.vendaAtual).subscribe(async (res: any) => {
-      console.log(res);
+      console.log(res.status.venda['STATUS']);
+      if(res.status.venda['STATUS'] === 'OK') {
+        const alert = await this.alertController.create({
+          cssClass: 'my-custom-class',
+          header: 'Venda finalizada',
+          backdropDismiss: false,
+          buttons: [
+            {
+              text: 'Fechar',
+              id: 'confirm-button'
+            },
+          ],
+        });
+        await alert.present();
+        this.caixaMovelStorage.sistemaVendas.vendaAtual = null;
+        await this.storage.set('caixa-movel', this.caixaMovelStorage);
+        this.navCtrl.navigateForward('/home/caixa-movel/sistema-vendas');
+      } else {
+        const alert = await this.alertController.create({
+          cssClass: 'my-custom-class',
+          header: 'Ocorreu um erro ao finalizar:',
+          message: res.status.venda['STATUS'].toLowerCase()+'.',
+          backdropDismiss: false,
+          buttons: [
+            {
+              text: 'Fechar',
+              id: 'confirm-button'
+            },
+          ],
+        });
+        await alert.present();
+      }
+      await loading.dismiss();
     });
   }
 }
