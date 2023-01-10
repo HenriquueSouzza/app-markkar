@@ -5,7 +5,7 @@
         defaultHref="/home/caixa-movel/sistema-vendas/pagamento"
       ></ion-back-button>
     </ion-buttons>
-    <ion-title>Confirme sua venda</ion-title>
+    <ion-title>Venda atual: 3181</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -18,6 +18,9 @@
         <p>X{{produto['qnt']}} ========== {{convertReal(produto['valor'])}}</p>
       </li>
     </ul>
+    <ion-button expand="block" fill="clear" shape="round">
+      Adicionar produto
+    </ion-button>
   </div>
   <div class="lista">
     <h2 class="title">Pagamentos</h2>
@@ -30,6 +33,9 @@
         <p *ngIf="pagamento['formaPg']['sigla'] === 'CRT'">- Parcelas: {{ pagamento['formaPg']['parcelas'] === null ? 'Não Selecionado' : pagamento['formaPg']['parcelas'] }}</p>
       </li>
     </ul>
+    <ion-button expand="block" fill="clear" shape="round">
+      Adicionar pagamento
+    </ion-button>
   </div>
   <div class="lista">
     <h2 class="title">Cliente</h2>
