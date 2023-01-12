@@ -1,7 +1,10 @@
 .title {
-  width: 90%;
-  text-align: left;
   font-weight: bold;
+
+  ion-button {
+    margin: 0 5px;
+    color: gray;
+  }
 }
 
 .lista {
@@ -20,7 +23,14 @@
     }
   }
 
+  #btnsProdutos {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+  }
+
   ul {
+    margin: 0;
     padding-top: 10px;
     max-height: 280px;
     min-height: 100px;
@@ -59,7 +69,6 @@
     h2 {
       text-transform: capitalize;
       margin: 10px 0;
-      margin-top: 20px;
     }
 
     h2, p {

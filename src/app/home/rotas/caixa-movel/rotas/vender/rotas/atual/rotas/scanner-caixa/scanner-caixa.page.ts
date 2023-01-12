@@ -7,8 +7,8 @@ import { ScreenOrientation } from '@awesome-cordova-plugins/screen-orientation/n
 import { NgForm } from '@angular/forms';
 import { Storage } from '@ionic/storage-angular';
 import { StorageService } from 'src/app/services/storage/storage.service';
-import { EstoqueService } from '../../../estoque/services/estoque/estoque.service';
 import { VendaService } from '../../services/venda/venda.service';
+import { EstoqueService } from '../../../../../estoque/services/estoque/estoque.service';
 
 @Component({
   selector: 'app-scanner-caixa',
@@ -125,7 +125,7 @@ export class ScannerCaixaPage implements OnInit {
     this.stopScan();
     this.telaEspelho = true;
     setTimeout(() => {
-      this.navCtrl.navigateBack('/home/caixa-movel/sistema-vendas');
+      this.navCtrl.navigateBack('/home/caixa-movel/sistema-vendas/atual');
     }, 500);
   }
 
@@ -203,46 +203,11 @@ export class ScannerCaixaPage implements OnInit {
   }
 
   goToCar(){
-    this.navCtrl.navigateForward('/home/caixa-movel/sistema-vendas/lista-itens');
+    this.navCtrl.navigateForward('/home/caixa-movel/sistema-vendas/atual/lista-itens');
   }
 
-  async cancelarCarrinho(){
-    const alert = await this.alertController.create({
-      cssClass: 'my-custom-class',
-      header: 'Você deseja cancelar a venda?',
-      backdropDismiss: false,
-      buttons: [
-        {
-          text: 'NÃO',
-          role: 'cancel',
-          cssClass: 'secondary',
-          id: 'cancel-button'
-        },
-        {
-          text: 'SIM',
-          id: 'confirm-button',
-          handler: async () => {
-            const loading = await this.loadingController.create({
-              message: 'Cancelando venda, aguarde...'
-            });
-            await loading.present();
-            this.vendaService.cancelar(this.caixaMovelStorage.sistemaVendas.vendaAtual.selectIds.vendaId).subscribe(async (res: any) => {
-              await loading.dismiss();
-              if (res.status === 'OK' || res.status.toLowerCase() === 'a venda já foi cancelada'){
-                this.caixaMovelStorage.sistemaVendas.vendaAtual = null;
-                await this.storage.set('caixa-movel', this.caixaMovelStorage);
-                this.navigateBack();
-              } else {
-                this.erroAlert('Erro ao cancelar a venda:', res.status.toLowerCase());
-              };
-            }, (err) => {
-              this.erroAlert('Erro ao cancelar a venda:', 'Erro ao conectar com o servidor local');
-            });
-          },
-        },
-      ],
-    });
-    await alert.present();
+  voltarAtual(){
+    this.navCtrl.navigateBack('/home/caixa-movel/sistema-vendas/atual');
   }
 
   mostrarProdutoScaneado(codeBar){

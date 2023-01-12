@@ -9,26 +9,24 @@ const routes: Routes = [
     component: VenderPage
   },
   {
-    path: 'lista-itens',
-    loadChildren: () => import('./rotas/carrinho/carrinho.module').then( m => m.CarrinhoPageModule)
+    path: 'configuracoes',
+    loadChildren: () => import('./rotas/configuracoes/configuracoes.module').then( m => m.ConfiguracoesPageModule)
   },
   {
-    path: 'scanner',
-    loadChildren: () => import('./rotas/scanner-caixa/scanner-caixa.module').then( m => m.ScannerCaixaPageModule)
+    path: 'atual',
+    loadChildren: () => import('./rotas/atual/atual.module').then( m => m.AtualPageModule)
   },
   {
-    path: 'pagamento',
-    loadChildren: () => import('./rotas/pagamento/pagamento.module').then( m => m.PagamentoPageModule)
-  },
-  {
-    path: 'confirmacao',
-    loadChildren: () => import('./rotas/confirmacao/confirmacao.module').then( m => m.ConfirmacaoPageModule)
+    path: 'anteriores',
+    loadChildren: () => import('./rotas/anteriores/anteriores.module').then( m => m.AnterioresPageModule)
   },
   {
     path: '**',
     redirectTo: '/home/caixa-movel/sistema-vendas',
     pathMatch: 'full'
-  }
+  },
+
+
 ];
 
 @NgModule({

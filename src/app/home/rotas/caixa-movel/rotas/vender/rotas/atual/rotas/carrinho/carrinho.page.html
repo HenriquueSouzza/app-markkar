@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar color="dark">
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/home/caixa-movel/sistema-vendas/scanner"></ion-back-button>
+      <ion-back-button defaultHref="/home/caixa-movel/sistema-vendas/atual/scanner"></ion-back-button>
     </ion-buttons>
     <ion-title>Lista de Itens</ion-title>
   </ion-toolbar>
@@ -31,8 +31,8 @@
       <p>{{totalCarrinho}}</p>
     </div>
     <div id="btns">
-      <ion-button color="danger" (click)="cancelarCarrinho()">
-        Cancelar
+      <ion-button color="primary" (click)="voltarAtual()">
+        Voltar
       </ion-button>
       <ion-button (click)="goPagamento()">
         Pagamento

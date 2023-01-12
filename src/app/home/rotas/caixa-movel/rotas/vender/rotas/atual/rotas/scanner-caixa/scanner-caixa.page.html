@@ -28,8 +28,8 @@
           <p>{{totalCarrinho}}</p>
         </div>
         <div id="btns">
-          <ion-button (click)="cancelarCarrinho()" color="danger">
-            Cancelar
+          <ion-button (click)="voltarAtual()">
+            Voltar
           </ion-button>
           <ion-button color="dark" (click)="goToCar()">
             Lista de itens
@@ -92,7 +92,7 @@
             <ion-label slot="end">{{convertReal(pordutoScanneado['valor']*pordutoScanneado['qnt'])}}</ion-label>
           </ion-item>
           <div style="display: flex;align-items: baseline;justify-content: center;margin-top: 10px;">
-            <ion-button (click)="modalProdIsOpen = false;reloadScan();" color="danger" style="margin-right: 30px; min-width: 115px;">Voltar</ion-button>
+            <ion-button (click)="modalProdIsOpen = false;reloadScan();" color="danger" style="margin-right: 30px; min-width: 115px;">Não adicionar</ion-button>
             <ion-button (click)="adicionaCarrinho();!modalProdIsOpen = false;reloadScan();" style=" min-width: 115px;" >Adicionar</ion-button>
           </div>
         </div>
@@ -128,8 +128,8 @@
         <p>{{totalCarrinho}}</p>
       </div>
       <div id="btns">
-        <ion-button (click)="cancelarCarrinho()" color="danger">
-          Cancelar
+        <ion-button (click)="voltarAtual()">
+          Voltar
         </ion-button>
         <ion-button color="dark" (click)="goToCar()">
           Lista de itens

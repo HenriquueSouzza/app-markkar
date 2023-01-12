@@ -102,47 +102,12 @@ export class CarrinhoPage implements OnInit {
     }
   }
 
-  async cancelarCarrinho(){
-    const alert = await this.alertController.create({
-      cssClass: 'my-custom-class',
-      header: 'Você deseja cancelar a venda?',
-      backdropDismiss: false,
-      buttons: [
-        {
-          text: 'NÃO',
-          role: 'cancel',
-          cssClass: 'secondary',
-          id: 'cancel-button'
-        },
-        {
-          text: 'SIM',
-          id: 'confirm-button',
-          handler: async () => {
-            const loading = await this.loadingController.create({
-              message: 'Cancelando venda, aguarde...'
-            });
-            await loading.present();
-            this.vendaService.cancelar(this.caixaMovelStorage.sistemaVendas.vendaAtual.selectIds.vendaId).subscribe(async (res: any) => {
-              await loading.dismiss();
-              if (res.status === 'OK' || res.status.toLowerCase() === 'a venda já foi cancelada'){
-                this.caixaMovelStorage.sistemaVendas.vendaAtual = null;
-                await this.storage.set('caixa-movel', this.caixaMovelStorage);
-                this.navCtrl.navigateBack('/home/caixa-movel/sistema-vendas');;
-              } else {
-                this.erroAlert('Erro ao cancelar a venda:', res.status.toLowerCase());
-              };
-            }, (err) => {
-              this.erroAlert('Erro ao cancelar a venda:', 'Erro ao conectar com o servidor local');
-            });
-          },
-        },
-      ],
-    });
-    await alert.present();
+  voltarAtual(){
+    this.navCtrl.navigateBack('/home/caixa-movel/sistema-vendas/atual');
   }
 
   goPagamento(){
-    this.navCtrl.navigateForward('/home/caixa-movel/sistema-vendas/pagamento');
+    this.navCtrl.navigateForward('/home/caixa-movel/sistema-vendas/atual/pagamento');
   }
 
   // erros

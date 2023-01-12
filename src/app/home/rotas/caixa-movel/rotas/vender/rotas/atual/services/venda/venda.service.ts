@@ -12,6 +12,10 @@ export class VendaService {
     return this.http.post('http://192.168.0.15:8080/app/caixaMovel/venda/iniciar', {codEmp, codCc, codUser, cpf, codCliente});
   }
 
+  finalizar(vendaAtual: string){
+    return this.http.put('http://192.168.0.15:8080/app/caixaMovel/venda/finalizar', {vendaAtual});
+  }
+
   buscarClientes(nome: string, cpf: string){
     return this.http.get('http://192.168.0.15:8080/app/caixaMovel/venda/cliente/buscar', {params:{nome, cpf}});
   }

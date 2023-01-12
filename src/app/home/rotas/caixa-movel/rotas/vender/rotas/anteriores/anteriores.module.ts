@@ -4,17 +4,17 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { ConfirmacaoPageRoutingModule } from './confirmacao-routing.module';
+import { AnterioresPageRoutingModule } from './anteriores-routing.module';
 
-import { ConfirmacaoPage } from './confirmacao.page';
+import { AnterioresPage } from './anteriores.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    ConfirmacaoPageRoutingModule
+    AnterioresPageRoutingModule
   ],
-  declarations: [ConfirmacaoPage]
+  declarations: [AnterioresPage]
 })
-export class ConfirmacaoPageModule {}
+export class AnterioresPageModule {}
