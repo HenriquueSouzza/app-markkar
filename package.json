@@ -42,6 +42,7 @@
     "@ionic/storage": "^3.0.6",
     "@ionic/storage-angular": "^3.0.6",
     "@types/date-fns": "^2.6.0",
+    "capacitor-rate-app": "^3.1.0-beta.1",
     "chart.js": "4.1.1",
     "cordova-plugin-app-version": "^0.1.14",
     "cordova-plugin-file": "^7.0.0",

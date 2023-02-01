@@ -19,6 +19,7 @@ import { timeout } from 'rxjs/operators';
 import { LoginService } from 'src/app/login/services/login/login.service';
 import { StorageService } from 'src/app/services/storage/storage.service';
 import { FaturamentoService } from 'src/app/home/services/faturamento/faturamento.service';
+import { RateApp } from 'capacitor-rate-app';
 
 @Component({
   selector: 'app-faturamento',
@@ -160,6 +161,7 @@ export class FaturamentoPage implements OnInit {
   ngOnInit() {}
 
   async ionViewWillEnter() {
+    RateApp.requestReview();
     this.menu.enable(true, 'homeMenu');
     //loadStorage
     this.auth = await this.storage.get('auth');

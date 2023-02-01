@@ -24,7 +24,7 @@ export class ProdutosPage implements OnInit {
     private storage: Storage,
     private storageService: StorageService,
     private route: ActivatedRoute
-    ) { }
+  ) {}
 
   async ngOnInit() {
     this.estoqueStorage = await this.storage.get('estoque');
@@ -37,27 +37,38 @@ export class ProdutosPage implements OnInit {
       }
     });
     this.estoqueService
-        .consultaProduto({
-          codeEmp: this.idEmpBird,
-          codeCC: this.idCc,
-          codeBar: this.codeBar,
-          nome: this.nome
-        })
-        .subscribe(async (res: any) => {
-          console.log(res);
-          this.produtos = Object.values(res.produtos);
-          if(res.produtos.length === 1){
-            if (this.estoqueStorage.historico.length > 4){
-              this.estoqueStorage.historico.pop();
-              this.estoqueStorage.historico.unshift({nome: res.produtos[0].NOME_PRODUTO, codeBar: res.produtos[0].COD_BARRA});
-              await this.storage.set('estoque', this.estoqueStorage);
-            } else {
-              this.estoqueStorage.historico.unshift({nome: res.produtos[0].NOME_PRODUTO, codeBar: res.produtos[0].COD_BARRA});
-              await this.storage.set('estoque', this.estoqueStorage);
-            }
+      .consultaProduto({
+        codeEmp: this.idEmpBird,
+        codeCC: this.idCc,
+        codeBar: this.codeBar,
+        nome: this.nome,
+      })
+      .subscribe(async (res: any) => {
+        console.log(res);
+        this.produtos = Object.values(res.produtos);
+        if (res.produtos.length === 1) {
+          if (this.estoqueStorage.historico.length > 4) {
+            this.estoqueStorage.historico.pop();
+            this.estoqueStorage.historico.unshift({
+              nome: res.produtos[0].NOME_PRODUTO,
+              codeBar: res.produtos[0].COD_BARRA,
+            });
+            await this.storage.set('estoque', this.estoqueStorage);
+          } else {
+            this.estoqueStorage.historico.unshift({
+              nome: res.produtos[0].NOME_PRODUTO,
+              codeBar: res.produtos[0].COD_BARRA,
+            });
+            await this.storage.set('estoque', this.estoqueStorage);
           }
-          //{COD_BARRA: "7899838806976" COD_PRODUTO: "4371" NOME_PRODUTO: "TESTE HENRIQUE" QTD_ESTOQUE: "50" UNIDADE: "UN" VALOR: "5"}
-        });
+        }
+        //{COD_BARRA: "7899838806976" COD_PRODUTO: "4371" NOME_PRODUTO: "TESTE HENRIQUE" QTD_ESTOQUE: "50" UNIDADE: "UN" VALOR: "5"}
+      });
   }
-
+  convertReal(valor) {
+    return parseFloat(valor).toLocaleString('pt-br', {
+      style: 'currency',
+      currency: 'BRL',
+    });
+  }
 }
