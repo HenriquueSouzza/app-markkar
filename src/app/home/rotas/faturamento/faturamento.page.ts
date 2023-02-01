@@ -158,10 +158,11 @@ export class FaturamentoPage implements OnInit {
     public toastController: ToastController
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    RateApp.requestReview();
+  }
 
   async ionViewWillEnter() {
-    RateApp.requestReview();
     this.menu.enable(true, 'homeMenu');
     //loadStorage
     this.auth = await this.storage.get('auth');
