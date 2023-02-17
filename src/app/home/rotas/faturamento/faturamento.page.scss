@@ -178,9 +178,12 @@ ion-toolbar{
       border-radius: 12px;
       border: #ff9f19 solid 1px;
       padding: 8px;
-      height: 114px;
-      min-height: 114px;
-      max-height: 114px;
+      overflow: hidden;
+      height: 130px;
+      min-height: 130px;
+      max-height: 250px;
+      transition: all .4s;
+      position: relative;
 
       .dado{
         padding: 5px;
@@ -202,6 +205,21 @@ ion-toolbar{
           text-overflow: ellipsis;
           overflow: hidden;
           text-transform: uppercase;
+        }
+      }
+
+      .mostrarMais {
+        width: 100%;
+        left: 0;
+        bottom: -5px;
+        position: absolute;
+
+        ion-button {
+          font-size: .9rem;
+          height: 40px;
+          text-transform: uppercase;
+          --background: linear-gradient(0deg, rgba(20,21,24,1) 40%, rgba(20,21,24,0.24693627450980393) 79%, rgba(20,21,24,0) 100%);
+          --background-activated: linear-gradient(0deg, rgba(20,21,24,1) 40%, rgba(20,21,24,0.24693627450980393) 79%, rgba(20,21,24,0) 100%);
         }
       }
     }

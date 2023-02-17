@@ -103,6 +103,7 @@ export class FaturamentoPage implements OnInit {
   valueGraficoIntervalFilter: string;
   titleGra: string;
   fatHeaderTime: string;
+  openDetails = false;
 
   //Login
   valFLogin: boolean;

@@ -113,7 +113,7 @@
             <p *ngIf="displayDay === 'block'" >{{ dateValueDayFormat }}</p>
             <p *ngIf="displayDay === 'none'" >{{ displayIntervalUnid }}</p>
           </div>
-          <div class="dados">
+          <div class="dados" [ngStyle]="{'height': openDetails ? '250px' : '130px'}">
             <div class="dado">
               <h3>faturamento:</h3>
               <p *ngIf="!dateLoader">{{ convertInReal(unidade['somaFat']) }}</p>
@@ -129,6 +129,26 @@
               <h3>margem:</h3>
               <p *ngIf="!dateLoader">{{ convertInReal(unidade['somaMargem']) }}</p>
               <ion-skeleton-text *ngIf="dateLoader" animated style="width: 30%"></ion-skeleton-text>
+            </div>
+            <div class="dado" style="padding-top: 10px; margin-top: 10px; border-top: 2px white solid;">
+              <h3>pix:</h3>
+              <p *ngIf="!dateLoader">{{ convertInReal(unidade['somaMargem']/3) }}</p>
+              <ion-skeleton-text *ngIf="dateLoader" animated style="width: 30%"></ion-skeleton-text>
+            </div>
+            <div class="dado">
+              <h3>cartão:</h3>
+              <p *ngIf="!dateLoader">{{ convertInReal(unidade['somaMargem']/3) }}</p>
+              <ion-skeleton-text *ngIf="dateLoader" animated style="width: 30%"></ion-skeleton-text>
+            </div>
+            <div class="dado">
+              <h3>dinheiro:</h3>
+              <p *ngIf="!dateLoader">{{ convertInReal(unidade['somaMargem']/3) }}</p>
+              <ion-skeleton-text *ngIf="dateLoader" animated style="width: 30%"></ion-skeleton-text>
+            </div>
+            <div class="mostrarMais">
+              <ion-button (click)="openDetails = !openDetails" expand="block">
+                Mostrar mais
+              </ion-button>
             </div>
           </div>
         </div>
