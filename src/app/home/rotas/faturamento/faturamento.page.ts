@@ -87,6 +87,7 @@ export class FaturamentoPage implements OnInit {
   ];
 
   //Settings and Bool
+  indexDetalhes = 0;
   tryies = 0;
   contentLoader: boolean;
   dateLoader: boolean;
@@ -116,6 +117,7 @@ export class FaturamentoPage implements OnInit {
 
   //Faturamento
   unidadesFat: string[];
+  unidadesFatDetalhes: string[];
   unidadesHeader: string[];
   somaFatHeader: string;
   somaMargemHeader: string;
