@@ -113,7 +113,7 @@
             <p *ngIf="displayDay === 'block'" >{{ dateValueDayFormat }}</p>
             <p *ngIf="displayDay === 'none'" >{{ displayIntervalUnid }}</p>
           </div>
-          <div class="dados" [ngStyle]="{'height': openDetails ? 'auto' : '130px'}">
+          <div class="dados" [ngStyle]="{'height': unidade['detalhesOpen'] ? 'auto' : '130px'}">
             <div class="dado">
               <h3>faturamento:</h3>
               <p *ngIf="!dateLoader">{{ convertInReal(unidade['somaFat']) }}</p>
@@ -140,7 +140,7 @@
               </ng-container>
             </div>
             <div class="mostrarMais">
-              <ion-button (click)="openDetails = !openDetails" expand="block">
+              <ion-button fill="clear" shape="round" [disabled]="unidade['detalhes'] === null ? true : false" (click)="unidade['detalhesOpen'] = !unidade['detalhesOpen']" expand="block">
                 Mostrar mais
               </ion-button>
             </div>

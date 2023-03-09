@@ -162,7 +162,7 @@ export class FaturamentoPage implements OnInit {
   ) {}
 
   ngOnInit() {
-    RateApp.requestReview();
+    //RateApp.requestReview();
   }
 
   async ionViewWillEnter() {

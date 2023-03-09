@@ -212,13 +212,12 @@ ion-toolbar{
         left: 0;
         bottom: -5px;
         position: absolute;
+        background: linear-gradient(0deg, rgba(20,21,24,1) 50%, rgba(20,21,24,0.24693627450980393) 79%, rgba(20,21,24,0) 100%);
 
         ion-button {
-          font-size: .9rem;
-          height: 40px;
+          font-size: .8rem;
+          height: 30px;
           text-transform: uppercase;
-          --background: linear-gradient(0deg, rgba(20,21,24,1) 40%, rgba(20,21,24,0.24693627450980393) 79%, rgba(20,21,24,0) 100%);
-          --background-activated: linear-gradient(0deg, rgba(20,21,24,1) 40%, rgba(20,21,24,0.24693627450980393) 79%, rgba(20,21,24,0) 100%);
         }
       }
     }
