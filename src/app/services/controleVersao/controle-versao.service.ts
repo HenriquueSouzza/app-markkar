@@ -29,8 +29,8 @@ export class ControleVersaoService {
         const versaoAtual = res.versao;
         const versaoApp = await this.appVersion.getVersionCode();
         if(versaoAtual > versaoApp){
-          //this.router.navigateByUrl('/login/updateApp', { replaceUrl: true });
-          //this.showDialog();
+          this.router.navigateByUrl('/login/updateApp', { replaceUrl: true });
+          this.showDialog();
           this.checkReset();
         } else {
           this.checkReset();
