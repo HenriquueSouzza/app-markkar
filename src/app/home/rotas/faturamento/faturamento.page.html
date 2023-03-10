@@ -113,7 +113,7 @@
             <p *ngIf="displayDay === 'block'" >{{ dateValueDayFormat }}</p>
             <p *ngIf="displayDay === 'none'" >{{ displayIntervalUnid }}</p>
           </div>
-          <div class="dados" [ngStyle]="{'height': unidade['detalhesOpen'] ? 'auto' : '130px'}">
+          <div class="dados" [ngStyle]="{'height': unidade['detalhes']['isOpen'] ? 180+(25*unidade['detalhes']['qnt'])+'px' : '130px'}">
             <div class="dado">
               <h3>faturamento:</h3>
               <p *ngIf="!dateLoader">{{ convertInReal(unidade['somaFat']) }}</p>
@@ -130,8 +130,8 @@
               <p *ngIf="!dateLoader">{{ convertInReal(unidade['somaMargem']) }}</p>
               <ion-skeleton-text *ngIf="dateLoader" animated style="width: 30%"></ion-skeleton-text>
             </div>
-            <div style="width: 100%;padding-top: 10px; margin-top: 10px; border-top: 2px white solid;margin-bottom: 25px;">
-              <ng-container *ngFor="let detelhes of unidade['detalhes']; let indexDetalhes = index">
+            <div style="width: 100%;padding-top: 10px; margin-top: 10px; border-top: 1px rgb(231, 150, 0) solid;margin-bottom: 25px;">
+              <ng-container *ngFor="let detelhes of unidade['detalhes']['valores']; let indexDetalhes = index">
                 <div class="dado">
                   <h3 style="text-transform: lowercase;">{{detelhes['formaPg']}}:</h3>
                   <p *ngIf="!dateLoader">{{ convertInReal(detelhes['valor']) }}</p>
@@ -140,8 +140,8 @@
               </ng-container>
             </div>
             <div class="mostrarMais">
-              <ion-button fill="clear" shape="round" [disabled]="unidade['detalhes'] === null ? true : false" (click)="unidade['detalhesOpen'] = !unidade['detalhesOpen']" expand="block">
-                Mostrar mais
+              <ion-button fill="clear" shape="round" [disabled]="unidade['detalhes']['valores'] === null ? true : false" (click)="unidade['detalhes']['isOpen'] = !unidade['detalhes']['isOpen']" expand="block">
+                {{unidade['detalhes']['isOpen'] === true ? 'ocultar' : 'mostrar'}} detalhes
               </ion-button>
             </div>
           </div>

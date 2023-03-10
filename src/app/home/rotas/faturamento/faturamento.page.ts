@@ -649,12 +649,11 @@ export class FaturamentoPage implements OnInit {
     }
   }
 
-  async setGraficoInterval(event) {
+  setGraficoInterval(event) {
     this.valueGraficoIntervalFilter = event.detail.value;
   }
-  async setInterval(event) {
-    await this.storage.set('interval', event.detail.value);
-    this.interval = await this.storage.get('interval');
+  setInterval(event) {
+    this.interval = event.detail.value;
     if (this.interval === 'interval') {
       this.displayIntervalUnid = 'intervalo';
       this.displayInterval = 'block';
