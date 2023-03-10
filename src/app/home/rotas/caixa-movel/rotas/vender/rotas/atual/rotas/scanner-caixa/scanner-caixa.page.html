@@ -1,0 +1,140 @@
+<ion-content *ngIf="telaEspelho" no-bounce has-bouncing="false" forceOverscroll="false">
+  <div id="scan" *ngIf="!telaDigCodigo">
+    <div id="backUp">
+      <ion-header>
+        <ion-toolbar color="dark" style="height: auto">
+          <ion-buttons slot="start">
+            <ion-button (click)="navigateBack()" fill="clear" shape="round"><ion-icon slot="icon-only" class="flashIcon" name="close-outline"></ion-icon></ion-button>
+          </ion-buttons>
+          <ion-buttons slot="end">
+            <!--<ion-button (click)="switchFlashLight();presentToast('Em desenvolvimento...')" fill="clear" shape="round" *ngIf="!flashIsSwitchedOn"><ion-icon slot="icon-only" class="flashIcon" name="flash-outline"></ion-icon></ion-button>
+            <ion-button (click)="switchFlashLight();presentToast('Em desenvolvimento...')" fill="clear" shape="round" *ngIf="flashIsSwitchedOn"><ion-icon slot="icon-only" class="flashIcon" name="flash-off-outline"></ion-icon></ion-button>-->
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <div id="btnsDigCodeAndFast">
+        <ion-button color="dark" (click)="setModoRapido()">
+          <ion-checkbox [checked]="modoRapido" slot="start"></ion-checkbox>
+          <ion-label>Modo Rápido</ion-label>
+        </ion-button>
+        <ion-button color="dark" (click)="telaDigCodigo = !telaDigCodigo; telaEspelho = true;stopScan();modoRapido = false">Digite o código</ion-button>
+      </div>
+    </div>
+    <div id="line"></div>
+    <div id="backDown">
+      <div id="footer">
+        <div id="total">
+          <h3>Total:</h3>
+          <p>{{totalCarrinho}}</p>
+        </div>
+        <div id="btns">
+          <ion-button (click)="voltarAtual()">
+            Voltar
+          </ion-button>
+          <ion-button color="dark" (click)="goToCar()">
+            Lista de itens
+          </ion-button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="code" *ngIf="telaDigCodigo">
+    <ion-header>
+      <ion-toolbar color="dark" style="height: auto">
+        <ion-buttons slot="start">
+          <ion-button (click)="telaDigCodigo = !telaDigCodigo;ionViewWillEnter()"><ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon></ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-item lines="none">
+      <ion-label id="titleCode">digite o código de barras</ion-label>
+    </ion-item>
+    <form #f="ngForm" (ngSubmit)="consultarProd(f)">
+      <ion-item lines="full">
+        <ion-label position="stacked">código de barras</ion-label>
+        <ion-input #inputCodeScanner ngModel name="codeProd" inputmode="numeric"></ion-input>
+      </ion-item>
+      <div id="btnConsultar">
+        <ion-button type="submit">Consultar</ion-button>
+        <span style="margin: 10px 0;">ou</span>
+        <ion-button color="dark" (click)="telaDigCodigo = !telaDigCodigo;ionViewWillEnter()"><ion-icon size="large" slot="start" style="color: white;" name="barcode-outline"></ion-icon>Scanner</ion-button>
+      </div>
+    </form>
+  </div>
+</ion-content>
+<ion-modal
+    [isOpen]="modalProdIsOpen"
+    [canDismiss]="true"
+    swipe-to-close="true"
+  >
+    <ng-template>
+      <ion-header style="background: var(--ion-color-dark) !important">
+        <ion-toolbar color="dark">
+          <ion-title>produto</ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <div class="produtos">
+          <ion-item class="produto" lines="full">
+            <ion-label>
+              {{pordutoScanneado['nome']}}
+              <p>Cod: {{pordutoScanneado['cod']}}</p>
+              <p>QntMax: {{pordutoScanneado['qntMax']}}</p>
+              <p>medida: {{pordutoScanneado['medida']}}</p>
+              <div style="display: flex;align-items: baseline;justify-content: flex-start;">
+                <div class="addItem">
+                  <ion-button (click)="pordutoScanneado['qnt'] = verificaEstoque(changeQnt(pordutoScanneado['qnt'], 'sub'), pordutoScanneado['qntMax']);" expand="block" fill="clear" shape="round"><ion-icon slot="icon-only" name="remove-outline"></ion-icon></ion-button>
+                  <input [value]="pordutoScanneado['qnt']" (input)="pordutoScanneado['qnt'] = verificaEstoque(toIntQnt($event.target['value']), pordutoScanneado['qntMax']);" onkeypress="return event.charCode >= 48 && event.charCode <= 57" type = "text" maxlength = "6" inputmode="numeric" pattern="[0-9]+">
+                  <ion-button (click)="pordutoScanneado['qnt'] = verificaEstoque(changeQnt(pordutoScanneado['qnt'], 'add'), pordutoScanneado['qntMax']);" expand="block" fill="clear" shape="round"><ion-icon slot="icon-only" name="add-outline"></ion-icon></ion-button>
+                </div>
+              </div>
+            </ion-label>
+            <ion-label slot="end">{{convertReal(pordutoScanneado['valor']*pordutoScanneado['qnt'])}}</ion-label>
+          </ion-item>
+          <div style="display: flex;align-items: baseline;justify-content: center;margin-top: 10px;">
+            <ion-button (click)="modalProdIsOpen = false;reloadScan();" color="danger" style="margin-right: 30px; min-width: 115px;">Não adicionar</ion-button>
+            <ion-button (click)="adicionaCarrinho();!modalProdIsOpen = false;reloadScan();" style=" min-width: 115px;" >Adicionar</ion-button>
+          </div>
+        </div>
+      </ion-content>
+    </ng-template>
+</ion-modal>
+<div id="scan" *ngIf="!telaEspelho">
+  <div id="backUp">
+    <ion-header>
+      <ion-toolbar color="dark" style="height: auto">
+        <ion-buttons slot="start">
+          <ion-button (click)="navigateBack()" fill="clear" shape="round"><ion-icon slot="icon-only" class="flashIcon" name="close-outline"></ion-icon></ion-button>
+        </ion-buttons>
+        <ion-buttons slot="end">
+          <!--<ion-button (click)="switchFlashLight();presentToast('Em desenvolvimento...')" fill="clear" shape="round" *ngIf="!flashIsSwitchedOn"><ion-icon slot="icon-only" class="flashIcon" name="flash-outline"></ion-icon></ion-button>
+          <ion-button (click)="switchFlashLight();presentToast('Em desenvolvimento...')" fill="clear" shape="round" *ngIf="flashIsSwitchedOn"><ion-icon slot="icon-only" class="flashIcon" name="flash-off-outline"></ion-icon></ion-button>-->
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <div id="btnsDigCodeAndFast">
+      <ion-button color="dark" (click)="setModoRapido()">
+        <ion-checkbox [checked]="modoRapido" slot="start"></ion-checkbox>
+        <ion-label>Modo Rápido</ion-label>
+      </ion-button>
+      <ion-button color="dark" (click)="telaDigCodigo = !telaDigCodigo; telaEspelho = true;stopScan();modoRapido = false">Digite o código</ion-button>
+    </div>
+  </div>
+  <div id="line"></div>
+  <div id="backDown">
+    <div id="footer">
+      <div id="total">
+        <h3>Total:</h3>
+        <p>{{totalCarrinho}}</p>
+      </div>
+      <div id="btns">
+        <ion-button (click)="voltarAtual()">
+          Voltar
+        </ion-button>
+        <ion-button color="dark" (click)="goToCar()">
+          Lista de itens
+        </ion-button>
+      </div>
+    </div>
+  </div>
+</div>

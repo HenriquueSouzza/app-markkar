@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/dot-notation */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Storage } from '@ionic/storage-angular';
 import { StorageService } from 'src/app/services/storage/storage.service';
 import { AlertController, LoadingController, NavController, ToastController } from '@ionic/angular';
 import { timeout } from 'rxjs/operators';
-import { EstoqueService } from '../estoque/services/estoque/estoque.service';
+import { EstoqueService } from './rotas/estoque/services/estoque/estoque.service';
 
 @Component({
   selector: 'app-caixa-movel',
@@ -13,6 +13,10 @@ import { EstoqueService } from '../estoque/services/estoque/estoque.service';
   styleUrls: ['./caixa-movel.page.scss'],
 })
 export class CaixaMovelPage implements OnInit {
+
+  @ViewChild('popOver') popOver: any;
+  @ViewChild('ionSelect') ionSelect: any;
+  @ViewChild('ionSelectOff') ionSelectOff: any;
 
   public conectadoServeLocal = false;
   public btnServerLocal = true;
@@ -27,23 +31,39 @@ export class CaixaMovelPage implements OnInit {
   // storage
   private auth: any;
   private multiEmpresaStorage: any;
+  private caixaMovelStorage: any;
 
   constructor(
+    public loadingController: LoadingController,
+    public alertController: AlertController,
+    public toastController: ToastController,
     private estoqueService: EstoqueService,
     private storage: Storage,
     private storageService: StorageService,
     private navCtrl: NavController,
-    public loadingController: LoadingController,
-    public alertController: AlertController,
-    public toastController: ToastController
   ) {}
 
   async ngOnInit() {
     this.auth = await this.storage.get('auth');
     this.multiEmpresaStorage = await this.storage.get('multiEmpresa');
     if(await this.storage.get('caixa-movel') === null){
-      await this.storage.set('caixa-movel', {vendas: {carrinho: [], configuracoes: { modoRapido: false }}});
-    };
+      await this.storage.set('caixa-movel',
+        {
+          sistemaVendas: {vendaAtual: null, configuracoes: {modoRapido: false}},
+          configuracoes: {slectedIds: {firebirdIdEmp: null, fireBirdIdCc: null, sqlIdCc: null }}}
+        );
+      this.caixaMovelStorage = await this.storage.get('caixa-movel');
+    } else {
+      this.caixaMovelStorage = await this.storage.get('caixa-movel');
+      if(this.caixaMovelStorage.sistemaVendas === undefined ||this.caixaMovelStorage.sistemaVendas === null){
+        await this.storage.set('caixa-movel',
+          {
+            sistemaVendas: {vendaAtual: null, configuracoes: {modoRapido: false}},
+            configuracoes: {slectedIds: {firebirdIdEmp: null, fireBirdIdCc: null, sqlIdCc: null }}}
+          );
+          this.caixaMovelStorage = await this.storage.get('caixa-movel');
+      }
+    }
     this.conectServidor();
   }
 
@@ -68,6 +88,7 @@ export class CaixaMovelPage implements OnInit {
         this.btnServerLocal = false;
         this.conectadoServeLocal = true;
         await loading.dismiss();
+        console.log(this.ionSelect);
       }, async (error) => {
         await loading.dismiss();
         const alert = await this.alertController.create({
@@ -98,43 +119,49 @@ export class CaixaMovelPage implements OnInit {
       });
   }
 
-  centroscustosChange(cc) {
+  async centroscustosChange(cc) {
     if(this.conectadoServeLocal){
       this.idCc = cc.detail.value.fire;
       this.idCcSql = cc.detail.value.sql;
     } else {
       this.idCcSql = cc.detail.value;
     }
+    console.log(this.caixaMovelStorage);
+    this.caixaMovelStorage.configuracoes.slectedIds.firebirdIdEmp = this.idEmpBird;
+    this.caixaMovelStorage.configuracoes.slectedIds.fireBirdIdCc = this.idCc === undefined ? 'localServerOff' : this.idCc;
+    this.caixaMovelStorage.configuracoes.slectedIds.sqlIdCc = this.idCcSql;
+    await this.storage.set('caixa-movel', this.caixaMovelStorage);
   }
 
-  navigateScanner() {
+  navigateSistemaVendas() {
     if (this.idCc === undefined) {
-      this.presentToast('Escolha o centro de custo');
+      this.popOver.present();
     } else {
-      this.navCtrl.navigateForward('/home/caixa-movel/scanner-caixa', {
-        queryParams: { id1: this.idEmpBird, id2: this.idCc },
-        queryParamsHandling: 'merge',
-      });
+      this.navCtrl.navigateForward('/home/caixa-movel/sistema-vendas');
     }
   }
 
   navigateRelatorios() {
     if (this.idCcSql === undefined) {
-      this.presentToast('Escolha o centro de custo');
+      this.popOver.present();
     } else {
-      this.navCtrl.navigateForward('/home/caixa-movel/relatorios', {
-        queryParams: { id: this.idCcSql },
-        queryParamsHandling: 'merge',
-      });
+      this.navCtrl.navigateForward('/home/caixa-movel/relatorios');
     }
   }
 
-  async presentToast(men) {
-    const toast = await this.toastController.create({
-      message: men,
-      duration: 2000,
-      color: 'dark',
-    });
-    toast.present();
+  navigateEstoque() {
+    if (this.idCc === undefined) {
+      this.popOver.present();
+    } else {
+      this.navCtrl.navigateForward('/home/caixa-movel/estoque');
+    }
+  }
+
+  popOverCloseEvent(){
+    if(this.conectadoServeLocal){
+      this.ionSelect.open();
+    } else {
+      this.ionSelectOff.open();
+    }
   }
 }

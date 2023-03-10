@@ -1,0 +1,75 @@
+<ion-header>
+  <ion-toolbar color="dark">
+    <ion-buttons slot="start">
+      <ion-back-button
+        defaultHref="/home/caixa-movel/sistema-vendas/pagamento"
+      ></ion-back-button>
+    </ion-buttons>
+    <ion-title>Venda atual: {{codVenda}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="lista">
+    <ion-item lines="none" style="width: 100%;" class="title">
+      <ion-label>Produtos</ion-label>
+      <ion-button [disabled]="produtosLength === 0 ? true : false" routerLink="/home/caixa-movel/sistema-vendas/atual/lista-itens" expand="block" fill="clear" shape="round" slot="end"><ion-icon slot="icon-only" name="create-outline"></ion-icon></ion-button>
+      <ion-button routerLink="/home/caixa-movel/sistema-vendas/atual/scanner" expand="block" fill="clear" shape="round" slot="end" style="margin-right: 0;"><ion-icon slot="icon-only" name="add-outline"></ion-icon></ion-button>
+    </ion-item>
+    <ul>
+      <li *ngFor="let produto of produtos">
+        <h2 style="font-weight: bold;">{{produto['nome']}}</h2>
+        <p>X{{produto['qnt']}} ========== {{convertReal(produto['valor'])}}</p>
+      </li>
+      <li style="list-style: none;" *ngIf="produtosLength === 0">
+        <h2 style="font-weight: bold;color: gray;">Nenhum produto adicionado</h2>
+      </li>
+    </ul>
+  </div>
+  <div class="lista">
+    <ion-item lines="none" style="width: 100%;" class="title">
+      <ion-label>Pagamentos</ion-label>
+      <ion-button routerLink="/home/caixa-movel/sistema-vendas/atual/pagamento" [disabled]="produtosLength === 0 ? true : false" expand="block" fill="clear" shape="round" slot="end" style="margin-right: 0;"><ion-icon slot="icon-only" name="add-outline"></ion-icon></ion-button>
+    </ion-item>
+    <ul>
+      <li *ngFor="let pagamento of pagamentos">
+        <h2 style="font-weight: bold;">{{pagamento['formaPg']['sigla']}}: {{convertReal(pagamento['valor'])}}</h2>
+        <p style="margin-top: 10px;" *ngIf="pagamento['formaPg']['sigla'] === 'CRT'">- Bandeira: {{ pagamento['formaPg']['bandeira'] === null ? 'Não Selecionado' : pagamento['formaPg']['bandeira'] }}</p>
+        <p *ngIf="pagamento['formaPg']['sigla'] === 'CRT'">- Rede Autoriza: {{ pagamento['formaPg']['redeAutoriza'] === null ? 'Não Selecionado' : pagamento['formaPg']['redeAutoriza'] }}</p>
+        <p *ngIf="pagamento['formaPg']['sigla'] === 'CRT'">- Tipo de pagamento: {{ pagamento['formaPg']['dc'] === 'C' ? 'Crédito' : pagamento['formaPg']['dc'] === 'D' ? 'Débito' : 'Não Selecionado' }}</p>
+        <p *ngIf="pagamento['formaPg']['sigla'] === 'CRT'">- Parcelas: {{ pagamento['formaPg']['parcelas'] === null ? 'Não Selecionado' : pagamento['formaPg']['parcelas'] }}</p>
+      </li>
+      <li style="list-style: none;" *ngIf="pagamentosLength === 0">
+        <h2 style="font-weight: bold;color: gray;">Nenhum pagamento adicionado</h2>
+      </li>
+    </ul>
+  </div>
+  <div class="lista">
+    <ion-item lines="none" style="width: 100%;" class="title">
+      <ion-label>Clientes</ion-label>
+      <ion-button expand="block" fill="clear" shape="round" slot="end" style="margin-right: 0;"><ion-icon slot="icon-only" name="add-outline"></ion-icon></ion-button>
+    </ion-item>
+    <div id="cliente">
+      <h2>Nome: {{clienteNome}}</h2>
+      <p>CPF: {{clienteCPF}}</p>
+    </div>
+  </div>
+  <div class="lista">
+    <ion-item lines="none" style="width: 100%;" class="title">
+      <ion-label>Caixa</ion-label>
+    </ion-item>
+    <ion-item lines="none">
+      <ion-select #selectCaixa placeholder="Selecione o caixa">
+        <ion-select-option *ngFor="let caixa of caixasAbertos" value="{{caixa['COD_VND_CAIXA']}}">{{caixa['COD_VND_CAIXA']+'-'+caixa['APELIDO']}}</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <div id="btnsFinal">
+      <ion-button (click)="cancelarCarrinho()" color="danger">
+        Cancelar
+      </ion-button>
+      <ion-button (click)="finalizarVenda()">
+        Confirmar
+      </ion-button>
+    </div>
+  </div>
+</ion-content>

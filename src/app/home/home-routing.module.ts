@@ -28,10 +28,6 @@ const routes: Routes = [
     loadChildren: () => import('./rotas/caixa-movel/caixa-movel.module').then( m => m.CaixaMovelPageModule)
   },
   {
-    path: 'estoque',
-    loadChildren: () => import('./rotas/estoque/estoque.module').then( m => m.EstoquePageModule)
-  },
-  {
     path: '**',
     redirectTo: '/home/faturamento',
     pathMatch: 'full'

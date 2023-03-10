@@ -10,6 +10,7 @@ import { ControleVersaoService } from './services/controleVersao/controle-versao
 })
 export class AppComponent {
   constructor(private controleVersao: ControleVersaoService, private screenOrientation: ScreenOrientation) {
+    console.log(isPlatform('mobileweb'));
     if (!isPlatform('mobileweb')) {
       this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
     }

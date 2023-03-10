@@ -1,0 +1,135 @@
+ion-progress-bar {
+  margin-bottom: 10px;
+  --background: rgb(95, 62, 0);
+  --progress-background: rgb(220, 143, 0);
+}
+#swiper {
+  height: 100%;
+}
+.headerSlide {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+
+  h2 {
+    text-align: center;
+    font-size: 1.2rem;
+  }
+}
+.opcoes {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.opcoes.valor {
+  flex-direction: column;
+}
+.metodosPg {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 10px 0 90px 0;
+
+  .selectBtn {
+    width: 200px;
+    height: 100px;
+    margin: 10px 10px;
+
+    div {
+      display: flex;
+      flex-flow: column nowrap;
+      align-items: center;
+      font-weight: 500;
+      font-size: 0.7rem;
+
+      img {
+        width: 32px;
+        margin-bottom: 12px;
+        filter: saturate(0%) brightness(200%);
+      }
+
+      ion-icon {
+        font-size: 2rem;
+        margin-bottom: 12px;
+      }
+    }
+  }
+}
+#parcelas {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 10px 0 0 0;
+
+  .selectBtn {
+    width: 200px;
+    height: 60px;
+    margin: 10px 10px;
+
+    h2 {
+      font-size: 1.2rem;
+    }
+  }
+}
+#footer {
+  background-color: var(--ion-color-dark);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+
+  .opcao {
+    height: 30px;
+    padding: 0 20px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    h3 {
+      color: rgb(181, 181, 181);
+      font-size: 1rem;
+      font-family: robotoBold;
+    }
+    p {
+      color: rgb(181, 181, 181);
+      font-size: 0.8rem;
+    }
+  }
+
+  .total {
+    padding: 0 20px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    h3 {
+      font-family: robotoBold;
+    }
+  }
+
+  #btns {
+    margin-top: 15px;
+    margin-bottom: 25px;
+    padding: 0 20px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    ion-button {
+      width: 130px;
+      margin: 0 10px;
+    }
+  }
+}

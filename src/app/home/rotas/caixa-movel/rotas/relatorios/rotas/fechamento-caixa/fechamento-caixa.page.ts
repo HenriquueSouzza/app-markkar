@@ -3,7 +3,7 @@ import { File } from '@awesome-cordova-plugins/file/ngx';
 import { FileOpener } from '@awesome-cordova-plugins/file-opener/ngx';
 import { AlertController, isPlatform, LoadingController, NavController } from '@ionic/angular';
 import { Storage } from '@ionic/storage-angular';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { format, parseISO } from 'date-fns';
 import { FechamentoCaixaService } from './services/fechamentoCaixa/fechamento-caixa.service';
 import { StorageService } from 'src/app/services/storage/storage.service';
@@ -19,8 +19,9 @@ export class FechamentoCaixaPage implements OnInit {
   public relatoriosData: any;
   public semRelatorio = false;
   private idCc: string;
-  private auth: any;
   private valTokenUsuario: string;
+  private auth: any;
+  private caixaMovelStorage: any;
 
   constructor(
     public loadingController: LoadingController,
@@ -31,13 +32,13 @@ export class FechamentoCaixaPage implements OnInit {
     private storage: Storage,
     private storageService: StorageService,
     private navCtrl: NavController,
-    private router: Router,
-    private route: ActivatedRoute
+    private router: Router
   ) {}
 
   async ngOnInit() {
     //loadStorage
     this.auth = await this.storage.get('auth');
+    this.caixaMovelStorage = await this.storage.get('caixa-movel');
 
     //verifyLogin
     this.valTokenUsuario = this.auth.usuario.token;
@@ -45,14 +46,7 @@ export class FechamentoCaixaPage implements OnInit {
       this.router.navigateByUrl('/login', { replaceUrl: true });
     }
     else if (this.valTokenUsuario !== null) {
-
-      //getParam
-      this.route.queryParamMap.subscribe((params: any) => {
-        if (params) {
-          this.idCc = params.params.id;
-        }
-      });
-
+      this.idCc = this.caixaMovelStorage.configuracoes.slectedIds.sqlIdCc;
       //querySQL
       this.baixarPDF();
     }
@@ -62,9 +56,11 @@ export class FechamentoCaixaPage implements OnInit {
     const data = pdf;
     const downloadPDF = async (href) => {
       const downloadLink = document.createElement('a');
-      downloadLink.href = href;
+      downloadLink.href = 'data:application/pdf;base64,' + href;
       downloadLink.download = nome;
+      document.body.appendChild(downloadLink);
       downloadLink.click();
+      document.body.removeChild(downloadLink);
     };
 
     if (
@@ -73,6 +69,7 @@ export class FechamentoCaixaPage implements OnInit {
       (isPlatform('desktop') && !isPlatform('android') && !isPlatform('ios'))
     ) {
       downloadPDF(data);
+      console.log('teste');
     } else {
       this.saveAndOpenPdf(data, nome);
     }
@@ -126,7 +123,7 @@ export class FechamentoCaixaPage implements OnInit {
 
   async baixarPDF(){
     const loading = await this.loadingController.create({
-      message: 'Buscando aguarde...'
+      message: 'Gerando os PDFs aguarde...'
     });
     await loading.present();
     this.relatoriosService.get(this.idCc, this.valTokenUsuario).subscribe(async (response: any) => {
@@ -148,6 +145,7 @@ export class FechamentoCaixaPage implements OnInit {
           ],
         });
         await alert.present();
+        await loading.dismiss();
       } else if(response.connection.status === 'success') {
         this.semRelatorio = false;
         await loading.dismiss();

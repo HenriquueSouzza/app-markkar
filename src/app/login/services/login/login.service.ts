@@ -19,9 +19,9 @@ export interface Login{
   providedIn: 'root',
 })
 export class LoginService {
-  private flurl = 'https://apimarkkar.igrejabatistamundial.com/app/auth/loginEmpresarial';
-  private lurl = 'https://apimarkkar.igrejabatistamundial.com/app/auth/login';
-  private vAtappurl = 'https://apimarkkar.igrejabatistamundial.com/app/auth/vAtapp';
+  private flurl = 'https://api.markkar.com.br/app/auth/loginEmpresarial';
+  private lurl = 'https://api.markkar.com.br/app/auth/login';
+  private vAtappurl = 'https://api.markkar.com.br/app/auth/vAtapp';
 
   /*private flurl = 'http://192.168.1.30/app/auth/loginEmpresarial';
   private lurl = 'http://192.168.1.30/app/auth/login';

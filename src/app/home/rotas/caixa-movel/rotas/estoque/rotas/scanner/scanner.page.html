@@ -1,0 +1,61 @@
+<ion-content *ngIf="telaEspelho" no-bounce has-bouncing="false" forceOverscroll="false">
+  <div id="scan" *ngIf="!telaDigCodigo">
+    <div id="backUp">
+      <ion-header>
+        <ion-toolbar color="dark" style="height: auto">
+          <ion-buttons slot="start">
+            <ion-button (click)="navigateBack()" fill="clear" shape="round"><ion-icon slot="icon-only" class="flashIcon" name="close-outline"></ion-icon></ion-button>
+          </ion-buttons>
+          <ion-buttons slot="end">
+            <!--<ion-button (click)="switchFlashLight();presentToast('Em desenvolvimento...')" fill="clear" shape="round" *ngIf="!flashIsSwitchedOn"><ion-icon slot="icon-only" class="flashIcon" name="flash-outline"></ion-icon></ion-button>
+            <ion-button (click)="switchFlashLight();presentToast('Em desenvolvimento...')" fill="clear" shape="round" *ngIf="flashIsSwitchedOn"><ion-icon slot="icon-only" class="flashIcon" name="flash-off-outline"></ion-icon></ion-button>-->
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+    </div>
+    <div id="line"></div>
+    <div id="backDown">
+      <ion-button (click)="telaDigCodigo = !telaDigCodigo; telaEspelho = true;stopScan();">Digite o código</ion-button>
+    </div>
+  </div>
+  <div id="code" *ngIf="telaDigCodigo">
+    <ion-header>
+      <ion-toolbar color="dark" style="height: auto">
+        <ion-buttons slot="start">
+          <ion-button routerLink="/home/caixa-movel/estoque" routerDirection="back"><ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon></ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-item lines="none">
+      <ion-label id="titleCode">digite o código de barras</ion-label>
+    </ion-item>
+    <form #f="ngForm" (ngSubmit)="consultarProd(f)">
+      <ion-item lines="full">
+        <ion-label position="stacked">código de barras</ion-label>
+        <ion-input ngModel name="codeProd" inputmode="numeric"></ion-input>
+      </ion-item>
+      <div id="btnConsultar">
+        <ion-button type="submit">Consultar</ion-button>
+      </div>
+    </form>
+  </div>
+</ion-content>
+<div id="scan" *ngIf="!telaEspelho">
+  <div id="backUp">
+    <ion-header>
+      <ion-toolbar color="dark" style="height: auto">
+        <ion-buttons slot="start">
+          <ion-button (click)="navigateBack()" fill="clear" shape="round"><ion-icon slot="icon-only" class="flashIcon" name="close-outline"></ion-icon></ion-button>
+        </ion-buttons>
+        <ion-buttons slot="end">
+          <!--<ion-button (click)="switchFlashLight();presentToast('Em desenvolvimento...')" fill="clear" shape="round" *ngIf="!flashIsSwitchedOn"><ion-icon slot="icon-only" class="flashIcon" name="flash-outline"></ion-icon></ion-button>
+          <ion-button (click)="switchFlashLight();presentToast('Em desenvolvimento...')" fill="clear" shape="round" *ngIf="flashIsSwitchedOn"><ion-icon slot="icon-only" class="flashIcon" name="flash-off-outline"></ion-icon></ion-button>-->
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+  </div>
+  <div id="line"></div>
+  <div id="backDown">
+    <ion-button (click)="telaDigCodigo = !telaDigCodigo; telaEspelho = true;stopScan();">Digite o código</ion-button>
+  </div>
+</div>

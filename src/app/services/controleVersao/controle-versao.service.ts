@@ -25,12 +25,12 @@ export class ControleVersaoService {
 
   async check(){
     if (!isPlatform('mobileweb')) {
-      this.http.get('https://apimarkkar.igrejabatistamundial.com/versaoAppControl.json').subscribe(async (res: any) => {
+      this.http.get('https://api.markkar.com.br/versaoAppControl.json').subscribe(async (res: any) => {
         const versaoAtual = res.versao;
         const versaoApp = await this.appVersion.getVersionCode();
         if(versaoAtual > versaoApp){
-          //this.router.navigateByUrl('/login/updateApp', { replaceUrl: true });
-          //this.showDialog();
+          this.router.navigateByUrl('/login/updateApp', { replaceUrl: true });
+          this.showDialog();
           this.checkReset();
         } else {
           this.checkReset();

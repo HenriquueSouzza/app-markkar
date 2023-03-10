@@ -19,6 +19,7 @@ import { timeout } from 'rxjs/operators';
 import { LoginService } from 'src/app/login/services/login/login.service';
 import { StorageService } from 'src/app/services/storage/storage.service';
 import { FaturamentoService } from 'src/app/home/services/faturamento/faturamento.service';
+import { RateApp } from 'capacitor-rate-app';
 
 @Component({
   selector: 'app-faturamento',
@@ -26,9 +27,11 @@ import { FaturamentoService } from 'src/app/home/services/faturamento/faturament
   styleUrls: ['./faturamento.page.scss'],
 })
 export class FaturamentoPage implements OnInit {
+  @ViewChild(BaseChartDirective) chart: BaseChartDirective;
+
   //Chart configs
   public chartData: ChartDataset[] = [];
-  public chartType: ChartType = 'bar';
+  public chartType: ChartType;
   public chartlabels: string[] = [];
   public chartOptions: ChartOptions = {
     locale: 'pt-BR',
@@ -56,7 +59,7 @@ export class FaturamentoPage implements OnInit {
     scales: {
       y: {
         beginAtZero: true,
-        display: false,
+        display: null,
         ticks: {
           callback: (value) =>
             value.toLocaleString('pt-br', {
@@ -67,8 +70,6 @@ export class FaturamentoPage implements OnInit {
       },
     },
   };
-  // eslint-disable-next-line @typescript-eslint/member-ordering
-  @ViewChild(BaseChartDirective) chart: BaseChartDirective;
 
   month = [
     'Janeiro',
@@ -86,6 +87,7 @@ export class FaturamentoPage implements OnInit {
   ];
 
   //Settings and Bool
+  indexDetalhes = 0;
   tryies = 0;
   contentLoader: boolean;
   dateLoader: boolean;
@@ -102,6 +104,7 @@ export class FaturamentoPage implements OnInit {
   valueGraficoIntervalFilter: string;
   titleGra: string;
   fatHeaderTime: string;
+  openDetails = false;
 
   //Login
   valFLogin: boolean;
@@ -114,6 +117,7 @@ export class FaturamentoPage implements OnInit {
 
   //Faturamento
   unidadesFat: string[];
+  unidadesFatDetalhes: string[];
   unidadesHeader: string[];
   somaFatHeader: string;
   somaMargemHeader: string;
@@ -158,7 +162,8 @@ export class FaturamentoPage implements OnInit {
   ) {}
 
   ngOnInit() {
-}
+    //RateApp.requestReview();
+  }
 
   async ionViewWillEnter() {
     this.menu.enable(true, 'homeMenu');
@@ -209,6 +214,14 @@ export class FaturamentoPage implements OnInit {
     this.multiempresa = this.multiEmpresaStorage;
     this.empresa = this.appConfigStorage.empresaAtual;
     //Set Preferences
+    this.chartType =
+      this.faturamentoStorage.configuracoes.grafico.formato === undefined
+        ? 'bar'
+        : this.faturamentoStorage.configuracoes.grafico.formato;
+    this.chartOptions.scales.y.display =
+      this.faturamentoStorage.configuracoes.grafico.y === undefined
+        ? false
+        : this.faturamentoStorage.configuracoes.grafico.y;
     this.mask = this.faturamentoStorage.configuracoes.gerais.mask;
     this.cmvPerc = this.faturamentoStorage.configuracoes.gerais.cmvPerc;
     if (this.cmvPerc === true) {
@@ -636,12 +649,11 @@ export class FaturamentoPage implements OnInit {
     }
   }
 
-  async setGraficoInterval(event) {
+  setGraficoInterval(event) {
     this.valueGraficoIntervalFilter = event.detail.value;
   }
-  async setInterval(event) {
-    await this.storage.set('interval', event.detail.value);
-    this.interval = await this.storage.get('interval');
+  setInterval(event) {
+    this.interval = event.detail.value;
     if (this.interval === 'interval') {
       this.displayIntervalUnid = 'intervalo';
       this.displayInterval = 'block';
