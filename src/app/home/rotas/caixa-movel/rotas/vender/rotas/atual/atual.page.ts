@@ -52,6 +52,7 @@ export class AtualPage implements OnInit {
     this.codVenda = this.caixaMovelStorage.sistemaVendas.vendaAtual.selectIds.vendaId;
     this.totalCar();
     this.vendaService.buscarCaixasAbertos(this.caixaMovelStorage.sistemaVendas.vendaAtual.selectIds.vendaId).subscribe((res: any)=>{
+      console.log(res);
       this.caixasAbertos = res.caixasAbertos;
       this.selectCaixa.value = this.caixaSelecionado;
     }, (error) => {
@@ -116,6 +117,22 @@ export class AtualPage implements OnInit {
         });
         await alert.present();
       }
+      await loading.dismiss();
+    }, async (err) => {
+      console.log(err);
+      const alert = await this.alertController.create({
+        cssClass: 'my-custom-class',
+        header: 'Ocorreu um erro ao finalizar:',
+        message: err.name,
+        backdropDismiss: false,
+        buttons: [
+          {
+            text: 'Fechar',
+            id: 'confirm-button'
+          },
+        ],
+      });
+      await alert.present();
       await loading.dismiss();
     });
   }

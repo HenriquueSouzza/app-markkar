@@ -54,7 +54,7 @@ export class VenderPage implements OnInit {
     if(!somenteCpf){
       cpf = null;
     }
-    this.vendaService.iniciar(this.idEmpBird, this.idCc, '3', cpf, idCliente).subscribe(async (res: any) => {
+    this.vendaService.iniciar(this.idEmpBird, this.idCc, '-39', cpf, idCliente).subscribe(async (res: any) => {
       if (res.novaVenda['COD_VENDA'] === '-1'){
         this.erroAlert('Erro ao iniciar a venda:', res.novaVenda['STATUS'].toLowerCase());
       } else {

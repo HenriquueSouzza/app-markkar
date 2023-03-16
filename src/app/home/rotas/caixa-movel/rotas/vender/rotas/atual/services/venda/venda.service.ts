@@ -9,10 +9,12 @@ export class VendaService {
   constructor(private http: HttpClient) { }
 
   iniciar(codEmp: string, codCc: string, codUser: string, cpf: string, codCliente: string){
+    console.log({codEmp, codCc, codUser, cpf, codCliente});
     return this.http.post('http://192.168.0.15:8080/app/caixaMovel/venda/iniciar', {codEmp, codCc, codUser, cpf, codCliente});
   }
 
   finalizar(vendaAtual: string){
+    console.log({vendaAtual});
     return this.http.put('http://192.168.0.15:8080/app/caixaMovel/venda/finalizar', {vendaAtual});
   }
 
