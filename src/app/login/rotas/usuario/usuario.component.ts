@@ -149,11 +149,13 @@ export class UsuarioComponent implements OnInit {
               this.auth.usuario = {
                 login: login.user,
                 token: response.token,
+                idFireBird: response.idFire
               };
             } else {
               this.auth.usuario = {
                 login: login.user,
                 token: response.token,
+                idFireBird: response.idFire
               };
             }
             await this.storageService.set('auth', this.auth);

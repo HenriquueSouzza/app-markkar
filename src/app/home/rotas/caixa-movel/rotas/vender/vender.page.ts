@@ -27,7 +27,9 @@ export class VenderPage implements OnInit {
   // storage
   private idEmpBird: string;
   private idCc: string;
+  private idUserBird: string;
   private caixaMovelStorage: any;
+  private auth: any;
 
   constructor(
     public alertController: AlertController,
@@ -41,9 +43,12 @@ export class VenderPage implements OnInit {
   ngOnInit() { }
 
   async ionViewWillEnter(){
+    //loadStorage
+    this.auth = await this.storage.get('auth');
     this.caixaMovelStorage = await this.storage.get('caixa-movel');
     this.idEmpBird = this.caixaMovelStorage.configuracoes.slectedIds.firebirdIdEmp;
     this.idCc = this.caixaMovelStorage.configuracoes.slectedIds.fireBirdIdCc;
+    this.idUserBird = this.auth.usuario.idFireBird;
   }
 
   //nova venda
@@ -54,7 +59,7 @@ export class VenderPage implements OnInit {
     if(!somenteCpf){
       cpf = null;
     }
-    this.vendaService.iniciar(this.idEmpBird, this.idCc, '-39', cpf, idCliente).subscribe(async (res: any) => {
+    this.vendaService.iniciar(this.idEmpBird, this.idCc, this.idUserBird, cpf, idCliente).subscribe(async (res: any) => {
       if (res.novaVenda['COD_VENDA'] === '-1'){
         this.erroAlert('Erro ao iniciar a venda:', res.novaVenda['STATUS'].toLowerCase());
       } else {
@@ -70,7 +75,7 @@ export class VenderPage implements OnInit {
           selectIds: {
             fireBirdIdEmp: this.idEmpBird,
             fireBirdIdCc: this.idCc,
-            userId: '3',
+            userId: this.idUserBird,
             vendaId: res.novaVenda['COD_VENDA'],
             caixaId: res.novaVenda['COD_CAIXA']
           }
@@ -84,7 +89,10 @@ export class VenderPage implements OnInit {
   }
 
   async verificaNovaVenda(){
-    if(this.caixaMovelStorage.sistemaVendas.vendaAtual !== null){
+    if(this.idUserBird === null){
+      this.erroAlert('Erro ao iniciar a venda:', 'Não é possível realizar venda com uma conta \'mkadmin\'.');
+    }
+    else if(this.caixaMovelStorage.sistemaVendas.vendaAtual !== null){
       const alert = await this.alertController.create({
         cssClass: 'my-custom-class',
         header: 'Venda não finalizada',
@@ -112,7 +120,8 @@ export class VenderPage implements OnInit {
                 await loading.dismiss();
                 if (res.status === 'OK' ||
                 res.status.toLowerCase() === 'a venda já foi cancelada' ||
-                res.status.toLowerCase() === 'a venda já foi fechada'){
+                res.status.toLowerCase() === 'a venda já foi fechada' ||
+                res.status.toLowerCase() === 'a venda já foi realizada no sistema' ){
                   this.caixaMovelStorage.sistemaVendas.vendaAtual = null;
                   await this.storage.set('caixa-movel', this.caixaMovelStorage);
                   this.abrirModalIdentificarCliente();
