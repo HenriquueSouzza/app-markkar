@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/dot-notation */
 import { Component, OnInit, ViewChild } from '@angular/core';
 import {
@@ -8,6 +9,7 @@ import {
 import { StorageService } from 'src/app/services/storage/storage.service';
 import { Storage } from '@ionic/storage-angular';
 import { VendaService } from './services/venda/venda.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-atual',
@@ -101,128 +103,32 @@ export class AtualPage implements OnInit {
   }
 
   async finalizarVenda() {
-    const loading = await this.loadingController.create({
-      message: 'Finalizando a venda, Aguarde...',
-    });
-    await loading.present();
-    if (
-      this.caixaMovelStorage.sistemaVendas.vendaAtual.pagList.length === 0 ||
-      this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList.length === 0
-    ) {
-      const alert = await this.alertController.create({
-        cssClass: 'my-custom-class',
-        header: 'Ocorreu um erro ao finalizar:',
-        message:
-          'Por Favor, verifique se todos os campos foram preenchidos e tente novamente.',
-        backdropDismiss: false,
-        buttons: [
-          {
-            text: 'Fechar',
-            id: 'confirm-button',
-          },
-        ],
-      });
-      await alert.present();
-      await loading.dismiss();
-    } else {
-      this.vendaService
-        .gravarBd(this.caixaMovelStorage.sistemaVendas.vendaAtual)
-        .subscribe(
-          async (res: any) => {
-            console.log(res);
-            if (res.status.fireBird['STATUS'] === 'OK') {
-              this.vendaService
-                .finalizar(this.caixaMovelStorage.sistemaVendas.vendaAtual)
-                .subscribe(
-                  async (resFin: any) => {
-                    if (resFin.status === 1) {
-                      const alert = await this.alertController.create({
-                        cssClass: 'my-custom-class',
-                        header: 'Venda finalizada',
-                        backdropDismiss: false,
-                        buttons: [
-                          {
-                            text: 'Fechar',
-                            id: 'confirm-button',
-                          },
-                        ],
-                      });
-                      await alert.present();
-                      await loading.dismiss();
-                      this.caixaMovelStorage.sistemaVendas.vendaAtual = null;
-                      await this.storage.set('caixa-movel', this.caixaMovelStorage);
-                      this.navCtrl.navigateForward('/home/caixa-movel/sistema-vendas');
-                    } else {
-                      const alert = await this.alertController.create({
-                        cssClass: 'my-custom-class',
-                        header: 'Ocorreu um erro ao finalizar:',
-                        message: 'Por favor, verifique o servidor.',
-                        backdropDismiss: false,
-                        buttons: [
-                          {
-                            text: 'Fechar',
-                            id: 'confirm-button',
-                          },
-                        ],
-                      });
-                      await alert.present();
-                      await loading.dismiss();
-                    }
-                  },
-                  async (err) => {
-                    const alert = await this.alertController.create({
-                      cssClass: 'my-custom-class',
-                      header: 'Ocorreu um erro ao finalizar:',
-                      message: 'Erro ao tentar comunicar com o servidor',
-                      backdropDismiss: false,
-                      buttons: [
-                        {
-                          text: 'Fechar',
-                          id: 'confirm-button',
-                        },
-                      ],
-                    });
-                    await alert.present();
-                    await loading.dismiss();
-                  }
-                );
-            } else {
-              const alert = await this.alertController.create({
-                cssClass: 'my-custom-class',
-                header: 'Ocorreu um erro ao finalizar:',
-                message:
-                  res.status.fireBird['STATUS'] !== 'OK'
-                    ? res.status.fireBird['STATUS'].toLowerCase() + '.'
-                    : 'Por favor, verifique o servidor.',
-                backdropDismiss: false,
-                buttons: [
-                  {
-                    text: 'Fechar',
-                    id: 'confirm-button',
-                  },
-                ],
-              });
-              await alert.present();
-              await loading.dismiss();
-            }
-          },
-          async (err) => {
-            const alert = await this.alertController.create({
-              cssClass: 'my-custom-class',
-              header: 'Ocorreu um erro ao finalizar:',
-              message: 'Erro ao tentar comunicar com o servidor',
-              backdropDismiss: false,
-              buttons: [
-                {
-                  text: 'Fechar',
-                  id: 'confirm-button',
-                },
-              ],
-            });
-            await alert.present();
-            await loading.dismiss();
+    const loading = await this.createLoading('Finalizando a venda, Aguarde...');
+    try {
+      const vendaAtual = this.caixaMovelStorage.sistemaVendas.vendaAtual;
+      if (vendaAtual.pagList.length === 0 || vendaAtual.produtosList.length === 0) {
+        await this.exibirAlerta('Erro ao tentar finalizar a venda.', 'Por Favor, verifique se todos os campos foram preenchidos e tente novamente.');
+      } else {
+        const gravarBdResponse: any = await firstValueFrom(this.vendaService.gravarBd(vendaAtual));
+        const firebirdStatus = gravarBdResponse?.status?.fireBird?.STATUS;
+        if (firebirdStatus !== 'OK') {
+          await this.exibirAlerta('Erro ao tentar finalizar a venda.', firebirdStatus?.toLowerCase() || 'Por favor, verifique o servidor.');
+        } else {
+          const finalizarResponse: any = await firstValueFrom(this.vendaService.finalizar(vendaAtual));
+          if (finalizarResponse?.status === 1) {
+            await this.exibirAlerta('Venda finalizada', null);
+            this.caixaMovelStorage.sistemaVendas.vendaAtual = null;
+            await this.storage.set('caixa-movel', this.caixaMovelStorage);
+            this.navCtrl.navigateForward('/home/caixa-movel/sistema-vendas');
+          } else {
+            await this.exibirAlerta('Erro ao tentar finalizar a venda.', 'Por favor, verifique o servidor.');
           }
-        );
+        }
+      }
+    } catch (error) {
+      await this.exibirAlerta('Erro ao finalizar a venda.', 'Por favor, tente novamente.');
+    } finally {
+      await loading.dismiss();
     }
   }
 
@@ -267,14 +173,14 @@ export class AtualPage implements OnInit {
                       '/home/caixa-movel/sistema-vendas'
                     );
                   } else {
-                    this.erroAlert(
+                    this.exibirAlerta(
                       'Erro ao cancelar a venda:',
                       res.status.toLowerCase()
                     );
                   }
                 },
                 (err) => {
-                  this.erroAlert(
+                  this.exibirAlerta(
                     'Erro ao cancelar a venda:',
                     'Erro ao conectar com o servidor local'
                   );
@@ -288,11 +194,17 @@ export class AtualPage implements OnInit {
   }
 
   // erros
-  async erroAlert(title, men) {
+  async createLoading(message) {
+    const loading = await this.loadingController.create({ message });
+    await loading.present();
+    return loading;
+  }
+
+  async exibirAlerta(header, message) {
     const alert = await this.alertController.create({
       cssClass: 'my-custom-class',
-      header: title,
-      message: men,
+      header,
+      message,
       backdropDismiss: false,
       buttons: [
         {
