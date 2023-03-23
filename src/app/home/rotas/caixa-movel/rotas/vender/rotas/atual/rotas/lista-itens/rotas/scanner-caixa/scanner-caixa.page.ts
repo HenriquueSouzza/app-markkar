@@ -7,8 +7,8 @@ import { ScreenOrientation } from '@awesome-cordova-plugins/screen-orientation/n
 import { NgForm } from '@angular/forms';
 import { Storage } from '@ionic/storage-angular';
 import { StorageService } from 'src/app/services/storage/storage.service';
-import { VendaService } from '../../services/venda/venda.service';
-import { EstoqueService } from '../../../../../estoque/services/estoque/estoque.service';
+import { VendaService } from '../../../../services/venda/venda.service';
+import { EstoqueService } from 'src/app/home/rotas/caixa-movel/rotas/estoque/services/estoque/estoque.service';
 
 @Component({
   selector: 'app-scanner-caixa',

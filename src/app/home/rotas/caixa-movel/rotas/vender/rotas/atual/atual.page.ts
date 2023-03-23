@@ -126,6 +126,7 @@ export class AtualPage implements OnInit {
         }
       }
     } catch (error) {
+      console.log(error);
       await this.exibirAlerta('Erro ao finalizar a venda.', 'Por favor, tente novamente.');
     } finally {
       await loading.dismiss();

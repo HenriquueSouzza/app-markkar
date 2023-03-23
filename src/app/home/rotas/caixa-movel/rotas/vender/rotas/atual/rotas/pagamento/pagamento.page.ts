@@ -188,7 +188,7 @@ export class PagamentoPage implements OnInit {
     } else {
       this.parcelas = [];
       for(let i = 1; i <= this.opcsCard.parcelasMax; i++){
-        this.parcelas.push(i+'x de '+this.convertReal(i*this.totalCarrinhoNum));
+        this.parcelas.push(i+'x de '+this.convertReal(this.totalCarrinhoNum/i));
       }
       setTimeout(() => {
         this.porcLoad = .8;

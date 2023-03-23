@@ -12,9 +12,9 @@
 <ion-content>
   <div class="lista">
     <ion-item lines="none" style="width: 100%;" class="title">
-      <ion-label>Produtos</ion-label>
+      <ion-label>Lista itens</ion-label>
       <ion-button [disabled]="produtosLength === 0 ? true : false" routerLink="/home/caixa-movel/sistema-vendas/atual/lista-itens" expand="block" fill="clear" shape="round" slot="end"><ion-icon slot="icon-only" name="create-outline"></ion-icon></ion-button>
-      <ion-button routerLink="/home/caixa-movel/sistema-vendas/atual/scanner" expand="block" fill="clear" shape="round" slot="end" style="margin-right: 0;"><ion-icon slot="icon-only" name="add-outline"></ion-icon></ion-button>
+      <ion-button routerLink="/home/caixa-movel/sistema-vendas/atual/lista-itens/estoque" expand="block" fill="clear" shape="round" slot="end" style="margin-right: 0;"><ion-icon slot="icon-only" name="add-outline"></ion-icon></ion-button>
     </ion-item>
     <ul>
       <li *ngFor="let produto of produtos">
@@ -28,7 +28,7 @@
   </div>
   <div class="lista">
     <ion-item lines="none" style="width: 100%;" class="title">
-      <ion-label>Pagamentos</ion-label>
+      <ion-label>Pagamento</ion-label>
       <ion-button routerLink="/home/caixa-movel/sistema-vendas/atual/pagamento" [disabled]="produtosLength === 0 ? true : false" expand="block" fill="clear" shape="round" slot="end" style="margin-right: 0;"><ion-icon slot="icon-only" name="add-outline"></ion-icon></ion-button>
     </ion-item>
     <ul>
@@ -46,7 +46,7 @@
   </div>
   <div class="lista">
     <ion-item lines="none" style="width: 100%;" class="title">
-      <ion-label>Clientes</ion-label>
+      <ion-label>Cliente</ion-label>
       <ion-button expand="block" fill="clear" shape="round" slot="end" style="margin-right: 0;"><ion-icon slot="icon-only" name="add-outline"></ion-icon></ion-button>
     </ion-item>
     <div id="cliente">

@@ -1,0 +1,53 @@
+<ion-header>
+  <ion-toolbar color="dark" style="height: auto">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home/caixa-movel"></ion-back-button>
+    </ion-buttons>
+    <ion-title mode="ios">consultar estoque</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content no-bounce has-bouncing="false" forceOverscroll="false">
+  <form #f="ngForm" (ngSubmit)="consultarNome(f)">
+    <div id="pesquisa">
+      <ion-searchbar
+        (ionChange)="verificaSearchbar($event)"
+        ngModel
+        name="nomeProd"
+        placeholder="Consulta por nome..."
+      ></ion-searchbar>
+      <ion-button *ngIf="consultaNome" color="dark" type="submit">
+        <ion-icon name="search-outline"></ion-icon>
+        Consultar
+      </ion-button>
+    </div>
+  </form>
+  <div style="display: flex; flex-direction: column; align-items: center;justify-content: center; margin-bottom: 30px;">
+    <span style="margin: 10px 0;" *ngIf="!consultaNome">ou</span>
+    <ion-button
+      *ngIf="!consultaNome"
+      color="dark"
+      (click)="navigateScanner()"
+    >
+      <ion-icon slot="start" name="barcode-outline"></ion-icon>
+      Scanner
+    </ion-button>
+  </div>
+  <div id="recentes">
+    <ion-item lines="none">
+      <ion-label style="font-weight: 700; text-transform: uppercase"
+        >Consultas Recentes:</ion-label
+      >
+    </ion-item>
+    <ion-item *ngIf="!recentesExist"  lines="none">
+      <ion-label style="color: gray;">sem consultas recentes</ion-label>
+    </ion-item>
+    <ion-list *ngIf="recentesExist"  lines="none">
+      <ion-item *ngFor="let produtos of estoqueStorageHist" [button]="true" (click)="redirectHist(produtos.codeBar)">
+        <ion-label>
+          {{produtos.nome}}
+          <p>Cod: {{produtos.codeBar}}</p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+  </div>
+</ion-content>

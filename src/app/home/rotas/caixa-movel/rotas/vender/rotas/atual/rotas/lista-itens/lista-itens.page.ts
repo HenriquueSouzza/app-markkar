@@ -5,13 +5,13 @@ import { Storage } from '@ionic/storage-angular';
 import { StorageService } from 'src/app/services/storage/storage.service';
 import { VendaService } from '../../services/venda/venda.service';
 
-@Component({
-  selector: 'app-carrinho',
-  templateUrl: './carrinho.page.html',
-  styleUrls: ['./carrinho.page.scss'],
-})
-export class CarrinhoPage implements OnInit {
 
+@Component({
+  selector: 'app-lista-itens',
+  templateUrl: './lista-itens.page.html',
+  styleUrls: ['./lista-itens.page.scss'],
+})
+export class ListaItensPage implements OnInit {
   public produtos: Array<object>;
   public totalCarrinho: string;
   private caixaMovelStorage: any;
@@ -106,8 +106,8 @@ export class CarrinhoPage implements OnInit {
     this.navCtrl.navigateBack('/home/caixa-movel/sistema-vendas/atual');
   }
 
-  goPagamento(){
-    this.navCtrl.navigateForward('/home/caixa-movel/sistema-vendas/atual/pagamento');
+  goAdd(){
+    this.navCtrl.navigateForward('/home/caixa-movel/sistema-vendas/atual/lista-itens/estoque');
   }
 
   // erros
@@ -126,4 +126,5 @@ export class CarrinhoPage implements OnInit {
     });
     await alert.present();
   }
+
 }
