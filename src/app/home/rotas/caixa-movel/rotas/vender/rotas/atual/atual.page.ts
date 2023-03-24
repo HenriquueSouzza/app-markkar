@@ -9,7 +9,6 @@ import {
 import { StorageService } from 'src/app/services/storage/storage.service';
 import { Storage } from '@ionic/storage-angular';
 import { VendaService } from './services/venda/venda.service';
-import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-atual',
@@ -106,28 +105,69 @@ export class AtualPage implements OnInit {
     const loading = await this.createLoading('Finalizando a venda, Aguarde...');
     try {
       const vendaAtual = this.caixaMovelStorage.sistemaVendas.vendaAtual;
-      if (vendaAtual.pagList.length === 0 || vendaAtual.produtosList.length === 0) {
-        await this.exibirAlerta('Erro ao tentar finalizar a venda.', 'Por Favor, verifique se todos os campos foram preenchidos e tente novamente.');
+      if (
+        vendaAtual.pagList.length === 0 ||
+        vendaAtual.produtosList.length === 0
+      ) {
+        await this.exibirAlerta(
+          'Erro ao tentar finalizar a venda.',
+          'Por Favor, verifique se todos os campos foram preenchidos e tente novamente.'
+        );
       } else {
-        const gravarBdResponse: any = await firstValueFrom(this.vendaService.gravarBd(vendaAtual));
-        const firebirdStatus = gravarBdResponse?.status?.fireBird?.STATUS;
-        if (firebirdStatus !== 'OK') {
-          await this.exibirAlerta('Erro ao tentar finalizar a venda.', firebirdStatus?.toLowerCase() || 'Por favor, verifique o servidor.');
-        } else {
-          const finalizarResponse: any = await firstValueFrom(this.vendaService.finalizar(vendaAtual));
-          if (finalizarResponse?.status === 1) {
-            await this.exibirAlerta('Venda finalizada', null);
-            this.caixaMovelStorage.sistemaVendas.vendaAtual = null;
-            await this.storage.set('caixa-movel', this.caixaMovelStorage);
-            this.navCtrl.navigateForward('/home/caixa-movel/sistema-vendas');
-          } else {
-            await this.exibirAlerta('Erro ao tentar finalizar a venda.', 'Por favor, verifique o servidor.');
-          }
-        }
+        this.vendaService.gravarBd(vendaAtual).subscribe({
+          next: async (gravarBdResponse: any) => {
+            const firebirdStatus = gravarBdResponse?.status?.fireBird?.STATUS;
+            if (firebirdStatus !== 'OK') {
+              await this.exibirAlerta(
+                'Erro ao tentar finalizar a venda.',
+                firebirdStatus?.toLowerCase() ||
+                  'Por favor, verifique o servidor.'
+              );
+            } else {
+              this.vendaService.finalizar(vendaAtual).subscribe({
+                next: async (finalizarResponse: any) => {
+                  if (finalizarResponse?.status === 1) {
+                    await this.exibirAlerta('Venda finalizada', null);
+                    this.caixaMovelStorage.sistemaVendas.vendaAtual = null;
+                    await this.storage.set(
+                      'caixa-movel',
+                      this.caixaMovelStorage
+                    );
+                    this.navCtrl.navigateForward(
+                      '/home/caixa-movel/sistema-vendas'
+                    );
+                  } else {
+                    await this.exibirAlerta(
+                      'Erro ao tentar finalizar a venda.',
+                      'Por favor, verifique o servidor.'
+                    );
+                  }
+                },
+                error: async (error) => {
+                  console.log(error);
+                  await this.exibirAlerta(
+                    'Erro ao finalizar a venda.',
+                    'Por favor, tente novamente.'
+                  );
+                },
+              });
+            }
+          },
+          error: async (error) => {
+            console.log(error);
+            await this.exibirAlerta(
+              'Erro ao finalizar a venda.',
+              'Por favor, tente novamente.'
+            );
+          },
+        });
       }
     } catch (error) {
       console.log(error);
-      await this.exibirAlerta('Erro ao finalizar a venda.', 'Por favor, tente novamente.');
+      await this.exibirAlerta(
+        'Erro ao finalizar a venda.',
+        'Por favor, tente novamente.'
+      );
     } finally {
       await loading.dismiss();
     }
