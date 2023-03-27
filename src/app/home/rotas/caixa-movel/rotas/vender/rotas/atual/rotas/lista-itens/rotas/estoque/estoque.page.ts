@@ -49,7 +49,6 @@ export class EstoquePage implements OnInit {
         nome: '',
       })
       .subscribe({ next: (response: any) => {
-        console.log(response.produtos);
         this.listEstoque = response.produtos;
       }, error: (err) => {} });
   }
@@ -60,8 +59,13 @@ export class EstoquePage implements OnInit {
     );
   }
 
-  async consultarNome(form: NgForm) {
-    this.mostrarProdutoScaneado(form.value.nomeProd.toUpperCase());
+  async consultarNomeOuCod(form: NgForm) {
+    const strConsulta = form.value.nomeProd;
+    if(/^\d+$/.test(strConsulta) && strConsulta.length === 12){
+      this.mostrarProdutoScaneado('', strConsulta);
+    }else {
+      this.mostrarProdutoScaneado(strConsulta);
+    }
   }
 
   mostrarProdutoScaneado(nome = '', codeBar = '') {
@@ -73,8 +77,6 @@ export class EstoquePage implements OnInit {
         nome,
       })
       .subscribe(async (res: any) => {
-        console.log(nome);
-        console.log(res.produtos);
         const produtos = Object.values(res.produtos);
         if (produtos.length !== 0) {
           this.pordutoScanneado = {

@@ -7,14 +7,14 @@
   </ion-toolbar>
 </ion-header>
 <ion-content no-bounce has-bouncing="false" forceOverscroll="false">
-  <form #f="ngForm" (ngSubmit)="consultarNome(f)">
+  <form #f="ngForm" (ngSubmit)="consultarNomeOuCod(f)">
     <div id="pesquisa">
       <ion-searchbar
         mode="ios"
         (ionChange)="verificaSearchbar($event)"
         ngModel
         name="nomeProd"
-        placeholder="Consulta por nome..."
+        placeholder="Digite o nome ou codigo de barras..."
       ></ion-searchbar>
       <ion-button mode="ios" *ngIf="consultaNome" color="dark" type="submit">
         <ion-icon name="search-outline"></ion-icon>
