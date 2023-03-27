@@ -73,6 +73,8 @@ export class EstoquePage implements OnInit {
         nome,
       })
       .subscribe(async (res: any) => {
+        console.log(nome);
+        console.log(res.produtos);
         const produtos = Object.values(res.produtos);
         if (produtos.length !== 0) {
           this.pordutoScanneado = {
