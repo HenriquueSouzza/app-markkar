@@ -41,16 +41,7 @@ export class EstoquePage implements OnInit {
     this.idEmpBird =
       this.caixaMovelStorage.configuracoes.slectedIds.firebirdIdEmp;
     this.idCc = this.caixaMovelStorage.configuracoes.slectedIds.fireBirdIdCc;
-    this.estoqueService
-      .consultaProduto({
-        codeEmp: this.idEmpBird,
-        codeCC: this.idCc,
-        codeBar: '',
-        nome: '',
-      })
-      .subscribe({ next: (response: any) => {
-        this.listEstoque = response.produtos;
-      }, error: (err) => {} });
+    this.updateListEstoque();
   }
 
   navigateScanner() {
@@ -59,12 +50,25 @@ export class EstoquePage implements OnInit {
     );
   }
 
+  updateListEstoque(nome = '', codeBar = ''){
+    this.estoqueService
+      .consultaProduto({
+        codeEmp: this.idEmpBird,
+        codeCC: this.idCc,
+        codeBar,
+        nome,
+      })
+      .subscribe({ next: (response: any) => {
+        this.listEstoque = response.produtos;
+      }, error: (err) => {} });
+  }
+
   async consultarNomeOuCod(form: NgForm) {
     const strConsulta = form.value.nomeProd;
     if(/^\d+$/.test(strConsulta) && strConsulta.length === 12){
-      this.mostrarProdutoScaneado('', strConsulta);
+      this.updateListEstoque('', strConsulta);
     }else {
-      this.mostrarProdutoScaneado(strConsulta);
+      this.updateListEstoque(strConsulta);
     }
   }
 
@@ -160,6 +164,7 @@ export class EstoquePage implements OnInit {
     if (event.detail.value.length > 0) {
       this.consultaNome = true;
     } else {
+      this.updateListEstoque();
       this.consultaNome = false;
     }
   }

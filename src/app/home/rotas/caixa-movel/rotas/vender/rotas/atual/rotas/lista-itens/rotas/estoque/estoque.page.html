@@ -40,8 +40,8 @@
         >Lista estoque:</ion-label
       >
     </ion-item>
-    <ion-item *ngIf="!listEstoque"  lines="none">
-      <ion-label style="color: gray;">Não foi possível consultar o estoque</ion-label>
+    <ion-item *ngIf="!listEstoque || listEstoque.length === 0"  lines="none">
+      <ion-label style="color: gray;">Nenhum produto encontrado</ion-label>
     </ion-item>
     <ion-list style="display: flex; align-items: center; justify-content: center; flex-direction: column;" *ngIf="listEstoque"  lines="none">
       <ion-item detail="true" style="margin: 10px 0; width: 90%;border-radius: 12px;" color="dark" *ngFor="let produtos of listEstoque" [button]="true" (click)="mostrarProdutoScaneado('', produtos.COD_BARRA)">
