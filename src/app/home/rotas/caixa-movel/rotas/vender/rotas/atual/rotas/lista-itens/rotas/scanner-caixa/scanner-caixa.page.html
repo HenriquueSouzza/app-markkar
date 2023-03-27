@@ -17,7 +17,6 @@
           <ion-checkbox [checked]="modoRapido" slot="start"></ion-checkbox>
           <ion-label>Modo Rápido</ion-label>
         </ion-button>
-        <ion-button color="dark" (click)="telaDigCodigo = !telaDigCodigo; telaEspelho = true;stopScan();modoRapido = false">Digite o código</ion-button>
       </div>
     </div>
     <div id="line"></div>
@@ -28,12 +27,10 @@
           <p>{{totalCarrinho}}</p>
         </div>
         <div id="btns">
-          <ion-button (click)="voltarAtual()">
+          <ion-button (click)="navigateBack()">
             Voltar
           </ion-button>
-          <ion-button color="dark" (click)="goToCar()">
-            Lista de itens
-          </ion-button>
+          <ion-button color="dark" (click)="telaDigCodigo = !telaDigCodigo; telaEspelho = true;stopScan();modoRapido = false">Digite o código</ion-button>
         </div>
       </div>
     </div>
@@ -117,7 +114,6 @@
         <ion-checkbox [checked]="modoRapido" slot="start"></ion-checkbox>
         <ion-label>Modo Rápido</ion-label>
       </ion-button>
-      <ion-button color="dark" (click)="telaDigCodigo = !telaDigCodigo; telaEspelho = true;stopScan();modoRapido = false">Digite o código</ion-button>
     </div>
   </div>
   <div id="line"></div>
@@ -128,12 +124,10 @@
         <p>{{totalCarrinho}}</p>
       </div>
       <div id="btns">
-        <ion-button (click)="voltarAtual()">
+        <ion-button (click)="navigateBack()">
           Voltar
         </ion-button>
-        <ion-button color="dark" (click)="goToCar()">
-          Lista de itens
-        </ion-button>
+        <ion-button color="dark" (click)="telaDigCodigo = !telaDigCodigo; telaEspelho = true;stopScan();modoRapido = false">Digite o código</ion-button>
       </div>
     </div>
   </div>

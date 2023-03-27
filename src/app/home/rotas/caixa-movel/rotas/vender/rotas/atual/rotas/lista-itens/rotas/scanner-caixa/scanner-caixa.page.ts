@@ -67,10 +67,10 @@ export class ScannerCaixaPage implements OnInit {
       this.telaEspelho = false;
     }, 700);
     this.reloadScan();
-    setTimeout(() => {
+    /*setTimeout(() => {
       const codeBar = '000000000011';
       this.mostrarProdutoScaneado(codeBar);
-    }, 500);
+    }, 500);*/
   }
 
   ionViewWillLeave() {
@@ -125,7 +125,7 @@ export class ScannerCaixaPage implements OnInit {
     this.stopScan();
     this.telaEspelho = true;
     setTimeout(() => {
-      this.navCtrl.navigateBack('/home/caixa-movel/sistema-vendas/atual');
+      this.navCtrl.navigateBack('/home/caixa-movel/sistema-vendas/atual/lista-itens');
     }, 500);
   }
 
@@ -200,14 +200,6 @@ export class ScannerCaixaPage implements OnInit {
         this.totalCarrinho = this.convertReal(valores.reduce((a, b) => a + b, 0));
       }
     }
-  }
-
-  goToCar(){
-    this.navCtrl.navigateForward('/home/caixa-movel/sistema-vendas/atual/lista-itens');
-  }
-
-  voltarAtual(){
-    this.navCtrl.navigateBack('/home/caixa-movel/sistema-vendas/atual');
   }
 
   mostrarProdutoScaneado(codeBar){
