@@ -15,6 +15,7 @@ import { IonicStorageModule } from '@ionic/storage-angular';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { ScreenOrientation } from '@awesome-cordova-plugins/screen-orientation/ngx';
+import { AndroidPermissions } from '@awesome-cordova-plugins/android-permissions/ngx';
 import { Flashlight } from '@awesome-cordova-plugins/flashlight/ngx';
 import { AppVersion } from '@awesome-cordova-plugins/app-version/ngx';
 import { File } from '@awesome-cordova-plugins/file/ngx';
@@ -42,7 +43,7 @@ import { SwiperModule } from 'swiper/angular';
       registrationStrategy: 'registerWhenStable:30000'
     })
   ],
-  providers: [ScreenOrientation, Flashlight, AppVersion, File, FileOpener, { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+  providers: [ScreenOrientation, AndroidPermissions, Flashlight, AppVersion, File, FileOpener, { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

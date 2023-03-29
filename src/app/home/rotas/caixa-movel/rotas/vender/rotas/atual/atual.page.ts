@@ -9,6 +9,7 @@ import {
 import { StorageService } from 'src/app/services/storage/storage.service';
 import { Storage } from '@ionic/storage-angular';
 import { VendaService } from './services/venda/venda.service';
+import { AndroidPermissions } from '@awesome-cordova-plugins/android-permissions/ngx';
 
 @Component({
   selector: 'app-atual',
@@ -36,10 +37,27 @@ export class AtualPage implements OnInit {
     private vendaService: VendaService,
     private storage: Storage,
     private navCtrl: NavController,
-    private storageService: StorageService
+    private storageService: StorageService,
+    private androidPermissions: AndroidPermissions
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.androidPermissions
+      .checkPermission(this.androidPermissions.PERMISSION.CAMERA)
+      .then(
+        async (result: any) => {
+          if(!result.hasPermission){
+            this.androidPermissions.requestPermission(
+              this.androidPermissions.PERMISSION.CAMERA
+            );
+          }
+        },
+        (err) =>
+          this.androidPermissions.requestPermission(
+            this.androidPermissions.PERMISSION.CAMERA
+          )
+      );
+  }
 
   async ionViewWillEnter() {
     this.caixaMovelStorage = await this.storage.get('caixa-movel');
