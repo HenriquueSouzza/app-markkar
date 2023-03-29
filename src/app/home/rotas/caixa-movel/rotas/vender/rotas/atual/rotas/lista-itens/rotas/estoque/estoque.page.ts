@@ -50,7 +50,7 @@ export class EstoquePage implements OnInit {
     );
   }
 
-  updateListEstoque(nome = '', codeBar = ''){
+  updateListEstoque(nome = '', codeBar = '') {
     this.estoqueService
       .consultaProduto({
         codeEmp: this.idEmpBird,
@@ -58,16 +58,21 @@ export class EstoquePage implements OnInit {
         codeBar,
         nome,
       })
-      .subscribe({ next: (response: any) => {
-        this.listEstoque = response.produtos;
-      }, error: (err) => {} });
+      .subscribe({
+        next: (response: any) => {
+          this.listEstoque = response.produtos;
+        },
+        error: (err) => {
+          console.log(err);
+        },
+      });
   }
 
   async consultarNomeOuCod(form: NgForm) {
     const strConsulta = form.value.nomeProd;
-    if(/^\d+$/.test(strConsulta) && strConsulta.length === 12){
+    if (/^\d+$/.test(strConsulta) && strConsulta.length === 12) {
       this.updateListEstoque('', strConsulta);
-    }else {
+    } else {
       this.updateListEstoque(strConsulta);
     }
   }
@@ -103,20 +108,24 @@ export class EstoquePage implements OnInit {
     if (
       this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList.length > 0
     ) {
-      let i = -1;
-      for (const produto of this.caixaMovelStorage.sistemaVendas.vendaAtual
-        .produtosList) {
-        i++;
-        if (produto.id === this.pordutoScanneado.id) {
-          this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList[i].qnt =
-            this.pordutoScanneado.qnt;
-        } else {
-          this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList.push(
-            this.pordutoScanneado
-          );
-        }
+      // Método Array.findIndex() para encontrar o índice do produto
+      const index =
+        this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList.findIndex(
+          (produto) => produto.id === this.pordutoScanneado.id
+        );
+      if (index !== -1) {
+        // Atualiza a quantidade do produto existente
+        this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList[
+          index
+        ].qnt = this.pordutoScanneado.qnt;
+      } else {
+        // Adiciona o novo produto à lista
+        this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList.push(
+          this.pordutoScanneado
+        );
       }
     } else {
+      // Adiciona o novo produto à lista vazia
       this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList.push(
         this.pordutoScanneado
       );

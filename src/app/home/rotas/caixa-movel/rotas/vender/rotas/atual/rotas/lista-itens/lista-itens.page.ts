@@ -25,7 +25,9 @@ export class ListaItensPage implements OnInit {
     private storageService: StorageService
   ) { }
 
-  async ngOnInit() {
+  ngOnInit() { }
+
+  async ionViewWillEnter() {
     this.caixaMovelStorage = await this.storage.get('caixa-movel');
     if (this.caixaMovelStorage.sistemaVendas.vendaAtual === null) {
       this.navCtrl.navigateBack('/home/caixa-movel/sistema-vendas');

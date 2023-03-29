@@ -165,26 +165,31 @@ export class ScannerCaixaPage implements OnInit {
 
   */
 
-  async adicionaCarrinho(){
-    if(this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList.length > 0){
-      let i = -1;
-      for(const produto of this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList){
-        i++;
-        if(produto.id === this.pordutoScanneado.id){
-          if(this.modoRapido){
-            ++this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList[i].qnt;
-            if(this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList[i].qnt > this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList[i].qntMax){
-              this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList[i].qnt = this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList[i].qntMax;
-            }
-          } else {
-            this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList[i].qnt = this.pordutoScanneado.qnt;
-          }
-        } else {
-          this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList.push(this.pordutoScanneado);
-        }
+  async adicionaCarrinho() {
+    if (
+      this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList.length > 0
+    ) {
+      // Método Array.findIndex() para encontrar o índice do produto
+      const index =
+        this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList.findIndex(
+          (produto) => produto.id === this.pordutoScanneado.id
+        );
+      if (index !== -1) {
+        // Atualiza a quantidade do produto existente
+        this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList[
+          index
+        ].qnt = this.pordutoScanneado.qnt;
+      } else {
+        // Adiciona o novo produto à lista
+        this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList.push(
+          this.pordutoScanneado
+        );
       }
     } else {
-      this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList.push(this.pordutoScanneado);
+      // Adiciona o novo produto à lista vazia
+      this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList.push(
+        this.pordutoScanneado
+      );
     }
     await this.storage.set('caixa-movel', this.caixaMovelStorage);
     this.somaTotalCarrinho();
