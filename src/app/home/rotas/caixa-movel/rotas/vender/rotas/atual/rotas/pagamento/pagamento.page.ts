@@ -1,8 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable no-var */
-/* eslint-disable @typescript-eslint/no-inferrable-types */
-/* eslint-disable max-len */
-/* eslint-disable @typescript-eslint/dot-notation */
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import {
   AlertController,
@@ -28,7 +23,7 @@ export class PagamentoPage implements OnInit {
   @ViewChild('inputValor') inputValor: any;
   @ViewChild(IonContent) content: IonContent;
 
-  public porcLoad: number = 0;
+  public porcLoad = 0;
   public produtos: Array<object>;
   public totalCarrinho: string;
   public totalCarrinhoNum: any;
@@ -38,16 +33,16 @@ export class PagamentoPage implements OnInit {
   public redeAutoriza: Array<string> = [];
   public parcelas: Array<string> = [];
   public opcsCard = { bloqDebito: true, bloqCredito: true, parcelasMax: 0 };
-  public valorPg: number = 0;
-  public metodoPg: string = 'Não selecionado';
-  public bandeiraPg: string = 'Não selecionado';
-  public redeAutorizaPg: string = 'Não selecionado';
-  public debitOrCreditPg: string = 'Não selecionado';
+  public valorPg = 0;
+  public metodoPg = 'Não selecionado';
+  public bandeiraPg = 'Não selecionado';
+  public redeAutorizaPg = 'Não selecionado';
+  public debitOrCreditPg = 'Não selecionado';
   public tipoCartaoPg: string;
-  public parcelasPg: string = 'Não selecionado';
-  public parcelasPgNum: string = 'Não selecionado';
-  public bloqFinishPg: boolean = true;
-  public totalPagoCliente: number = 0;
+  public parcelasPg = 'Não selecionado';
+  public parcelasPgNum = 'Não selecionado';
+  public bloqFinishPg = true;
+  public totalPagoCliente = 0;
   private allPagMetods: any;
   private caixaMovelStorage: any;
   private empId: string;
@@ -98,14 +93,14 @@ export class PagamentoPage implements OnInit {
     this.pagamentoService.all(this.empId).subscribe(async (res: any) => {
       this.allPagMetods = res.formasPagamento;
       for (const formspg of this.allPagMetods) {
-        if (!this.formsPg.includes(formspg['FORMA_PG'])) {
-          this.formsPg.push(formspg['FORMA_PG']);
+        if (!this.formsPg.includes(formspg.FORMA_PG)) {
+          this.formsPg.push(formspg.FORMA_PG);
         }
         if (
-          !this.bandeiras.includes(formspg['BANDEIRA']) &&
-          formspg['BANDEIRA'] !== ''
+          !this.bandeiras.includes(formspg.BANDEIRA) &&
+          formspg.BANDEIRA !== ''
         ) {
-          this.bandeiras.push(formspg['BANDEIRA']);
+          this.bandeiras.push(formspg.BANDEIRA);
         }
       }
       await loading.dismiss();
@@ -158,11 +153,11 @@ export class PagamentoPage implements OnInit {
     this.bandeiraPg = bandeira;
     for (const formspg of this.allPagMetods) {
       if (
-        !this.redeAutoriza.includes(formspg['REDE_AUTORIZA']) &&
-        formspg['FORMA_PG'] === 'CARTÃO' &&
-        formspg['BANDEIRA'] === this.bandeiraPg
+        !this.redeAutoriza.includes(formspg.REDE_AUTORIZA) &&
+        formspg.FORMA_PG === 'CARTÃO' &&
+        formspg.BANDEIRA === this.bandeiraPg
       ) {
-        this.redeAutoriza.push(formspg['REDE_AUTORIZA']);
+        this.redeAutoriza.push(formspg.REDE_AUTORIZA);
       }
     }
     setTimeout(() => {
@@ -180,21 +175,21 @@ export class PagamentoPage implements OnInit {
     for (const formspg of this.allPagMetods) {
       i++;
       if (
-        formspg['FORMA_PG'] === 'CARTÃO' &&
-        formspg['BANDEIRA'] === this.bandeiraPg &&
-        formspg['REDE_AUTORIZA'] === this.redeAutorizaPg
+        formspg.FORMA_PG === 'CARTÃO' &&
+        formspg.BANDEIRA === this.bandeiraPg &&
+        formspg.REDE_AUTORIZA === this.redeAutorizaPg
       ) {
         this.opcsCard.bloqDebito =
-          this.allPagMetods[i]['DEBITO_CREDITO'] === 'D'
+          this.allPagMetods[i].DEBITO_CREDITO === 'D'
             ? false
             : this.opcsCard.bloqDebito;
         this.opcsCard.bloqCredito =
-          this.allPagMetods[i]['DEBITO_CREDITO'] === 'C'
+          this.allPagMetods[i].DEBITO_CREDITO === 'C'
             ? false
             : this.opcsCard.bloqCredito;
         this.opcsCard.parcelasMax =
-          this.allPagMetods[i]['PARCELAS'] > this.opcsCard.parcelasMax
-            ? this.allPagMetods[i]['PARCELAS']
+          this.allPagMetods[i].PARCELAS > this.opcsCard.parcelasMax
+            ? this.allPagMetods[i].PARCELAS
             : this.opcsCard.parcelasMax;
       }
     }
@@ -245,14 +240,14 @@ export class PagamentoPage implements OnInit {
       let i = -1;
       for (const formspg of this.allPagMetods) {
         i++;
-        if (formspg['FORMA_PG'] === this.metodoPg) {
+        if (formspg.FORMA_PG === this.metodoPg) {
           formPg = {
             idEmp: this.empId,
-            sigla: formspg['SIGLA'],
-            dc: formspg['DEBITO_CREDITO'],
-            parcelas: formspg['PARCELAS'],
-            bandeira: formspg['BANDEIRA'],
-            redeAutoriza: formspg['REDE_AUTORIZA'],
+            sigla: formspg.SIGLA,
+            dc: formspg.DEBITO_CREDITO,
+            parcelas: formspg.PARCELAS,
+            bandeira: formspg.BANDEIRA,
+            redeAutoriza: formspg.REDE_AUTORIZA,
           };
         }
       }
@@ -291,7 +286,7 @@ export class PagamentoPage implements OnInit {
           pagIds.formaPg = formPg;
           //verifica se existe no array
           let i = 0;
-          var pagExist = false;
+          let pagExist = false;
           if (
             this.caixaMovelStorage.sistemaVendas.vendaAtual.pagList.length === 0
           ) {
@@ -347,7 +342,7 @@ export class PagamentoPage implements OnInit {
 
   verificaValorTotal() {
     if (this.caixaMovelStorage.sistemaVendas.vendaAtual.pagList.length > 0) {
-      const valores = this.caixaMovelStorage.sistemaVendas.vendaAtual.pagList.map(pagamento => pagamento['valor']);
+      const valores = this.caixaMovelStorage.sistemaVendas.vendaAtual.pagList.map(pagamento => pagamento.valor);
       const pagamentoTotal = valores.reduce((a, b) => a + b, 0);
       this.totalPagoCliente = pagamentoTotal;
       this.bloqFinishPg = this.totalCarrinhoNum <= pagamentoTotal ? false : true;
@@ -425,7 +420,7 @@ export class PagamentoPage implements OnInit {
 
   totalCar() {
     const valores = this.produtos.map(
-      (produto) => produto['valor'] * produto['qnt']
+      (produto: any) => produto.valor * produto.qnt
     );
     this.totalCarrinhoNum = valores.reduce((a, b) => a + b, 0);
     this.totalCarrinho = this.convertReal(this.totalCarrinhoNum);

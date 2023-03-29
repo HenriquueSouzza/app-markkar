@@ -92,15 +92,12 @@ export class ListaItensPage implements OnInit {
   }
 
   async remove(prodEvent){
-    let i = -1;
-    for (const produto of this.produtos) {
-      i++;
-      if(produto['id'] === prodEvent['id']){
-        this.produtos.splice(i);
-        this.totalCar();
-        this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList = this.produtos;
-        await this.storage.set('caixa-movel', this.caixaMovelStorage);
-      }
+    const index = this.produtos.findIndex((produto: any) => produto.id === prodEvent.id);
+    if(index !== -1){
+      this.produtos.splice(index, 1);
+      this.totalCar();
+      this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList = this.produtos;
+      await this.storage.set('caixa-movel', this.caixaMovelStorage);
     }
   }
 
