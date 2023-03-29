@@ -239,8 +239,6 @@ export class ScannerCaixaPage implements OnInit {
         this.presentToast('Nenhum produto encontrado', 'bottom');
       }
     }
-    //{nome: 'teste', id: 1, cod: 2123, qnt: 5, valor: 18}
-    //{COD_BARRA: "7899838806976" COD_PRODUTO: "4371" NOME_PRODUTO: "TESTE HENRIQUE" QTD_ESTOQUE: "50" UNIDADE: "UN" VALOR: "5"}
     );
   }
 

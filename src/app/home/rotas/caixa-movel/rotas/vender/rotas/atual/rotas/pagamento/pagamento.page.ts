@@ -34,14 +34,14 @@ export class PagamentoPage implements OnInit {
   public parcelas: Array<string> = [];
   public opcsCard = { bloqDebito: true, bloqCredito: true, parcelasMax: 0 };
   public valorPg = 0;
-  public metodoPg = 'Não selecionado';
-  public bandeiraPg = 'Não selecionado';
-  public redeAutorizaPg = 'Não selecionado';
-  public debitOrCreditPg = 'Não selecionado';
+  public metodoPg: string;
+  public bandeiraPg: string;
+  public redeAutorizaPg: string;
+  public debitOrCreditPg: string;
   public tipoCartaoPg: string;
-  public parcelasPg = 'Não selecionado';
-  public parcelasPgNum = 'Não selecionado';
-  public bloqFinishPg = true;
+  public parcelasPg: string;
+  public parcelasPgNum: string;
+  public bloqAdcPg = true;
   public totalPagoCliente = 0;
   private allPagMetods: any;
   private caixaMovelStorage: any;
@@ -56,13 +56,22 @@ export class PagamentoPage implements OnInit {
     private platform: Platform,
     private storageService: StorageService,
     private pagamentoService: PagamentoService
-  ) {}
+  ) {
+    this.heightW = this.platform.height();
+  }
 
   //main
 
-  async ngOnInit() {
+  ngOnInit() {}
+
+  async ionViewWillEnter() {
+    this.metodoPg = 'Não selecionado';
+    this.bandeiraPg = 'Não selecionado';
+    this.debitOrCreditPg = 'Não selecionado';
+    this.redeAutorizaPg = 'Não selecionado';
+    this.parcelasPg = 'Não selecionado';
+    this.parcelasPgNum = 'Não selecionado';
     this.getMetodosPag();
-    this.heightW = this.platform.height();
     this.caixaMovelStorage = await this.storage.get('caixa-movel');
     this.produtos =
       this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList;
@@ -92,17 +101,18 @@ export class PagamentoPage implements OnInit {
     await loading.present();
     this.pagamentoService.all(this.empId).subscribe(async (res: any) => {
       this.allPagMetods = res.formasPagamento;
-      for (const formspg of this.allPagMetods) {
-        if (!this.formsPg.includes(formspg.FORMA_PG)) {
-          this.formsPg.push(formspg.FORMA_PG);
-        }
-        if (
-          !this.bandeiras.includes(formspg.BANDEIRA) &&
-          formspg.BANDEIRA !== ''
-        ) {
-          this.bandeiras.push(formspg.BANDEIRA);
-        }
-      }
+
+      this.formsPg = Array.from(
+        new Set(this.allPagMetods.map((formspg) => formspg.FORMA_PG))
+      );
+
+      this.bandeiras = Array.from(
+        new Set(
+          this.allPagMetods
+            .filter((formspg) => formspg.BANDEIRA !== '')
+            .map((formspg) => formspg.BANDEIRA)
+        )
+      );
       await loading.dismiss();
     });
   }
@@ -136,7 +146,9 @@ export class PagamentoPage implements OnInit {
     this.metodoPg = formPg;
     if (this.metodoPg === 'DINHEIRO' || this.metodoPg === 'PIX') {
       this.subirModal();
+      this.bloqAdcPg = false;
     } else {
+      this.bloqAdcPg = true;
       this.slideNext();
     }
     setTimeout(() => {
@@ -163,6 +175,7 @@ export class PagamentoPage implements OnInit {
     setTimeout(() => {
       this.porcLoad = 0.4;
     }, 250);
+    this.bloqAdcPg = true;
     this.slideNext();
   }
 
@@ -171,31 +184,39 @@ export class PagamentoPage implements OnInit {
     this.parcelasPg = 'Não selecionado';
     this.opcsCard = { bloqDebito: true, bloqCredito: true, parcelasMax: 0 };
     this.redeAutorizaPg = rede;
-    let i = -1;
-    for (const formspg of this.allPagMetods) {
-      i++;
-      if (
+
+    const cardMethods = this.allPagMetods.filter(
+      (formspg) =>
         formspg.FORMA_PG === 'CARTÃO' &&
         formspg.BANDEIRA === this.bandeiraPg &&
         formspg.REDE_AUTORIZA === this.redeAutorizaPg
-      ) {
-        this.opcsCard.bloqDebito =
-          this.allPagMetods[i].DEBITO_CREDITO === 'D'
-            ? false
-            : this.opcsCard.bloqDebito;
-        this.opcsCard.bloqCredito =
-          this.allPagMetods[i].DEBITO_CREDITO === 'C'
-            ? false
-            : this.opcsCard.bloqCredito;
-        this.opcsCard.parcelasMax =
-          this.allPagMetods[i].PARCELAS > this.opcsCard.parcelasMax
-            ? this.allPagMetods[i].PARCELAS
-            : this.opcsCard.parcelasMax;
+    );
+
+    if (cardMethods.length > 0) {
+      const debitMethod = cardMethods.find(
+        (formspg) => formspg.DEBITO_CREDITO === 'D'
+      );
+      const creditMethod = cardMethods.find(
+        (formspg) => formspg.DEBITO_CREDITO === 'C'
+      );
+      const maxInstallments = Math.max(
+        ...cardMethods.map((formspg) => formspg.PARCELAS)
+      );
+
+      if (debitMethod) {
+        this.opcsCard.bloqDebito = false;
       }
+
+      if (creditMethod) {
+        this.opcsCard.bloqCredito = false;
+      }
+
+      this.opcsCard.parcelasMax = maxInstallments;
     }
     setTimeout(() => {
       this.porcLoad = 0.6;
     }, 250);
+    this.bloqAdcPg = true;
     this.slideNext();
   }
 
@@ -217,6 +238,7 @@ export class PagamentoPage implements OnInit {
       setTimeout(() => {
         this.porcLoad = 0.8;
       }, 250);
+      this.bloqAdcPg = true;
       this.slideNext();
     }
   }
@@ -227,6 +249,7 @@ export class PagamentoPage implements OnInit {
     setTimeout(() => {
       this.porcLoad = 1;
     }, 250);
+    this.bloqAdcPg = false;
     this.subirModal();
   }
 
@@ -279,57 +302,20 @@ export class PagamentoPage implements OnInit {
     this.pagamentoService.pgmtDetalhe(this.empId, formPg).subscribe(
       async (res: any) => {
         if (res.codigosPg.err === '' || res.codigosPg.err === null) {
-          const pagIds = res.codigosPg;
+          const pagIds = {
+            valor: this.valorPg,
+            empId: this.empId,
+            formaPg: formPg,
+            ...res.codigosPg,
+          };
           delete pagIds.err;
-          pagIds.valor = this.valorPg;
-          pagIds.empId = this.empId;
-          pagIds.formaPg = formPg;
-          //verifica se existe no array
-          let i = 0;
-          let pagExist = false;
-          if (
-            this.caixaMovelStorage.sistemaVendas.vendaAtual.pagList.length === 0
-          ) {
-            this.caixaMovelStorage.sistemaVendas.vendaAtual.pagList.push(
-              pagIds
-            );
-            await this.storage.set('caixa-movel', this.caixaMovelStorage);
-            this.verificaValorTotal();
-            this.resetNovoPagamento();
-            setTimeout(async () => {
-              await loading.dismiss();
-            }, 1000);
-          } else {
-            for (const pagamento of this.caixaMovelStorage.sistemaVendas
-              .vendaAtual.pagList) {
-              i++;
-              if (
-                pagamento.codFormaPag === pagIds.codFormaPag &&
-                pagamento.codTipoPag === pagIds.codTipoPag &&
-                pagamento.valor === pagIds.valor
-              ) {
-                pagExist = true;
-                setTimeout(async () => {
-                  await loading.dismiss();
-                }, 1000);
-              }
-              if (
-                this.caixaMovelStorage.sistemaVendas.vendaAtual.pagList
-                  .length === i &&
-                pagExist === false
-              ) {
-                this.caixaMovelStorage.sistemaVendas.vendaAtual.pagList.push(
-                  pagIds
-                );
-                await this.storage.set('caixa-movel', this.caixaMovelStorage);
-                this.verificaValorTotal();
-                this.resetNovoPagamento();
-                setTimeout(async () => {
-                  await loading.dismiss();
-                }, 1000);
-              }
-            }
-          }
+          this.caixaMovelStorage.sistemaVendas.vendaAtual.pagList.push(pagIds);
+          await this.storage.set('caixa-movel', this.caixaMovelStorage);
+          this.verificaValorTotal();
+          this.resetNovoPagamento();
+          setTimeout(async () => {
+            await loading.dismiss();
+          }, 1000);
         } else {
           console.log('error:', res.codigosPg.err);
         }
@@ -342,10 +328,12 @@ export class PagamentoPage implements OnInit {
 
   verificaValorTotal() {
     if (this.caixaMovelStorage.sistemaVendas.vendaAtual.pagList.length > 0) {
-      const valores = this.caixaMovelStorage.sistemaVendas.vendaAtual.pagList.map(pagamento => pagamento.valor);
+      const valores =
+        this.caixaMovelStorage.sistemaVendas.vendaAtual.pagList.map(
+          (pagamento) => pagamento.valor
+        );
       const pagamentoTotal = valores.reduce((a, b) => a + b, 0);
       this.totalPagoCliente = pagamentoTotal;
-      this.bloqFinishPg = this.totalCarrinhoNum <= pagamentoTotal ? false : true;
     } else {
       this.totalPagoCliente = 0;
     }

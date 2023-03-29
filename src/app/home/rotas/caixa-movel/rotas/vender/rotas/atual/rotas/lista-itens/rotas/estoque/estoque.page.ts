@@ -131,6 +131,9 @@ export class EstoquePage implements OnInit {
       );
     }
     await this.storage.set('caixa-movel', this.caixaMovelStorage);
+    this.navCtrl.navigateBack(
+      '/home/caixa-movel/sistema-vendas/atual/lista-itens'
+    );
   }
 
   toIntQnt(qnt) {

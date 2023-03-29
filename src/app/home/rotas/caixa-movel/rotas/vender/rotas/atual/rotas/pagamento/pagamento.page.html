@@ -352,12 +352,11 @@
               <p>{{convertReal(totalCarrinhoNum-totalPagoCliente < 0 ? 0 : totalCarrinhoNum-totalPagoCliente)}}</p>
             </div>
             <div id="btns">
-              <ion-button (click)="addPg()">
+              <ion-button routerLink="/home/caixa-movel/sistema-vendas/atual"
+                >Voltar</ion-button>
+              <ion-button [disabled]="bloqAdcPg" (click)="addPg()">
                 Adicionar
               </ion-button>
-              <ion-button [disabled]="bloqFinishPg" routerLink="/home/caixa-movel/sistema-vendas/atual"
-                >Finalizar</ion-button
-              >
             </div>
           </div>
         </div>
