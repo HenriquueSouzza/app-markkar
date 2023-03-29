@@ -120,7 +120,7 @@ export class PagamentoPage implements OnInit {
 
   aplicaValorPagamento(valorTotal: boolean) {
     if (valorTotal === true) {
-      this.inputValor.value = this.totalCarrinhoNum.toFixed(2) * 100;
+      this.inputValor.value = this.totalCarrinhoNum;
     } else {
       if (this.valorPg !== 0) {
         this.slideNext();
