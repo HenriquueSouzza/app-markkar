@@ -130,7 +130,7 @@ export class PagamentoPage implements OnInit {
 
   aplicaValorPagamento(valorTotal: boolean) {
     if (valorTotal === true) {
-      this.inputValor.value = this.totalCarrinhoNum;
+      this.inputValor.value = Number(this.totalCarrinhoNum).toFixed(2);
     } else {
       if (this.valorPg !== 0) {
         this.slideNext();
@@ -254,6 +254,10 @@ export class PagamentoPage implements OnInit {
   }
 
   async addPg() {
+    setTimeout(() => {
+      this.porcLoad = 0;
+    }, 250);
+    this.bloqAdcPg = true;
     const loading = await this.loadingController.create({
       message: 'Adicionando pagamento, Aguarde...',
     });
@@ -381,7 +385,6 @@ export class PagamentoPage implements OnInit {
     if (!inputValue) {
       inputValue = 0;
     }
-
     /* REMOVE ALL NON-NUMERIC CHARACTERS */
     inputValue = parseInt(inputValue.toString().replace(/\D/g, ''), 10);
 
@@ -394,7 +397,6 @@ export class PagamentoPage implements OnInit {
     } else {
       inputValue = (inputValue / 100).toFixed(2).replace('.', ',');
     }
-
     /* RETURN FORMATTED CURRENCY VALUE */
     return inputValue;
   }

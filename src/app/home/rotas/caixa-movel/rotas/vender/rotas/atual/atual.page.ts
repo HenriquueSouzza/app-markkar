@@ -46,7 +46,7 @@ export class AtualPage implements OnInit {
       .checkPermission(this.androidPermissions.PERMISSION.CAMERA)
       .then(
         async (result: any) => {
-          if(!result.hasPermission){
+          if (!result.hasPermission) {
             this.androidPermissions.requestPermission(
               this.androidPermissions.PERMISSION.CAMERA
             );
@@ -131,11 +131,15 @@ export class AtualPage implements OnInit {
           'Erro ao tentar finalizar a venda.',
           'Por Favor, verifique se todos os campos foram preenchidos e tente novamente.'
         );
+        await loading.dismiss();
       } else {
         this.vendaService.gravarBd(vendaAtual).subscribe({
           next: async (gravarBdResponse: any) => {
+            console.log(gravarBdResponse);
             const firebirdStatus = gravarBdResponse?.status?.fireBird?.STATUS;
             if (firebirdStatus !== 'OK') {
+              await loading.dismiss();
+              this.limpaVendaStorage();
               await this.exibirAlerta(
                 'Erro ao tentar finalizar a venda.',
                 firebirdStatus?.toLowerCase() ||
@@ -144,17 +148,12 @@ export class AtualPage implements OnInit {
             } else {
               this.vendaService.finalizar(vendaAtual).subscribe({
                 next: async (finalizarResponse: any) => {
+                  await loading.dismiss();
                   if (finalizarResponse?.status === 1) {
                     await this.exibirAlerta('Venda finalizada', null);
-                    this.caixaMovelStorage.sistemaVendas.vendaAtual = null;
-                    await this.storage.set(
-                      'caixa-movel',
-                      this.caixaMovelStorage
-                    );
-                    this.navCtrl.navigateForward(
-                      '/home/caixa-movel/sistema-vendas'
-                    );
+                    this.limpaVendaStorage();
                   } else {
+                    this.limpaVendaStorage();
                     await this.exibirAlerta(
                       'Erro ao tentar finalizar a venda.',
                       'Por favor, verifique o servidor.'
@@ -162,9 +161,10 @@ export class AtualPage implements OnInit {
                   }
                 },
                 error: async (error) => {
+                  await loading.dismiss();
                   console.log(error);
                   await this.exibirAlerta(
-                    'Erro ao finalizar a venda.',
+                    'Erro ao connectar ao servidor.',
                     'Por favor, tente novamente.'
                   );
                 },
@@ -172,9 +172,10 @@ export class AtualPage implements OnInit {
             }
           },
           error: async (error) => {
+            await loading.dismiss();
             console.log(error);
             await this.exibirAlerta(
-              'Erro ao finalizar a venda.',
+              'Erro ao connectar ao servidor.',
               'Por favor, tente novamente.'
             );
           },
@@ -186,12 +187,10 @@ export class AtualPage implements OnInit {
         'Erro ao finalizar a venda.',
         'Por favor, tente novamente.'
       );
-    } finally {
-      await loading.dismiss();
     }
   }
 
-  async cancelarCarrinho() {
+  async cancelarVenda() {
     const alert = await this.alertController.create({
       cssClass: 'my-custom-class',
       header: 'Você deseja cancelar a venda?',
@@ -223,14 +222,7 @@ export class AtualPage implements OnInit {
                     res.status === 'OK' ||
                     res.status.toLowerCase() === 'a venda já foi cancelada'
                   ) {
-                    this.caixaMovelStorage.sistemaVendas.vendaAtual = null;
-                    await this.storage.set(
-                      'caixa-movel',
-                      this.caixaMovelStorage
-                    );
-                    this.navCtrl.navigateBack(
-                      '/home/caixa-movel/sistema-vendas'
-                    );
+                    this.limpaVendaStorage();
                   } else {
                     this.exibirAlerta(
                       'Erro ao cancelar a venda:',
@@ -250,6 +242,12 @@ export class AtualPage implements OnInit {
       ],
     });
     await alert.present();
+  }
+
+  async limpaVendaStorage() {
+    this.caixaMovelStorage.sistemaVendas.vendaAtual = null;
+    await this.storage.set('caixa-movel', this.caixaMovelStorage);
+    this.navCtrl.navigateBack('/home/caixa-movel/sistema-vendas');
   }
 
   // erros

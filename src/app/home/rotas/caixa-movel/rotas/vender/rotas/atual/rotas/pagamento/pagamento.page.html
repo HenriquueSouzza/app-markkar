@@ -52,7 +52,7 @@
         <div class="opcoes valor">
           <ion-item>
             <ion-label>R$:</ion-label>
-            <ion-input maxlength="9" #inputValor (ionChange)="changeValorPagamento($event)" type="text" placeholder="0,00"></ion-input>
+            <ion-input maxlength="9" #inputValor (ionChange)="changeValorPagamento($event)" type="tel" placeholder="0,00"></ion-input>
           </ion-item>
          <div style="width: 100%; display: flex;">
             <ion-button (click)="aplicaValorPagamento(true)" expand="block" fill="clear" shape="round">
