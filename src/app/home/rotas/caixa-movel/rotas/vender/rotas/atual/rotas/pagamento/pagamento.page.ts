@@ -99,7 +99,7 @@ export class PagamentoPage implements OnInit {
       message: 'Aguarde...',
     });
     await loading.present();
-    this.pagamentoService.all(this.empId).subscribe(async (res: any) => {
+    this.pagamentoService.all(this.empId).subscribe({next: async (res: any) => {
       this.allPagMetods = res.formasPagamento;
 
       this.formsPg = Array.from(
@@ -114,7 +114,11 @@ export class PagamentoPage implements OnInit {
         )
       );
       await loading.dismiss();
-    });
+  }, error: async (err) => {
+    this.navCtrl.navigateBack('/home/caixa-movel/sistema-vendas/atual');
+    await this.exibirAlerta('Erro ao tentar comunicar com o servidor local.');
+    await loading.dismiss();
+  }});
   }
 
   changeValorPagamento(event) {
@@ -321,10 +325,13 @@ export class PagamentoPage implements OnInit {
             await loading.dismiss();
           }, 1000);
         } else {
-          console.log('error:', res.codigosPg.err);
+          await this.exibirAlerta('Erro ao tentar adicionar o pagamento.', res.codigosPg.err);
+          await loading.dismiss();
         }
       },
       async (error) => {
+        this.navCtrl.navigateBack('/home/caixa-movel/sistema-vendas/atual');
+        await this.exibirAlerta('Erro ao tentar comunicar com o servidor local.');
         await loading.dismiss();
       }
     );
@@ -416,36 +423,6 @@ export class PagamentoPage implements OnInit {
     this.totalCarrinho = this.convertReal(this.totalCarrinhoNum);
   }
 
-  async cancelarCarrinho() {
-    const alert = await this.alertController.create({
-      cssClass: 'my-custom-class',
-      header: 'Você deseja cancelar a venda?',
-      message: 'Ao cancelar todo carrinho será deletado.',
-      backdropDismiss: false,
-      buttons: [
-        {
-          text: 'NÃO',
-          role: 'cancel',
-          cssClass: 'secondary',
-          id: 'cancel-button',
-        },
-        {
-          text: 'SIM',
-          id: 'confirm-button',
-          handler: async () => {
-            this.produtos = [];
-            this.totalCar();
-            this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList =
-              this.produtos;
-            await this.storage.set('caixa-movel', this.caixaMovelStorage);
-            this.navCtrl.navigateBack('/home/caixa-movel');
-          },
-        },
-      ],
-    });
-    await alert.present();
-  }
-
   //swiper
 
   movePrimeiroSlide() {
@@ -461,5 +438,28 @@ export class PagamentoPage implements OnInit {
 
   slidePrev() {
     this.swiper.swiperRef.slidePrev();
+  }
+
+  // erros
+  async createLoading(message) {
+    const loading = await this.loadingController.create({ message });
+    await loading.present();
+    return loading;
+  }
+
+  async exibirAlerta(header, message = '') {
+    const alert = await this.alertController.create({
+      cssClass: 'my-custom-class',
+      header,
+      message,
+      backdropDismiss: false,
+      buttons: [
+        {
+          text: 'Fechar',
+          id: 'confirm-button',
+        },
+      ],
+    });
+    await alert.present();
   }
 }

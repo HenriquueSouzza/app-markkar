@@ -23,7 +23,6 @@ export class AtualPage implements OnInit {
   public produtosLength: number;
   public pagamentos: Array<object>;
   public pagamentosLength: number;
-  public totalCarrinho: string;
   public clienteNome: string;
   public clienteCPF: string;
   public caixasAbertos: Array<object>;
@@ -41,25 +40,9 @@ export class AtualPage implements OnInit {
     private androidPermissions: AndroidPermissions
   ) {}
 
-  ngOnInit() {
-    this.androidPermissions
-      .checkPermission(this.androidPermissions.PERMISSION.CAMERA)
-      .then(
-        async (result: any) => {
-          if (!result.hasPermission) {
-            this.androidPermissions.requestPermission(
-              this.androidPermissions.PERMISSION.CAMERA
-            );
-          }
-        },
-        (err) =>
-          this.androidPermissions.requestPermission(
-            this.androidPermissions.PERMISSION.CAMERA
-          )
-      );
-  }
-
-  async ionViewWillEnter() {
+  async ngOnInit() {
+    const loading = await this.createLoading('Aguarde...');
+    this.checkCamPermit();
     this.caixaMovelStorage = await this.storage.get('caixa-movel');
     if (this.caixaMovelStorage.sistemaVendas.vendaAtual === null) {
       this.navCtrl.navigateBack('/home/caixa-movel/sistema-vendas');
@@ -81,35 +64,59 @@ export class AtualPage implements OnInit {
       this.caixaMovelStorage.sistemaVendas.vendaAtual.selectIds.caixaId;
     this.codVenda =
       this.caixaMovelStorage.sistemaVendas.vendaAtual.selectIds.vendaId;
-    this.totalCar();
+      this.vendaService
+      .buscarCaixasAbertos(
+        this.caixaMovelStorage.sistemaVendas.vendaAtual.selectIds.vendaId
+      )
+      .subscribe({
+        next: async (res: any) => {
+          await loading.dismiss();
+          this.caixasAbertos = res.caixasAbertos;
+          this.selectCaixa.value = this.caixaSelecionado;
+        },
+        error: async (err) => {
+          this.limpaVendaStorage();
+          await this.exibirAlerta('Erro ao tentar comunicar com o servidor local.');
+          await loading.dismiss();
+        }
+      }
+    );
+   }
+
+  async ionViewWillEnter() {
     this.vendaService
       .buscarCaixasAbertos(
         this.caixaMovelStorage.sistemaVendas.vendaAtual.selectIds.vendaId
       )
-      .subscribe(
-        (res: any) => {
-          console.log(res);
+      .subscribe({
+        next: async (res: any) => {
           this.caixasAbertos = res.caixasAbertos;
           this.selectCaixa.value = this.caixaSelecionado;
         },
-        (error) => {
-          console.log(error);
+        error: async (err) => {
+          this.limpaVendaStorage();
+          await this.exibirAlerta('Erro ao tentar comunicar com o servidor local.');
         }
-      );
+      }
+    );
   }
 
-  totalCar() {
-    const valores = [];
-    if (this.produtos.length === 0) {
-      this.totalCarrinho = this.convertReal(0);
-    } else {
-      for (const produto of this.produtos) {
-        valores.push(produto['valor'] * produto['qnt']);
-        this.totalCarrinho = this.convertReal(
-          valores.reduce((a, b) => a + b, 0)
-        );
-      }
-    }
+  checkCamPermit(){
+    this.androidPermissions
+      .checkPermission(this.androidPermissions.PERMISSION.CAMERA)
+      .then(
+        async (result: any) => {
+          if (!result.hasPermission) {
+            this.androidPermissions.requestPermission(
+              this.androidPermissions.PERMISSION.CAMERA
+            );
+          }
+        },
+        (err) =>
+          this.androidPermissions.requestPermission(
+            this.androidPermissions.PERMISSION.CAMERA
+          )
+      );
   }
 
   convertReal(valor) {
@@ -135,7 +142,6 @@ export class AtualPage implements OnInit {
       } else {
         this.vendaService.gravarBd(vendaAtual).subscribe({
           next: async (gravarBdResponse: any) => {
-            console.log(gravarBdResponse);
             const firebirdStatus = gravarBdResponse?.status?.fireBird?.STATUS;
             if (firebirdStatus !== 'OK') {
               await loading.dismiss();
@@ -162,7 +168,6 @@ export class AtualPage implements OnInit {
                 },
                 error: async (error) => {
                   await loading.dismiss();
-                  console.log(error);
                   await this.exibirAlerta(
                     'Erro ao connectar ao servidor.',
                     'Por favor, tente novamente.'
@@ -173,7 +178,6 @@ export class AtualPage implements OnInit {
           },
           error: async (error) => {
             await loading.dismiss();
-            console.log(error);
             await this.exibirAlerta(
               'Erro ao connectar ao servidor.',
               'Por favor, tente novamente.'
@@ -182,7 +186,6 @@ export class AtualPage implements OnInit {
         });
       }
     } catch (error) {
-      console.log(error);
       await this.exibirAlerta(
         'Erro ao finalizar a venda.',
         'Por favor, tente novamente.'
@@ -257,7 +260,7 @@ export class AtualPage implements OnInit {
     return loading;
   }
 
-  async exibirAlerta(header, message) {
+  async exibirAlerta(header, message='') {
     const alert = await this.alertController.create({
       cssClass: 'my-custom-class',
       header,

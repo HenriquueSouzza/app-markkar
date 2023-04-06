@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Storage } from '@ionic/storage-angular';
 import { StorageService } from 'src/app/services/storage/storage.service';
-import { NavController, ToastController } from '@ionic/angular';
+import { AlertController, LoadingController, NavController, ToastController } from '@ionic/angular';
 import { EstoqueService } from 'src/app/home/rotas/caixa-movel/rotas/estoque/services/estoque/estoque.service';
 
 @Component({
@@ -27,11 +27,13 @@ export class EstoquePage implements OnInit {
   private caixaMovelStorage: any;
 
   constructor(
+    public loadingController: LoadingController,
+    public alertController: AlertController,
+    public toastController: ToastController,
     private storage: Storage,
     private storageService: StorageService,
     private navCtrl: NavController,
     private estoqueService: EstoqueService,
-    public toastController: ToastController
   ) {}
 
   ngOnInit() {}
@@ -62,8 +64,9 @@ export class EstoquePage implements OnInit {
         next: (response: any) => {
           this.listEstoque = response.produtos;
         },
-        error: (err) => {
-          console.log(err);
+        error: async (err) => {
+          this.navCtrl.navigateBack('/home/caixa-movel/sistema-vendas/atual');
+          await this.exibirAlerta('Erro ao tentar comunicar com o servidor local.');
         },
       });
   }
@@ -181,13 +184,29 @@ export class EstoquePage implements OnInit {
     }
   }
 
-  redirectHist(code) {
-    this.navCtrl.navigateForward('/home/caixa-movel/estoque/produtos', {
-      queryParams: { id1: this.idEmpBird, id2: this.idCc, code, nome: '' },
-    });
+  /* Erros */
+
+  async createLoading(message) {
+    const loading = await this.loadingController.create({ message });
+    await loading.present();
+    return loading;
   }
 
-  /* Erros */
+  async exibirAlerta(header, message = '') {
+    const alert = await this.alertController.create({
+      cssClass: 'my-custom-class',
+      header,
+      message,
+      backdropDismiss: false,
+      buttons: [
+        {
+          text: 'Fechar',
+          id: 'confirm-button',
+        },
+      ],
+    });
+    await alert.present();
+  }
 
   async presentToast(message, position: 'top' | 'middle' | 'bottom') {
     const toast = await this.toastController.create({

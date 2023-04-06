@@ -88,7 +88,6 @@ export class CaixaMovelPage implements OnInit {
         this.btnServerLocal = false;
         this.conectadoServeLocal = true;
         await loading.dismiss();
-        console.log(this.ionSelect);
       }, async (error) => {
         await loading.dismiss();
         const alert = await this.alertController.create({
@@ -126,7 +125,6 @@ export class CaixaMovelPage implements OnInit {
     } else {
       this.idCcSql = cc.detail.value;
     }
-    console.log(this.caixaMovelStorage);
     this.caixaMovelStorage.configuracoes.slectedIds.firebirdIdEmp = this.idEmpBird;
     this.caixaMovelStorage.configuracoes.slectedIds.fireBirdIdCc = this.idCc === undefined ? 'localServerOff' : this.idCc;
     this.caixaMovelStorage.configuracoes.slectedIds.sqlIdCc = this.idCcSql;

@@ -231,7 +231,7 @@ export class ScannerCaixaPage implements OnInit {
         codeBar,
         nome: '',
       })
-      .subscribe(async (res: any) => {
+      .subscribe({next: async (res: any) => {
         const produtos = Object.values(res.produtos);
         if (produtos.length !== 0) {
           if (this.telaDigCodigo) {
@@ -265,7 +265,10 @@ export class ScannerCaixaPage implements OnInit {
         } else {
           this.presentToast('Nenhum produto encontrado', 'bottom');
         }
-      });
+      }, error: async (err) => {
+        this.navCtrl.navigateBack('/home/caixa-movel/sistema-vendas/atual');
+        await this.exibirAlerta('Erro ao tentar comunicar com o servidor local.');
+      }});
   }
 
   /*
@@ -313,11 +316,17 @@ export class ScannerCaixaPage implements OnInit {
   }
 
   // erros
-  async erroAlert(title, men) {
+  async createLoading(message) {
+    const loading = await this.loadingController.create({ message });
+    await loading.present();
+    return loading;
+  }
+
+  async exibirAlerta(header, message = '') {
     const alert = await this.alertController.create({
       cssClass: 'my-custom-class',
-      header: title,
-      message: men,
+      header,
+      message,
       backdropDismiss: false,
       buttons: [
         {
