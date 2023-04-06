@@ -42,7 +42,6 @@ export class AtualPage implements OnInit {
 
   async ngOnInit() {
     const loading = await this.createLoading('Aguarde...');
-    this.checkCamPermit();
     this.caixaMovelStorage = await this.storage.get('caixa-movel');
     if (this.caixaMovelStorage.sistemaVendas.vendaAtual === null) {
       this.navCtrl.navigateBack('/home/caixa-movel/sistema-vendas');
@@ -84,6 +83,7 @@ export class AtualPage implements OnInit {
    }
 
   async ionViewWillEnter() {
+    this.checkCamPermit();
     this.vendaService
       .buscarCaixasAbertos(
         this.caixaMovelStorage.sistemaVendas.vendaAtual.selectIds.vendaId
