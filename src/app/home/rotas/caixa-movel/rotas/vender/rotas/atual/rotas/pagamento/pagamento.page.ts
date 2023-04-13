@@ -99,7 +99,7 @@ export class PagamentoPage implements OnInit {
       message: 'Aguarde...',
     });
     await loading.present();
-    this.pagamentoService.all(this.empId).subscribe({next: async (res: any) => {
+    this.pagamentoService.all(this.empId, this.caixaMovelStorage.configuracoes.slectedIds.ipLocal).subscribe({next: async (res: any) => {
       this.allPagMetods = res.formasPagamento;
 
       this.formsPg = Array.from(
@@ -307,7 +307,7 @@ export class PagamentoPage implements OnInit {
             : this.redeAutorizaPg,
       };
     }
-    this.pagamentoService.pgmtDetalhe(this.empId, formPg).subscribe(
+    this.pagamentoService.pgmtDetalhe(this.empId, formPg, this.caixaMovelStorage.configuracoes.slectedIds.ipLocal).subscribe(
       async (res: any) => {
         if (res.codigosPg.err === '' || res.codigosPg.err === null) {
           const pagIds = {

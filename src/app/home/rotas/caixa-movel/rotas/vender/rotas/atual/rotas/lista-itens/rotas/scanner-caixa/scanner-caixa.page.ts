@@ -230,7 +230,7 @@ export class ScannerCaixaPage implements OnInit {
         codeCC: this.idCc,
         codeBar,
         nome: '',
-      })
+      }, this.caixaMovelStorage.configuracoes.slectedIds.ipLocal)
       .subscribe({next: async (res: any) => {
         const produtos = Object.values(res.produtos);
         if (produtos.length !== 0) {

@@ -40,7 +40,9 @@ export class AtualPage implements OnInit {
     private androidPermissions: AndroidPermissions
   ) {}
 
-  async ngOnInit() {
+  ngOnInit() { }
+
+  async ionViewWillEnter() {
     const loading = await this.createLoading('Aguarde...');
     this.caixaMovelStorage = await this.storage.get('caixa-movel');
     if (this.caixaMovelStorage.sistemaVendas.vendaAtual === null) {
@@ -65,7 +67,8 @@ export class AtualPage implements OnInit {
       this.caixaMovelStorage.sistemaVendas.vendaAtual.selectIds.vendaId;
       this.vendaService
       .buscarCaixasAbertos(
-        this.caixaMovelStorage.sistemaVendas.vendaAtual.selectIds.vendaId
+        this.caixaMovelStorage.sistemaVendas.vendaAtual.selectIds.vendaId,
+        this.caixaMovelStorage.configuracoes.slectedIds.ipLocal
       )
       .subscribe({
         next: async (res: any) => {
@@ -77,25 +80,6 @@ export class AtualPage implements OnInit {
           this.limpaVendaStorage();
           await this.exibirAlerta('Erro ao tentar comunicar com o servidor local.');
           await loading.dismiss();
-        }
-      }
-    );
-   }
-
-  async ionViewWillEnter() {
-    this.checkCamPermit();
-    this.vendaService
-      .buscarCaixasAbertos(
-        this.caixaMovelStorage.sistemaVendas.vendaAtual.selectIds.vendaId
-      )
-      .subscribe({
-        next: async (res: any) => {
-          this.caixasAbertos = res.caixasAbertos;
-          this.selectCaixa.value = this.caixaSelecionado;
-        },
-        error: async (err) => {
-          this.limpaVendaStorage();
-          await this.exibirAlerta('Erro ao tentar comunicar com o servidor local.');
         }
       }
     );
@@ -140,7 +124,7 @@ export class AtualPage implements OnInit {
         );
         await loading.dismiss();
       } else {
-        this.vendaService.gravarBd(vendaAtual).subscribe({
+        this.vendaService.gravarBd(vendaAtual, this.caixaMovelStorage.configuracoes.slectedIds.ipLocal).subscribe({
           next: async (gravarBdResponse: any) => {
             const firebirdStatus = gravarBdResponse?.status?.fireBird?.STATUS;
             if (firebirdStatus !== 'OK') {
@@ -152,7 +136,7 @@ export class AtualPage implements OnInit {
                   'Por favor, verifique o servidor.'
               );
             } else {
-              this.vendaService.finalizar(vendaAtual).subscribe({
+              this.vendaService.finalizar(vendaAtual, this.caixaMovelStorage.configuracoes.slectedIds.ipLocal).subscribe({
                 next: async (finalizarResponse: any) => {
                   await loading.dismiss();
                   if (finalizarResponse?.status === 1) {
@@ -216,7 +200,8 @@ export class AtualPage implements OnInit {
             this.vendaService
               .cancelar(
                 this.caixaMovelStorage.sistemaVendas.vendaAtual.selectIds
-                  .vendaId
+                  .vendaId,
+                  this.caixaMovelStorage.configuracoes.slectedIds.ipLocal
               )
               .subscribe(
                 async (res: any) => {

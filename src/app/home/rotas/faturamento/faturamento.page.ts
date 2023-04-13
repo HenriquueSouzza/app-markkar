@@ -300,6 +300,7 @@ export class FaturamentoPage implements OnInit {
     };
     this.lojas.faturamento(interfaceHFat, this.valTokenUsuario).subscribe(
       (response: any) => {
+        console.log(response);
         if (response.connection.error === 'invalidToken') {
           this.error('invalidToken');
         } else if (response.connection.error === 'databaseError') {
@@ -473,6 +474,7 @@ export class FaturamentoPage implements OnInit {
             somaMargemArray = [];
             somaCMVrray = [];
             for (const unidade of unidadesFat) {
+              console.log(unidade);
               somaFatArray.push(parseFloat(unidade['somaFat']));
               somaMargemArray.push(parseFloat(unidade['somaMargem']));
               somaCMVrray.push(parseFloat(unidade['cmv_vlr']));
@@ -480,6 +482,7 @@ export class FaturamentoPage implements OnInit {
                 unidade: unidade['unidade'],
                 idCentroCusto: unidade['idCentroCusto'],
                 idEmpBird: unidade['idEmpBird'],
+                idCcBird: unidade['idCcBird'],
                 telefone: unidade['telefone'],
                 cep: unidade['cep'],
                 endereco: unidade['endereco'],
@@ -489,6 +492,7 @@ export class FaturamentoPage implements OnInit {
                 ultimaExportacao: unidade['ultimaExportacao'],
                 check: true,
                 display: 'block',
+                servidorLocal: unidade['servidorLocal']
               };
               this.multiempresa.empresas[this.valIdToken].centrodecustos =
                 multiempresa;

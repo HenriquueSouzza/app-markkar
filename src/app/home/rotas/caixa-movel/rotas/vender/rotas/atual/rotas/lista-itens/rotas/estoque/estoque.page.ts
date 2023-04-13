@@ -59,13 +59,14 @@ export class EstoquePage implements OnInit {
         codeCC: this.idCc,
         codeBar,
         nome,
-      })
+      }, this.caixaMovelStorage.configuracoes.slectedIds.ipLocal)
       .subscribe({
         next: (response: any) => {
           this.listEstoque = response.produtos;
         },
         error: async (err) => {
-          this.navCtrl.navigateBack('/home/caixa-movel/sistema-vendas/atual');
+          console.log(err);
+          //this.navCtrl.navigateBack('/home/caixa-movel/sistema-vendas/atual');
           await this.exibirAlerta('Erro ao tentar comunicar com o servidor local.');
         },
       });
@@ -87,7 +88,7 @@ export class EstoquePage implements OnInit {
         codeCC: this.idCc,
         codeBar,
         nome,
-      })
+      }, this.caixaMovelStorage.configuracoes.slectedIds.ipLocal)
       .subscribe(async (res: any) => {
         const produtos = Object.values(res.produtos);
         if (produtos.length !== 0) {

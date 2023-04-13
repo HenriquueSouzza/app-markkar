@@ -23,8 +23,9 @@ export class CaixaMovelPage implements OnInit {
   public centroscustos = [];
   public consultaNome = false;
   public estoqueStorageHist: any;
-  public idEmpBird: any;
+  public idEmpBird: string;
   public idCcSql: string;
+  public ipLocal: string;
   public idCc: string;
   public recentesExist = false;
 
@@ -50,84 +51,44 @@ export class CaixaMovelPage implements OnInit {
       await this.storage.set('caixa-movel',
         {
           sistemaVendas: {vendaAtual: null, configuracoes: {modoRapido: false}},
-          configuracoes: {slectedIds: {firebirdIdEmp: null, fireBirdIdCc: null, sqlIdCc: null }}}
+          configuracoes: {slectedIds: {firebirdIdEmp: null, fireBirdIdCc: null, sqlIdCc: null, ipLocal: null }}}
         );
       this.caixaMovelStorage = await this.storage.get('caixa-movel');
     } else {
       this.caixaMovelStorage = await this.storage.get('caixa-movel');
-      if(this.caixaMovelStorage.sistemaVendas === undefined ||this.caixaMovelStorage.sistemaVendas === null){
+      if(this.caixaMovelStorage.configuracoes.slectedIds.ipLocal === undefined ||
+        this.caixaMovelStorage.sistemaVendas === undefined ||
+        this.caixaMovelStorage.sistemaVendas === null){
         await this.storage.set('caixa-movel',
           {
             sistemaVendas: {vendaAtual: null, configuracoes: {modoRapido: false}},
-            configuracoes: {slectedIds: {firebirdIdEmp: null, fireBirdIdCc: null, sqlIdCc: null }}}
+            configuracoes: {slectedIds: {firebirdIdEmp: null, fireBirdIdCc: null, sqlIdCc: null, ipLocal: null }}}
           );
           this.caixaMovelStorage = await this.storage.get('caixa-movel');
       }
     }
-    this.conectServidor();
-  }
-
-  async conectServidor(){
-    const loading = await this.loadingController.create({
-      message: 'Conectando ao servidor local, aguarde...'
-    });
-    await loading.present();
-    this.idEmpBird = Object.values(this.multiEmpresaStorage.empresas[this.auth.empresa.id].centrodecustos)[0]['idEmpBird'];
     const ccStorage = Object.values(this.multiEmpresaStorage.empresas[this.auth.empresa.id].centrodecustos);
-    this.estoqueService
-      .consultaCC({ codeEmp: this.idEmpBird })
-      .pipe(timeout(5000))
-      .subscribe(async (res: any) => {
-        for(const cc of res.centrosCustos){
-          for(const ccs of ccStorage){
-            if(cc.nome === ccs['unidade']){
-              this.centroscustos.push({nome: cc.nome, ccIdFb: cc.id, ccIdSql: ccs['idCentroCusto']});
-            }
-          }
-        }
-        this.btnServerLocal = false;
-        this.conectadoServeLocal = true;
-        await loading.dismiss();
-      }, async (error) => {
-        await loading.dismiss();
-        const alert = await this.alertController.create({
-          cssClass: 'my-custom-class',
-          header: 'Falha ao conectar com o servidor local',
-          message: 'Algumas funcionalidades ficarão desativadas. <br> <br> Deseja continuar ?',
-          backdropDismiss: false,
-          buttons: [
-            {
-              text: 'voltar',
-              role: 'cancel',
-              cssClass: 'secondary',
-              id: 'cancel-button',
-              handler: () => {
-                this.navCtrl.navigateBack('/home/faturamento');
-              },
-            },
-            {
-              text: 'SIM',
-              id: 'confirm-button',
-              handler: () => {
-                this.centroscustos = Object.values(this.multiEmpresaStorage.empresas[this.auth.empresa.id].centrodecustos);
-              },
-            },
-          ],
-        });
-        await alert.present();
+    for(const ccs of ccStorage){
+      this.centroscustos.push({
+        nome: ccs['unidade'],
+        empIdFb: ccs['idEmpBird'],
+        ccIdFb: ccs['idCcBird'],
+        ccIdSql: ccs['idCentroCusto'],
+        ipLocal: ccs['servidorLocal']
       });
+    }
+    console.log(this.centroscustos);
   }
 
   async centroscustosChange(cc) {
-    if(this.conectadoServeLocal){
-      this.idCc = cc.detail.value.fire;
-      this.idCcSql = cc.detail.value.sql;
-    } else {
-      this.idCcSql = cc.detail.value;
-    }
+    this.idCc = cc.detail.value.ccFire;
+    this.idCcSql = cc.detail.value.ccSql;
+    this.idEmpBird = cc.detail.value.empFire;
+    this.ipLocal = cc.detail.value.ipLocal;
     this.caixaMovelStorage.configuracoes.slectedIds.firebirdIdEmp = this.idEmpBird;
-    this.caixaMovelStorage.configuracoes.slectedIds.fireBirdIdCc = this.idCc === undefined ? 'localServerOff' : this.idCc;
+    this.caixaMovelStorage.configuracoes.slectedIds.fireBirdIdCc = this.idCc;
     this.caixaMovelStorage.configuracoes.slectedIds.sqlIdCc = this.idCcSql;
+    this.caixaMovelStorage.configuracoes.slectedIds.ipLocal = this.ipLocal;
     await this.storage.set('caixa-movel', this.caixaMovelStorage);
   }
 

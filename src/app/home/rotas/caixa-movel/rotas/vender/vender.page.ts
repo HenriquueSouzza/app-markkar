@@ -53,15 +53,21 @@ export class VenderPage implements OnInit {
 
   //nova venda
 
-  novaVenda(cpfCliente = null, idCliente = null, nomeCliente = null, somenteCpf = false){
+  async novaVenda(cpfCliente = null, idCliente = null, nomeCliente = null, somenteCpf = false){
     let cpf = cpfCliente;
     this.fecharModalIdentificarCliente();
     if(!somenteCpf){
       cpf = null;
     }
-    this.vendaService.iniciar(this.idEmpBird, this.idCc, this.idUserBird, cpf, idCliente).subscribe(async (res: any) => {
+    const loading = await this.loadingController.create({
+      message: 'Iniciando a venda, aguarde...'
+    });
+    await loading.present();
+    this.vendaService.iniciar(this.idEmpBird, this.idCc, this.idUserBird, cpf, idCliente,
+      this.caixaMovelStorage.configuracoes.slectedIds.ipLocal).subscribe(async (res: any) => {
       if (res.novaVenda['COD_VENDA'] === '-1'){
         this.erroAlert('Erro ao iniciar a venda:', res.novaVenda['STATUS'].toLowerCase());
+        await loading.dismiss();
       } else {
         this.caixaMovelStorage.sistemaVendas.vendaAtual = {
           dataInicio: new Date().getTime(),
@@ -80,10 +86,12 @@ export class VenderPage implements OnInit {
             caixaId: res.novaVenda['COD_CAIXA']
           }
         };
+        await loading.dismiss();
         await this.storage.set('caixa-movel', this.caixaMovelStorage);
         this.navCtrl.navigateForward('/home/caixa-movel/sistema-vendas/atual');
       }
-    }, (error)=>{
+    }, async (error)=>{
+      await loading.dismiss();
       this.erroAlert('Erro ao iniciar a venda:', 'Erro ao conectar com o servidor local');
     });
   }
@@ -116,7 +124,8 @@ export class VenderPage implements OnInit {
                 message: 'Cancelando venda anterior, aguarde...'
               });
               await loading.present();
-              this.vendaService.cancelar(this.caixaMovelStorage.sistemaVendas.vendaAtual.selectIds.vendaId).subscribe(async (res: any)=> {
+              this.vendaService.cancelar(this.caixaMovelStorage.sistemaVendas.vendaAtual.selectIds.vendaId,
+                this.caixaMovelStorage.configuracoes.slectedIds.ipLocal).subscribe(async (res: any)=> {
                 await loading.dismiss();
                 if (res.status === 'OK' ||
                 res.status.toLowerCase() === 'a venda já foi cancelada' ||
@@ -152,7 +161,8 @@ export class VenderPage implements OnInit {
 
   buscarCliente(form: NgForm){
     const inputs = form.value;
-    this.vendaService.buscarClientes(inputs.nome, inputs.cpf).subscribe((res: any) => {
+    this.vendaService.buscarClientes(inputs.nome, inputs.cpf,
+      this.caixaMovelStorage.configuracoes.slectedIds.ipLocal).subscribe((res: any) => {
       this.clientesList = res.clientes === null ? [{NOME_CLIENTE: 'Não encontrado', DOCUMENTO: ''}] : res.clientes;
     });
   }
