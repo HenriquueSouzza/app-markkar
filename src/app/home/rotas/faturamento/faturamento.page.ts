@@ -12,7 +12,6 @@ import {
   NavController,
 } from '@ionic/angular';
 import { format, parseISO } from 'date-fns';
-import { StatusBar } from '@capacitor/status-bar';
 import { ChartDataset, ChartOptions, ChartType, Color } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { timeout } from 'rxjs/operators';
@@ -300,7 +299,6 @@ export class FaturamentoPage implements OnInit {
     };
     this.lojas.faturamento(interfaceHFat, this.valTokenUsuario).subscribe(
       (response: any) => {
-        console.log(response);
         if (response.connection.error === 'invalidToken') {
           this.error('invalidToken');
         } else if (response.connection.error === 'databaseError') {
@@ -474,7 +472,6 @@ export class FaturamentoPage implements OnInit {
             somaMargemArray = [];
             somaCMVrray = [];
             for (const unidade of unidadesFat) {
-              console.log(unidade);
               somaFatArray.push(parseFloat(unidade['somaFat']));
               somaMargemArray.push(parseFloat(unidade['somaMargem']));
               somaCMVrray.push(parseFloat(unidade['cmv_vlr']));

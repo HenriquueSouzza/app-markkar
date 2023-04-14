@@ -24,6 +24,7 @@ export class ControleVersaoService {
     ) { }
 
   async check(){
+    console.log('app');
     if (!isPlatform('mobileweb')) {
       this.http.get('https://api.markkar.com.br/versaoAppControl.json').subscribe(async (res: any) => {
         const versaoAtual = res.versao;

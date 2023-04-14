@@ -6,7 +6,6 @@ import { MenuController, IonicSlides, IonSlides, LoadingController, isPlatform} 
 import { Router } from '@angular/router';
 import SwiperCore, { Autoplay, Keyboard, Pagination, Scrollbar, Zoom } from 'swiper';
 import { SwiperComponent } from 'swiper/angular';
-import { StatusBar } from '@capacitor/status-bar';
 import { Platform } from '@ionic/angular';
 import { LoginService } from '../../services/login/login.service';
 import { StorageService } from 'src/app/services/storage/storage.service';
@@ -71,9 +70,6 @@ export class BemVindoComponent implements OnInit {
       if(valCnpj !== null && valToken !== null){
         this.router.navigateByUrl('/login/usuario', { replaceUrl: true });
       }
-    }
-    if(!isPlatform('mobileweb') && isPlatform('android')){
-      StatusBar.setBackgroundColor({color: '#141518'});
     }
   }
 

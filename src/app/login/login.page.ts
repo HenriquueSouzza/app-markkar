@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable import/no-deprecated */
 /* eslint-disable @typescript-eslint/dot-notation */
 import { Component, OnInit } from '@angular/core';
@@ -9,11 +10,6 @@ import {
   ToastController,
   MenuController,
 } from '@ionic/angular';
-import {
-  BackgroundColorOptions,
-  StatusBar,
-  StatusBarStyle,
-} from '@capacitor/status-bar';
 import { SplashScreen } from '@capacitor/splash-screen';
 import { StorageService } from '../services/storage/storage.service';
 import { LoginService } from './services/login/login.service';
@@ -24,7 +20,6 @@ import { LoginService } from './services/login/login.service';
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage implements OnInit {
-
   btn: string;
   // storage
   private auth: any;
@@ -45,31 +40,34 @@ export class LoginPage implements OnInit {
   }
 
   async ngOnInit() {
+    console.log('/login');
     // storage
     this.auth = await this.storage.get('auth');
-    if(this.auth === null || this.auth === undefined){
-      this.router.navigateByUrl('/login', { replaceUrl: true });
-    }
     this.faturamentoStorage = await this.storage.get('faturamento');
     this.multiEmpresaStorage = await this.storage.get('multiEmpresa');
     this.appConfigStorage = await this.storage.get('appConfig');
     // ..
     let auth = this.auth;
-    if (auth === null || !this.appConfigStorage.hasOwnProperty('firstOpen') || this.appConfigStorage.firstOpen !== false) {
+    if (
+      auth === undefined ||
+      auth === null ||
+      !this.appConfigStorage.hasOwnProperty('firstOpen') ||
+      this.appConfigStorage.firstOpen !== false
+    ) {
       const configsFaturamento = {
         unidadesCheck: {},
         configuracoes: {
-          grafico: {intervalo: 'lastFourMonths'},
-          centrodecustos: {intervalo: 'day'},
-          header: {intervalo: 'month'},
+          grafico: { intervalo: 'lastFourMonths' },
+          centrodecustos: { intervalo: 'day' },
+          header: { intervalo: 'month' },
           gerais: {
             mask: true,
-            cmvPerc: true
-          }
-        }
+            cmvPerc: true,
+          },
+        },
       };
-      const multiEmpresa = {empresas: {}};
-      const appConfig = {updateCritico: '1.15.3'};
+      const multiEmpresa = { empresas: {} };
+      const appConfig = { updateCritico: '1.15.3' };
       auth = {};
       await this.storage.set('faturamento', configsFaturamento);
       await this.storage.set('multiEmpresa', multiEmpresa);
@@ -80,22 +78,15 @@ export class LoginPage implements OnInit {
         SplashScreen.hide();
       }, 2000);
     } else {
-      const valIntGra = this.faturamentoStorage.configuracoes.grafico.intervalo;
-      const valUpdateReset = this.appConfigStorage.updateCritico;
-      const valFLogin = this.appConfigStorage.firstOpen;
       const valCnpj = this.auth.empresa.cnpj;
       const valToken = this.auth.empresa.token;
       const valIdToken = this.auth.empresa.id;
       const valLogin = this.auth.usuario.login;
       const valTokenUser = this.auth.usuario.token;
-      const validateLogin = {
-        user: auth.usuario.login,
-        senha: auth.usuario.senha,
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        id_token: auth.empresa.id,
-        cnpj: auth.empresa.cnpj
+      const validatefLogin = {
+        cnpj: auth.empresa.cnpj,
+        token: auth.empresa.token,
       };
-      const validatefLogin = { cnpj: auth.empresa.cnpj, token: auth.empresa.token };
 
       // Primeira verificacao auth
       if (
@@ -110,14 +101,9 @@ export class LoginPage implements OnInit {
           async (response: any) => {
             if (response.connection['status'] === 'success') {
               this.btn = 'block';
-              if (!isPlatform('mobileweb') && isPlatform('android')) {
-                const optsBck: BackgroundColorOptions = { color: '#222428' };
-                StatusBar.setBackgroundColor(optsBck);
-              }
-              if (!isPlatform('mobileweb') && isPlatform('ios')) {
-                StatusBar.setStyle({ style: StatusBarStyle.Dark });
-              }
-              this.router.navigateByUrl('/home/faturamento', { replaceUrl: true });
+              this.router.navigateByUrl('/home/faturamento', {
+                replaceUrl: true,
+              });
               setTimeout(() => {
                 SplashScreen.hide();
               }, 2000);
@@ -129,7 +115,6 @@ export class LoginPage implements OnInit {
             }
           },
           async (error) => {
-            console.log(error);
             this.btn = 'block';
             setTimeout(() => {
               SplashScreen.hide();
@@ -137,7 +122,7 @@ export class LoginPage implements OnInit {
             this.presentToast('Falha ao conectar com o servidor');
           }
         );
-      } else if (valCnpj !== null && valToken !== null) {
+      } else if (valCnpj !== null && valToken !== null && valCnpj !== undefined && valToken !== undefined) {
         this.service.firstlogin(validatefLogin).subscribe(
           async (response: any) => {
             if (response.connection['status'] === 'failed') {
@@ -146,7 +131,9 @@ export class LoginPage implements OnInit {
                 SplashScreen.hide();
               }, 2000);
             } else if (response.connection['status'] === 'blocked') {
-              this.router.navigateByUrl('/login/tokenBlock', { replaceUrl: true });
+              this.router.navigateByUrl('/login/tokenBlock', {
+                replaceUrl: true,
+              });
               setTimeout(() => {
                 SplashScreen.hide();
               }, 2000);
@@ -176,7 +163,12 @@ export class LoginPage implements OnInit {
         valToken === null ||
         valLogin === null ||
         valIdToken === null ||
-        valTokenUser === null
+        valTokenUser === null ||
+        valCnpj === undefined ||
+        valToken === undefined ||
+        valLogin === undefined ||
+        valIdToken === undefined ||
+        valTokenUser === undefined
       ) {
         this.router.navigateByUrl('/login/empresa', { replaceUrl: true });
         setTimeout(() => {

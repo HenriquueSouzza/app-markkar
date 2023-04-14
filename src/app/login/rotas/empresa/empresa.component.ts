@@ -4,7 +4,6 @@ import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AlertController, isPlatform, LoadingController, MenuController, Platform } from '@ionic/angular';
 import { Storage } from '@ionic/storage-angular';
-import { StatusBar } from '@capacitor/status-bar';
 import { LoginService } from '../../services/login/login.service';
 import { StorageService } from 'src/app/services/storage/storage.service';
 
@@ -54,9 +53,6 @@ constructor(
 
 
 async ngOnInit() {
-  if(!isPlatform('mobileweb') && isPlatform('android')){
-    StatusBar.setBackgroundColor({color: '#141518'});
-  }
   this.auth = await this.storage.get('auth');
   if(this.auth !== null && this.auth.hasOwnProperty('empresa')) {
     const valCnpj = this.auth.empresa.cnpj;
