@@ -16,7 +16,6 @@ export class CaixaMovelPage implements OnInit {
 
   @ViewChild('popOver') popOver: any;
   @ViewChild('ionSelect') ionSelect: any;
-  @ViewChild('ionSelectOff') ionSelectOff: any;
 
   public conectadoServeLocal = false;
   public btnServerLocal = true;
@@ -77,7 +76,6 @@ export class CaixaMovelPage implements OnInit {
         ipLocal: ccs['servidorLocal']
       });
     }
-    console.log(this.centroscustos);
   }
 
   async centroscustosChange(cc) {
@@ -117,10 +115,6 @@ export class CaixaMovelPage implements OnInit {
   }
 
   popOverCloseEvent(){
-    if(this.conectadoServeLocal){
-      this.ionSelect.open();
-    } else {
-      this.ionSelectOff.open();
-    }
+    this.ionSelect.open();
   }
 }

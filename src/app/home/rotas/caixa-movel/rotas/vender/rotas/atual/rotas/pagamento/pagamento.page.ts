@@ -128,7 +128,12 @@ export class PagamentoPage implements OnInit {
     this.debitOrCreditPg = 'Não selecionado';
     this.redeAutorizaPg = 'Não selecionado';
     this.parcelasPg = 'Não selecionado';
-    const inputMask = this.maskMoney(event.detail.value);
+    const valorRestante = Number(
+      this.totalCarrinhoNum - this.totalPagoCliente < 0
+        ? 0
+        : this.totalCarrinhoNum - this.totalPagoCliente
+    ).toFixed(2);
+    const inputMask = this.maskMoney(event.detail.value, valorRestante);
     this.inputValor.value = inputMask;
     this.valorPg = parseFloat(inputMask.replace('.', '').replace(',', '.'));
   }
@@ -395,18 +400,23 @@ export class PagamentoPage implements OnInit {
   }
 
   finalizarVenda(){
-    this.navCtrl.navigateForward('/home/caixa-movel/sistema-vendas/atual/lista-itens/estoque');
+    this.navCtrl.navigateForward('/home/caixa-movel/sistema-vendas/atual?finalizar=true');
   }
 
   //total-carrinho
 
-  maskMoney(inputValue) {
+  maskMoney(inputValue, maxValue) {
     /* CONVERT EMPTY STRING TO 0 */
     if (!inputValue) {
       inputValue = 0;
     }
     /* REMOVE ALL NON-NUMERIC CHARACTERS */
     inputValue = parseInt(inputValue.toString().replace(/\D/g, ''), 10);
+
+    /* CHECK IF INPUT VALUE EXCEEDS MAX VALUE */
+    if (maxValue && (inputValue/100) > maxValue) {
+      inputValue = maxValue * 100;
+    }
 
     /* ADD DECIMAL SEPARATOR ',' AND THOUSANDS SEPARATOR '.' */
     if (inputValue.toString().length > 2) {

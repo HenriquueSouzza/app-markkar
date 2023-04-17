@@ -10,6 +10,7 @@ import { StorageService } from 'src/app/services/storage/storage.service';
 import { Storage } from '@ionic/storage-angular';
 import { VendaService } from './services/venda/venda.service';
 import { AndroidPermissions } from '@awesome-cordova-plugins/android-permissions/ngx';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-atual',
@@ -37,7 +38,8 @@ export class AtualPage implements OnInit {
     private storage: Storage,
     private navCtrl: NavController,
     private storageService: StorageService,
-    private androidPermissions: AndroidPermissions
+    private androidPermissions: AndroidPermissions,
+    private activatedRoute: ActivatedRoute
   ) {}
 
   ngOnInit() { }
@@ -72,10 +74,18 @@ export class AtualPage implements OnInit {
       )
       .subscribe({
         next: async (res: any) => {
-          await loading.dismiss();
           this.caixasAbertos = res.caixasAbertos;
           this.selectCaixa.value = this.caixaSelecionado;
-          this.verificaValorPago();
+          this.activatedRoute.queryParamMap.subscribe({next: async (params: any) => {
+            if(params.params.finalizar === 'true'){
+              setTimeout(async () => {
+                this.finalizarVenda();
+                await loading.dismiss();
+              }, 1500);
+            } else {
+              await loading.dismiss();
+            }
+          }});
         },
         error: async (err) => {
           this.limpaVendaStorage();
@@ -111,29 +121,42 @@ export class AtualPage implements OnInit {
     });
   }
 
-  verificaValorPago() {
+  async verificaValorPago() {
     const valoresPagos =
       this.caixaMovelStorage.sistemaVendas.vendaAtual.pagList.map(
         (pagamento) => pagamento.valor
       );
     const valoresProdutos =
     this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList.map(
-      (produtos) => produtos.valor
+      (produtos) => produtos.valor * produtos.qnt
     );
-    const pagamentoTotal = valoresPagos.reduce((a, b) => a + b, 0);
-    const totalProdutos = valoresProdutos.reduce((a, b) => a + b, 0);
+    const pagamentoTotal = Math.round((valoresPagos.reduce((a, b) => a + b, 0)) * 1e2 ) / 1e2;
+    const totalProdutos = Math.round((valoresProdutos.reduce((a, b) => a + b, 0)) * 1e2 ) / 1e2;
     if(pagamentoTotal < totalProdutos){
-      console.log('valor menor');
+      await this.exibirAlerta(
+        'Erro ao tentar finalizar a venda.',
+        'Por Favor, verifique o pagamento.<br><br>Obs:. Pagamento menor que o total de produtos.'
+      );
       return false;
-    } else if(pagamentoTotal !== totalProdutos){
-      console.log('valor diferente');
+    } else if(pagamentoTotal > totalProdutos){
+      await this.exibirAlerta(
+        'Erro ao tentar finalizar a venda.',
+        'Por Favor, verifique o pagamento.<br><br>Obs:. Pagamento maior que o total de produtos.'
+      );
       return false;
-    }
-    else if(pagamentoTotal === totalProdutos){
-      console.log('ok');
+    } else if(pagamentoTotal === 0){
+      await this.exibirAlerta(
+        'Erro ao tentar finalizar a venda.',
+        'Por Favor, adicione o pagemento'
+      );
+      return false;
+    } else if(pagamentoTotal === totalProdutos){
       return true;
     }else {
-      console.log('valor diferente');
+      await this.exibirAlerta(
+        'Erro ao tentar finalizar a venda.',
+        'Por Favor, verifique o pagamento.<br><br>Error:. Pagamento inválido'
+      );
       return false;
     }
   }
@@ -143,13 +166,14 @@ export class AtualPage implements OnInit {
     try {
       const vendaAtual = this.caixaMovelStorage.sistemaVendas.vendaAtual;
       if (
-        vendaAtual.pagList.length === 0 ||
         vendaAtual.produtosList.length === 0
       ) {
         await this.exibirAlerta(
           'Erro ao tentar finalizar a venda.',
-          'Por Favor, verifique se todos os campos foram preenchidos e tente novamente.'
+          'Por Favor, adicione um produto.'
         );
+        await loading.dismiss();
+      }else if(await this.verificaValorPago() === false){
         await loading.dismiss();
       } else {
         this.vendaService.gravarBd(vendaAtual, this.caixaMovelStorage.configuracoes.slectedIds.ipLocal).subscribe({

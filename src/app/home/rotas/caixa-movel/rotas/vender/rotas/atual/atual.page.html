@@ -53,7 +53,7 @@
       <p>CPF: {{clienteCPF}}</p>
     </div>
   </div>
-  <div class="lista">
+  <div class="lista" style="margin-bottom: 80px;">
     <ion-item lines="none" style="width: 100%;" class="title">
       <ion-label>Caixa</ion-label>
     </ion-item>
@@ -62,13 +62,13 @@
         <ion-select-option *ngFor="let caixa of caixasAbertos" value="{{caixa['COD_VND_CAIXA']}}">{{caixa['COD_VND_CAIXA']+'-'+caixa['APELIDO']}}</ion-select-option>
       </ion-select>
     </ion-item>
-    <div id="btnsFinal">
-      <ion-button (click)="cancelarVenda()" color="danger">
-        Cancelar
-      </ion-button>
-      <ion-button (click)="finalizarVenda()">
-        Finalizar
-      </ion-button>
-    </div>
+  </div>
+  <div id="btnsFinal">
+    <ion-button (click)="cancelarVenda()" color="danger">
+      Cancelar
+    </ion-button>
+    <ion-button (click)="finalizarVenda()">
+      Finalizar
+    </ion-button>
   </div>
 </ion-content>

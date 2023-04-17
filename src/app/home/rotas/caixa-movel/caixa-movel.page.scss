@@ -1,15 +1,11 @@
 #venda {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin: 10px 0 60px 0;
+  width: 100%;
   max-width: 600px;
 
   ion-button {
     width: 100px;
     height: 100px;
-    margin: 10px 10px;
+    margin: 10px 0 0 20px;
 
     div {
       display: flex;
@@ -47,4 +43,12 @@ ion-popover {
     justify-content: center;
     text-align: center;
   }
+}
+.group{
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  margin: 20px 0 30px 0;
+  max-width: 600px;
 }

@@ -23,7 +23,6 @@ export class HomeGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Promise<boolean> {
-    console.log('homeguard');
     const auth = await this.storage.get('auth');
     if (auth.hasOwnProperty('usuario')) {
       const valIdToken = auth.empresa.token;
@@ -37,7 +36,6 @@ export class HomeGuard implements CanActivate {
         valTokenLogin !== undefined &&
         valIdToken !== undefined
       ) {
-        console.log(auth.usuario.senha);
         return true;
       } else {
         this.router.navigateByUrl('/login', { replaceUrl: true });

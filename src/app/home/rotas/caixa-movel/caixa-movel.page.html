@@ -32,61 +32,34 @@
   </ion-popover>
   <div style="width: 100%;display: flex;align-items: center;justify-content: center;">
     <div id="venda">
-      <ion-button color="dark" (click)="navigateSistemaVendas()">
-        <div>
-          <ion-icon name="cash-outline"></ion-icon>
-          Vender
-        </div>
-      </ion-button>
-      <ion-button color="dark" (click)="navigateEstoque()">
-        <div>
-          <ion-icon slot="start" name="pie-chart-outline"></ion-icon>
-          Estoque
-        </div>
-      </ion-button>
-      <ion-button [disabled]="true" color="dark">
-        <div>
-          <ion-icon name="swap-vertical-outline"></ion-icon>
-          Trocas
-        </div>
-      </ion-button>
-      <ion-button color="dark" (click)="navigateRelatorios()">
-        <div>
-          <ion-icon name="reader-outline"></ion-icon>
-          Relatórios
-        </div>
-      </ion-button>
-      <ion-button [disabled]="true" color="dark">
-        <div>
-          <ion-icon name="file-tray-full-outline"></ion-icon>
-          Caixa
-        </div>
-      </ion-button>
-      <ion-button [disabled]="true" color="dark">
-        <div>
-          <ion-icon name="extension-puzzle-outline"></ion-icon>
-          Em Breve...
-        </div>
-      </ion-button>
-      <ion-button [disabled]="true" color="dark">
-        <div>
-          <ion-icon name="extension-puzzle-outline"></ion-icon>
-          Em Breve...
-        </div>
-      </ion-button>
-      <ion-button [disabled]="true" color="dark">
-        <div>
-          <ion-icon name="extension-puzzle-outline"></ion-icon>
-          Em Breve...
-        </div>
-      </ion-button>
-      <ion-button [disabled]="true" color="dark">
-        <div>
-          <ion-icon name="extension-puzzle-outline"></ion-icon>
-          Em Breve...
-        </div>
-      </ion-button>
-
+      <ion-item-group class="group" id="servidorLocal">
+        <ion-item-divider>
+          <ion-label>Servidor Local</ion-label>
+        </ion-item-divider>
+        <ion-button color="dark" (click)="navigateSistemaVendas()">
+          <div>
+            <ion-icon name="cash-outline"></ion-icon>
+            Vender
+          </div>
+        </ion-button>
+        <ion-button color="dark" (click)="navigateEstoque()">
+          <div>
+            <ion-icon slot="start" name="pie-chart-outline"></ion-icon>
+            Estoque
+          </div>
+        </ion-button>
+      </ion-item-group>
+      <ion-item-group class="group" id="nuvem">
+        <ion-item-divider>
+          <ion-label>Exportador</ion-label>
+        </ion-item-divider>
+        <ion-button color="dark" (click)="navigateRelatorios()">
+          <div>
+            <ion-icon name="reader-outline"></ion-icon>
+            Relatórios
+          </div>
+        </ion-button>
+      </ion-item-group>
     </div>
   </div>
 </ion-content>
