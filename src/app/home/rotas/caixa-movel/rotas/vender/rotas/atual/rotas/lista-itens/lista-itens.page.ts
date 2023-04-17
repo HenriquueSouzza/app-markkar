@@ -109,6 +109,11 @@ export class ListaItensPage implements OnInit {
     this.navCtrl.navigateForward('/home/caixa-movel/sistema-vendas/atual/lista-itens/estoque');
   }
 
+  goPagamentos(){
+    this.navCtrl.navigateForward('/home/caixa-movel/sistema-vendas/atual/pagamento');
+  }
+
+
   // erros
   async erroAlert(title, men){
     const alert = await this.alertController.create({

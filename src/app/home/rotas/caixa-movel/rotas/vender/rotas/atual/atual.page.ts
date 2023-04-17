@@ -75,6 +75,7 @@ export class AtualPage implements OnInit {
           await loading.dismiss();
           this.caixasAbertos = res.caixasAbertos;
           this.selectCaixa.value = this.caixaSelecionado;
+          this.verificaValorPago();
         },
         error: async (err) => {
           this.limpaVendaStorage();
@@ -108,6 +109,33 @@ export class AtualPage implements OnInit {
       style: 'currency',
       currency: 'BRL',
     });
+  }
+
+  verificaValorPago() {
+    const valoresPagos =
+      this.caixaMovelStorage.sistemaVendas.vendaAtual.pagList.map(
+        (pagamento) => pagamento.valor
+      );
+    const valoresProdutos =
+    this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList.map(
+      (produtos) => produtos.valor
+    );
+    const pagamentoTotal = valoresPagos.reduce((a, b) => a + b, 0);
+    const totalProdutos = valoresProdutos.reduce((a, b) => a + b, 0);
+    if(pagamentoTotal < totalProdutos){
+      console.log('valor menor');
+      return false;
+    } else if(pagamentoTotal !== totalProdutos){
+      console.log('valor diferente');
+      return false;
+    }
+    else if(pagamentoTotal === totalProdutos){
+      console.log('ok');
+      return true;
+    }else {
+      console.log('valor diferente');
+      return false;
+    }
   }
 
   async finalizarVenda() {

@@ -7,6 +7,7 @@ import { SwiperComponent } from 'swiper/angular';
 import { StorageService } from 'src/app/services/storage/storage.service';
 import { NgForm } from '@angular/forms';
 import { VendaService } from './rotas/atual/services/venda/venda.service';
+import { timeout } from 'rxjs/operators';
 
 @Component({
   selector: 'app-vender',
@@ -64,7 +65,7 @@ export class VenderPage implements OnInit {
     });
     await loading.present();
     this.vendaService.iniciar(this.idEmpBird, this.idCc, this.idUserBird, cpf, idCliente,
-      this.caixaMovelStorage.configuracoes.slectedIds.ipLocal).subscribe(async (res: any) => {
+      this.caixaMovelStorage.configuracoes.slectedIds.ipLocal).pipe(timeout(3000)).subscribe({next: async (res: any) => {
       if (res.novaVenda['COD_VENDA'] === '-1'){
         this.erroAlert('Erro ao iniciar a venda:', res.novaVenda['STATUS'].toLowerCase());
         await loading.dismiss();
@@ -90,10 +91,10 @@ export class VenderPage implements OnInit {
         await this.storage.set('caixa-movel', this.caixaMovelStorage);
         this.navCtrl.navigateForward('/home/caixa-movel/sistema-vendas/atual');
       }
-    }, async (error)=>{
+    },error: async (error)=>{
       await loading.dismiss();
       this.erroAlert('Erro ao iniciar a venda:', 'Erro ao conectar com o servidor local');
-    });
+    }});
   }
 
   async verificaNovaVenda(){

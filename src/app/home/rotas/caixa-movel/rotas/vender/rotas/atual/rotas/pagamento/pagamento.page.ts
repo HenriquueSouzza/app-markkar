@@ -114,6 +114,7 @@ export class PagamentoPage implements OnInit {
         )
       );
       await loading.dismiss();
+      this.subirModal();
   }, error: async (err) => {
     this.navCtrl.navigateBack('/home/caixa-movel/sistema-vendas/atual');
     await this.exibirAlerta('Erro ao tentar comunicar com o servidor local.');
@@ -134,7 +135,11 @@ export class PagamentoPage implements OnInit {
 
   aplicaValorPagamento(valorTotal: boolean) {
     if (valorTotal === true) {
-      this.inputValor.value = Number(this.totalCarrinhoNum).toFixed(2);
+      this.inputValor.value = Number(
+        this.totalCarrinhoNum - this.totalPagoCliente < 0
+          ? 0
+          : this.totalCarrinhoNum - this.totalPagoCliente
+      ).toFixed(2);
     } else {
       if (this.valorPg !== 0) {
         this.slideNext();
@@ -374,7 +379,7 @@ export class PagamentoPage implements OnInit {
   }
 
   subirModal() {
-    this.modal.setCurrentBreakpoint(this.heightW > 785 ? 0.5 : 0.8);
+    this.modal.setCurrentBreakpoint((500 / this.heightW) > 1 ? 1 : (500 / this.heightW));
   }
 
   closeModal() {
@@ -383,6 +388,14 @@ export class PagamentoPage implements OnInit {
 
   openModal() {
     this.modal.present();
+  }
+
+  voltarAtual(){
+    this.navCtrl.navigateBack('/home/caixa-movel/sistema-vendas/atual');
+  }
+
+  finalizarVenda(){
+    this.navCtrl.navigateForward('/home/caixa-movel/sistema-vendas/atual/lista-itens/estoque');
   }
 
   //total-carrinho

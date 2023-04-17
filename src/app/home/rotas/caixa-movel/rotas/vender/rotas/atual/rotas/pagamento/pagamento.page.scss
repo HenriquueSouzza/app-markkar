@@ -106,30 +106,37 @@ ion-progress-bar {
     }
   }
 
-  .total {
-    padding: 0 20px;
-    width: 100%;
+  #wrpBot{
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
+    flex-direction: column;
 
-    h3 {
-      font-family: robotoBold;
+    .total {
+      padding: 0 20px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      h3 {
+        font-family: robotoBold;
+      }
     }
-  }
 
-  #btns {
-    margin-top: 15px;
-    margin-bottom: 25px;
-    padding: 0 20px;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    #btns {
+      width: 85%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
 
-    ion-button {
-      width: 130px;
-      margin: 0 10px;
+      ion-button {
+        text-transform: uppercase;
+        --background:rgb(0, 182, 55);
+        --border-radius: 10px;
+        height: 40px;
+        margin: 0 10px;
+      }
     }
   }
 }
