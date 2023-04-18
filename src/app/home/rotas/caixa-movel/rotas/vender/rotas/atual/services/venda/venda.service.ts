@@ -32,7 +32,6 @@ export class VendaService {
   }
 
   iniciar(codEmp: string, codCc: string, codUser: string, cpf: string, codCliente: string, ipLocal: string){
-    console.log({codEmp, codCc, codUser, cpf, codCliente, ipLocal});
     if (!this.isIPv4(ipLocal)) {
       return throwError(() => new Error('Endereço IP local não definido'));
     }
@@ -40,7 +39,6 @@ export class VendaService {
   }
 
   gravarBd(vendaAtual: any, ipLocal: string){
-    console.log({vendaAtual});
     if (!this.isIPv4(ipLocal)) {
       return throwError(() => new Error('Endereço IP local não definido'));
     }
@@ -48,7 +46,6 @@ export class VendaService {
   }
 
   finalizar(vendaAtual: any, ipLocal: string){
-    console.log({vendaAtual});
     if (!this.isIPv4(ipLocal)) {
       return throwError(() => new Error('Endereço IP local não definido'));
     }

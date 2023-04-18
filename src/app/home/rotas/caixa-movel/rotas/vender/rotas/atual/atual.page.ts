@@ -11,6 +11,7 @@ import { Storage } from '@ionic/storage-angular';
 import { VendaService } from './services/venda/venda.service';
 import { AndroidPermissions } from '@awesome-cordova-plugins/android-permissions/ngx';
 import { ActivatedRoute } from '@angular/router';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-atual',
@@ -76,16 +77,16 @@ export class AtualPage implements OnInit {
         next: async (res: any) => {
           this.caixasAbertos = res.caixasAbertos;
           this.selectCaixa.value = this.caixaSelecionado;
-          this.activatedRoute.queryParamMap.subscribe({next: async (params: any) => {
-            if(params.params.finalizar === 'true'){
-              setTimeout(async () => {
+          this.activatedRoute.queryParamMap.pipe(
+            take(1),
+          ).subscribe({
+            next: async (params: any) => {
+              if(params.params.finalizar === 'true'){
                 this.finalizarVenda();
-                await loading.dismiss();
-              }, 1500);
-            } else {
-              await loading.dismiss();
+              }
             }
-          }});
+          });
+          await loading.dismiss();
         },
         error: async (err) => {
           this.limpaVendaStorage();

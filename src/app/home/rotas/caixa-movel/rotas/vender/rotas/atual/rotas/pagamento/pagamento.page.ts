@@ -138,13 +138,17 @@ export class PagamentoPage implements OnInit {
     this.valorPg = parseFloat(inputMask.replace('.', '').replace(',', '.'));
   }
 
-  aplicaValorPagamento(valorTotal: boolean) {
+  aplicaValorPagamento(valorTotal: boolean, valorPreFix: any = null) {
     if (valorTotal === true) {
+      if(valorPreFix === null){
       this.inputValor.value = Number(
         this.totalCarrinhoNum - this.totalPagoCliente < 0
           ? 0
           : this.totalCarrinhoNum - this.totalPagoCliente
       ).toFixed(2);
+    } else{
+        this.inputValor.value = Number(valorPreFix + parseFloat(this.inputValor.value.replace('.', '').replace(',', '.'))).toFixed(2);
+      }
     } else {
       if (this.valorPg !== 0) {
         this.slideNext();
@@ -246,7 +250,7 @@ export class PagamentoPage implements OnInit {
       this.parcelas = [];
       for (let i = 1; i <= this.opcsCard.parcelasMax; i++) {
         this.parcelas.push(
-          i + 'x de ' + this.convertReal(this.totalCarrinhoNum / i)
+          i + 'x de ' + this.convertReal(this.valorPg / i)
         );
       }
       setTimeout(() => {
