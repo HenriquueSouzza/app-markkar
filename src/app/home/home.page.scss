@@ -1,5 +1,5 @@
 h2, h3{
-  color: rgb(235, 235, 235);
+  /*color: rgb(235, 235, 235);*/
 }
 ion-item{
   text-transform: capitalize;
@@ -9,10 +9,10 @@ ion-title{
   text-transform: uppercase;
 }
 ion-content {
-  --background: var(--ion-color-dark2);
+  /*--background: var(--ion-color-dark2);*/
 }
 ion-list{
-  --background: var(--ion-color-dark2);
+  /*--background: var(--ion-color-dark2);*/
   padding: 0;
 }
 ion-button.ios{
@@ -28,12 +28,12 @@ ion-button.ios{
   font-family: 'robotoBold';
   #pLabelAvatar{
     font-size: 1.3rem;
-    color: white;
+    color: var(--ion-text-color);
     text-transform: capitalize;
   }
 }
 .ion-color-secondary {
-  --ion-color-base: transparent !important;
+  /*--ion-color-base: transparent !important;*/
 }
 #footer{
   display: flex;

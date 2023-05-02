@@ -39,24 +39,24 @@
   src: url('assets/fonts/roboto/Roboto-Bold.ttf');
 }
 ion-skeleton-text{
-  --background-rgb: 255,255,255 !important;
+  /*--background-rgb: 255,255,255 !important;*/
 }
 ion-popover {
-  --background: var(--ion-color-dark2) !important;
+  /*--background: var(--ion-color-dark2) !important;*/
   --backdrop-opacity: 0.4 !important;
 }
 ion-select-popover{
-  --background: var(--ion-color-dark2) !important;
+  /*--background: var(--ion-color-dark2) !important;*/
 }
 ion-header{
-  background-color: transparent !important
+  /*background-color: transparent !important*/
 }
 ion-content {
-  --background: var(--ion-color-dark2) !important;
+  /*--background: var(--ion-color-dark2) !important;*/
 }
 ion-list{
   padding: 0;
-  --background: var(--ion-color-dark2) !important;
+  /*--background: var(--ion-color-dark2) !important;*/
 }
 ion-item{
   text-transform: capitalize !important;
@@ -76,10 +76,10 @@ ion-label{
   }
 }
 ion-datetime{
-  --background: var(--ion-color-dark2) !important;
+  --background: var(--ion-color-step-50) !important;
   --title-color: var(--ion-color-primary) !important;
-  --background-rgb: 20,21,24 !important;
-  color: white !important;
+  --background-rgb: var(--ion-color-step-50) !important;
+  /*color: white !important;*/
   text-transform: uppercase;
 }
 ion-app{
@@ -87,18 +87,19 @@ ion-app{
 }
 ion-content{
   font-family:robotoLight !important;
-  --background: var(--ion-color-dark2) !important;
+  /*--background: var(--ion-color-dark2) !important;*/
   --keyboard-offset: 0 !important;
 }
 ion-toggle{
   --background-checked: rgb(177, 115, 0) !important;
-  --background: rgb(128, 128, 128) !important;
-  --handle-background: rgb(184, 184, 184) !important;
+  /*--background: rgb(128, 128, 128) !important;
+  --handle-background: rgb(184, 184, 184) !important;*/
 }
 ion-button {
   --border-radius: 10px;
 }
-h1, h2, h3, h4, h5, h6 {
+h1, h2, h3, h4, h5, h6, p{
+  color: var(--ion-text-color);
   line-height: 1;
   margin: 0;
 }
@@ -109,39 +110,39 @@ h1, h2, h3, h4, h5, h6 {
   padding-bottom: 0 !important;
 }
 html{
-  background: var(--ion-background-color);
+  /*background: var(--ion-background-color);*/
   min-height: 100vh !important
 }
 html.md{
-  background: var(--ion-background-color) ;
+  /*background: var(--ion-background-color) ;*/
   min-height: 100vh !important
 }
 html.ios{
-  background: var(--ion-background-color)  ;
+  /*background: var(--ion-background-color)  ;*/
   min-height: 100vh !important
 }
 .datetime-size-fixed{
   max-width: 100% !important;
 }
 .list-ios{
-  background: var(--ion-color-dark2) !important;
+  /*background: var(--ion-color-dark2) !important;*/
 }
 .list-md{
-  background: var(--ion-color-dark2) !important;
+  /*background: var(--ion-color-dark2) !important;*/
   --color: white !important;
 }
 .select-interface-option{
-  --background:  var(--ion-color-dark2) !important;
+  /*--background:  var(--ion-color-dark2) !important;*/
   color: white !important;
   --color: white !important;
   --background-focused-opacity: 0.8 !important;
   --background-focused: transparent;
 }
 .inner-scroll {
-  background: var(--ion-color-dark2) !important;
+  /*background: var(--ion-color-dark2) !important;*/
 }
 .content-ltr{
-  background: var(--ion-color-dark2) !important;
+  /*background: var(--ion-color-dark2) !important;*/
 }
 .picker-opt.picker-opt-selected, .picker-prefix, .picker-suffix {
   color: red;
@@ -150,7 +151,7 @@ html.ios{
 .picker-button.sc-ion-picker-ios, .picker-button.activated.sc-ion-picker-ios {
   color: red;
 }
-:root {
+/*:root {
 	--ion-background-color: #141518;
 	--ion-background-color-rgb: 20,21,24;
 
@@ -176,9 +177,9 @@ html.ios{
 	--ion-color-step-850: #d9d9d9;
 	--ion-color-step-900: #e6e6e6;
 	--ion-color-step-950: #f2f2f2;
-}
+}*/
 :host .picker-before{
-  background: linear-gradient(180deg, rgba(20,21,24,1) 20%, rgba(20,21,24,0.8) 100%) !important;
+  /*background: linear-gradient(180deg, rgba(20,21,24,1) 20%, rgba(20,21,24,0.8) 100%) !important;*/
 }
 .interactive.hydrated{
   margin-bottom: 5px !important;
@@ -196,7 +197,7 @@ ion-modal{
   }
 }
 body {
-  background: transparent !important;
+  /*background: transparent !important;*/
 }
 *:focus {
   outline: none;

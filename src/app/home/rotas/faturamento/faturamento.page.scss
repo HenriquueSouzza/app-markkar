@@ -1,37 +1,36 @@
-//SCSS Home-Page
+//SCSS Home-Pagekg
 
 // Geral
 h1, h2, h3, h4, h5, h6, p {
   line-height: 1;
   margin: 0;
-  color: white;
 }
 .header-md::after {
   /* Removes the toolbar shadow. */
-  background: none;
+  /*background: none;*/
 }
 ion-skeleton-text{
-  --background-rgb: 255,255,255;
+ /* --background-rgb: 255,255,255;*/
 }
 ion-popover{
-  --background: var(--ion-color-dark2);
+  /*--background: var(--ion-color-dark2);*/
   .list-md{
-    background: var(--ion-color-dark2) !important;
+    /*background: var(--ion-color-dark2) !important;*/
   }
   ion-accordion{
-    background: var(--ion-color-dark2) !important;
+   /* background: var(--ion-color-dark2) !important;*/
   }
 }
 ion-content {
-  --background: var(--ion-color-dark2);
+ /* --background: var(--ion-color-dark2);*/
 }
 ion-list{
   padding: 0;
 }
 ion-datetime{
-  --background: var(--ion-color-dark2);
-  --title-color: var(--ion-color-primary);
-  color: white;
+  /*--background: var(--ion-color-dark2);*/
+  /*--title-color: var(--ion-color-primary);*/
+  /*color: white;*/
 }
 #filter{
   --width: 80%;
@@ -42,10 +41,10 @@ ion-datetime{
 
 //header
 ion-toolbar{
-  --background: var(--ion-color-dark);
+  /*--background: var(--ion-color-dark);*/
 }
 .headerSection{
-  background-color: var(--ion-color-dark);
+  background-color: var(--ion-color-step-100);
   padding: 20px 10px;
   border-radius:0 0 30px 30px;
   display: flex;
@@ -143,7 +142,7 @@ ion-toolbar{
 
       h2{
         font-size: 1.2rem;
-        color: rgb(187, 187, 187);
+        color: var(--ion-color-step-750);
         font-family: 'robotoBold';
         height: 20px;
         text-overflow: ellipsis;
@@ -153,18 +152,18 @@ ion-toolbar{
 
       p{
         font-size: 1rem;
-        color: rgb(187, 187, 187);
+        color: var(--ion-color-step-750);
         font-family: 'robotoBold';
       }
 
       ion-checkbox{
         margin-right: 10px;
         margin-bottom: 0px !important;
-        --background-checked: var(--ion-color-dark);
+       /* --background-checked: var(--ion-color-dark);
         --checkmark-color: var(--ion-color-primary);
         --border-color-checked: var(--ion-color-dark);
         --background: var(--ion-color-dark);
-        --border-color: var(--ion-color-primary);
+        --border-color: var(--ion-color-primary);*/
       }
       ion-checkbox.md{
         margin-bottom: 1px !important;
@@ -212,7 +211,7 @@ ion-toolbar{
         left: 0;
         bottom: -5px;
         position: absolute;
-        background: linear-gradient(0deg, rgba(20,21,24,1) 50%, rgba(20,21,24,0.24693627450980393) 79%, rgba(20,21,24,0) 100%);
+        /*background: linear-gradient(0deg, rgba(20,21,24,1) 50%, rgba(20,21,24,0.24693627450980393) 79%, rgba(20,21,24,0) 100%);*/
 
         ion-button {
           font-size: .8rem;
@@ -236,7 +235,7 @@ ion-toolbar{
     }
     #dadosTotal{
       border-radius: 12px;
-      background-color: var(--ion-color-dark);
+      background-color: var(--ion-color-step-100);
       padding: 8px;
 
       .dadoTotal{
@@ -263,7 +262,7 @@ ion-toolbar{
   --padding-end: 0;
 }
 .content-ltr{
-  background: transparent !important;
+  /*background: transparent !important;*/
 }
 #grafico{
   width: 90%;
