@@ -6,15 +6,14 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class PagamentoService {
-  private url = 'http://192.168.0.15:8080/app/caixaMovel/venda/pagamento/formas?id=';
 
   constructor(private http: HttpClient) { }
 
-  all(idEmp: string) {
-    return this.http.get(this.url + idEmp);
+  all(idEmp: string, ipLocal) {
+    return this.http.get(`http://${ipLocal}/app/caixaMovel/venda/pagamento/formas?id=` + idEmp);
   }
 
-  pgmtDetalhe(idEmp: string, forms) {
-    return this.http.post(this.url + idEmp, forms);
+  pgmtDetalhe(idEmp: string, forms, ipLocal) {
+    return this.http.post(`http://${ipLocal}/app/caixaMovel/venda/pagamento/formas?id=` + idEmp, forms);
   }
 }

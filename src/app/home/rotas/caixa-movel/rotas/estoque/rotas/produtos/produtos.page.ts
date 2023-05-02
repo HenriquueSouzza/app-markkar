@@ -27,7 +27,7 @@ export class ProdutosPage implements OnInit {
   ) {}
 
   async ngOnInit() {
-    this.estoqueStorage = await this.storage.get('estoque');
+    /*this.estoqueStorage = await this.storage.get('estoque');
     this.route.queryParamMap.subscribe((params: any) => {
       if (params) {
         this.idEmpBird = params.params.id1;
@@ -42,7 +42,7 @@ export class ProdutosPage implements OnInit {
         codeCC: this.idCc,
         codeBar: this.codeBar,
         nome: this.nome,
-      })
+      },this.caixaMovelStorage.configuracoes.slectedIds.ipLocal)
       .subscribe(async (res: any) => {
         console.log(res);
         this.produtos = Object.values(res.produtos);
@@ -63,7 +63,7 @@ export class ProdutosPage implements OnInit {
           }
         }
         //{COD_BARRA: "7899838806976" COD_PRODUTO: "4371" NOME_PRODUTO: "TESTE HENRIQUE" QTD_ESTOQUE: "50" UNIDADE: "UN" VALOR: "5"}
-      });
+      });*/
   }
   convertReal(valor) {
     return parseFloat(valor).toLocaleString('pt-br', {

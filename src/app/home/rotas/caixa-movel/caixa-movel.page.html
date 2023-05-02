@@ -12,7 +12,6 @@
     <h2>Centro de custo</h2>
     <ion-select
       #ionSelect
-      *ngIf="conectadoServeLocal"
       (ionChange)="centroscustosChange($event)"
       multiple="false"
       interface="alert"
@@ -20,22 +19,8 @@
       okText="Confirmar"
       placeholder="Selecione"
     >
-      <ion-select-option *ngFor="let cc of centroscustos" [value]="{fire: cc.ccIdFb, sql: cc.ccIdSql}"
+      <ion-select-option *ngFor="let cc of centroscustos" [value]="{ipLocal: cc.ipLocal,empFire: cc.empIdFb,ccFire: cc.ccIdFb, ccSql: cc.ccIdSql}"
         >{{cc.nome}}</ion-select-option
-      >
-    </ion-select>
-    <ion-select
-      #ionSelectOff
-      *ngIf="!conectadoServeLocal"
-      (ionChange)="centroscustosChange($event)"
-      multiple="false"
-      interface="alert"
-      cancelText="Voltar"
-      okText="Confirmar"
-      placeholder="Selecione"
-    >
-      <ion-select-option *ngFor="let cc of centroscustos" [value]="cc.idCentroCusto"
-        >{{cc.unidade}}</ion-select-option
       >
     </ion-select>
   </div>
@@ -47,61 +32,34 @@
   </ion-popover>
   <div style="width: 100%;display: flex;align-items: center;justify-content: center;">
     <div id="venda">
-      <ion-button [disabled]="btnServerLocal" color="dark" (click)="navigateSistemaVendas()">
-        <div>
-          <ion-icon name="cash-outline"></ion-icon>
-          Vender
-        </div>
-      </ion-button>
-      <ion-button [disabled]="btnServerLocal" color="dark" (click)="navigateEstoque()">
-        <div>
-          <ion-icon slot="start" name="pie-chart-outline"></ion-icon>
-          Estoque
-        </div>
-      </ion-button>
-      <ion-button [disabled]="true" color="dark">
-        <div>
-          <ion-icon name="swap-vertical-outline"></ion-icon>
-          Trocas
-        </div>
-      </ion-button>
-      <ion-button color="dark" (click)="navigateRelatorios()">
-        <div>
-          <ion-icon name="reader-outline"></ion-icon>
-          Relatórios
-        </div>
-      </ion-button>
-      <ion-button [disabled]="true" color="dark">
-        <div>
-          <ion-icon name="file-tray-full-outline"></ion-icon>
-          Caixa
-        </div>
-      </ion-button>
-      <ion-button [disabled]="true" color="dark">
-        <div>
-          <ion-icon name="extension-puzzle-outline"></ion-icon>
-          Em Breve...
-        </div>
-      </ion-button>
-      <ion-button [disabled]="true" color="dark">
-        <div>
-          <ion-icon name="extension-puzzle-outline"></ion-icon>
-          Em Breve...
-        </div>
-      </ion-button>
-      <ion-button [disabled]="true" color="dark">
-        <div>
-          <ion-icon name="extension-puzzle-outline"></ion-icon>
-          Em Breve...
-        </div>
-      </ion-button>
-      <ion-button [disabled]="true" color="dark">
-        <div>
-          <ion-icon name="extension-puzzle-outline"></ion-icon>
-          Em Breve...
-        </div>
-      </ion-button>
-
+      <ion-item-group class="group" id="servidorLocal">
+        <ion-item-divider>
+          <ion-label>Servidor Local</ion-label>
+        </ion-item-divider>
+        <ion-button color="dark" (click)="navigateSistemaVendas()">
+          <div>
+            <ion-icon name="cash-outline"></ion-icon>
+            Vender
+          </div>
+        </ion-button>
+        <ion-button color="dark" (click)="navigateEstoque()">
+          <div>
+            <ion-icon slot="start" name="pie-chart-outline"></ion-icon>
+            Estoque
+          </div>
+        </ion-button>
+      </ion-item-group>
+      <ion-item-group class="group" id="nuvem">
+        <ion-item-divider>
+          <ion-label>Exportador</ion-label>
+        </ion-item-divider>
+        <ion-button color="dark" (click)="navigateRelatorios()">
+          <div>
+            <ion-icon name="reader-outline"></ion-icon>
+            Relatórios
+          </div>
+        </ion-button>
+      </ion-item-group>
     </div>
   </div>
 </ion-content>

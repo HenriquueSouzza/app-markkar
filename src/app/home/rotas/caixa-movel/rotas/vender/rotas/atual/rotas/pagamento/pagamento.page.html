@@ -11,7 +11,7 @@
 
 <ion-content>
   <swiper
-    (click)="downModalIfOpen()"
+    (click)="totalCarrinhoNum - totalPagoCliente <= 0 ? null : downModalIfOpen()"
     id="swiper"
     #swiper
     [config]="{initialSlide: 0, speed: 400, allowTouchMove: false}"
@@ -39,7 +39,7 @@
             </p>
           </h2>
           <ion-button
-            [disabled]="valorPg === 0 ? true : false"
+            [disabled]="valorPg === 0 || totalCarrinhoNum - totalPagoCliente <= 0 ? true : false"
             (click)="slideNext()"
             mode="ios"
             expand="block"
@@ -50,17 +50,35 @@
           </ion-button>
         </div>
         <div class="opcoes valor">
-          <ion-item>
+          <ion-item [disabled]="totalCarrinhoNum - totalPagoCliente <= 0 ? true : false">
             <ion-label>R$:</ion-label>
-            <ion-input maxlength="9" #inputValor (ionChange)="changeValorPagamento($event)" type="text" placeholder="0,00"></ion-input>
+            <ion-input maxlength="9" #inputValor (ionChange)="changeValorPagamento($event)" type="tel" placeholder="0,00"></ion-input>
           </ion-item>
          <div style="width: 100%; display: flex;">
-            <ion-button (click)="aplicaValorPagamento(true)" expand="block" fill="clear" shape="round">
-              valor total
+            <ion-button [disabled]="totalCarrinhoNum - totalPagoCliente <= 0 ? true : false" (click)="aplicaValorPagamento(true)" expand="block" fill="clear" shape="round">
+              valor {{totalPagoCliente === 0 ? 'total' : 'restante'}}
             </ion-button>
-            <ion-button [disabled]="valorPg === 0 ? true : false" (click)="aplicaValorPagamento(false)" expand="block" fill="clear" shape="round">
+            <ion-button [disabled]="valorPg === 0 || totalCarrinhoNum - totalPagoCliente <= 0 ? true : false" (click)="aplicaValorPagamento(false)" expand="block" fill="clear" shape="round">
               confirmar
             </ion-button>
+         </div>
+         <div style="
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 20px 0 30px 0;
+            width: 100%;
+            max-width: 600px;">
+          <ion-button (click)="aplicaValorPagamento(true, 10.00)" color="dark">
+            +R$ 10,00
+          </ion-button>
+          <ion-button (click)="aplicaValorPagamento(true, 50.00)" color="dark">
+            +R$ 50,00
+          </ion-button>
+          <ion-button (click)="aplicaValorPagamento(true, 100.00)" color="dark">
+            +R$ 100,00
+          </ion-button>
          </div>
         </div>
       </div>
@@ -301,7 +319,7 @@
     #modal
     [isOpen]="true"
     [initialBreakpoint]="0.07"
-    [breakpoints]="[0.07, heightW > 785 ? 0.50 : 0.8]"
+    [breakpoints]="[0.07, (500 / heightW) > 1 ? 1 : (500 / heightW)]"
     [backdropDismiss]="false"
     [backdropBreakpoint]="1"
   >
@@ -338,7 +356,7 @@
               <p>{{parcelasPg}}</p>
             </div>
           </div>
-          <div id="wrpBot" style="width: 100%">
+          <div id="wrpBot" style="width: 100%;">
             <div class="total" style="border-top: solid rgb(61, 61, 61) 1px;">
               <h3>Total:</h3>
               <p>{{totalCarrinho}}</p>
@@ -351,13 +369,17 @@
               <h3>Valor restante:</h3>
               <p>{{convertReal(totalCarrinhoNum-totalPagoCliente < 0 ? 0 : totalCarrinhoNum-totalPagoCliente)}}</p>
             </div>
-            <div id="btns">
-              <ion-button (click)="addPg()">
+            <div id="btns" style="margin-top: 20px;">
+              <ion-button style="width: 50%;" color="primary" (click)="voltarAtual()"
+                >Voltar</ion-button>
+              <ion-button style="width: 50%;" color="primary" [disabled]="bloqAdcPg" (click)="addPg()">
                 Adicionar
               </ion-button>
-              <ion-button [disabled]="bloqFinishPg" routerLink="/home/caixa-movel/sistema-vendas/atual"
-                >Finalizar</ion-button
-              >
+            </div>
+            <div id="btns" style="margin-top: 20px;">
+              <ion-button style="width: 100%;" [disabled]="totalCarrinhoNum - totalPagoCliente <= 0 ? false : true" (click)="finalizarVenda()">
+                Finalizar
+              </ion-button>
             </div>
           </div>
         </div>

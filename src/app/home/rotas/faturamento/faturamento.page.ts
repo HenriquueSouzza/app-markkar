@@ -12,7 +12,6 @@ import {
   NavController,
 } from '@ionic/angular';
 import { format, parseISO } from 'date-fns';
-import { StatusBar } from '@capacitor/status-bar';
 import { ChartDataset, ChartOptions, ChartType, Color } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { timeout } from 'rxjs/operators';
@@ -480,6 +479,7 @@ export class FaturamentoPage implements OnInit {
                 unidade: unidade['unidade'],
                 idCentroCusto: unidade['idCentroCusto'],
                 idEmpBird: unidade['idEmpBird'],
+                idCcBird: unidade['idCcBird'],
                 telefone: unidade['telefone'],
                 cep: unidade['cep'],
                 endereco: unidade['endereco'],
@@ -489,6 +489,7 @@ export class FaturamentoPage implements OnInit {
                 ultimaExportacao: unidade['ultimaExportacao'],
                 check: true,
                 display: 'block',
+                servidorLocal: unidade['servidorLocal']
               };
               this.multiempresa.empresas[this.valIdToken].centrodecustos =
                 multiempresa;

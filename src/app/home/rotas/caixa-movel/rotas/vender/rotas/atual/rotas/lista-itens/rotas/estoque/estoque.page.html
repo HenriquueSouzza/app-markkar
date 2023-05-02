@@ -1,0 +1,95 @@
+<ion-header>
+  <ion-toolbar color="dark" style="height: auto">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home/caixa-movel/sistema-vendas/atual/lista-itens"></ion-back-button>
+    </ion-buttons>
+    <ion-title mode="ios">Pesquisa de produtos</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content no-bounce has-bouncing="false" forceOverscroll="false">
+  <form #f="ngForm" (ngSubmit)="consultarNomeOuCod(f)">
+    <div id="pesquisa">
+      <ion-searchbar
+        mode="ios"
+        (ionChange)="verificaSearchbar($event)"
+        ngModel
+        name="nomeProd"
+        placeholder="Digite o nome ou codigo de barras..."
+      ></ion-searchbar>
+      <ion-button mode="ios" *ngIf="consultaNome" color="dark" type="submit">
+        <ion-icon name="search-outline"></ion-icon>
+        Consultar
+      </ion-button>
+    </div>
+  </form>
+  <div style="display: flex; flex-direction: column; align-items: center;justify-content: center; margin-bottom: 30px;">
+    <span style="margin: 10px 0;" *ngIf="!consultaNome">ou</span>
+    <ion-button
+      mode="ios"
+      *ngIf="!consultaNome"
+      color="dark"
+      (click)="navigateScanner()"
+    >
+      <ion-icon slot="start" name="barcode-outline"></ion-icon>
+      Scanner
+    </ion-button>
+  </div>
+  <div id="recentes">
+    <ion-item lines="none">
+      <ion-label style="font-weight: 700; text-transform: uppercase"
+        >Lista estoque:</ion-label
+      >
+    </ion-item>
+    <ion-item *ngIf="!listEstoque || listEstoque.length === 0"  lines="none">
+      <ion-label style="color: gray;">Nenhum produto encontrado</ion-label>
+    </ion-item>
+    <ion-list style="display: flex; align-items: center; justify-content: center; flex-direction: column;" *ngIf="listEstoque"  lines="none">
+      <ion-item detail="true" style="margin: 10px 0; width: 90%;border-radius: 12px;" color="dark" *ngFor="let produtos of listEstoque" [button]="true" (click)="mostrarProdutoScaneado('', produtos.COD_BARRA)">
+        <ion-label>
+          {{produtos.NOME_PRODUTO}}
+          <p style="margin-top: 5px; color: rgb(156, 156, 156);">Cod. barra: {{produtos.COD_BARRA}}</p>
+          <p style="color: rgb(156, 156, 156);">Cod. produto: {{produtos.COD_PRODUTO}}</p>
+          <p style="color: rgb(156, 156, 156);">Valor: {{convertReal(produtos.VALOR)}}</p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+  </div>
+</ion-content>
+
+<ion-modal
+    [isOpen]="modalProdIsOpen"
+    [canDismiss]="true"
+    swipe-to-close="true"
+  >
+    <ng-template>
+      <ion-header style="background: var(--ion-color-dark) !important">
+        <ion-toolbar color="dark">
+          <ion-title>produto</ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <div class="produtos">
+          <ion-item class="produto" lines="full">
+            <ion-label>
+              {{pordutoScanneado['nome']}}
+              <p>Cod: {{pordutoScanneado['cod']}}</p>
+              <p>QntMax: {{pordutoScanneado['qntMax']}}</p>
+              <p>medida: {{pordutoScanneado['medida']}}</p>
+              <div style="display: flex;align-items: baseline;justify-content: flex-start;">
+                <div class="addItem">
+                  <ion-button (click)="pordutoScanneado['qnt'] = verificaEstoque(changeQnt(pordutoScanneado['qnt'], 'sub'), pordutoScanneado['qntMax']);" expand="block" fill="clear" shape="round"><ion-icon slot="icon-only" name="remove-outline"></ion-icon></ion-button>
+                  <input [value]="pordutoScanneado['qnt']" (input)="pordutoScanneado['qnt'] = verificaEstoque(toIntQnt($event.target['value']), pordutoScanneado['qntMax']);" onkeypress="return event.charCode >= 48 && event.charCode <= 57" type = "text" maxlength = "6" inputmode="numeric" pattern="[0-9]+">
+                  <ion-button (click)="pordutoScanneado['qnt'] = verificaEstoque(changeQnt(pordutoScanneado['qnt'], 'add'), pordutoScanneado['qntMax']);" expand="block" fill="clear" shape="round"><ion-icon slot="icon-only" name="add-outline"></ion-icon></ion-button>
+                </div>
+              </div>
+            </ion-label>
+            <ion-label slot="end">{{convertReal(pordutoScanneado['valor']*pordutoScanneado['qnt'])}}</ion-label>
+          </ion-item>
+          <div style="display: flex;align-items: baseline;justify-content: center;margin-top: 10px;">
+            <ion-button (click)="modalProdIsOpen = false" color="danger" style="margin-right: 30px; min-width: 115px;">Não adicionar</ion-button>
+            <ion-button (click)="adicionaCarrinho();!modalProdIsOpen = false;" style=" min-width: 115px;" >Adicionar</ion-button>
+          </div>
+        </div>
+      </ion-content>
+    </ng-template>
+</ion-modal>

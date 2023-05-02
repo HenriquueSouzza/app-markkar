@@ -3,7 +3,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { isPlatform, LoadingController, MenuController } from '@ionic/angular';
 import { Storage } from '@ionic/storage-angular';
-import { StatusBar } from '@capacitor/status-bar';
 import { LoginService } from '../../services/login/login.service';
 import { StorageService } from 'src/app/services/storage/storage.service';
 
@@ -50,9 +49,6 @@ export class TokenBlockComponent implements OnInit {
         this.loader = false;
         alert('falha ao conectar com o servidor');
       });
-    }
-    if(!isPlatform('mobileweb') && isPlatform('android')){
-      StatusBar.setBackgroundColor({color: '#222428'});
     }
   }
 

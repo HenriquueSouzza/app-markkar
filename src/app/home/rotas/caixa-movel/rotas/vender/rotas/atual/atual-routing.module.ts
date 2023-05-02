@@ -9,16 +9,12 @@ const routes: Routes = [
     component: AtualPage
   },
   {
-    path: 'lista-itens',
-    loadChildren: () => import('./rotas/carrinho/carrinho.module').then( m => m.CarrinhoPageModule)
-  },
-  {
-    path: 'scanner',
-    loadChildren: () => import('./rotas/scanner-caixa/scanner-caixa.module').then( m => m.ScannerCaixaPageModule)
-  },
-  {
     path: 'pagamento',
     loadChildren: () => import('./rotas/pagamento/pagamento.module').then( m => m.PagamentoPageModule)
+  },
+  {
+    path: 'lista-itens',
+    loadChildren: () => import('./rotas/lista-itens/lista-itens.module').then( m => m.ListaItensPageModule)
   }
 ];
 

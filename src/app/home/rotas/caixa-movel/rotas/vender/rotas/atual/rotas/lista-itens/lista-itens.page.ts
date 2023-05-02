@@ -5,13 +5,13 @@ import { Storage } from '@ionic/storage-angular';
 import { StorageService } from 'src/app/services/storage/storage.service';
 import { VendaService } from '../../services/venda/venda.service';
 
-@Component({
-  selector: 'app-carrinho',
-  templateUrl: './carrinho.page.html',
-  styleUrls: ['./carrinho.page.scss'],
-})
-export class CarrinhoPage implements OnInit {
 
+@Component({
+  selector: 'app-lista-itens',
+  templateUrl: './lista-itens.page.html',
+  styleUrls: ['./lista-itens.page.scss'],
+})
+export class ListaItensPage implements OnInit {
   public produtos: Array<object>;
   public totalCarrinho: string;
   private caixaMovelStorage: any;
@@ -25,7 +25,9 @@ export class CarrinhoPage implements OnInit {
     private storageService: StorageService
   ) { }
 
-  async ngOnInit() {
+  ngOnInit() { }
+
+  async ionViewWillEnter() {
     this.caixaMovelStorage = await this.storage.get('caixa-movel');
     if (this.caixaMovelStorage.sistemaVendas.vendaAtual === null) {
       this.navCtrl.navigateBack('/home/caixa-movel/sistema-vendas');
@@ -90,15 +92,12 @@ export class CarrinhoPage implements OnInit {
   }
 
   async remove(prodEvent){
-    let i = -1;
-    for (const produto of this.produtos) {
-      i++;
-      if(produto['id'] === prodEvent['id']){
-        this.produtos.splice(i);
-        this.totalCar();
-        this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList = this.produtos;
-        await this.storage.set('caixa-movel', this.caixaMovelStorage);
-      }
+    const index = this.produtos.findIndex((produto: any) => produto.id === prodEvent.id);
+    if(index !== -1){
+      this.produtos.splice(index, 1);
+      this.totalCar();
+      this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList = this.produtos;
+      await this.storage.set('caixa-movel', this.caixaMovelStorage);
     }
   }
 
@@ -106,9 +105,14 @@ export class CarrinhoPage implements OnInit {
     this.navCtrl.navigateBack('/home/caixa-movel/sistema-vendas/atual');
   }
 
-  goPagamento(){
+  goAdd(){
+    this.navCtrl.navigateForward('/home/caixa-movel/sistema-vendas/atual/lista-itens/estoque');
+  }
+
+  goPagamentos(){
     this.navCtrl.navigateForward('/home/caixa-movel/sistema-vendas/atual/pagamento');
   }
+
 
   // erros
   async erroAlert(title, men){
@@ -126,4 +130,5 @@ export class CarrinhoPage implements OnInit {
     });
     await alert.present();
   }
+
 }

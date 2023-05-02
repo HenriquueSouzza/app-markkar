@@ -113,7 +113,7 @@
             <p *ngIf="displayDay === 'block'" >{{ dateValueDayFormat }}</p>
             <p *ngIf="displayDay === 'none'" >{{ displayIntervalUnid }}</p>
           </div>
-          <div class="dados" [ngStyle]="{'height': unidade['detalhes']['isOpen'] ? 180+(25*unidade['detalhes']['qnt'])+'px' : '130px'}">
+          <div class="dados" [ngStyle]="{'height': unidade['detalhes']['isOpen'] ? 180+(25*unidade['detalhes']['qnt'])+'px' : '130px', 'max-height': unidade['detalhes']['isOpen'] ? 180+(25*unidade['detalhes']['qnt'])+'px' : '130px'}">
             <div class="dado">
               <h3>faturamento:</h3>
               <p *ngIf="!dateLoader">{{ convertInReal(unidade['somaFat']) }}</p>

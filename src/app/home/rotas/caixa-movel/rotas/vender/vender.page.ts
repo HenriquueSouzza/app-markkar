@@ -7,6 +7,7 @@ import { SwiperComponent } from 'swiper/angular';
 import { StorageService } from 'src/app/services/storage/storage.service';
 import { NgForm } from '@angular/forms';
 import { VendaService } from './rotas/atual/services/venda/venda.service';
+import { timeout } from 'rxjs/operators';
 
 @Component({
   selector: 'app-vender',
@@ -27,7 +28,9 @@ export class VenderPage implements OnInit {
   // storage
   private idEmpBird: string;
   private idCc: string;
+  private idUserBird: string;
   private caixaMovelStorage: any;
+  private auth: any;
 
   constructor(
     public alertController: AlertController,
@@ -41,22 +44,31 @@ export class VenderPage implements OnInit {
   ngOnInit() { }
 
   async ionViewWillEnter(){
+    //loadStorage
+    this.auth = await this.storage.get('auth');
     this.caixaMovelStorage = await this.storage.get('caixa-movel');
     this.idEmpBird = this.caixaMovelStorage.configuracoes.slectedIds.firebirdIdEmp;
     this.idCc = this.caixaMovelStorage.configuracoes.slectedIds.fireBirdIdCc;
+    this.idUserBird = this.auth.usuario.idFireBird;
   }
 
   //nova venda
 
-  novaVenda(cpfCliente = null, idCliente = null, nomeCliente = null, somenteCpf = false){
+  async novaVenda(cpfCliente = null, idCliente = null, nomeCliente = null, somenteCpf = false){
     let cpf = cpfCliente;
     this.fecharModalIdentificarCliente();
     if(!somenteCpf){
       cpf = null;
     }
-    this.vendaService.iniciar(this.idEmpBird, this.idCc, '3', cpf, idCliente).subscribe(async (res: any) => {
+    const loading = await this.loadingController.create({
+      message: 'Iniciando a venda, aguarde...'
+    });
+    await loading.present();
+    this.vendaService.iniciar(this.idEmpBird, this.idCc, this.idUserBird, cpf, idCliente,
+      this.caixaMovelStorage.configuracoes.slectedIds.ipLocal).pipe(timeout(3000)).subscribe({next: async (res: any) => {
       if (res.novaVenda['COD_VENDA'] === '-1'){
         this.erroAlert('Erro ao iniciar a venda:', res.novaVenda['STATUS'].toLowerCase());
+        await loading.dismiss();
       } else {
         this.caixaMovelStorage.sistemaVendas.vendaAtual = {
           dataInicio: new Date().getTime(),
@@ -70,21 +82,26 @@ export class VenderPage implements OnInit {
           selectIds: {
             fireBirdIdEmp: this.idEmpBird,
             fireBirdIdCc: this.idCc,
-            userId: '3',
+            userId: this.idUserBird,
             vendaId: res.novaVenda['COD_VENDA'],
             caixaId: res.novaVenda['COD_CAIXA']
           }
         };
+        await loading.dismiss();
         await this.storage.set('caixa-movel', this.caixaMovelStorage);
         this.navCtrl.navigateForward('/home/caixa-movel/sistema-vendas/atual');
       }
-    }, (error)=>{
+    },error: async (error)=>{
+      await loading.dismiss();
       this.erroAlert('Erro ao iniciar a venda:', 'Erro ao conectar com o servidor local');
-    });
+    }});
   }
 
   async verificaNovaVenda(){
-    if(this.caixaMovelStorage.sistemaVendas.vendaAtual !== null){
+    if(this.idUserBird === null){
+      this.erroAlert('Erro ao iniciar a venda:', 'Não é possível realizar venda com uma conta \'mkadmin\'.');
+    }
+    else if(this.caixaMovelStorage.sistemaVendas.vendaAtual !== null){
       const alert = await this.alertController.create({
         cssClass: 'my-custom-class',
         header: 'Venda não finalizada',
@@ -108,11 +125,13 @@ export class VenderPage implements OnInit {
                 message: 'Cancelando venda anterior, aguarde...'
               });
               await loading.present();
-              this.vendaService.cancelar(this.caixaMovelStorage.sistemaVendas.vendaAtual.selectIds.vendaId).subscribe(async (res: any)=> {
+              this.vendaService.cancelar(this.caixaMovelStorage.sistemaVendas.vendaAtual.selectIds.vendaId,
+                this.caixaMovelStorage.configuracoes.slectedIds.ipLocal).subscribe(async (res: any)=> {
                 await loading.dismiss();
                 if (res.status === 'OK' ||
                 res.status.toLowerCase() === 'a venda já foi cancelada' ||
-                res.status.toLowerCase() === 'a venda já foi fechada'){
+                res.status.toLowerCase() === 'a venda já foi fechada' ||
+                res.status.toLowerCase() === 'a venda já foi realizada no sistema' ){
                   this.caixaMovelStorage.sistemaVendas.vendaAtual = null;
                   await this.storage.set('caixa-movel', this.caixaMovelStorage);
                   this.abrirModalIdentificarCliente();
@@ -143,7 +162,8 @@ export class VenderPage implements OnInit {
 
   buscarCliente(form: NgForm){
     const inputs = form.value;
-    this.vendaService.buscarClientes(inputs.nome, inputs.cpf).subscribe((res: any) => {
+    this.vendaService.buscarClientes(inputs.nome, inputs.cpf,
+      this.caixaMovelStorage.configuracoes.slectedIds.ipLocal).subscribe((res: any) => {
       this.clientesList = res.clientes === null ? [{NOME_CLIENTE: 'Não encontrado', DOCUMENTO: ''}] : res.clientes;
     });
   }
