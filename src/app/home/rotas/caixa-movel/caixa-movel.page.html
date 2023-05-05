@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar color="dark">
+  <ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/home/faturamento"></ion-back-button>
     </ion-buttons>
@@ -36,13 +36,13 @@
         <ion-item-divider>
           <ion-label>Servidor Local</ion-label>
         </ion-item-divider>
-        <ion-button color="dark" (click)="navigateSistemaVendas()">
+        <ion-button color="tertiary" (click)="navigateSistemaVendas()">
           <div>
             <ion-icon name="cash-outline"></ion-icon>
             Vender
           </div>
         </ion-button>
-        <ion-button color="dark" (click)="navigateEstoque()">
+        <ion-button color="tertiary" (click)="navigateEstoque()">
           <div>
             <ion-icon slot="start" name="pie-chart-outline"></ion-icon>
             Estoque
@@ -53,7 +53,7 @@
         <ion-item-divider>
           <ion-label>Exportador</ion-label>
         </ion-item-divider>
-        <ion-button color="dark" (click)="navigateRelatorios()">
+        <ion-button color="tertiary" (click)="navigateRelatorios()">
           <div>
             <ion-icon name="reader-outline"></ion-icon>
             Relatórios
