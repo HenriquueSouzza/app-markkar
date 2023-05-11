@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar color="dark" style="height: auto">
+  <ion-toolbar style="height: auto">
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/home/caixa-movel/sistema-vendas/atual/lista-itens"></ion-back-button>
     </ion-buttons>
@@ -10,13 +10,14 @@
   <form #f="ngForm" (ngSubmit)="consultarNomeOuCod(f)">
     <div id="pesquisa">
       <ion-searchbar
+      color="tertiary"
         mode="ios"
         (ionChange)="verificaSearchbar($event)"
         ngModel
         name="nomeProd"
         placeholder="Digite o nome ou codigo de barras..."
       ></ion-searchbar>
-      <ion-button mode="ios" *ngIf="consultaNome" color="dark" type="submit">
+      <ion-button color="tertiary" mode="ios" *ngIf="consultaNome" type="submit">
         <ion-icon name="search-outline"></ion-icon>
         Consultar
       </ion-button>
@@ -25,9 +26,9 @@
   <div style="display: flex; flex-direction: column; align-items: center;justify-content: center; margin-bottom: 30px;">
     <span style="margin: 10px 0;" *ngIf="!consultaNome">ou</span>
     <ion-button
+      color="tertiary"
       mode="ios"
       *ngIf="!consultaNome"
-      color="dark"
       (click)="navigateScanner()"
     >
       <ion-icon slot="start" name="barcode-outline"></ion-icon>
@@ -44,7 +45,7 @@
       <ion-label style="color: gray;">Nenhum produto encontrado</ion-label>
     </ion-item>
     <ion-list style="display: flex; align-items: center; justify-content: center; flex-direction: column;" *ngIf="listEstoque"  lines="none">
-      <ion-item detail="true" style="margin: 10px 0; width: 90%;border-radius: 12px;" color="dark" *ngFor="let produtos of listEstoque" [button]="true" (click)="mostrarProdutoScaneado('', produtos.COD_BARRA)">
+      <ion-item color="tertiary" detail="true" style="margin: 10px 0; width: 90%;border-radius: 12px;" *ngFor="let produtos of listEstoque" [button]="true" (click)="mostrarProdutoScaneado('', produtos.COD_BARRA)">
         <ion-label>
           {{produtos.NOME_PRODUTO}}
           <p style="margin-top: 5px; color: rgb(156, 156, 156);">Cod. barra: {{produtos.COD_BARRA}}</p>
@@ -63,7 +64,7 @@
   >
     <ng-template>
       <ion-header style="background: var(--ion-color-dark) !important">
-        <ion-toolbar color="dark">
+        <ion-toolbar>
           <ion-title>produto</ion-title>
         </ion-toolbar>
       </ion-header>

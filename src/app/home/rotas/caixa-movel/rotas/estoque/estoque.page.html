@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar color="dark" style="height: auto">
+  <ion-toolbar style="height: auto">
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/home/caixa-movel"></ion-back-button>
     </ion-buttons>
@@ -10,12 +10,13 @@
   <form #f="ngForm" (ngSubmit)="consultarNome(f)">
     <div id="pesquisa">
       <ion-searchbar
+        mode="ios"
         (ionChange)="verificaSearchbar($event)"
         ngModel
         name="nomeProd"
         placeholder="Consulta por nome..."
       ></ion-searchbar>
-      <ion-button *ngIf="consultaNome" color="dark" type="submit">
+      <ion-button color="tertiary" *ngIf="consultaNome" type="submit">
         <ion-icon name="search-outline"></ion-icon>
         Consultar
       </ion-button>
@@ -24,8 +25,8 @@
   <div style="display: flex; flex-direction: column; align-items: center;justify-content: center; margin-bottom: 30px;">
     <span style="margin: 10px 0;" *ngIf="!consultaNome">ou</span>
     <ion-button
+       color="tertiary"
       *ngIf="!consultaNome"
-      color="dark"
       (click)="navigateScanner()"
     >
       <ion-icon slot="start" name="barcode-outline"></ion-icon>
