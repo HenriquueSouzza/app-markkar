@@ -113,7 +113,7 @@
   --ion-card-background: var(--ion-color-step-100);
 }
 
-@media (prefers-color-scheme: light) {
+@media (prefers-color-scheme: dark) {
   /*
    * Dark Colors
    * -------------------------------------------
@@ -264,7 +264,7 @@
     --ion-color-step-650: #acacac;
     --ion-color-step-700: #b8b8b8;
     --ion-color-step-750: #c4c4c4;
-    --ion-color-step-800: hwb(0 82% 18%);
+    --ion-color-step-800: #d1d1d1;
     --ion-color-step-850: #dbdbdb;
     --ion-color-step-900: #e7e7e7;
     --ion-color-step-950: #f3f3f3;
