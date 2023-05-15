@@ -1,5 +1,6 @@
 <ion-content no-bounce has-bouncing="false" forceOverscroll="false" [fullscreen]="true">
-  <img id="imgBck" src="../../assets/img/backgW/1.png" alt="">
+  <img class="imgBck" id="imgBckW" src="assets/img/backgW/1W.png" alt="">
+  <img class="imgBck" id="imgBckD" src="assets/img/backgW/1D.png" alt="">
   <section id="idEmpresa">
     <div class="emp" [ngClass]="{'contentSlide': true, 'inputUp': keyHeight, 'inputUpM': keyHeightM}" style="z-index: 10;">
       <img style="z-index: 10;"src="assets/img/logoMarkkar.png" alt="MarkkarLogo">
@@ -12,7 +13,7 @@
       <span style="z-index: 10; color: red;font-family: 'robotoBold'; text-transform: uppercase;">{{ err }}</span>
       <ion-button type="submit" id="btnRetry" color="primary" expand="block" shape="round">
         <ion-spinner *ngIf="loader" ></ion-spinner>
-        <h1 *ngIf="!loader" style="width: 100%; text-align: center; font-size: 1rem;margin: 0 !important; color: white;">Buscar</h1>
+        <h1 *ngIf="!loader" style="width: 100%; text-align: center; font-size: 1rem;margin: 0 !important; color: var(--ion-text-color);">Buscar</h1>
       </ion-button>
     </form>
   </section>
