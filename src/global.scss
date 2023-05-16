@@ -79,7 +79,6 @@ ion-datetime{
   --background: var(--ion-color-step-50) !important;
   --title-color: var(--ion-color-primary) !important;
   --background-rgb: var(--ion-color-step-50) !important;
-  /*color: white !important;*/
   text-transform: uppercase;
 }
 ion-app{
@@ -129,14 +128,15 @@ html.ios{
 }
 .list-md{
   /*background: var(--ion-color-dark2) !important;*/
-  --color: white !important;
+  --color: var(--ion-text-color) !important;
 }
 .select-interface-option{
   /*--background:  var(--ion-color-dark2) !important;*/
-  color: white !important;
-  --color: white !important;
+  color: var(--ion-text-color) !important;
+  --color: var(--ion-text-color) !important;
   --background-focused-opacity: 0.8 !important;
-  --background-focused: transparent;
+  --background-focused: var(--ion-color-primary) !important;
+  --background: transparent !important;
 }
 .inner-scroll {
   /*background: var(--ion-color-dark2) !important;*/
