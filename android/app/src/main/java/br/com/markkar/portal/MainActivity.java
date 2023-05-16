@@ -2,12 +2,10 @@ package br.com.markkar.portal;
 
 import android.content.res.Configuration;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 
-import androidx.annotation.RequiresApi;
 import androidx.core.view.WindowInsetsControllerCompat;
 
 import com.getcapacitor.BridgeActivity;
@@ -20,7 +18,6 @@ public class MainActivity extends BridgeActivity {
     private static final int LIGHT_NAVIGATION_BAR_COLOR = Color.parseColor("#f3f3f3");
 
     @Override
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -41,12 +38,10 @@ public class MainActivity extends BridgeActivity {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void setStatusBarColor(Window window, int color) {
         window.setStatusBarColor(color);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void setNavigationBarColor(Window window, int color) {
         window.setNavigationBarColor(color);
     }
