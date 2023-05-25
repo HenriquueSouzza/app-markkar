@@ -1,5 +1,6 @@
 <ion-content no-bounce has-bouncing="false" forceOverscroll="false" [fullscreen]="true">
-  <img id="imgBck" src="assets/img/backgW/1.png" alt="">
+  <img class="imgBck" id="imgBckW" src="assets/img/backgW/1W.png" alt="">
+  <img class="imgBck" id="imgBckD" src="assets/img/backgW/1D.png" alt="">
   <section style="z-index: 10;" id="idEmpresa">
     <ion-item [ngClass]="{'contentSlide': true, 'inputUp': keyHeight, 'inputUpM': keyHeightM}" lines="none" class="emp">
       <img slot="start" src="assets/img/m-markkar.png" alt="MarkkarLogo">
@@ -10,7 +11,7 @@
       <input (click)="colorReset()" [ngStyle]="{'color': colorInput}" ngModel name="senha" type="password" placeholder="Digite a sua senha...">
       <span style="z-index: 10; color: red;font-family: 'robotoBold'; text-transform: uppercase;">{{ errLogin }}</span>
       <ion-button type="submit" expand="block" shape="round">ENTRAR</ion-button>
-      <ion-button id="btnAlternate" style="color: white;" (click)="change()" expand="block" fill="clear" shape="round">
+      <ion-button id="btnAlternate" style="color: var(--ion-text-color);" (click)="change()" expand="block" fill="clear" shape="round">
         Trocar Empresa
       </ion-button>
     </form>

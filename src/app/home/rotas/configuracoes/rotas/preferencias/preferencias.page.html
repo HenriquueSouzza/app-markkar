@@ -1,7 +1,7 @@
-<ion-header color="dark">
-  <ion-toolbar color="dark" style="height: auto;">
+<ion-header>
+  <ion-toolbar style="height: auto;">
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="settings"></ion-back-button>
+      <ion-back-button color="dark" defaultHref="/home/configuracoes"></ion-back-button>
     </ion-buttons>
     <ion-title mode="ios">preferências</ion-title>
   </ion-toolbar>
@@ -16,6 +16,12 @@
       <ion-label style="text-transform: none;">Idioma<p class="p">Altera o idioma do aplicativo</p></ion-label>
       <ion-select cancel-text="cancelar" value="Portugues" ok-text="confirmar" interface="popover" (ionChange)="blank()" placeholder="Selecione">
         <ion-select-option value="Portugues">Português</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item [detail]="false" lines="none" color="secondary">
+      <ion-label style="text-transform: none;">Tema<p class="p">Altera o tema do aplicativo</p></ion-label>
+      <ion-select cancel-text="cancelar" value="auto" ok-text="confirmar" interface="popover" (ionChange)="blank()" placeholder="Selecione">
+        <ion-select-option value="auto">Automático (sistema)</ion-select-option>
       </ion-select>
     </ion-item>
     <ion-item [detail]="false" (click)="mask = !mask" [button]="true" lines="none" color="secondary">

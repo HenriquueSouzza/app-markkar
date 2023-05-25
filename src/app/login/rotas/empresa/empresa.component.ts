@@ -95,8 +95,8 @@ async ngOnInit() {
   }
 }
 colorReset(){
-  this.colorCnpj = 'white';
-  this.colorTOKEN = 'white';
+  this.colorCnpj = 'var(--ion-text-color);';
+  this.colorTOKEN = 'var(--ion-text-color);';
 }
 async enviarLogin(form: NgForm){
   this.loader = true;
@@ -130,8 +130,8 @@ async enviarLogin(form: NgForm){
       }
       else if(response.connection['status'] === 'success'){
         this.err = null;
-        this.colorTOKEN = 'white';
-        this.colorCnpj = 'white';
+        this.colorTOKEN = 'var(--ion-text-color);';
+        this.colorCnpj = 'var(--ion-text-color);';
         let auth = this.auth;
           if(auth === null){
             auth = {};

@@ -1,4 +1,4 @@
-#imgBck{
+.imgBck{
   width: 100vw;
   height: 100vh;
   position: absolute;
@@ -21,4 +21,20 @@ ion-button{
   height: 45px;
   --padding-start: 7px;
   --padding-end: 7px;
+}
+@media (prefers-color-scheme: dark) {
+  #imgBckW {
+    display: none;
+  }
+  #imgBckD {
+    display: block;
+  }
+}
+@media (prefers-color-scheme: light) {
+  #imgBckW {
+    display: block;
+  }
+  #imgBckD {
+    display: none;
+  }
 }

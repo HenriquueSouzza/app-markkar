@@ -1,4 +1,4 @@
-#imgBck{
+.imgBck{
   width: 100vw;
   height: 100vh;
   position: absolute;
@@ -29,7 +29,7 @@
     }
 
     h1{
-      color: white;
+      color: var(--ion-text-color);
       margin: 5px 0 0 0 ;
       font-family: 'robotoBold';
     }
@@ -64,5 +64,21 @@
       width: 80%;
       --border-radius: 10px;
     }
+  }
+}
+@media (prefers-color-scheme: dark) {
+  #imgBckW {
+    display: none;
+  }
+  #imgBckD {
+    display: block;
+  }
+}
+@media (prefers-color-scheme: light) {
+  #imgBckW {
+    display: block;
+  }
+  #imgBckD {
+    display: none;
   }
 }

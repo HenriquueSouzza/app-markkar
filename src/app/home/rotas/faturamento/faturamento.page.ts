@@ -695,8 +695,10 @@ export class FaturamentoPage implements OnInit {
 
   //Usuario
   async logOut(): Promise<void> {
-    await this.storage.remove('login');
-    await this.storage.remove('senha');
+    if (this.auth.hasOwnProperty('usuario')) {
+      delete this.auth.usuario;
+    }
+    await this.storage.set('auth', this.auth);
     this.router.navigateByUrl('/login/usuario', { replaceUrl: true });
   }
   redirect() {

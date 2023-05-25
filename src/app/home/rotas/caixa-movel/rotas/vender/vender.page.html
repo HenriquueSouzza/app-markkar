@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar color="dark">
+  <ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/home/caixa-movel"></ion-back-button>
     </ion-buttons>
@@ -9,19 +9,19 @@
 
 <ion-content>
   <div id="tiposVenda">
-    <ion-button (click)="verificaNovaVenda()" color="dark">
+    <ion-button (click)="verificaNovaVenda()" color="tertiary">
       <div>
         <ion-icon name="add-outline"></ion-icon>
         Nova Venda
       </div>
     </ion-button>
-    <ion-button color="dark">
+    <ion-button color="tertiary">
       <div>
         <ion-icon name="reload-outline"></ion-icon>
         Vendas anteriores
       </div>
     </ion-button>
-    <ion-button color="dark">
+    <ion-button color="tertiary">
       <div>
         <ion-icon name="settings-outline"></ion-icon>
         Configurações da venda
@@ -32,7 +32,7 @@
 <ion-modal #modalCliente [canDismiss]="true">
   <ng-template>
     <ion-header style="background: var(--ion-color-dark) !important">
-      <ion-toolbar color="dark">
+      <ion-toolbar color="tertiary">
         <ion-buttons slot="end">
           <ion-button color="danger" (click)="fecharModalIdentificarCliente()">Cancelar</ion-button>
         </ion-buttons>
@@ -47,25 +47,25 @@
       >
         <ng-template swiperSlide>
           <div id="wrpSldBtnClient">
-            <ion-button disabled="true" color="dark">
+            <ion-button disabled="true" color="tertiary">
               <div>
                 <ion-icon name="person-add-outline"></ion-icon>
                 Cadastrar
               </div>
             </ion-button>
-            <ion-button (click)="toIdentSld()" color="dark">
+            <ion-button (click)="toIdentSld()" color="tertiary">
               <div>
                 <ion-icon name="person-outline"></ion-icon>
                 Identificar
               </div>
             </ion-button>
-            <ion-button (click)="toSomenteCpfSld()" color="dark">
+            <ion-button (click)="toSomenteCpfSld()" color="tertiary">
               <div>
                 <ion-icon name="add-outline"></ion-icon>
                 Somente CPF
               </div>
             </ion-button>
-            <ion-button (click)="novaVenda()" color="dark">
+            <ion-button (click)="novaVenda()" color="tertiary">
               <div>
                 <ion-icon name="close-outline"></ion-icon>
                 Não identificar
@@ -185,7 +185,7 @@
                 (click)="selecionarCliente(cliente['COD_CLIENTE'], cliente['NOME_CLIENTE'], cliente['DOCUMENTO'])"
                   [disabled]="cliente['NOME_CLIENTE'] === 'Não encontrado' ? true : false"
                   class="clientesBtn"
-                  color="dark"
+                  color="tertiary"
                 >
                   <ion-label style="margin: 0px !important">
                     <h3>{{cliente['NOME_CLIENTE']}}</h3>

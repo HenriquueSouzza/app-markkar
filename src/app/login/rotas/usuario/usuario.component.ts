@@ -21,7 +21,7 @@ import { StorageService } from 'src/app/services/storage/storage.service';
 })
 export class UsuarioComponent implements OnInit {
   empAtual: string;
-  colorInput = 'white';
+  colorInput = 'var(--ion-text-color)';
   keyHeight = false;
   keyHeightM = false;
   errLogin: string;
@@ -180,6 +180,6 @@ export class UsuarioComponent implements OnInit {
     }
   }
   colorReset() {
-    this.colorInput = 'white';
+    this.colorInput = 'var(--ion-text-color)';
   }
 }

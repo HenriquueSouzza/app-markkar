@@ -1,3 +1,5 @@
+/* eslint-disable one-var */
+/* eslint-disable no-var */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable import/no-deprecated */
 /* eslint-disable @typescript-eslint/dot-notation */
@@ -40,7 +42,6 @@ export class LoginPage implements OnInit {
   }
 
   async ngOnInit() {
-    console.log('/login');
     // storage
     this.auth = await this.storage.get('auth');
     this.faturamentoStorage = await this.storage.get('faturamento');
@@ -78,11 +79,19 @@ export class LoginPage implements OnInit {
         SplashScreen.hide();
       }, 2000);
     } else {
-      const valCnpj = this.auth.empresa.cnpj;
-      const valToken = this.auth.empresa.token;
-      const valIdToken = this.auth.empresa.id;
-      const valLogin = this.auth.usuario.login;
-      const valTokenUser = this.auth.usuario.token;
+      if(this.auth.hasOwnProperty('empresa')){
+        var valCnpj = this.auth.empresa.hasOwnProperty('cnpj') ? this.auth.empresa.cnpj : null;
+        var valToken = this.auth.empresa.hasOwnProperty('token') ? this.auth.empresa.token : null;
+        var valIdToken = this.auth.empresa.hasOwnProperty('id') ? this.auth.empresa.id : null;
+      } else {
+        var valCnpj, valToken, valIdToken = null;
+      }
+      if(this.auth.hasOwnProperty('usuario')){
+        var valLogin = this.auth.usuario.hasOwnProperty('login') ? this.auth.usuario.login : null;
+        var valTokenUser = this.auth.usuario.hasOwnProperty('token') ? this.auth.usuario.token : null;
+      } else {
+        var valLogin, valTokenUser = null;
+      }
       const validatefLogin = {
         cnpj: auth.empresa.cnpj,
         token: auth.empresa.token,

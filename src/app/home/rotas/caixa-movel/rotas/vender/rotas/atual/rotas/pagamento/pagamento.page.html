@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar color="dark">
+  <ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button
         defaultHref="/home/caixa-movel/sistema-vendas/atual"
@@ -70,13 +70,13 @@
             margin: 20px 0 30px 0;
             width: 100%;
             max-width: 600px;">
-          <ion-button (click)="aplicaValorPagamento(true, 10.00)" color="dark">
+          <ion-button [disabled]="totalCarrinhoNum - totalPagoCliente <= 0 ? true : false" color="tertiary" (click)="aplicaValorPagamento(true, 10.00)">
             +R$ 10,00
           </ion-button>
-          <ion-button (click)="aplicaValorPagamento(true, 50.00)" color="dark">
+          <ion-button [disabled]="totalCarrinhoNum - totalPagoCliente <= 0 ? true : false" color="tertiary" (click)="aplicaValorPagamento(true, 50.00)">
             +R$ 50,00
           </ion-button>
-          <ion-button (click)="aplicaValorPagamento(true, 100.00)" color="dark">
+          <ion-button [disabled]="totalCarrinhoNum - totalPagoCliente <= 0 ? true : false" color="tertiary" (click)="aplicaValorPagamento(true, 100.00)">
             +R$ 100,00
           </ion-button>
          </div>
@@ -117,10 +117,10 @@
         </div>
         <div class="opcoes">
           <ion-button
+            color="tertiary"
             (click)="changeFormaPagamento(formpg)"
             *ngFor="let formpg of formsPg"
             class="selectBtn"
-            color="dark"
           >
             <div>
               <ion-icon
@@ -173,10 +173,11 @@
         </div>
         <div class="opcoes" style="height: 70vh; overflow-y: scroll;align-items: flex-start;">
           <ion-button
+            color="tertiary"
             (click)="changeBandeira(bandeira)"
             *ngFor="let bandeira of bandeiras"
             class="selectBtn"
-            color="dark"
+
           >
             <div>{{bandeira}}</div>
           </ion-button>
@@ -214,10 +215,10 @@
         </div>
         <div class="opcoes">
           <ion-button
+            color="tertiary"
             (click)="changeRedeAutoriza(rede)"
             *ngFor="let rede of redeAutoriza"
             class="selectBtn"
-            color="dark"
           >
             <div>{{rede}}</div>
           </ion-button>
@@ -258,7 +259,7 @@
             (click)="changeDebitOrCredit('DÉBITO')"
             [disabled]="opcsCard.bloqDebito"
             class="selectBtn"
-            color="dark"
+            color="tertiary"
           >
             <div>DÉBITO</div>
           </ion-button>
@@ -266,7 +267,7 @@
             (click)="changeDebitOrCredit('CRÉDITO')"
             [disabled]="opcsCard.bloqCredito"
             class="selectBtn"
-            color="dark"
+            color="tertiary"
           >
             <div>CRÉDITO</div>
           </ion-button>
@@ -293,7 +294,7 @@
           </div>
           <ion-button
             (click)="slideNext()"
-            style="color: var(--ion-color-dark2)"
+            style="color: var(--ion-color-step-50);"
             mode="ios"
             expand="block"
             fill="clear"
@@ -307,7 +308,7 @@
             (click)="changeParcelas(parcela, i)"
             *ngFor="let parcela of parcelas; let i = index"
             class="selectBtn"
-            color="dark"
+            color="tertiary"
           >
             <h2>{{parcela}}</h2>
           </ion-button>

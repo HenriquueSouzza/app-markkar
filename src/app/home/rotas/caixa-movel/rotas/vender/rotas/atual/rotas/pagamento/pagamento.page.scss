@@ -79,7 +79,7 @@ ion-progress-bar {
   }
 }
 #footer {
-  background-color: var(--ion-color-dark);
+  background-color: var(--ion-color-step-100);
   width: 100%;
   height: 100%;
   display: flex;
@@ -96,12 +96,12 @@ ion-progress-bar {
     justify-content: space-between;
 
     h3 {
-      color: rgb(181, 181, 181);
+      color: var(--ion-text-color);
       font-size: 1rem;
       font-family: robotoBold;
     }
     p {
-      color: rgb(181, 181, 181);
+      color: var(--ion-text-color);
       font-size: 0.8rem;
     }
   }
@@ -113,7 +113,7 @@ ion-progress-bar {
     flex-direction: column;
 
     .total {
-      padding: 0 20px;
+      padding: 10px 20px;
       width: 100%;
       display: flex;
       align-items: center;

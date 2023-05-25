@@ -13,14 +13,14 @@ ion-skeleton-text{
   --background-rgb: 255,255,255;
 }
 ion-popover{
-  --background: var(--ion-color-dark2);
+  /*--background: var(--ion-color-dark2);*/
 }
 ion-content {
-  --background: var(--ion-color-dark2);
+  /*--background: var(--ion-color-dark2);*/
 }
 ion-list{
   padding: 0;
-  --background: var(--ion-color-dark2);
+  /*--background: var(--ion-color-dark2);*/
 }
 ion-item{
   text-transform: capitalize;
@@ -40,7 +40,7 @@ ion-label{
   }
 }
 ion-datetime{
-  --background: var(--ion-color-dark2);
+  /*--background: var(--ion-color-dark2);*/
   --title-color: var(--ion-color-primary);
   color: white;
 }

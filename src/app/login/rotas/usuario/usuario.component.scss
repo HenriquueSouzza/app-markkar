@@ -1,13 +1,13 @@
-#imgBck{
+.imgBck {
   width: 100vw;
   height: 100vh;
   position: absolute;
   z-index: 0;
 }
-ion-item{
+ion-item {
   --background: transparent !important;
 }
-#idEmpresa{
+#idEmpresa {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -16,7 +16,7 @@ ion-item{
   width: 100vw;
   height: 100vh;
 
-  .emp{
+  .emp {
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -27,33 +27,33 @@ ion-item{
     --padding-start: calc(50vw - 304px);
     transition: all 0.5s;
 
-    img{
+    img {
       max-width: 30%;
       margin-inline: 35px 0px;
     }
 
-    ion-label{
-      color: white;
-      margin: 5px 0 0 0 ;
+    ion-label {
+      color: var(--ion-text-color);
+      margin: 5px 0 0 0;
       text-align: start;
-      font-family: 'robotoBold';
+      font-family: "robotoBold";
       width: 80%;
     }
   }
-  .emp.inputUpM{
+  .emp.inputUpM {
     margin-top: calc(35vh - 200px);
   }
-  .emp.inputUp{
+  .emp.inputUp {
     margin-top: calc(28vh - 200px);
   }
-  form{
+  form {
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 
-    input{
+    input {
       border: var(--ion-color-primary) solid 1px;
       background: var(--ion-color-dark2);
       outline: 0;
@@ -64,11 +64,27 @@ ion-item{
       min-height: 36px;
       margin-bottom: 10px;
     }
-    ion-button{
+    ion-button {
       width: 80%;
       max-width: 600px;
-      font-size: .9rem;
+      font-size: 0.9rem;
       --border-radius: 10px;
     }
+  }
+}
+@media (prefers-color-scheme: dark) {
+  #imgBckW {
+    display: none;
+  }
+  #imgBckD {
+    display: block;
+  }
+}
+@media (prefers-color-scheme: light) {
+  #imgBckW {
+    display: block;
+  }
+  #imgBckD {
+    display: none;
   }
 }

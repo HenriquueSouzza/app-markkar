@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar color="dark">
+  <ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button
         defaultHref="/home/caixa-movel/relatorios"
@@ -14,7 +14,7 @@
     <div *ngFor="let relatorio of relatorios; let index = index" class="relatorios">
       <h2 class="dataRelatorios">{{formartarData(relatoriosData[index])}}</h2>
       <div *ngFor="let info of relatorio" class="relatorio">
-        <ion-item [detail]="false" (click)="abrirRelatorio(info['fecha_cx_pdf'], info['cod_vnd_caixa']+'_'+info['dt_fecha'])" [button]="true" lines="none" color="dark">
+        <ion-item [detail]="false" (click)="abrirRelatorio(info['fecha_cx_pdf'], info['cod_vnd_caixa']+'_'+info['dt_fecha'])" [button]="true" lines="none" color="tertiary">
           <ion-icon size="large" slot="end" name="document-outline"></ion-icon>
           <ion-label>
             <h2>Cod. caixa: {{info['cod_vnd_caixa']}}</h2>
@@ -32,7 +32,7 @@
       </div>
       <div id="divBtn">
         <h2>Nenhum relatório exportado</h2>
-        <ion-button (click)="baixarPDF()" color="dark">
+        <ion-button (click)="baixarPDF()" color="tertiary">
           Tentar Novamente
         </ion-button>
       </div>
