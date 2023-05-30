@@ -35,6 +35,7 @@ export class ScannerCaixaPage implements OnInit {
   private scanIsRun = false;
   private idCc: string;
   private idEmpBird: any;
+  private qntMaxBlock: any;
 
   constructor(
     public toastController: ToastController,
@@ -67,6 +68,8 @@ export class ScannerCaixaPage implements OnInit {
     this.somaTotalCarrinho();
     this.modoRapido =
       this.caixaMovelStorage.sistemaVendas.configuracoes.modoRapido;
+    this.qntMaxBlock =
+      this.caixaMovelStorage.sistemaVendas.configuracoes.qntMaxBlock;
     this.idEmpBird =
       this.caixaMovelStorage.sistemaVendas.vendaAtual.selectIds.fireBirdIdEmp;
     this.idCc =
@@ -100,18 +103,18 @@ export class ScannerCaixaPage implements OnInit {
   */
 
   async startScan() {
-      this.scanIsRun = true;
-          this.screenOrientation.unlock();
-          BarcodeScanner.hideBackground(); // make background of WebView transparent
-          const resultScanner = await BarcodeScanner.startScan(); // start scanning and wait for a result
-          // if the result has content
-          if (resultScanner.hasContent) {
-            const codeBar: string = resultScanner.content; //result.content log the raw scanned content
-            this.mostrarProdutoScaneado(codeBar);
-            if (this.modoRapido) {
-              this.reloadScan();
-            }
-          }
+    this.scanIsRun = true;
+    this.screenOrientation.unlock();
+    BarcodeScanner.hideBackground(); // make background of WebView transparent
+    const resultScanner = await BarcodeScanner.startScan(); // start scanning and wait for a result
+    // if the result has content
+    if (resultScanner.hasContent) {
+      const codeBar: string = resultScanner.content; //result.content log the raw scanned content
+      this.mostrarProdutoScaneado(codeBar);
+      if (this.modoRapido) {
+        this.reloadScan();
+      }
+    }
   }
 
   stopScan() {
@@ -225,50 +228,60 @@ export class ScannerCaixaPage implements OnInit {
 
   mostrarProdutoScaneado(codeBar) {
     this.estoqueService
-      .consultaProduto({
-        codeEmp: this.idEmpBird,
-        codeCC: this.idCc,
-        codeBar,
-        nome: '',
-      }, this.caixaMovelStorage.configuracoes.slectedIds.ipLocal)
-      .subscribe({next: async (res: any) => {
-        const produtos = Object.values(res.produtos);
-        if (produtos.length !== 0) {
-          if (this.telaDigCodigo) {
-            this.inputCodeScanner['value'] = '';
-          }
-          this.pordutoScanneado = {
-            nome: produtos[0]['NOME_PRODUTO'],
-            id: produtos[0]['COD_PRODUTO'],
-            cod: produtos[0]['COD_BARRA'],
-            qnt: produtos[0]['QTD_ESTOQUE'] === '0' ? 0 : 1,
-            qntMax: produtos[0]['QTD_ESTOQUE'],
-            medida: produtos[0]['UNIDADE'],
-            valor: produtos[0]['VALOR'],
-          };
-          if (this.modoRapido) {
-            // eslint-disable-next-line max-len
-            this.presentToast(
-              `PRODUTO ADICIONADO:<br><br>produto: ${
-                this.pordutoScanneado.nome
-              } <br>Cod: ${this.pordutoScanneado.cod}<br>QntMax: ${
-                this.pordutoScanneado.qntMax
-              }<br>Medida: ${
-                this.pordutoScanneado.medida
-              }<br><br>VALOR: ${this.convertReal(this.pordutoScanneado.valor)}`,
-              'middle'
-            );
-            this.adicionaCarrinho();
+      .consultaProduto(
+        {
+          codeEmp: this.idEmpBird,
+          codeCC: this.idCc,
+          codeBar,
+          nome: '',
+        },
+        this.caixaMovelStorage.configuracoes.slectedIds.ipLocal
+      )
+      .subscribe({
+        next: async (res: any) => {
+          const produtos = Object.values(res.produtos);
+          if (produtos.length !== 0) {
+            if (this.telaDigCodigo) {
+              this.inputCodeScanner['value'] = '';
+            }
+            this.pordutoScanneado = {
+              nome: produtos[0]['NOME_PRODUTO'],
+              id: produtos[0]['COD_PRODUTO'],
+              cod: produtos[0]['COD_BARRA'],
+              qnt: produtos[0]['QTD_ESTOQUE'] === '0' ? 0 : 1,
+              qntMax: produtos[0]['QTD_ESTOQUE'],
+              medida: produtos[0]['UNIDADE'],
+              valor: produtos[0]['VALOR'],
+            };
+            if (this.modoRapido) {
+              // eslint-disable-next-line max-len
+              this.presentToast(
+                `PRODUTO ADICIONADO:<br><br>produto: ${
+                  this.pordutoScanneado.nome
+                } <br>Cod: ${this.pordutoScanneado.cod}<br>QntMax: ${
+                  this.pordutoScanneado.qntMax
+                }<br>Medida: ${
+                  this.pordutoScanneado.medida
+                }<br><br>VALOR: ${this.convertReal(
+                  this.pordutoScanneado.valor
+                )}`,
+                'middle'
+              );
+              this.adicionaCarrinho();
+            } else {
+              this.modalProdIsOpen = true;
+            }
           } else {
-            this.modalProdIsOpen = true;
+            this.presentToast('Nenhum produto encontrado', 'bottom');
           }
-        } else {
-          this.presentToast('Nenhum produto encontrado', 'bottom');
-        }
-      }, error: async (err) => {
-        this.navCtrl.navigateBack('/home/caixa-movel/sistema-vendas/atual');
-        await this.exibirAlerta('Erro ao tentar comunicar com o servidor local.');
-      }});
+        },
+        error: async (err) => {
+          this.navCtrl.navigateBack('/home/caixa-movel/sistema-vendas/atual');
+          await this.exibirAlerta(
+            'Erro ao tentar comunicar com o servidor local.'
+          );
+        },
+      });
   }
 
   /*
@@ -308,7 +321,7 @@ export class ScannerCaixaPage implements OnInit {
   }
 
   verificaEstoque(qnt, qntEstoque) {
-    if (qnt > qntEstoque) {
+    if (qnt > qntEstoque && this.qntMaxBlock === true) {
       return qntEstoque;
     } else {
       return qnt;

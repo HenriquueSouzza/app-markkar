@@ -16,87 +16,19 @@
     #swiper
     [config]="{initialSlide: 0, speed: 400, allowTouchMove: false}"
   >
+    <!-- Metodo - metodoPg -->
     <ng-template class="slide" swiperSlide>
       <div class="metodosPg">
         <div class="headerSlide">
           <ion-button
-            (click)="slidePrev()"
+            [disabled]="true"
+            color="secondary"
             mode="ios"
             expand="block"
             fill="clear"
             shape="round"
           >
-            <ion-icon
-              slot="icon-only"
-              style="color: var(--ion-color-dark2)"
-              name="arrow-back-outline"
-            ></ion-icon>
-          </ion-button>
-          <h2>
-            Informe o valor:
-            <p style="margin: 6px 0 0 0; font-size: 1rem; color: gray">
-              {{convertReal(valorPg)}}
-            </p>
-          </h2>
-          <ion-button
-            [disabled]="valorPg === 0 || totalCarrinhoNum - totalPagoCliente <= 0 ? true : false"
-            (click)="slideNext()"
-            mode="ios"
-            expand="block"
-            fill="clear"
-            shape="round"
-          >
-            <ion-icon slot="icon-only" name="arrow-forward-outline"></ion-icon>
-          </ion-button>
-        </div>
-        <div class="opcoes valor">
-          <ion-item [disabled]="totalCarrinhoNum - totalPagoCliente <= 0 ? true : false">
-            <ion-label>R$:</ion-label>
-            <ion-input maxlength="9" #inputValor (ionChange)="changeValorPagamento($event)" type="tel" placeholder="0,00"></ion-input>
-          </ion-item>
-         <div style="width: 100%; display: flex;">
-            <ion-button [disabled]="totalCarrinhoNum - totalPagoCliente <= 0 ? true : false" (click)="aplicaValorPagamento(true)" expand="block" fill="clear" shape="round">
-              valor {{totalPagoCliente === 0 ? 'total' : 'restante'}}
-            </ion-button>
-            <ion-button [disabled]="valorPg === 0 || totalCarrinhoNum - totalPagoCliente <= 0 ? true : false" (click)="aplicaValorPagamento(false)" expand="block" fill="clear" shape="round">
-              confirmar
-            </ion-button>
-         </div>
-         <div style="
-            display: flex;
-            align-items: flex-start;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin: 20px 0 30px 0;
-            width: 100%;
-            max-width: 600px;">
-          <ion-button [disabled]="totalCarrinhoNum - totalPagoCliente <= 0 ? true : false" color="tertiary" (click)="aplicaValorPagamento(true, 10.00)">
-            +R$ 10,00
-          </ion-button>
-          <ion-button [disabled]="totalCarrinhoNum - totalPagoCliente <= 0 ? true : false" color="tertiary" (click)="aplicaValorPagamento(true, 50.00)">
-            +R$ 50,00
-          </ion-button>
-          <ion-button [disabled]="totalCarrinhoNum - totalPagoCliente <= 0 ? true : false" color="tertiary" (click)="aplicaValorPagamento(true, 100.00)">
-            +R$ 100,00
-          </ion-button>
-         </div>
-        </div>
-      </div>
-    </ng-template>
-    <ng-template class="slide" swiperSlide>
-      <div class="metodosPg">
-        <div class="headerSlide">
-          <ion-button
-            (click)="slidePrev()"
-            mode="ios"
-            expand="block"
-            fill="clear"
-            shape="round"
-          >
-            <ion-icon
-              slot="icon-only"
-              name="arrow-back-outline"
-            ></ion-icon>
+            <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
           </ion-button>
           <h2>
             Forma de pagamento:
@@ -105,7 +37,7 @@
             </p>
           </h2>
           <ion-button
-            [disabled]="metodoPg === 'Não selecionado' ? true : metodoPg === 'DINHEIRO' || metodoPg === 'PIX' ? true : false"
+            [disabled]="metodoPg === 'Não selecionado' ? true : false"
             (click)="slideNext()"
             mode="ios"
             expand="block"
@@ -142,6 +74,111 @@
         </div>
       </div>
     </ng-template>
+    <!-- Valor Din ou pix - valorPg -->
+    <ng-template class="slide" *ngIf="metodoPg !== 'CARTÃO'" swiperSlide>
+      <div class="metodosPg">
+        <div class="headerSlide">
+          <ion-button
+            (click)="slidePrev()"
+            mode="ios"
+            expand="block"
+            fill="clear"
+            shape="round"
+          >
+            <ion-icon
+              slot="icon-only"
+              style="color: var(--ion-color-dark2)"
+              name="arrow-back-outline"
+            ></ion-icon>
+          </ion-button>
+          <h2>
+            Informe o valor:
+            <p style="margin: 6px 0 0 0; font-size: 1rem; color: gray">
+              {{convertReal(valorPg)}}
+            </p>
+          </h2>
+          <ion-button
+            [disabled]="valorPg === 0 || totalCarrinhoNum - totalPagoCliente <= 0 ? true : false"
+            (click)="slideNext()"
+            mode="ios"
+            expand="block"
+            fill="clear"
+            shape="round"
+          >
+            <ion-icon slot="icon-only" name="arrow-forward-outline"></ion-icon>
+          </ion-button>
+        </div>
+        <div class="opcoes valor">
+          <ion-item
+            [disabled]="totalCarrinhoNum - totalPagoCliente <= 0 ? true : false"
+          >
+            <ion-label>R$:</ion-label>
+            <ion-input
+              maxlength="9"
+              #inputValor
+              [value]="inputValorPadrao"
+              (ionChange)="changeValorPagamento($event)"
+              type="tel"
+              placeholder="0,00"
+            ></ion-input>
+          </ion-item>
+          <div style="width: 100%; display: flex">
+            <ion-button
+              [disabled]="totalCarrinhoNum - totalPagoCliente <= 0 ? true : false"
+              (click)="aplicaValorPagamento(true)"
+              expand="block"
+              fill="clear"
+              shape="round"
+            >
+              valor {{totalPagoCliente === 0 ? 'total' : 'restante'}}
+            </ion-button>
+            <ion-button
+              [disabled]="valorPg === 0 || totalCarrinhoNum - totalPagoCliente <= 0 ? true : false"
+              (click)="aplicaValorPagamento(false)"
+              expand="block"
+              fill="clear"
+              shape="round"
+            >
+              confirmar
+            </ion-button>
+          </div>
+          <div
+            style="
+              display: flex;
+              align-items: flex-start;
+              justify-content: center;
+              flex-wrap: wrap;
+              margin: 20px 0 30px 0;
+              width: 100%;
+              max-width: 600px;
+            "
+          >
+            <ion-button
+              [disabled]="totalCarrinhoNum - totalPagoCliente <= 0 ? true : false"
+              color="tertiary"
+              (click)="aplicaValorPagamento(true, 10.00)"
+            >
+              +R$ 10,00
+            </ion-button>
+            <ion-button
+              [disabled]="totalCarrinhoNum - totalPagoCliente <= 0 ? true : false"
+              color="tertiary"
+              (click)="aplicaValorPagamento(true, 50.00)"
+            >
+              +R$ 50,00
+            </ion-button>
+            <ion-button
+              [disabled]="totalCarrinhoNum - totalPagoCliente <= 0 ? true : false"
+              color="tertiary"
+              (click)="aplicaValorPagamento(true, 100.00)"
+            >
+              +R$ 100,00
+            </ion-button>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <!-- Bandeira - bandeiraPg -->
     <ng-template class="slide" swiperSlide>
       <div class="metodosPg">
         <div class="headerSlide">
@@ -171,19 +208,22 @@
             <ion-icon slot="icon-only" name="arrow-forward-outline"></ion-icon>
           </ion-button>
         </div>
-        <div class="opcoes" style="height: 70vh; overflow-y: scroll;align-items: flex-start;">
+        <div
+          class="opcoes"
+          style="height: 70vh; overflow-y: scroll; align-items: flex-start"
+        >
           <ion-button
             color="tertiary"
             (click)="changeBandeira(bandeira)"
             *ngFor="let bandeira of bandeiras"
             class="selectBtn"
-
           >
             <div>{{bandeira}}</div>
           </ion-button>
         </div>
       </div>
     </ng-template>
+    <!-- Rede Autoriza - redeAutorizaPg -->
     <ng-template class="slide" swiperSlide>
       <div class="metodosPg">
         <div class="headerSlide">
@@ -225,6 +265,7 @@
         </div>
       </div>
     </ng-template>
+    <!-- Deb ou Cred - debitOrCreditPg -->
     <ng-template class="slide" swiperSlide>
       <div class="metodosPg">
         <div class="headerSlide">
@@ -274,6 +315,7 @@
         </div>
       </div>
     </ng-template>
+    <!-- Parcelas - parcelasPgNum -->
     <ng-template class="slide" swiperSlide>
       <div id="parcelas">
         <div class="headerSlide">
@@ -288,13 +330,9 @@
           </ion-button>
           <div>
             <h2>Parcelas</h2>
-            <p style="color: gray; font-size: 0.7rem; margin: 0">
-              *Juros não calculado
-            </p>
           </div>
           <ion-button
             (click)="slideNext()"
-            style="color: var(--ion-color-step-50);"
             mode="ios"
             expand="block"
             fill="clear"
@@ -315,12 +353,116 @@
         </div>
       </div>
     </ng-template>
+    <!-- Valor Crt - valorPg -->
+    <ng-template class="slide" swiperSlide>
+      <div class="metodosPg">
+        <div class="headerSlide">
+          <ion-button
+            (click)="slidePrev()"
+            mode="ios"
+            expand="block"
+            fill="clear"
+            shape="round"
+          >
+            <ion-icon
+              slot="icon-only"
+              name="arrow-back-outline"
+            ></ion-icon>
+          </ion-button>
+          <h2>
+            Informe o valor:
+            <p style="margin: 6px 0 0 0; font-size: 1rem; color: gray">
+              {{convertReal(valorPg)}}
+            </p>
+          </h2>
+          <ion-button
+            [disabled]="true"
+            color="secondary"
+            (click)="slideNext()"
+            mode="ios"
+            expand="block"
+            fill="clear"
+            shape="round"
+          >
+            <ion-icon slot="icon-only" name="arrow-forward-outline"></ion-icon>
+          </ion-button>
+        </div>
+        <div class="opcoes valor">
+          <ion-item
+            [disabled]="totalCarrinhoNum - totalPagoCliente <= 0 ? true : false"
+          >
+            <ion-label>R$:</ion-label>
+            <ion-input
+              maxlength="9"
+              #inputValor
+              [value]="inputValorPadrao"
+              (ionChange)="changeValorPagamento($event)"
+              type="tel"
+              placeholder="0,00"
+            ></ion-input>
+          </ion-item>
+          <div style="width: 100%; display: flex">
+            <ion-button
+              [disabled]="totalCarrinhoNum - totalPagoCliente <= 0 ? true : false"
+              (click)="aplicaValorPagamento(true)"
+              expand="block"
+              fill="clear"
+              shape="round"
+            >
+              valor {{totalPagoCliente === 0 ? 'total' : 'restante'}}
+            </ion-button>
+            <ion-button
+              [disabled]="valorPg === 0 || totalCarrinhoNum - totalPagoCliente <= 0 ? true : false"
+              (click)="aplicaValorPagamento(false)"
+              expand="block"
+              fill="clear"
+              shape="round"
+            >
+              confirmar
+            </ion-button>
+          </div>
+          <div
+            style="
+              display: flex;
+              align-items: flex-start;
+              justify-content: center;
+              flex-wrap: wrap;
+              margin: 20px 0 30px 0;
+              width: 100%;
+              max-width: 600px;
+            "
+          >
+            <ion-button
+              [disabled]="totalCarrinhoNum - totalPagoCliente <= 0 ? true : false"
+              color="tertiary"
+              (click)="aplicaValorPagamento(true, 10.00)"
+            >
+              +R$ 10,00
+            </ion-button>
+            <ion-button
+              [disabled]="totalCarrinhoNum - totalPagoCliente <= 0 ? true : false"
+              color="tertiary"
+              (click)="aplicaValorPagamento(true, 50.00)"
+            >
+              +R$ 50,00
+            </ion-button>
+            <ion-button
+              [disabled]="totalCarrinhoNum - totalPagoCliente <= 0 ? true : false"
+              color="tertiary"
+              (click)="aplicaValorPagamento(true, 100.00)"
+            >
+              +R$ 100,00
+            </ion-button>
+          </div>
+        </div>
+      </div>
+    </ng-template>
   </swiper>
   <ion-modal
     #modal
     [isOpen]="true"
     [initialBreakpoint]="0.07"
-    [breakpoints]="[0.07, (500 / heightW) > 1 ? 1 : (500 / heightW)]"
+    [breakpoints]="[0.07, (470 / heightW) > 1 ? 1 : (470 / heightW)]"
     [backdropDismiss]="false"
     [backdropBreakpoint]="1"
   >
@@ -357,8 +499,8 @@
               <p>{{parcelasPg}}</p>
             </div>
           </div>
-          <div id="wrpBot" style="width: 100%;">
-            <div class="total" style="border-top: solid rgb(61, 61, 61) 1px;">
+          <div id="wrpBot" style="width: 100%">
+            <div class="total" style="border-top: solid rgb(61, 61, 61) 1px">
               <h3>Total:</h3>
               <p>{{totalCarrinho}}</p>
             </div>
@@ -368,17 +510,33 @@
             </div>
             <div class="total">
               <h3>Valor restante:</h3>
-              <p>{{convertReal(totalCarrinhoNum-totalPagoCliente < 0 ? 0 : totalCarrinhoNum-totalPagoCliente)}}</p>
+              <p>
+                {{convertReal(totalCarrinhoNum-totalPagoCliente < 0 ? 0 :
+                totalCarrinhoNum-totalPagoCliente)}}
+              </p>
             </div>
-            <div id="btns" style="margin-top: 20px;">
-              <ion-button style="width: 50%;" color="primary" (click)="voltarAtual()"
-                >Voltar</ion-button>
-              <ion-button style="width: 50%;" color="primary" [disabled]="bloqAdcPg" (click)="addPg()">
+            <div id="btns" style="margin-top: 20px">
+              <ion-button
+                style="width: 50%"
+                color="primary"
+                (click)="voltarAtual()"
+                >Voltar</ion-button
+              >
+              <ion-button
+                style="width: 50%"
+                color="primary"
+                [disabled]="bloqAdcPg"
+                (click)="addPg()"
+              >
                 Adicionar
               </ion-button>
             </div>
-            <div id="btns" style="margin-top: 20px;">
-              <ion-button style="width: 100%;" [disabled]="totalCarrinhoNum - totalPagoCliente <= 0 ? false : true" (click)="finalizarVenda()">
+            <div id="btns" style="margin-top: 20px">
+              <ion-button
+                style="width: 100%"
+                [disabled]="totalCarrinhoNum - totalPagoCliente <= 0 ? false : true"
+                (click)="finalizarVenda()"
+              >
                 Finalizar
               </ion-button>
             </div>

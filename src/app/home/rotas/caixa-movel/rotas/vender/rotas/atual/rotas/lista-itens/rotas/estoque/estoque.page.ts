@@ -3,7 +3,12 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Storage } from '@ionic/storage-angular';
 import { StorageService } from 'src/app/services/storage/storage.service';
-import { AlertController, LoadingController, NavController, ToastController } from '@ionic/angular';
+import {
+  AlertController,
+  LoadingController,
+  NavController,
+  ToastController,
+} from '@ionic/angular';
 import { EstoqueService } from 'src/app/home/rotas/caixa-movel/rotas/estoque/services/estoque/estoque.service';
 
 @Component({
@@ -22,6 +27,8 @@ export class EstoquePage implements OnInit {
   public listEstoque: any;
   public pordutoScanneado: any;
   private estoqueStorage: any;
+  private modoRapido: any;
+  private qntMaxBlock: any;
 
   // storage
   private caixaMovelStorage: any;
@@ -33,7 +40,7 @@ export class EstoquePage implements OnInit {
     private storage: Storage,
     private storageService: StorageService,
     private navCtrl: NavController,
-    private estoqueService: EstoqueService,
+    private estoqueService: EstoqueService
   ) {}
 
   ngOnInit() {}
@@ -43,6 +50,10 @@ export class EstoquePage implements OnInit {
     this.idEmpBird =
       this.caixaMovelStorage.configuracoes.slectedIds.firebirdIdEmp;
     this.idCc = this.caixaMovelStorage.configuracoes.slectedIds.fireBirdIdCc;
+    this.modoRapido =
+      this.caixaMovelStorage.sistemaVendas.configuracoes.modoRapido;
+    this.qntMaxBlock =
+      this.caixaMovelStorage.sistemaVendas.configuracoes.qntMaxBlock;
     this.updateListEstoque();
   }
 
@@ -54,12 +65,15 @@ export class EstoquePage implements OnInit {
 
   updateListEstoque(nome = '', codeBar = '') {
     this.estoqueService
-      .consultaProduto({
-        codeEmp: this.idEmpBird,
-        codeCC: this.idCc,
-        codeBar,
-        nome,
-      }, this.caixaMovelStorage.configuracoes.slectedIds.ipLocal)
+      .consultaProduto(
+        {
+          codeEmp: this.idEmpBird,
+          codeCC: this.idCc,
+          codeBar,
+          nome,
+        },
+        this.caixaMovelStorage.configuracoes.slectedIds.ipLocal
+      )
       .subscribe({
         next: (response: any) => {
           this.listEstoque = response.produtos;
@@ -67,7 +81,9 @@ export class EstoquePage implements OnInit {
         error: async (err) => {
           console.log(err);
           //this.navCtrl.navigateBack('/home/caixa-movel/sistema-vendas/atual');
-          await this.exibirAlerta('Erro ao tentar comunicar com o servidor local.');
+          await this.exibirAlerta(
+            'Erro ao tentar comunicar com o servidor local.'
+          );
         },
       });
   }
@@ -83,12 +99,15 @@ export class EstoquePage implements OnInit {
 
   mostrarProdutoScaneado(nome = '', codeBar = '') {
     this.estoqueService
-      .consultaProduto({
-        codeEmp: this.idEmpBird,
-        codeCC: this.idCc,
-        codeBar,
-        nome,
-      }, this.caixaMovelStorage.configuracoes.slectedIds.ipLocal)
+      .consultaProduto(
+        {
+          codeEmp: this.idEmpBird,
+          codeCC: this.idCc,
+          codeBar,
+          nome,
+        },
+        this.caixaMovelStorage.configuracoes.slectedIds.ipLocal
+      )
       .subscribe(async (res: any) => {
         const produtos = Object.values(res.produtos);
         if (produtos.length !== 0) {
@@ -101,7 +120,24 @@ export class EstoquePage implements OnInit {
             medida: produtos[0]['UNIDADE'],
             valor: produtos[0]['VALOR'],
           };
-          this.modalProdIsOpen = true;
+          if (this.modoRapido) {
+            // eslint-disable-next-line max-len
+            this.presentToast(
+              `PRODUTO ADICIONADO:<br><br>produto: ${
+                this.pordutoScanneado.nome
+              } <br>Cod: ${this.pordutoScanneado.cod}<br>QntMax: ${
+                this.pordutoScanneado.qntMax
+              }<br>Medida: ${
+                this.pordutoScanneado.medida
+              }<br><br>VALOR: ${this.convertReal(
+                this.pordutoScanneado.valor
+              )}`,
+              'middle'
+            );
+            this.adicionaCarrinho();
+          } else {
+            this.modalProdIsOpen = true;
+          }
         } else {
           this.presentToast('Nenhum produto encontrado', 'bottom');
         }
@@ -169,8 +205,8 @@ export class EstoquePage implements OnInit {
   }
 
   verificaEstoque(qnt, qntEstoque) {
-    if (qnt > qntEstoque) {
-      return qntEstoque;
+    if (qnt > qntEstoque && this.qntMaxBlock === true) {
+      return qntEstoque < 0 ? 1 : qntEstoque;
     } else {
       return qnt;
     }
@@ -214,7 +250,7 @@ export class EstoquePage implements OnInit {
       message,
       position,
       duration: 3000,
-      color: 'dark',
+      color: 'success',
       buttons: [
         {
           text: 'Fechar',

@@ -49,7 +49,7 @@ export class CaixaMovelPage implements OnInit {
     if(await this.storage.get('caixa-movel') === null){
       await this.storage.set('caixa-movel',
         {
-          sistemaVendas: {vendaAtual: null, configuracoes: {modoRapido: false}},
+          sistemaVendas: {vendaAtual: null, configuracoes: {modoRapido: false, qntMaxBlock: false}},
           configuracoes: {slectedIds: {firebirdIdEmp: null, fireBirdIdCc: null, sqlIdCc: null, ipLocal: null }}}
         );
       this.caixaMovelStorage = await this.storage.get('caixa-movel');
@@ -60,7 +60,7 @@ export class CaixaMovelPage implements OnInit {
         this.caixaMovelStorage.sistemaVendas === null){
         await this.storage.set('caixa-movel',
           {
-            sistemaVendas: {vendaAtual: null, configuracoes: {modoRapido: false}},
+            sistemaVendas: {vendaAtual: null, configuracoes: {modoRapido: false, qntMaxBlock: false}},
             configuracoes: {slectedIds: {firebirdIdEmp: null, fireBirdIdCc: null, sqlIdCc: null, ipLocal: null }}}
           );
           this.caixaMovelStorage = await this.storage.get('caixa-movel');

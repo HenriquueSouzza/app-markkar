@@ -23,6 +23,7 @@ export class PagamentoPage implements OnInit {
   @ViewChild('inputValor') inputValor: any;
   @ViewChild(IonContent) content: IonContent;
 
+  public inputValorPadrao: any;
   public porcLoad = 0;
   public produtos: Array<object>;
   public totalCarrinho: string;
@@ -79,7 +80,6 @@ export class PagamentoPage implements OnInit {
       this.caixaMovelStorage.sistemaVendas.vendaAtual.selectIds.fireBirdIdEmp;
     this.totalCar();
     this.verificaValorTotal();
-    this.inputValor.value = '0,00';
   }
 
   ionViewDidEnter() {
@@ -99,35 +99,83 @@ export class PagamentoPage implements OnInit {
       message: 'Aguarde...',
     });
     await loading.present();
-    this.pagamentoService.all(this.empId, this.caixaMovelStorage.configuracoes.slectedIds.ipLocal).subscribe({next: async (res: any) => {
-      this.allPagMetods = res.formasPagamento;
+    this.pagamentoService
+      .all(this.empId, this.caixaMovelStorage.configuracoes.slectedIds.ipLocal)
+      .subscribe({
+        next: async (res: any) => {
+          this.allPagMetods = res.formasPagamento;
 
-      this.formsPg = Array.from(
-        new Set(this.allPagMetods.map((formspg) => formspg.FORMA_PG))
-      );
+          this.formsPg = Array.from(
+            new Set(this.allPagMetods.map((formspg) => formspg.FORMA_PG))
+          );
 
-      this.bandeiras = Array.from(
-        new Set(
-          this.allPagMetods
-            .filter((formspg) => formspg.BANDEIRA !== '')
-            .map((formspg) => formspg.BANDEIRA)
-        )
-      );
-      await loading.dismiss();
-      this.subirModal();
-  }, error: async (err) => {
-    this.navCtrl.navigateBack('/home/caixa-movel/sistema-vendas/atual');
-    await this.exibirAlerta('Erro ao tentar comunicar com o servidor local.');
-    await loading.dismiss();
-  }});
+          this.bandeiras = Array.from(
+            new Set(
+              this.allPagMetods
+                .filter((formspg) => formspg.BANDEIRA !== '')
+                .map((formspg) => formspg.BANDEIRA)
+            )
+          );
+          await loading.dismiss();
+          //this.subirModal();
+        },
+        error: async (err) => {
+          this.navCtrl.navigateBack('/home/caixa-movel/sistema-vendas/atual');
+          await this.exibirAlerta(
+            'Erro ao tentar comunicar com o servidor local.'
+          );
+          await loading.dismiss();
+        },
+      });
   }
 
-  changeValorPagamento(event) {
-    this.metodoPg = 'Não selecionado';
+  aplicaValorPagamento(valorTotal: boolean, valorPreFix: any = null) {
+    if (valorTotal === true) {
+      if (valorPreFix === null) {
+        this.inputValor.value = Number(
+          this.totalCarrinhoNum - this.totalPagoCliente < 0
+            ? 0
+            : this.totalCarrinhoNum - this.totalPagoCliente
+        ).toFixed(2);
+      } else {
+        this.inputValor.value = Number(
+          valorPreFix +
+            parseFloat(this.inputValor.value.replace('.', '').replace(',', '.'))
+        ).toFixed(2);
+      }
+    } else {
+      if (this.valorPg > 0) {
+        this.subirModal();
+      }
+    }
+  }
+
+  changeFormaPagamento(formPg: string) {
+    const valorRestante = Number(
+      this.totalCarrinhoNum - this.totalPagoCliente < 0
+        ? 0
+        : this.totalCarrinhoNum - this.totalPagoCliente
+    ).toFixed(2);
+    this.valorPg = Number(valorRestante);
+    this.inputValorPadrao = this.maskMoney(valorRestante, valorRestante);
     this.bandeiraPg = 'Não selecionado';
     this.debitOrCreditPg = 'Não selecionado';
     this.redeAutorizaPg = 'Não selecionado';
     this.parcelasPg = 'Não selecionado';
+    this.metodoPg = formPg;
+    this.bloqAdcPg = true;
+    this.slideNext();
+    setTimeout(() => {
+      if (this.metodoPg !== 'CARTÃO') {
+        this.porcLoad = 1;
+        this.subirModal();
+      } else {
+        this.porcLoad = 0.2;
+      }
+    }, 250);
+  }
+
+  changeValorPagamento(event) {
     const valorRestante = Number(
       this.totalCarrinhoNum - this.totalPagoCliente < 0
         ? 0
@@ -136,43 +184,6 @@ export class PagamentoPage implements OnInit {
     const inputMask = this.maskMoney(event.detail.value, valorRestante);
     this.inputValor.value = inputMask;
     this.valorPg = parseFloat(inputMask.replace('.', '').replace(',', '.'));
-  }
-
-  aplicaValorPagamento(valorTotal: boolean, valorPreFix: any = null) {
-    if (valorTotal === true) {
-      if(valorPreFix === null){
-      this.inputValor.value = Number(
-        this.totalCarrinhoNum - this.totalPagoCliente < 0
-          ? 0
-          : this.totalCarrinhoNum - this.totalPagoCliente
-      ).toFixed(2);
-    } else{
-        this.inputValor.value = Number(valorPreFix + parseFloat(this.inputValor.value.replace('.', '').replace(',', '.'))).toFixed(2);
-      }
-    } else {
-      if (this.valorPg !== 0) {
-        this.slideNext();
-      }
-    }
-  }
-
-  changeFormaPagamento(formPg: string) {
-    this.bandeiraPg = 'Não selecionado';
-    this.debitOrCreditPg = 'Não selecionado';
-    this.redeAutorizaPg = 'Não selecionado';
-    this.parcelasPg = 'Não selecionado';
-    this.metodoPg = formPg;
-    if (this.metodoPg === 'DINHEIRO' || this.metodoPg === 'PIX') {
-      this.subirModal();
-      this.bloqAdcPg = false;
-    } else {
-      this.bloqAdcPg = true;
-      this.slideNext();
-    }
-    setTimeout(() => {
-      this.porcLoad =
-        this.metodoPg === 'DINHEIRO' || this.metodoPg === 'PIX' ? 1 : 0.2;
-    }, 250);
   }
 
   changeBandeira(bandeira: string) {
@@ -249,9 +260,7 @@ export class PagamentoPage implements OnInit {
     } else {
       this.parcelas = [];
       for (let i = 1; i <= this.opcsCard.parcelasMax; i++) {
-        this.parcelas.push(
-          i + 'x de ' + this.convertReal(this.valorPg / i)
-        );
+        this.parcelas.push(i + 'x');
       }
       setTimeout(() => {
         this.porcLoad = 0.8;
@@ -264,11 +273,12 @@ export class PagamentoPage implements OnInit {
   changeParcelas(parcela, index) {
     this.parcelasPg = parcela;
     this.parcelasPgNum = index + 1;
+    this.bloqAdcPg = true;
+    this.slideNext();
+    this.subirModal();
     setTimeout(() => {
       this.porcLoad = 1;
     }, 250);
-    this.bloqAdcPg = false;
-    this.subirModal();
   }
 
   async addPg() {
@@ -321,34 +331,47 @@ export class PagamentoPage implements OnInit {
             : this.redeAutorizaPg,
       };
     }
-    this.pagamentoService.pgmtDetalhe(this.empId, formPg, this.caixaMovelStorage.configuracoes.slectedIds.ipLocal).subscribe(
-      async (res: any) => {
-        if (res.codigosPg.err === '' || res.codigosPg.err === null) {
-          const pagIds = {
-            valor: this.valorPg,
-            empId: this.empId,
-            formaPg: formPg,
-            ...res.codigosPg,
-          };
-          delete pagIds.err;
-          this.caixaMovelStorage.sistemaVendas.vendaAtual.pagList.push(pagIds);
-          await this.storage.set('caixa-movel', this.caixaMovelStorage);
-          this.verificaValorTotal();
-          this.resetNovoPagamento();
-          setTimeout(async () => {
+    this.pagamentoService
+      .pgmtDetalhe(
+        this.empId,
+        formPg,
+        this.caixaMovelStorage.configuracoes.slectedIds.ipLocal
+      )
+      .subscribe(
+        async (res: any) => {
+          if (res.codigosPg.err === '' || res.codigosPg.err === null) {
+            const pagIds = {
+              valor: this.valorPg,
+              empId: this.empId,
+              formaPg: formPg,
+              ...res.codigosPg,
+            };
+            delete pagIds.err;
+            this.caixaMovelStorage.sistemaVendas.vendaAtual.pagList.push(
+              pagIds
+            );
+            await this.storage.set('caixa-movel', this.caixaMovelStorage);
+            this.verificaValorTotal();
+            this.resetNovoPagamento();
+            setTimeout(async () => {
+              await loading.dismiss();
+            }, 1000);
+          } else {
+            await this.exibirAlerta(
+              'Erro ao tentar adicionar o pagamento.',
+              res.codigosPg.err
+            );
             await loading.dismiss();
-          }, 1000);
-        } else {
-          await this.exibirAlerta('Erro ao tentar adicionar o pagamento.', res.codigosPg.err);
+          }
+        },
+        async (error) => {
+          this.navCtrl.navigateBack('/home/caixa-movel/sistema-vendas/atual');
+          await this.exibirAlerta(
+            'Erro ao tentar comunicar com o servidor local.'
+          );
           await loading.dismiss();
         }
-      },
-      async (error) => {
-        this.navCtrl.navigateBack('/home/caixa-movel/sistema-vendas/atual');
-        await this.exibirAlerta('Erro ao tentar comunicar com o servidor local.');
-        await loading.dismiss();
-      }
-    );
+      );
   }
 
   verificaValorTotal() {
@@ -388,7 +411,10 @@ export class PagamentoPage implements OnInit {
   }
 
   subirModal() {
-    this.modal.setCurrentBreakpoint((500 / this.heightW) > 1 ? 1 : (500 / this.heightW));
+    this.bloqAdcPg = false;
+    this.modal.setCurrentBreakpoint(
+      470 / this.heightW > 1 ? 1 : 470 / this.heightW
+    );
   }
 
   closeModal() {
@@ -399,12 +425,14 @@ export class PagamentoPage implements OnInit {
     this.modal.present();
   }
 
-  voltarAtual(){
+  voltarAtual() {
     this.navCtrl.navigateBack('/home/caixa-movel/sistema-vendas/atual');
   }
 
-  finalizarVenda(){
-    this.navCtrl.navigateForward('/home/caixa-movel/sistema-vendas/atual?finalizar=true');
+  finalizarVenda() {
+    this.navCtrl.navigateForward(
+      '/home/caixa-movel/sistema-vendas/atual?finalizar=true'
+    );
   }
 
   //total-carrinho
@@ -418,7 +446,7 @@ export class PagamentoPage implements OnInit {
     inputValue = parseInt(inputValue.toString().replace(/\D/g, ''), 10);
 
     /* CHECK IF INPUT VALUE EXCEEDS MAX VALUE */
-    if (maxValue && (inputValue/100) > maxValue) {
+    if (maxValue && inputValue / 100 > maxValue && this.metodoPg === 'CARTÃO') {
       inputValue = maxValue * 100;
     }
 

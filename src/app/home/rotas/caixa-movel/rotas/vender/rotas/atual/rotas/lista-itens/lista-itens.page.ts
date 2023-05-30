@@ -15,6 +15,7 @@ export class ListaItensPage implements OnInit {
   public produtos: Array<object>;
   public totalCarrinho: string;
   private caixaMovelStorage: any;
+  private qntMaxBlock: any;
 
   constructor(
     public alertController: AlertController,
@@ -33,6 +34,8 @@ export class ListaItensPage implements OnInit {
       this.navCtrl.navigateBack('/home/caixa-movel/sistema-vendas');
     }
     this.produtos = this.caixaMovelStorage.sistemaVendas.vendaAtual.produtosList;
+    this.qntMaxBlock =
+      this.caixaMovelStorage.sistemaVendas.configuracoes.qntMaxBlock;
     this.totalCar();
   }
 
@@ -60,7 +63,7 @@ export class ListaItensPage implements OnInit {
   }
 
   verificaEstoque(qnt, qntEstoque){
-    if(qnt > qntEstoque){
+    if(qnt > qntEstoque && this.qntMaxBlock === true){
       return qntEstoque;
     } else {
       return qnt;
