@@ -125,7 +125,7 @@ export class EstoquePage implements OnInit {
             this.presentToast(
               `PRODUTO ADICIONADO:<br><br>produto: ${
                 this.pordutoScanneado.nome
-              } <br>Cod: ${this.pordutoScanneado.cod}<br>QntMax: ${
+              } <br>Cod: ${this.pordutoScanneado.cod}<br>Qnt Estoque: ${
                 this.pordutoScanneado.qntMax
               }<br>Medida: ${
                 this.pordutoScanneado.medida
@@ -171,9 +171,9 @@ export class EstoquePage implements OnInit {
       );
     }
     await this.storage.set('caixa-movel', this.caixaMovelStorage);
-    this.navCtrl.navigateBack(
-      '/home/caixa-movel/sistema-vendas/atual/lista-itens'
-    );
+    if(!this.modoRapido){
+      this.presentToast('Produto adicionado', 'bottom');
+    }
   }
 
   toIntQnt(qnt) {
@@ -249,8 +249,8 @@ export class EstoquePage implements OnInit {
     const toast = await this.toastController.create({
       message,
       position,
-      duration: 3000,
-      color: 'success',
+      duration: 1500,
+      color: 'tertiary',
       buttons: [
         {
           text: 'Fechar',

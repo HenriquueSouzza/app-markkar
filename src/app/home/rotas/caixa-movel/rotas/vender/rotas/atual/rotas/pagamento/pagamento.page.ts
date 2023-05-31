@@ -411,7 +411,9 @@ export class PagamentoPage implements OnInit {
   }
 
   subirModal() {
-    this.bloqAdcPg = false;
+    if(this.totalCarrinhoNum - this.totalPagoCliente > 0){
+      this.bloqAdcPg = false;
+    }
     this.modal.setCurrentBreakpoint(
       470 / this.heightW > 1 ? 1 : 470 / this.heightW
     );
@@ -468,6 +470,10 @@ export class PagamentoPage implements OnInit {
       style: 'currency',
       currency: 'BRL',
     });
+  }
+
+  convertNegativo(valor){
+   return Math.abs(valor);
   }
 
   totalCar() {

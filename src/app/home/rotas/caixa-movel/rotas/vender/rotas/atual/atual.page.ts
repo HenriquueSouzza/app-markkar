@@ -139,26 +139,14 @@ export class AtualPage implements OnInit {
         'Por Favor, verifique o pagamento.<br><br>Obs:. Pagamento menor que o total de produtos.'
       );
       return false;
-    } else if(pagamentoTotal > totalProdutos){
-      await this.exibirAlerta(
-        'Erro ao tentar finalizar a venda.',
-        'Por Favor, verifique o pagamento.<br><br>Obs:. Pagamento maior que o total de produtos.'
-      );
-      return false;
     } else if(pagamentoTotal === 0){
       await this.exibirAlerta(
         'Erro ao tentar finalizar a venda.',
         'Por Favor, adicione o pagemento'
       );
       return false;
-    } else if(pagamentoTotal === totalProdutos){
+    } else {
       return true;
-    }else {
-      await this.exibirAlerta(
-        'Erro ao tentar finalizar a venda.',
-        'Por Favor, verifique o pagamento.<br><br>Error:. Pagamento inválido'
-      );
-      return false;
     }
   }
 

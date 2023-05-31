@@ -98,7 +98,8 @@
             </p>
           </h2>
           <ion-button
-            [disabled]="valorPg === 0 || totalCarrinhoNum - totalPagoCliente <= 0 ? true : false"
+            [disabled]="true"
+            color="secondary"
             (click)="slideNext()"
             mode="ios"
             expand="block"
@@ -509,9 +510,9 @@
               <p>{{convertReal(totalPagoCliente)}}</p>
             </div>
             <div class="total">
-              <h3>Valor restante:</h3>
+              <h3>Valor {{totalCarrinhoNum - totalPagoCliente < 0 ? 'troco' : 'restante'}}:</h3>
               <p>
-                {{convertReal(totalCarrinhoNum-totalPagoCliente < 0 ? 0 :
+                {{convertReal(totalCarrinhoNum-totalPagoCliente < 0 ? convertNegativo(totalCarrinhoNum - totalPagoCliente) :
                 totalCarrinhoNum-totalPagoCliente)}}
               </p>
             </div>

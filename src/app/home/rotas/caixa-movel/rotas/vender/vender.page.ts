@@ -136,9 +136,11 @@ export class VenderPage implements OnInit {
                   await this.storage.set('caixa-movel', this.caixaMovelStorage);
                   this.abrirModalIdentificarCliente();
                 } else {
+                  await loading.dismiss();
                   this.erroAlert('Erro ao cancelar a venda:', res.status.toLowerCase());
                 };
-              }, (err) => {
+              }, async (err) => {
+                await loading.dismiss();
                 this.erroAlert('Erro ao cancelar a venda:', 'Erro ao conectar com o servidor local');
               });
             },
