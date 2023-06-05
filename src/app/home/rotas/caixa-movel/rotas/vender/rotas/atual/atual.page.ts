@@ -43,7 +43,9 @@ export class AtualPage implements OnInit {
     private activatedRoute: ActivatedRoute
   ) {}
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.checkCamPermit();
+  }
 
   async ionViewWillEnter() {
     const loading = await this.createLoading('Aguarde...');

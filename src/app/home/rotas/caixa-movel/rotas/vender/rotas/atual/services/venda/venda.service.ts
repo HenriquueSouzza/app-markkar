@@ -41,6 +41,7 @@ export class VendaService {
     // Não é um IP válido nem um link válido
     return false;
   }
+
   iniciar(
     codEmp: string,
     codCc: string,
@@ -87,6 +88,26 @@ export class VendaService {
       `http://${ipLocal}/app/caixaMovel/venda/cliente/buscar`,
       { params: { nome, cpf } }
     );
+  }
+
+  cadastrarCliente(
+    codEmp: string,
+    nome: string,
+    cpf: string,
+    telefone: string | null,
+    email: string | null,
+    ipLocal: string
+  ) {
+    if (!this.isValidIPorLink(ipLocal)) {
+      return throwError(() => new Error('Endereço IP local não definido'));
+    }
+    return this.http.post(`http://${ipLocal}/app/caixaMovel/venda/cliente/cadastrar`, {
+      codEmp,
+      nome,
+      cpf,
+      telefone,
+      email
+    });
   }
 
   cancelar(vendaId: string, ipLocal: string) {

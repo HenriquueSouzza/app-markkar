@@ -34,7 +34,9 @@
     <ion-header style="background: var(--ion-color-dark) !important">
       <ion-toolbar color="tertiary">
         <ion-buttons slot="end">
-          <ion-button color="danger" (click)="fecharModalIdentificarCliente()">Cancelar</ion-button>
+          <ion-button color="danger" (click)="fecharModalIdentificarCliente()"
+            >Cancelar</ion-button
+          >
         </ion-buttons>
         <ion-title>Identificar Cliente</ion-title>
       </ion-toolbar>
@@ -47,7 +49,7 @@
       >
         <ng-template swiperSlide>
           <div id="wrpSldBtnClient">
-            <ion-button disabled="true" color="tertiary">
+            <ion-button (click)="toCriarSld()" color="tertiary">
               <div>
                 <ion-icon name="person-add-outline"></ion-icon>
                 Cadastrar
@@ -75,51 +77,51 @@
         </ng-template>
         <ng-template swiperSlide *ngIf="somenteCpfClientSld === true">
           <form
-              #f="ngForm"
-              (ngSubmit)="selecionarSomenteCpf(f)"
-              (keyup.enter)="selecionarSomenteCpf(f)"
+            #f="ngForm"
+            (ngSubmit)="selecionarSomenteCpf(f)"
+            (keyup.enter)="selecionarSomenteCpf(f)"
+          >
+            <ion-item lines="full">
+              <ion-label>CPF:</ion-label>
+              <ion-input
+                maxlength="11"
+                (ionChange)="changeInpCpf($event)"
+                ngModel
+                inputmode="numeric"
+                name="cpf"
+                [clearInput]="true"
+                type="text"
+                onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+              ></ion-input>
+            </ion-item>
+            <div
+              style="
+                display: flex;
+                align-items: center;
+                justify-content: space-evenly;
+              "
             >
-              <ion-item lines="full">
-                <ion-label>CPF:</ion-label>
-                <ion-input
-                  maxlength="11"
-                  (ionChange)="changeInpCpf($event)"
-                  ngModel
-                  inputmode="numeric"
-                  name="cpf"
-                  [clearInput]="true"
-                  type="text"
-                  onkeypress="return event.charCode >= 48 && event.charCode <= 57"
-                ></ion-input>
-              </ion-item>
-              <div
-                style="
-                  display: flex;
-                  align-items: center;
-                  justify-content: space-evenly;
-                "
+              <ion-button
+                (click)="backSomenteCpfSld()"
+                expand="block"
+                fill="clear"
+                shape="round"
+                style="margin-top: 10px; width: 30%"
               >
-                <ion-button
-                  (click)="backSomenteCpfSld()"
-                  expand="block"
-                  fill="clear"
-                  shape="round"
-                  style="margin-top: 10px; width: 30%"
-                >
-                  Voltar
-                </ion-button>
-                <ion-button
-                  type="submit"
-                  expand="block"
-                  fill="clear"
-                  shape="round"
-                  style="margin-top: 10px; width: 30%"
-                  [disabled]="bloqBtnSubInpCpf ? true : false"
-                >
-                  Confirmar
-                </ion-button>
-              </div>
-            </form>
+                Voltar
+              </ion-button>
+              <ion-button
+                type="submit"
+                expand="block"
+                fill="clear"
+                shape="round"
+                style="margin-top: 10px; width: 30%"
+                [disabled]="bloqBtnSubInpCpf ? true : false"
+              >
+                Confirmar
+              </ion-button>
+            </div>
+          </form>
         </ng-template>
         <ng-template swiperSlide *ngIf="identificarClientSld === true">
           <div id="wrpidentificarClientSld">
@@ -180,16 +182,129 @@
               </div>
             </form>
             <div id="wrpClientesBtn">
-              <span style="width: 100%;" *ngFor="let cliente of clientesList">
+              <span style="width: 100%" *ngFor="let cliente of clientesList">
                 <ion-button
-                (click)="selecionarCliente(cliente['COD_CLIENTE'], cliente['NOME_CLIENTE'], cliente['DOCUMENTO'])"
+                  (click)="selecionarCliente(cliente['COD_CLIENTE'], cliente['NOME_CLIENTE'], cliente['DOCUMENTO'])"
                   [disabled]="cliente['NOME_CLIENTE'] === 'Não encontrado' ? true : false"
                   class="clientesBtn"
                   color="tertiary"
                 >
                   <ion-label style="margin: 0px !important">
                     <h3>{{cliente['NOME_CLIENTE']}}</h3>
-                    <p [ngStyle]="{'display': cliente['NOME_CLIENTE'] === 'Não encontrado' ? 'none' : 'block'}">CPF: {{cliente['DOCUMENTO']}}</p>
+                    <p
+                      [ngStyle]="{'display': cliente['NOME_CLIENTE'] === 'Não encontrado' ? 'none' : 'block'}"
+                    >
+                      CPF: {{cliente['DOCUMENTO']}}
+                    </p>
+                  </ion-label>
+                </ion-button>
+              </span>
+            </div>
+          </div>
+        </ng-template>
+        <ng-template swiperSlide *ngIf="criarClientSld === true">
+          <div id="wrpidentificarClientSld">
+            <form
+              #f="ngForm"
+              (ngSubmit)="cadastrarCliente(f)"
+              (keyup.enter)="cadastrarCliente(f)"
+            >
+              <ion-item lines="full">
+                <ion-label>*Nome:</ion-label>
+                <ion-input
+                  style="text-transform: lowercase"
+                  (ionChange)="checkInpNomeCriar($event)"
+                  maxlength="40"
+                  ngModel
+                  name="nome"
+                  [clearInput]="true"
+                  type="text"
+                ></ion-input>
+              </ion-item>
+              <ion-item lines="full">
+                <ion-label>*CPF:</ion-label>
+                <ion-input
+                  style="text-transform: lowercase"
+                  maxlength="11"
+                  (ionChange)="checkInpCpfCriar($event)"
+                  ngModel
+                  inputmode="numeric"
+                  name="cpf"
+                  [clearInput]="true"
+                  type="text"
+                  onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                ></ion-input>
+              </ion-item>
+              <ion-item lines="full">
+                <ion-label>Telefone:</ion-label>
+                <ion-input
+                  style="text-transform: lowercase"
+                  maxlength="11"
+                  (ionChange)="checkInpTelCriar($event)"
+                  ngModel
+                  inputmode="numeric"
+                  name="telefone"
+                  [clearInput]="true"
+                  type="tel"
+                  onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                ></ion-input>
+              </ion-item>
+              <ion-item lines="full">
+                <ion-label>Email:</ion-label>
+                <ion-input
+                  style="text-transform: lowercase"
+                  maxlength="30"
+                  (ionChange)="checkInpEmailCriar($event)"
+                  ngModel
+                  inputmode="email"
+                  name="email"
+                  [clearInput]="true"
+                  type="email"
+                ></ion-input>
+              </ion-item>
+              <div
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-evenly;
+                "
+              >
+                <ion-button
+                  (click)="backIdentSld()"
+                  expand="block"
+                  fill="clear"
+                  shape="round"
+                  style="margin-top: 10px; width: 30%"
+                >
+                  Voltar
+                </ion-button>
+                <ion-button
+                  type="submit"
+                  expand="block"
+                  fill="clear"
+                  shape="round"
+                  style="margin-top: 10px; width: 30%"
+                  [disabled]="bloqBtnSubNomeCriar === true || bloqBtnSubCpfCriar === true || bloqBtnSubTelCriar === true || bloqBtnSubEmailCriar === true ? true : false"
+                >
+                  Criar
+                </ion-button>
+              </div>
+            </form>
+            <div id="wrpClientesBtn">
+              <span style="width: 100%" *ngFor="let cliente of clientesList">
+                <ion-button
+                  (click)="selecionarCliente(cliente['COD_CLIENTE'], cliente['NOME_CLIENTE'], cliente['DOCUMENTO'])"
+                  [disabled]="cliente['NOME_CLIENTE'] === 'Não encontrado' ? true : false"
+                  class="clientesBtn"
+                  color="tertiary"
+                >
+                  <ion-label style="margin: 0px !important">
+                    <h3>{{cliente['NOME_CLIENTE']}}</h3>
+                    <p
+                      [ngStyle]="{'display': cliente['NOME_CLIENTE'] === 'Não encontrado' ? 'none' : 'block'}"
+                    >
+                      CPF: {{cliente['DOCUMENTO']}}
+                    </p>
                   </ion-label>
                 </ion-button>
               </span>

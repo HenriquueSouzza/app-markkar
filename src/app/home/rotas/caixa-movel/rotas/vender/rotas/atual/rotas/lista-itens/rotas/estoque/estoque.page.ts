@@ -172,7 +172,10 @@ export class EstoquePage implements OnInit {
     }
     await this.storage.set('caixa-movel', this.caixaMovelStorage);
     if(!this.modoRapido){
-      this.presentToast('Produto adicionado', 'bottom');
+      this.presentToast('Produto adicionado', 'top');
+      this.navCtrl.navigateBack(
+        '/home/caixa-movel/sistema-vendas/atual/lista-itens'
+      );
     }
   }
 
