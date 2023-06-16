@@ -1,7 +1,7 @@
 <ion-content no-bounce has-bouncing="false" forceOverscroll="false">
   <form #f="ngForm" (ngSubmit)="enviarLogin(f)" (keyup.enter)="enviarLogin(f)">
-    <swiper id="swiper" #swiper [config]="{initialSlide: 0,speed: 400,allowTouchMove: false}">
-      <ng-template swiperSlide>
+    <swiper-container #swiperContainer id="swiper" initial-slide="0" speed="400" allow-touch-move="false" next-button=".nextBtn">
+      <swiper-slide>
         <img class="imgBck" id="imgBckW" src="assets/img/backgW/1W.png" alt="">
         <img class="imgBck" id="imgBckD" src="assets/img/backgW/1D.png" alt="">
         <div class="utilitsSlide">
@@ -10,10 +10,10 @@
             <h1>bem-vindo,</h1>
             <p>Para começarmos precisamos de algumas informações.</p>
           </div>
-          <ion-button expand="block" fill="clear" shape="round" (click)="slideNext()">Próximo</ion-button>
+          <ion-button class="nextBtn" expand="block" fill="clear" shape="round" (click)="slideNext()">Próximo</ion-button>
         </div>
-      </ng-template>
-      <ng-template swiperSlide>
+      </swiper-slide>
+      <swiper-slide>
         <img class="imgBck" id="imgBckW" src="assets/img/backgW/2W.png" alt="">
         <img class="imgBck" id="imgBckD" src="assets/img/backgW/2D.png" alt="">
         <div class="utilitsSlide">
@@ -33,8 +33,8 @@
             </div>
           </div>
         </div>
-      </ng-template>
-      <ng-template swiperSlide>
+      </swiper-slide>
+      <swiper-slide>
         <img class="imgBck" id="imgBckW" src="assets/img/backgW/3W.png" alt="">
         <img class="imgBck" id="imgBckD" src="assets/img/backgW/3D.png" alt="">
         <div class="utilitsSlide">
@@ -54,7 +54,7 @@
             </div>
           </div>
         </div>
-      </ng-template>
-    </swiper>
+      </swiper-slide>
+    </swiper-container>
   </form>
 </ion-content>
