@@ -10,14 +10,9 @@
 </ion-header>
 
 <ion-content>
-  <swiper
-    (click)="totalCarrinhoNum - totalPagoCliente <= 0 ? null : downModalIfOpen()"
-    id="swiper"
-    #swiper
-    [config]="{initialSlide: 0, speed: 400, allowTouchMove: false}"
-  >
+  <swiper-container #swiperContainer id="swiper" initial-slide="0" speed="400" allow-touch-move="false" (click)="totalCarrinhoNum - totalPagoCliente <= 0 ? null : downModalIfOpen()">
     <!-- Metodo - metodoPg -->
-    <ng-template class="slide" swiperSlide>
+    <swiper-slide class="slide">
       <div class="metodosPg">
         <div class="headerSlide">
           <ion-button
@@ -73,9 +68,9 @@
           </ion-button>
         </div>
       </div>
-    </ng-template>
+    </swiper-slide>
     <!-- Valor Din ou pix - valorPg -->
-    <ng-template class="slide" *ngIf="metodoPg !== 'CARTÃO'" swiperSlide>
+    <swiper-slide class="slide" *ngIf="metodoPg !== 'CARTÃO'">
       <div class="metodosPg">
         <div class="headerSlide">
           <ion-button
@@ -178,9 +173,9 @@
           </div>
         </div>
       </div>
-    </ng-template>
+    </swiper-slide>
     <!-- Bandeira - bandeiraPg -->
-    <ng-template class="slide" swiperSlide>
+    <swiper-slide class="slide">
       <div class="metodosPg">
         <div class="headerSlide">
           <ion-button
@@ -223,9 +218,9 @@
           </ion-button>
         </div>
       </div>
-    </ng-template>
+    </swiper-slide>
     <!-- Rede Autoriza - redeAutorizaPg -->
-    <ng-template class="slide" swiperSlide>
+    <swiper-slide class="slide">
       <div class="metodosPg">
         <div class="headerSlide">
           <ion-button
@@ -265,9 +260,9 @@
           </ion-button>
         </div>
       </div>
-    </ng-template>
+    </swiper-slide>
     <!-- Deb ou Cred - debitOrCreditPg -->
-    <ng-template class="slide" swiperSlide>
+    <swiper-slide class="slide">
       <div class="metodosPg">
         <div class="headerSlide">
           <ion-button
@@ -315,9 +310,9 @@
           </ion-button>
         </div>
       </div>
-    </ng-template>
+    </swiper-slide>
     <!-- Parcelas - parcelasPgNum -->
-    <ng-template class="slide" swiperSlide>
+    <swiper-slide class="slide">
       <div id="parcelas">
         <div class="headerSlide">
           <ion-button
@@ -353,9 +348,9 @@
           </ion-button>
         </div>
       </div>
-    </ng-template>
+    </swiper-slide>
     <!-- Valor Crt - valorPg -->
-    <ng-template class="slide" swiperSlide>
+    <swiper-slide class="slide">
       <div class="metodosPg">
         <div class="headerSlide">
           <ion-button
@@ -457,8 +452,8 @@
           </div>
         </div>
       </div>
-    </ng-template>
-  </swiper>
+    </swiper-slide>
+  </swiper-container>
   <ion-modal
     #modal
     [isOpen]="true"

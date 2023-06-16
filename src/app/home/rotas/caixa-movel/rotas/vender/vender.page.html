@@ -42,12 +42,8 @@
       </ion-toolbar>
     </ion-header>
     <ion-content>
-      <swiper
-        id="swiper"
-        #swiper
-        [config]="{initialSlide: 0, speed: 400, allowTouchMove: false}"
-      >
-        <ng-template swiperSlide>
+      <swiper-container #swiperContainer id="swiper" initial-slide="0" speed="400" allow-touch-move="false">
+        <swiper-slide>
           <div id="wrpSldBtnClient">
             <ion-button (click)="toCriarSld()" color="tertiary">
               <div>
@@ -74,8 +70,8 @@
               </div>
             </ion-button>
           </div>
-        </ng-template>
-        <ng-template swiperSlide *ngIf="somenteCpfClientSld === true">
+        </swiper-slide>
+        <swiper-slide *ngIf="somenteCpfClientSld === true">
           <form
             #f="ngForm"
             (ngSubmit)="selecionarSomenteCpf(f)"
@@ -122,8 +118,8 @@
               </ion-button>
             </div>
           </form>
-        </ng-template>
-        <ng-template swiperSlide *ngIf="identificarClientSld === true">
+        </swiper-slide>
+        <swiper-slide *ngIf="identificarClientSld === true">
           <div id="wrpidentificarClientSld">
             <form
               #f="ngForm"
@@ -201,8 +197,8 @@
               </span>
             </div>
           </div>
-        </ng-template>
-        <ng-template swiperSlide *ngIf="criarClientSld === true">
+        </swiper-slide>
+        <swiper-slide *ngIf="criarClientSld === true">
           <div id="wrpidentificarClientSld">
             <form
               #f="ngForm"
@@ -310,8 +306,8 @@
               </span>
             </div>
           </div>
-        </ng-template>
-      </swiper>
+        </swiper-slide>
+      </swiper-container>
     </ion-content>
   </ng-template>
 </ion-modal>

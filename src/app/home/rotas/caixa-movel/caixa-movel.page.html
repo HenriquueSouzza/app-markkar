@@ -9,8 +9,10 @@
 
 <ion-content no-bounce has-bouncing="false" forceOverscroll="false">
   <div id="itemSelect" lines="none">
-    <h2>Centro de custo</h2>
     <ion-select
+      justify="space-between"
+      label="Centro de custo"
+      aria-label="Centro de custo"
       #ionSelect
       (ionChange)="centroscustosChange($event)"
       multiple="false"
@@ -18,6 +20,9 @@
       cancelText="Voltar"
       okText="Confirmar"
       placeholder="Selecione"
+      fill="outline"
+      label-placement="floating"
+      style="width: 90%;"
     >
       <ion-select-option *ngFor="let cc of centroscustos" [value]="{ipLocal: cc.ipLocal,empFire: cc.empIdFb,ccFire: cc.ccIdFb, ccSql: cc.ccIdSql}"
         >{{cc.nome}}</ion-select-option

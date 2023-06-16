@@ -17,7 +17,7 @@ import { PagamentoService } from './services/pagamento/pagamento.service';
   styleUrls: ['./pagamento.page.scss'],
 })
 export class PagamentoPage implements OnInit {
-  @ViewChild('swiper') swiper: any;
+  @ViewChild('swiperContainer') swiperEl: any;
   @ViewChild('modal') modal: any;
   @ViewChild('inputValor') inputValor: any;
   @ViewChild(IonContent) content: IonContent;
@@ -486,18 +486,20 @@ export class PagamentoPage implements OnInit {
   //swiper
 
   movePrimeiroSlide() {
-    this.swiper.swiperRef.slideTo(0);
+    this.swiperEl.nativeElement.swiper.slideTo(0);
   }
 
   slideNext() {
-    this.swiper.swiperRef.slideNext();
+    this.swiperEl.nativeElement.swiper.update();
+    this.swiperEl.nativeElement.swiper.slideNext();
     setTimeout(() => {
       this.scrollToTop();
     }, 300);
   }
 
   slidePrev() {
-    this.swiper.swiperRef.slidePrev();
+    this.swiperEl.nativeElement.swiper.update();
+    this.swiperEl.nativeElement.swiper.slidePrev();
   }
 
   // erros

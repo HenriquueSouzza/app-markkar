@@ -1,6 +1,6 @@
 <ion-content no-bounce has-bouncing="false" forceOverscroll="false">
   <form #f="ngForm" (ngSubmit)="enviarLogin(f)" (keyup.enter)="enviarLogin(f)">
-    <swiper-container #swiperContainer id="swiper" initial-slide="0" speed="400" allow-touch-move="false" next-button=".nextBtn">
+    <swiper-container #swiperContainer id="swiper" initial-slide="0" speed="400" allow-touch-move="false">
       <swiper-slide>
         <img class="imgBck" id="imgBckW" src="assets/img/backgW/1W.png" alt="">
         <img class="imgBck" id="imgBckD" src="assets/img/backgW/1D.png" alt="">
@@ -10,7 +10,7 @@
             <h1>bem-vindo,</h1>
             <p>Para começarmos precisamos de algumas informações.</p>
           </div>
-          <ion-button class="nextBtn" expand="block" fill="clear" shape="round" (click)="slideNext()">Próximo</ion-button>
+          <ion-button expand="block" fill="clear" shape="round" (click)="slideNext()">Próximo</ion-button>
         </div>
       </swiper-slide>
       <swiper-slide>

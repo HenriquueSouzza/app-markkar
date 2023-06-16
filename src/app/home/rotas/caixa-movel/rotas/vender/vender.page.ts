@@ -18,7 +18,7 @@ import { timeout } from 'rxjs/operators';
   styleUrls: ['./vender.page.scss'],
 })
 export class VenderPage implements OnInit {
-  @ViewChild('swiper') swiper: any;
+  @ViewChild('swiperContainer') swiperEl: any;
   @ViewChild('modalCliente') modalCliente: any;
 
   public bloqBtnSubInpNome = true;
@@ -340,11 +340,13 @@ export class VenderPage implements OnInit {
   //slides
 
   slideNext() {
-    this.swiper.swiperRef.slideNext();
+    this.swiperEl.nativeElement.swiper.update();
+    this.swiperEl.nativeElement.swiper.slideNext();
   }
 
   slidePrev() {
-    this.swiper.swiperRef.slidePrev();
+    this.swiperEl.nativeElement.swiper.update();
+    this.swiperEl.nativeElement.swiper.slidePrev();
   }
 
   toSomenteCpfSld() {
