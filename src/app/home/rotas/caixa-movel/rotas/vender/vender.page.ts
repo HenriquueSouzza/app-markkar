@@ -387,8 +387,15 @@ export class VenderPage implements OnInit {
     }, 200);
   }
 
-  // erros
+  // route
 
+toConfig(){
+  this.navCtrl.navigateForward(
+    '/home/caixa-movel/sistema-vendas/configuracoes'
+  );
+}
+
+  // erros
   async erroAlert(title, men) {
     const alert = await this.alertController.create({
       cssClass: 'my-custom-class',

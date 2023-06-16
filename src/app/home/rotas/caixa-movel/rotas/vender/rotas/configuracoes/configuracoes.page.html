@@ -1,9 +1,31 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>configuracoes</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home/caixa-movel/sistema-vendas"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Configurações</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-
+<ion-content no-bounce has-bouncing="false" forceOverscroll="false">
+  <ion-item-group>
+    <ion-item-divider>
+      <ion-label>Status</ion-label>
+    </ion-item-divider>
+    <ion-item [detail]="false" [button]="true" lines="none" color="secondary">
+      <ion-label style="text-transform: none;">Estoque Máximo<p class="p">Quantidade do produto baseado no estoque.</p></ion-label>
+      <ion-toggle></ion-toggle>
+    </ion-item>
+    <ion-item-divider>
+      <ion-label>Produtos</ion-label>
+    </ion-item-divider>
+    <ion-item [detail]="false" [button]="true" lines="none" color="secondary">
+      <ion-label style="text-transform: none;">Estoque Máximo<p class="p">Quantidade do produto baseado no estoque.</p></ion-label>
+      <ion-toggle></ion-toggle>
+    </ion-item>
+    <ion-item [detail]="false" [button]="true" lines="none" color="secondary">
+      <ion-label style="text-transform: none;">Modo Rápido<p class="p">Adiciona o produto diretamente.</p></ion-label>
+      <ion-toggle></ion-toggle>
+    </ion-item>
+  </ion-item-group>
 </ion-content>
