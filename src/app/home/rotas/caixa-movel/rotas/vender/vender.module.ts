@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -15,6 +15,7 @@ import { VenderPage } from './vender.page';
     IonicModule,
     VenderPageRoutingModule
   ],
-  declarations: [VenderPage]
+  declarations: [VenderPage],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class VenderPageModule {}

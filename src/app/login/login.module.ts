@@ -1,7 +1,7 @@
 import { UsuarioComponent } from './rotas/usuario/usuario.component';
 import { TokenBlockComponent } from './rotas/token-block/token-block.component';
 import { EmpresaComponent } from './rotas/empresa/empresa.component';
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -26,5 +26,6 @@ import { BemVindoComponent } from './rotas/bem-vindo/bem-vindo.component';
     UsuarioComponent,
     TokenBlockComponent,
   ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class LoginPageModule {}

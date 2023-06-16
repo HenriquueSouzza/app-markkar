@@ -1,5 +1,5 @@
 import { FormsModule } from '@angular/forms';
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 
@@ -40,7 +40,6 @@ import { FileOpener } from '@awesome-cordova-plugins/file-opener/ngx';
       registrationStrategy: 'registerWhenStable:30000'
     })
   ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [ScreenOrientation, AndroidPermissions, Flashlight, AppVersion, File, FileOpener, { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],
 })
