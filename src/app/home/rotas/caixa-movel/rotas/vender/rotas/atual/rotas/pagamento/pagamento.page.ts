@@ -8,7 +8,6 @@ import {
 } from '@ionic/angular';
 import { Storage } from '@ionic/storage-angular';
 import { StorageService } from 'src/app/services/storage/storage.service';
-import { SwiperComponent } from 'swiper/angular';
 import { Platform } from '@ionic/angular';
 import { PagamentoService } from './services/pagamento/pagamento.service';
 
@@ -18,7 +17,7 @@ import { PagamentoService } from './services/pagamento/pagamento.service';
   styleUrls: ['./pagamento.page.scss'],
 })
 export class PagamentoPage implements OnInit {
-  @ViewChild('swiper') swiper: SwiperComponent;
+  @ViewChild('swiper') swiper: any;
   @ViewChild('modal') modal: any;
   @ViewChild('inputValor') inputValor: any;
   @ViewChild(IonContent) content: IonContent;

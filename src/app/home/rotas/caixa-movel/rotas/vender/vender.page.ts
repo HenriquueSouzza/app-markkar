@@ -7,7 +7,6 @@ import {
   NavController,
 } from '@ionic/angular';
 import { Storage } from '@ionic/storage-angular';
-import { SwiperComponent } from 'swiper/angular';
 import { StorageService } from 'src/app/services/storage/storage.service';
 import { NgForm } from '@angular/forms';
 import { VendaService } from './rotas/atual/services/venda/venda.service';
@@ -19,7 +18,7 @@ import { timeout } from 'rxjs/operators';
   styleUrls: ['./vender.page.scss'],
 })
 export class VenderPage implements OnInit {
-  @ViewChild('swiper') swiper: SwiperComponent;
+  @ViewChild('swiper') swiper: any;
   @ViewChild('modalCliente') modalCliente: any;
 
   public bloqBtnSubInpNome = true;

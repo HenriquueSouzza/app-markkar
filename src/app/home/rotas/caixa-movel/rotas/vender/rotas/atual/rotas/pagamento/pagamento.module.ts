@@ -8,14 +8,12 @@ import { PagamentoPageRoutingModule } from './pagamento-routing.module';
 
 import { PagamentoPage } from './pagamento.page';
 
-import { SwiperModule } from 'swiper/angular';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    SwiperModule,
     PagamentoPageRoutingModule
   ],
   declarations: [PagamentoPage]

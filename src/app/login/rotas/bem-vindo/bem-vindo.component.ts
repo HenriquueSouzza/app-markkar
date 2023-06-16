@@ -2,10 +2,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Storage } from '@ionic/storage-angular';
-import { MenuController, IonicSlides, IonSlides, LoadingController, isPlatform} from '@ionic/angular';
+import { MenuController, LoadingController, isPlatform} from '@ionic/angular';
 import { Router } from '@angular/router';
-import SwiperCore, { Autoplay, Keyboard, Pagination, Scrollbar, Zoom } from 'swiper';
-import { SwiperComponent } from 'swiper/angular';
 import { Platform } from '@ionic/angular';
 import { LoginService } from '../../services/login/login.service';
 import { StorageService } from 'src/app/services/storage/storage.service';
@@ -52,7 +50,7 @@ export class BemVindoComponent implements OnInit {
     }
 
   // eslint-disable-next-line @typescript-eslint/member-ordering
-  @ViewChild('swiper') swiper: SwiperComponent;
+  @ViewChild('swiper') swiper: any;
 
     slideNext(){
         this.swiper.swiperRef.slideNext();

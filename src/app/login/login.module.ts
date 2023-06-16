@@ -10,7 +10,6 @@ import { IonicModule } from '@ionic/angular';
 import { LoginPageRoutingModule } from './login-routing.module';
 
 import { LoginPage } from './login.page';
-import { SwiperModule } from 'swiper/angular';
 import { BemVindoComponent } from './rotas/bem-vindo/bem-vindo.component';
 
 @NgModule({
@@ -19,7 +18,6 @@ import { BemVindoComponent } from './rotas/bem-vindo/bem-vindo.component';
     FormsModule,
     IonicModule,
     LoginPageRoutingModule,
-    SwiperModule,
   ],
   declarations: [
     LoginPage,

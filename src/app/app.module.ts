@@ -20,17 +20,14 @@ import { Flashlight } from '@awesome-cordova-plugins/flashlight/ngx';
 import { AppVersion } from '@awesome-cordova-plugins/app-version/ngx';
 import { File } from '@awesome-cordova-plugins/file/ngx';
 import { FileOpener } from '@awesome-cordova-plugins/file-opener/ngx';
-import { SwiperModule } from 'swiper/angular';
 
 @NgModule({
   declarations: [
     AppComponent
   ],
-  entryComponents: [],
   imports: [
     BrowserModule,
     IonicModule.forRoot(),
-    SwiperModule,
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
