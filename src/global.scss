@@ -16,7 +16,7 @@
 @import "~@ionic/angular/css/normalize.css";
 @import "~@ionic/angular/css/structure.css";
 @import "~@ionic/angular/css/typography.css";
-@import '~@ionic/angular/css/display.css';
+@import "~@ionic/angular/css/display.css";
 
 /* Optional CSS utils that can be commented out */
 @import "~@ionic/angular/css/padding.css";
@@ -26,109 +26,125 @@
 @import "~@ionic/angular/css/flex-utils.css";
 
 /* Swiper */
-@import 'swiper/scss';
-@import 'swiper/scss/navigation';
-@import 'swiper/scss/pagination';
+@import "swiper/scss";
+@import "swiper/scss/navigation";
+@import "swiper/scss/pagination";
 
 @font-face {
-  font-family: 'robotoLight';
-  src: url('assets/fonts/roboto/Roboto-Light.ttf');
+  font-family: "robotoLight";
+  src: url("assets/fonts/roboto/Roboto-Light.ttf");
 }
 @font-face {
-  font-family: 'robotoBold';
-  src: url('assets/fonts/roboto/Roboto-Bold.ttf');
+  font-family: "robotoBold";
+  src: url("assets/fonts/roboto/Roboto-Bold.ttf");
 }
 ion-popover {
   --backdrop-opacity: 0.4 !important;
 }
-ion-item{
+ion-item {
   text-transform: capitalize !important;
 }
-ion-title{
-  font-family: 'robotoBold' !important;
+ion-title {
+  font-family: "robotoBold" !important;
   text-transform: uppercase !important;
 }
-ion-label{
+ion-label {
   margin-left: 10px !important;
   padding: 8px 0 !important;
-  .p{
+  .p {
     font-size: 0.7rem !important;
-    font-family: 'robotoLight' !important;
+    font-family: "robotoLight" !important;
     color: rgb(141, 141, 141) !important;
     margin-top: 5px !important;
   }
 }
-ion-datetime{
+ion-datetime {
   --background: var(--ion-color-step-50) !important;
   --title-color: var(--ion-color-primary) !important;
   --background-rgb: var(--ion-color-step-50) !important;
   text-transform: uppercase;
 }
-ion-app{
+ion-app {
   min-height: 100vh !important;
 }
-ion-content{
-  font-family:robotoLight !important;
+ion-content {
+  font-family: robotoLight !important;
   --keyboard-offset: 0 !important;
 }
-ion-toggle{
+ion-toggle {
   --background-checked: rgb(177, 115, 0) !important;
 }
 ion-button {
   --border-radius: 10px;
 }
-h1, h2, h3, h4, h5, h6, p{
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
   color: var(--ion-text-color);
   line-height: 1;
   margin: 0;
 }
-.ion-page{
+.descrip {
+  text-transform: none !important;
+  font-size: 0.7rem !important;
+  font-family: "robotoLight" !important;
+  color: rgb(141, 141, 141) !important;
+  margin-top: 5px !important;
+}
+.ion-page {
   min-height: 100vh !important;
 }
 .scroll-content {
   padding-bottom: 0 !important;
 }
-html{
-  min-height: 100vh !important
+html {
+  min-height: 100vh !important;
 }
-html.md{
-  min-height: 100vh !important
+html.md {
+  min-height: 100vh !important;
 }
-html.ios{
-  min-height: 100vh !important
+html.ios {
+  min-height: 100vh !important;
 }
-.datetime-size-fixed{
+.datetime-size-fixed {
   max-width: 100% !important;
 }
-.list-md{
+.list-md {
   --color: var(--ion-text-color) !important;
 }
-.select-interface-option{
+.select-interface-option {
   color: var(--ion-text-color) !important;
   --color: var(--ion-text-color) !important;
   --background-focused-opacity: 0.8 !important;
   --background-focused: var(--ion-color-primary) !important;
   --background: transparent !important;
 }
-.picker-opt.picker-opt-selected, .picker-prefix, .picker-suffix {
+.picker-opt.picker-opt-selected,
+.picker-prefix,
+.picker-suffix {
   color: red;
 }
 
-.picker-button.sc-ion-picker-ios, .picker-button.activated.sc-ion-picker-ios {
+.picker-button.sc-ion-picker-ios,
+.picker-button.activated.sc-ion-picker-ios {
   color: red;
 }
 
-.interactive.hydrated{
+.interactive.hydrated {
   margin-bottom: 5px !important;
 }
 .header-md::after {
   /* Removes the toolbar shadow. */
   background: none !important;
 }
-:host .picker-before{
+:host .picker-before {
   --background: red;
 }
-ion-modal{
+ion-modal {
   .ion-page {
     min-height: 0 !important;
   }

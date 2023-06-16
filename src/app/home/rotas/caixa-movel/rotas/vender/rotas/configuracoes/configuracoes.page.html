@@ -12,20 +12,23 @@
     <ion-item-divider>
       <ion-label>Status</ion-label>
     </ion-item-divider>
-    <ion-item [detail]="false" [button]="true" lines="none" color="secondary">
-      <ion-label style="text-transform: none;">Estoque Máximo<p class="p">Quantidade do produto baseado no estoque.</p></ion-label>
-      <ion-toggle></ion-toggle>
+    <ion-item lines="full" color="secondary">
+      <ion-label>
+        <h2>Conexão</h2>
+        <p>Conectando...</p>
+      </ion-label>
+    </ion-item>
+    <ion-item lines="full" color="secondary">
+      <ion-label>
+        <h2>Servidor</h2>
+        <p>192.168.0.1</p>
+      </ion-label>
     </ion-item>
     <ion-item-divider>
       <ion-label>Produtos</ion-label>
     </ion-item-divider>
     <ion-item [detail]="false" [button]="true" lines="none" color="secondary">
-      <ion-label style="text-transform: none;">Estoque Máximo<p class="p">Quantidade do produto baseado no estoque.</p></ion-label>
-      <ion-toggle></ion-toggle>
-    </ion-item>
-    <ion-item [detail]="false" [button]="true" lines="none" color="secondary">
-      <ion-label style="text-transform: none;">Modo Rápido<p class="p">Adiciona o produto diretamente.</p></ion-label>
-      <ion-toggle></ion-toggle>
+      <ion-toggle aria-label="Modo Rápido">Modo Rápido <br><span class="descrip">Adiciona o produto diretamente.</span></ion-toggle>
     </ion-item>
   </ion-item-group>
 </ion-content>
