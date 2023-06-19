@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
+    namespace "br.com.markkar.portal"
     compileSdkVersion rootProject.ext.compileSdkVersion
     defaultConfig {
         applicationId "br.com.markkar.portal"
