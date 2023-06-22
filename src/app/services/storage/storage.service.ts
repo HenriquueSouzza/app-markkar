@@ -13,11 +13,11 @@ export class StorageService {
   }
 
   async init() {
-    const storage = await this.storage.create();
-    this._storage = storage;
+    await this.storage.create();
   }
 
-  public set(key: string, value: any) {
-    this._storage?.set(key, value);
+  public async getIpServidorLocal() {
+    const caixaMovelStorage = await this.storage.get('caixa-movel');
+    return caixaMovelStorage.configuracoes.slectedIds.ipLocal;
   }
 }

@@ -158,7 +158,7 @@ export class UsuarioComponent implements OnInit {
                 idFireBird: response.idFire
               };
             }
-            await this.storageService.set('auth', this.auth);
+            await this.storage.set('auth', this.auth);
             await loading.dismiss();
             this.router.navigateByUrl('/home/faturamento', {
               replaceUrl: true,

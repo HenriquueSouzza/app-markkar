@@ -51,14 +51,14 @@ export class HomePage implements OnInit {
     this.auth.empresa.id = idToken;
     this.auth.usuario.token = null;
     this.appConfigStorage.empresaAtual = empresa;
-    await this.storageService.set('auth', this.auth);
-    await this.storageService.set('appConfig', this.appConfigStorage);
+    await this.storage.set('auth', this.auth);
+    await this.storage.set('appConfig', this.appConfigStorage);
     this.router.navigateByUrl('/login/usuario', { replaceUrl: true });
   }
 
   async addEmp() {
     this.auth.usuario.token = null;
-    await this.storageService.set('auth', this.auth);
+    await this.storage.set('auth', this.auth);
     this.navCtrl.pop();
     this.router.navigateByUrl('/login/empresa', { replaceUrl: false });
   }
@@ -111,8 +111,8 @@ export class HomePage implements OnInit {
                 this.auth.empresa.id = empresaReset[0]['idToken'];
                 this.appConfigStorage.empresaAtual = empresaReset[0]['empresa'];
                 this.auth.usuario.token = null;
-                await this.storageService.set('auth', this.auth);
-                await this.storageService.set('appConfig', this.appConfigStorage);
+                await this.storage.set('auth', this.auth);
+                await this.storage.set('appConfig', this.appConfigStorage);
                 this.navCtrl.pop();
                 this.router.navigateByUrl('/login/empresa', { replaceUrl: true, });
               }

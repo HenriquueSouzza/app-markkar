@@ -70,7 +70,7 @@
         <ion-select-option value="bar">Barras</ion-select-option>
       </ion-select>
     </ion-item>
-    <ion-item [detail]="false" (click)="graficoYtoggle.checked = !graficoYtoggle.checked" [button]="true" lines="none" color="secondary">
+    <ion-item [detail]="false" (click)="graficoYtoggle.checked = !graficoYtoggle.checked;" [button]="true" lines="none" color="secondary">
       <ion-label style="text-transform: none;">Exibir valores verticais<p class="p">Será adicionado uma escala na lateral do gráfico</p></ion-label>
       <ion-toggle #graficoYtoggle checked="{{ chartY }}" (ionChange)="setGraficoY($event)"></ion-toggle>
     </ion-item>

@@ -147,7 +147,7 @@ async enviarLogin(form: NgForm){
               id: response.loginInformation['id_token']
             };
           }
-          await this.storageService.set('auth', auth);
+          await this.storage.set('auth', auth);
           const multiEmpresa = await this.storage.get('multiEmpresa');
           multiEmpresa.empresas[response.loginInformation['id_token']] = {
             empresa: response.loginInformation['empresa'],
