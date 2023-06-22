@@ -72,7 +72,10 @@ ion-content {
   --keyboard-offset: 0 !important;
 }
 ion-toggle {
-  --background-checked: rgb(177, 115, 0) !important;
+  --handle-background: var(--ion-color-primary) !important;
+  --handle-background-checked: var(--ion-color-primary) !important;
+  --track-background: rgb(95, 62, 0) !important;
+  --track-background-checked: rgb(146, 95, 0) !important;
 }
 ion-button {
   --border-radius: 10px;
