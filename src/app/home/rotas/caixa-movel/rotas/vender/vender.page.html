@@ -1,4 +1,4 @@
-<ion-header>
+<ion-header class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/home/caixa-movel"></ion-back-button>
@@ -31,7 +31,7 @@
 </ion-content>
 <ion-modal #modalCliente [canDismiss]="true">
   <ng-template>
-    <ion-header style="background: var(--ion-color-dark) !important">
+    <ion-header class="ion-no-border" style="background: var(--ion-color-dark) !important">
       <ion-toolbar color="tertiary">
         <ion-buttons slot="end">
           <ion-button color="danger" (click)="fecharModalIdentificarCliente()"

@@ -19,7 +19,7 @@
     </div>
   </div>
   <div id="code" *ngIf="telaDigCodigo">
-    <ion-header>
+    <ion-header class="ion-no-border">
       <ion-toolbar color="dark" style="height: auto">
         <ion-buttons slot="start">
           <ion-button routerLink="/home/caixa-movel/estoque" routerDirection="back"><ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon></ion-button>
@@ -42,7 +42,7 @@
 </ion-content>
 <div id="scan" *ngIf="!telaEspelho">
   <div id="backUp">
-    <ion-header>
+    <ion-header class="ion-no-border">
       <ion-toolbar color="dark" style="height: auto">
         <ion-buttons slot="start">
           <ion-button (click)="navigateBack()" fill="clear" shape="round"><ion-icon slot="icon-only" class="flashIcon" name="close-outline"></ion-icon></ion-button>

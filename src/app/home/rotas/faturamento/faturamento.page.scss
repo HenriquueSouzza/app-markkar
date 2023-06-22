@@ -211,7 +211,7 @@ ion-toolbar{
         left: 0;
         bottom: -5px;
         position: absolute;
-        /*background: linear-gradient(0deg, rgba(20,21,24,1) 50%, rgba(20,21,24,0.24693627450980393) 79%, rgba(20,21,24,0) 100%);*/
+        background: linear-gradient(0deg, var(--ion-color-step-50) 50%, var(--ion-color-step-50) 79%, rgba(20,21,24,0) 100%);
 
         ion-button {
           font-size: .8rem;

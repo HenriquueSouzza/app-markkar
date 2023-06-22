@@ -36,7 +36,7 @@
     </div>
   </div>
   <div id="code" *ngIf="telaDigCodigo">
-    <ion-header>
+    <ion-header class="ion-no-border">
       <ion-toolbar color="dark" style="height: auto">
         <ion-buttons slot="start">
           <ion-button (click)="telaDigCodigo = !telaDigCodigo;ionViewWillEnter()"><ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon></ion-button>
@@ -65,7 +65,7 @@
     swipe-to-close="true"
   >
     <ng-template>
-      <ion-header style="background: var(--ion-color-dark) !important">
+      <ion-header class="ion-no-border" style="background: var(--ion-color-dark) !important">
         <ion-toolbar color="dark">
           <ion-title>produto</ion-title>
         </ion-toolbar>
