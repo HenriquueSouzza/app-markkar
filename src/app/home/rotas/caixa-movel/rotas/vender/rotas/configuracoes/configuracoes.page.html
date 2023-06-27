@@ -15,20 +15,29 @@
     <ion-item lines="full" color="secondary">
       <ion-label>
         <h2>Conexão</h2>
-        <p style="text-transform: initial;">{{isConected}}</p>
+        <p *ngIf="isConected === 'Conectando...'" style="text-transform: initial;color: yellow;display: flex;align-items: center;justify-content: flex-start;"><ion-icon style="color: yellow;font-size: 1rem; margin-right: 5px" name="alert-circle-outline"></ion-icon>{{isConected}}</p>
+        <p *ngIf="isConected === 'Conectado'" style="text-transform: initial;color: #00b800;display: flex;align-items: center;justify-content: flex-start;"><ion-icon style="color: #00b800;font-size: 1rem; margin-right: 5px" name="checkmark-circle-outline"></ion-icon>{{isConected}}</p>
+        <p *ngIf="isConected === 'Erro ao tentar comunicar com o servidor local.'" style="text-transform: initial;color: red;display: flex;align-items: center;justify-content: flex-start;"><ion-icon style="color: red;font-size: 1rem; margin-right: 5px" name="close-circle-outline"></ion-icon>{{isConected}}</p>
       </ion-label>
     </ion-item>
     <ion-item lines="full" color="secondary">
       <ion-label>
         <h2>Servidor</h2>
-        <p style="text-transform: uppercase;">{{ipServidorLocal}}</p>
+        <p *ngIf="ipServidorLocal !== '' && ipServidorLocal !== null && ipServidorLocal !== undefined" style="text-transform: initial;color: #00b800;display: flex;align-items: center;justify-content: flex-start;"><ion-icon style="color: #00b800;font-size: 1rem; margin-right: 5px" name="checkmark-circle-outline"></ion-icon>{{ipServidorLocal}}</p>
+        <p *ngIf="ipServidorLocal === '' || ipServidorLocal === null || ipServidorLocal === undefined" style="text-transform: initial;color: red;display: flex;align-items: center;justify-content: flex-start;"><ion-icon style="color: red;font-size: 1rem; margin-right: 5px" name="close-circle-outline"></ion-icon>Não foi configurado um servidor Local.</p>
       </ion-label>
     </ion-item>
     <ion-item-divider>
-      <ion-label>Produtos</ion-label>
+      <ion-label>Preferências</ion-label>
     </ion-item-divider>
-    <ion-item [detail]="false" [button]="true" lines="none" color="secondary">
-      <ion-toggle aria-label="Modo Rápido">Modo Rápido <br><span class="descrip">Adiciona o produto diretamente.</span></ion-toggle>
+    <ion-item style="margin: 10px 0 5px 0;" [detail]="false" (click)="fastMode = !fastMode" [button]="true" lines="none" color="secondary">
+      <ion-toggle checked="{{ fastMode }}" (ionChange)="setFastMode($event)" aria-label="Modo Rápido">Modo Rápido <br><span class="descrip">Adiciona o produto diretamente.</span></ion-toggle>
+    </ion-item>
+    <ion-item style="margin: 5px 0;" [detail]="false" (click)="scan = !scan" [button]="true" lines="none" color="secondary">
+      <ion-toggle checked="{{ scan }}" (ionChange)="setScan($event)" aria-label="Scanner padrão">Scanner padrão<br><span class="descrip">Define o scanner como padrão para adicionar produtos.</span></ion-toggle>
+    </ion-item>
+    <ion-item style="margin: 5px 0;" [detail]="false" (click)="outStock = !outStock" [button]="true" lines="none" color="secondary">
+      <ion-toggle checked="{{ outStock }}" (ionChange)="setOutStock($event)" aria-label="Sem estoque">Sem estoque<br><span class="descrip">Libera a venda sem estoque.</span></ion-toggle>
     </ion-item>
   </ion-item-group>
 </ion-content>

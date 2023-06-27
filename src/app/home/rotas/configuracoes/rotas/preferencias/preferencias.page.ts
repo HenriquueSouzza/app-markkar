@@ -9,7 +9,6 @@ import { StorageService } from 'src/app/services/storage/storage.service';
 })
 export class PreferenciasPage implements OnInit {
 
-  @ViewChild('graficoYtoggle') graficoYtoggle: any;
 
   public valueInterval: string;
   public valueGraficoInterval: string;

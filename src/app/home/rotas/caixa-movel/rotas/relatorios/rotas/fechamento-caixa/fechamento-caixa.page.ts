@@ -69,7 +69,6 @@ export class FechamentoCaixaPage implements OnInit {
       (isPlatform('desktop') && !isPlatform('android') && !isPlatform('ios'))
     ) {
       downloadPDF(data);
-      console.log('teste');
     } else {
       this.saveAndOpenPdf(data, nome);
     }
