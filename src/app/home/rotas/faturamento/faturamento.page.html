@@ -147,7 +147,7 @@
         <div *ngIf="displayUnidades" class="unidade" style="display: block;" [ngStyle]="{'opacity': unidadesCheck[valIdToken][unidade['idCentroCusto']]['check'] ? '100%' : '45%'}" >
           <div class="headerUnidades check">
             <ion-checkbox [checked]="unidadesCheck[valIdToken][unidade['idCentroCusto']]['check']" (ionChange)="unidadesChangeCheck($event['detail'].checked,unidade['idCentroCusto'])"></ion-checkbox>
-            <h2 (click)="unidadesCheck[valIdToken][unidade['idCentroCusto']]['check'] = !unidadesCheck[valIdToken][unidade['idCentroCusto']]['check']">{{unidade['unidade']}}</h2>
+            <h2 (click)="unidadesChangeCheck(unidadesCheck[valIdToken][unidade['idCentroCusto']]['check'] = !unidadesCheck[valIdToken][unidade['idCentroCusto']]['check'], unidade['idCentroCusto'])">{{unidade['unidade']}}</h2>
           </div>
           <div class="dados">
             <div class="dado">

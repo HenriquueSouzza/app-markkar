@@ -165,88 +165,83 @@ export class FaturamentoPage implements OnInit {
   }
 
   async ionViewWillEnter() {
-    this.menu.enable(true, 'homeMenu');
-    //loadStorage
+    // Load storage
     this.auth = await this.storage.get('auth');
-    if (this.auth === null || this.auth === undefined) {
+
+    if (!this.auth) {
       this.navCtrl.pop();
       this.router.navigateByUrl('/login', { replaceUrl: true });
+      return;
     }
+
     this.faturamentoStorage = await this.storage.get('faturamento');
     this.multiEmpresaStorage = await this.storage.get('multiEmpresa');
     this.appConfigStorage = await this.storage.get('appConfig');
-    //Set Menu
-    this.menu.enable(true, 'homeMenu');
+
+    // Set Menu
     this.displayUnidades = false;
-    //Set Loaders
+
+    // Set Loaders
     this.dateLoader = false;
     this.dateLoaderTotal = false;
     this.contentLoader = false;
-    //Error Prevention
-    if (this.faturamentoStorage.configuracoes.unidadesCheck === undefined) {
+
+    // Error Prevention
+    if (!this.faturamentoStorage.configuracoes.unidadesCheck) {
       this.faturamentoStorage.configuracoes.unidadesCheck = {};
     }
-    if ((await this.storage.get('multiEmpresa')) === null) {
+
+    if (!(await this.storage.get('multiEmpresa'))) {
       await this.storage.set('multiEmpresa', { empresas: {} });
     }
-    if (
-      this.faturamentoStorage.configuracoes.header.intervalo === undefined ||
-      this.faturamentoStorage.configuracoes.header.intervalo === null ||
-      this.faturamentoStorage.configuracoes.header.intervalo === '' ||
-      this.faturamentoStorage.configuracoes.header.intervalo === 'on'
-    ) {
+
+    if (!this.faturamentoStorage.configuracoes.header.intervalo ||
+        this.faturamentoStorage.configuracoes.header.intervalo === 'on') {
       this.faturamentoStorage.configuracoes.header.intervalo = 'month';
       await this.storage.set('faturamento', this.faturamentoStorage);
     }
-    if (
-      this.faturamentoStorage.configuracoes.centrodecustos.intervalo ===
-        undefined ||
-      this.faturamentoStorage.configuracoes.centrodecustos.intervalo === null ||
-      this.faturamentoStorage.configuracoes.centrodecustos.intervalo === '' ||
-      this.faturamentoStorage.configuracoes.centrodecustos.intervalo === 'on'
-    ) {
+
+    if (!this.faturamentoStorage.configuracoes.centrodecustos.intervalo ||
+        this.faturamentoStorage.configuracoes.centrodecustos.intervalo === 'on') {
       this.faturamentoStorage.configuracoes.centrodecustos.intervalo = 'day';
       await this.storage.set('faturamento', this.faturamentoStorage);
     }
-    //Set CheckBox
+
+    // Set CheckBox
     this.unidadesCheck = this.faturamentoStorage.unidadesCheck;
     this.multiempresa = this.multiEmpresaStorage;
     this.empresa = this.appConfigStorage.empresaAtual;
-    //Set Preferences
-    this.chartType =
-      this.faturamentoStorage.configuracoes.grafico.formato === undefined
-        ? 'bar'
-        : this.faturamentoStorage.configuracoes.grafico.formato;
-    this.chartOptions.scales.y.display =
-      this.faturamentoStorage.configuracoes.grafico.y === undefined
-        ? false
-        : this.faturamentoStorage.configuracoes.grafico.y;
+
+    // Set Preferences
+    this.chartType = this.faturamentoStorage.configuracoes.grafico.formato || 'bar';
+    this.chartOptions.scales.y.display = !!this.faturamentoStorage.configuracoes.grafico.y;
     this.mask = this.faturamentoStorage.configuracoes.gerais.mask;
     this.cmvPerc = this.faturamentoStorage.configuracoes.gerais.cmvPerc;
-    if (this.cmvPerc === true) {
-      this.perc = '%';
+    this.perc = this.cmvPerc ? '%' : '';
+
+    switch (this.faturamentoStorage.configuracoes.header.intervalo) {
+      case 'day':
+        this.fatHeaderTime = 'diario';
+        break;
+      case 'month':
+        this.fatHeaderTime = 'Mensal';
+        break;
+      case 'year':
+        this.fatHeaderTime = 'Anual';
+        this.displayInterval = 'none';
+        break;
+      case 'all':
+        this.fatHeaderTime = 'Todos';
+        break;
+      default:
+        this.fatHeaderTime = '';
+        break;
     }
-    if (this.cmvPerc === false) {
-      this.perc = '';
-    }
-    this.intervalHeader =
-      this.faturamentoStorage.configuracoes.header.intervalo;
-    if (this.intervalHeader === 'day') {
-      this.fatHeaderTime = 'diario';
-    } else if (this.intervalHeader === 'month') {
-      this.fatHeaderTime = 'Mensal';
-    } else if (this.intervalHeader === 'year') {
-      this.fatHeaderTime = 'Anual';
-      this.displayInterval = 'none';
-    } else if (this.intervalHeader === 'all') {
-      this.fatHeaderTime = 'Todos';
-    } else {
-      this.fatHeaderTime = '';
-    }
-    this.valueGraficoInterval =
-      this.faturamentoStorage.configuracoes.grafico.intervalo;
+
+    this.valueGraficoInterval = this.faturamentoStorage.configuracoes.grafico.intervalo;
     this.valueGraficoIntervalFilter = this.valueGraficoInterval;
-    //Set Dates and Filter Default
+
+    // Set Dates and Filter Default
     this.interval = 'day';
     this.displayInterval = 'none';
     this.displayDay = 'block';
@@ -259,36 +254,35 @@ export class FaturamentoPage implements OnInit {
     this.dateValueInitFormat = format(parseISO(this.maxDate), 'dd/MM/yyyy');
     this.dateValueFinishFormat = format(parseISO(this.maxDate), 'dd/MM/yyyy');
     this.dateValueDayFormat = format(parseISO(this.maxDate), 'dd/MM/yyyy');
-    //Login Validation
+
+    // Login Validation
     this.valFLogin = this.appConfigStorage.firstOpen;
     this.valCnpj = this.auth.empresa.cnpj;
     this.valToken = this.auth.empresa.token;
     this.valIdToken = this.auth.empresa.id;
     this.valLogin = this.auth.usuario.login;
     this.valTokenUsuario = this.auth.usuario.token;
-    if (
-      this.valFLogin !== false ||
-      this.valTokenUsuario === null ||
-      this.valTokenUsuario === undefined
-    ) {
+
+    if (this.valFLogin !== false ||
+        !this.valTokenUsuario) {
       this.router.navigateByUrl('/login', { replaceUrl: true });
-    } else if (
-      this.valLogin !== null &&
-      this.valTokenUsuario !== null &&
-      this.valCnpj !== null &&
-      this.valToken !== null &&
-      this.valIdToken !== null
-    ) {
+    } else if (this.valLogin &&
+               this.valTokenUsuario &&
+               this.valCnpj &&
+               this.valToken &&
+               this.valIdToken) {
       this.headerFat(this.intervalHeader);
       this.unidadeFatTotal();
     }
   }
 
+
   //Faturamento
   headerFat(interval) {
-    if (interval === '' || interval === 'on' || interval === null) {
+    if (!interval || interval === 'on' || interval === null) {
       interval = 'month';
     }
+
     const interfaceHFat = {
       interval,
       date: '',
@@ -297,6 +291,7 @@ export class FaturamentoPage implements OnInit {
       dateFinish: null,
       fourMonths: this.valueGraficoInterval,
     };
+
     this.lojas.faturamento(interfaceHFat, this.valTokenUsuario).subscribe(
       (response: any) => {
         if (response.connection.error === 'invalidToken') {
@@ -313,57 +308,46 @@ export class FaturamentoPage implements OnInit {
           this.chartData = [];
           this.chartlabels = [];
           let n = 1;
+
           for (const unidade of unidades) {
             somaFatArray.push(parseFloat(unidade['somaFat']));
             this.qntCC = somaFatArray.length;
             somaMargemArray.push(parseFloat(unidade['somaMargem']));
             somaCMVrray.push(parseFloat(unidade['cmv_vlr']));
-            n = n - 0.15;
-            const color = 'rgba(255, 159, 25,' + n + ')';
+            n -= 0.15;
+            const color = `rgba(255, 159, 25, ${n})`;
+            const data = Object.values(grafico[unidade['unidade']])
+              .map(faturamento => faturamento['faturamento']);
+
             this.chartData.push({
-              data: [],
+              data,
               label: unidade['unidade'],
               backgroundColor: color,
               borderColor: color,
               hoverBackgroundColor: 'rgba(255, 159, 25, 1)',
             });
-            for (const faturamento of Object.values(
-              grafico[unidade['unidade']]
-            )) {
-              this.chartData[this.chartData.length - 1].data.push(
-                faturamento['faturamento']
-              );
-            }
           }
+
           if (this.valueGraficoInterval === 'lastFourMonths') {
             this.titleGra = 'Últimos quatro meses';
-          } else if (this.valueGraficoInterval === 'fourMonths') {
-            this.titleGra = 'Quadrimestre';
-          } else if (this.valueGraficoInterval === '1FourMonth') {
-            this.titleGra = '1º Quadrimestre';
-          } else if (this.valueGraficoInterval === '2FourMonth') {
-            this.titleGra = '2º Quadrimestre';
-          } else if (this.valueGraficoInterval === '3FourMonth') {
-            this.titleGra = '3º Quadrimestre';
+          } else {
+            const numericValueGraficoInterval = parseInt(this.valueGraficoInterval, 10);
+            this.titleGra = `${numericValueGraficoInterval}º Quadrimestre`;
           }
-          //this.chartOptions.plugins.title.text = `Gráfico de Faturamento ( ${this.titleGra} )`;
-          for (const unidadeGRF of Object.values(
-            grafico[unidades[0]['unidade']]
-          )) {
+
+          for (const unidadeGRF of Object.values(grafico[unidades[0]['unidade']])) {
             this.chartlabels.push(this.month[unidadeGRF['month'] - 1]);
             this.chart.chart.update();
           }
-          const prepareRealFat = somaFatArray.reduce(somaArray, 0);
-          const prepareRealMargem = somaMargemArray.reduce(somaArray, 0);
-          let prepareRealCMV =
-            somaCMVrray.reduce(somaArray, 0) / somaCMVrray.length;
+
+          const prepareRealFat = somaFatArray.reduce((total, numero) => total + numero, 0);
+          const prepareRealMargem = somaMargemArray.reduce((total, numero) => total + numero, 0);
+          let prepareRealCMV = somaCMVrray.reduce((total, numero) => total + numero, 0) / somaCMVrray.length;
+
           if (!this.cmvPerc) {
-            prepareRealCMV = somaCMVrray.reduce(somaArray, 0);
+            prepareRealCMV = somaCMVrray.reduce((total, numero) => total + numero, 0);
           }
-          // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
-          function somaArray(total: any, numero: any): any {
-            return total + numero;
-          }
+
           if (this.mask === true) {
             this.somaFatHeader = prepareRealFat.toLocaleString('pt-br', {
               style: 'currency',
@@ -373,35 +357,33 @@ export class FaturamentoPage implements OnInit {
               style: 'currency',
               currency: 'BRL',
             });
+
             if (this.cmvPerc === true) {
               this.somaCMVHeader = prepareRealCMV.toFixed(2).toString();
-            } else if (this.cmvPerc === false) {
+            } else {
               this.somaCMVHeader = prepareRealCMV.toLocaleString('pt-br', {
                 style: 'currency',
                 currency: 'BRL',
               });
             }
-            this.contentLoader = true;
           } else {
             this.somaFatHeader = this.formatReall(prepareRealFat.toFixed(2));
-            this.somaMargemHeader = this.formatReall(
-              prepareRealMargem.toFixed(2)
-            );
+            this.somaMargemHeader = this.formatReall(prepareRealMargem.toFixed(2));
+
             if (this.cmvPerc === true) {
               this.somaCMVHeader = prepareRealCMV.toFixed(2).toString();
-            } else if (this.cmvPerc === false) {
-              this.somaCMVHeader = this.formatReall(
-                prepareRealCMV.toFixed(2)
-              ).toString();
+            } else {
+              this.somaCMVHeader = this.formatReall(prepareRealCMV.toFixed(2)).toString();
             }
-            this.contentLoader = true;
           }
+
+          this.contentLoader = true;
         } else {
           this.error('');
         }
       },
       async (error) => {
-        if (typeof error.error.connection == 'undefined') {
+        if (typeof error.error.connection === 'undefined') {
           this.error(error.error);
         } else {
           this.error('');
@@ -409,6 +391,7 @@ export class FaturamentoPage implements OnInit {
       }
     );
   }
+
   async unidadeFatTotal() {
     const dayFat = {
       interval: this.interval,
@@ -418,189 +401,191 @@ export class FaturamentoPage implements OnInit {
       dateFinish: this.dateValueFinish,
       fourMonths: this.valueGraficoInterval,
     };
-    this.lojas.faturamento(dayFat, this.valTokenUsuario).subscribe(
-      async (response: any) => {
-        if (response.connection.status === 'success') {
-          const unidades = response;
-          this.unidadesFat = Object.values(response['totalBilling']);
-          const unidadesFat = this.unidadesFat;
-          let somaFatArray = [];
-          let somaMargemArray = [];
-          let somaCMVrray = [];
-          const unidadesCheck = {};
-          const multiempresa = {};
-          if (
-            !this.unidadesCheck.hasOwnProperty(this.valIdToken) ||
-            Object.values(this.unidadesCheck[this.valIdToken]).length !==
-              unidadesFat.length
-          ) {
-            for (const unidade of unidadesFat) {
-              somaFatArray = [];
-              somaMargemArray = [];
-              somaCMVrray = [];
-              somaFatArray.push(parseFloat(unidade['somaFat']));
-              somaMargemArray.push(parseFloat(unidade['somaMargem']));
-              somaCMVrray.push(parseFloat(unidade['cmv_vlr']));
-              unidadesCheck[unidade['idCentroCusto']] = {
-                unidade: unidade['unidade'],
-                check: true,
-                display: 'block',
-              };
-              this.unidadesCheck[this.valIdToken] = unidadesCheck;
-              this.faturamentoStorage.unidadesCheck = this.unidadesCheck;
-              await this.storage.set('faturamento', this.faturamentoStorage);
-            }
-          } else {
-            let n = 1;
-            for (const unidade of unidadesFat) {
-              n = n - 0.15;
-              const color = 'rgba(255, 159, 25,' + n + ')';
-              somaFatArray.push(parseFloat(unidade['somaFat']));
-              this.qntCC = somaFatArray.length;
-              somaMargemArray.push(parseFloat(unidade['somaMargem']));
-              somaCMVrray.push(parseFloat(unidade['cmv_vlr']));
-            }
-          }
-          if (
-            !this.multiempresa.hasOwnProperty(this.valIdToken) ||
-            unidadesFat[0]['ultimaExportacao'] !==
-              Object.values(this.multiempresa[this.valIdToken])[0][
-                'ultimaExportacao'
-              ]
-          ) {
-            somaFatArray = [];
-            somaMargemArray = [];
-            somaCMVrray = [];
-            for (const unidade of unidadesFat) {
-              somaFatArray.push(parseFloat(unidade['somaFat']));
-              somaMargemArray.push(parseFloat(unidade['somaMargem']));
-              somaCMVrray.push(parseFloat(unidade['cmv_vlr']));
-              multiempresa[unidade['idCentroCusto']] = {
-                unidade: unidade['unidade'],
-                idCentroCusto: unidade['idCentroCusto'],
-                idEmpBird: unidade['idEmpBird'],
-                idCcBird: unidade['idCcBird'],
-                telefone: unidade['telefone'],
-                cep: unidade['cep'],
-                endereco: unidade['endereco'],
-                bairro: unidade['bairro'],
-                cidade: unidade['cidade'],
-                uf: unidade['uf'],
-                ultimaExportacao: unidade['ultimaExportacao'],
-                check: true,
-                display: 'block',
-                servidorLocal: unidade['servidorLocal']
-              };
-              this.multiempresa.empresas[this.valIdToken].centrodecustos =
-                multiempresa;
-              await this.storage.set('multiEmpresa', this.multiempresa);
-            }
-          }
-          const unidadesTotalBillingId = {};
-          const unidadesIgnore = [];
-          const ignoreSomaFatArray = [];
-          const ignoreSomaMargemArray = [];
-          const ignoreSomaCMVrray = [];
-          for (const unidId of Object.values(unidades['totalBilling'])) {
-            unidadesTotalBillingId[unidId['idCentroCusto']] = unidId;
-          }
-          for (const unidadegIgnore of Object.values(
-            this.unidadesCheck[this.valIdToken]
-          )) {
-            if (unidadegIgnore['check'] === false) {
-              unidadesIgnore.push(unidadegIgnore['unidade']);
-              ignoreSomaFatArray.push(
-                parseFloat(
-                  unidadesTotalBillingId[
-                    unidadesIgnore[unidadesIgnore.length - 1]
-                  ]['somaFat']
-                )
-              );
-              ignoreSomaMargemArray.push(
-                parseFloat(
-                  unidadesTotalBillingId[
-                    unidadesIgnore[unidadesIgnore.length - 1]
-                  ]['somaMargem']
-                )
-              );
-              ignoreSomaCMVrray.push(
-                parseFloat(
-                  unidadesTotalBillingId[
-                    unidadesIgnore[unidadesIgnore.length - 1]
-                  ]['cmv_vlr']
-                )
-              );
-            }
-          }
-          const somaArray = (total, numero) => total + numero;
-          const prepareRealFat =
-            somaFatArray.reduce(somaArray, 0) -
-            ignoreSomaFatArray.reduce(somaArray, 0);
-          const prepareRealMargem =
-            somaMargemArray.reduce(somaArray, 0) -
-            ignoreSomaMargemArray.reduce(somaArray, 0);
-          let prepareRealCMV =
-            (somaCMVrray.reduce(somaArray, 0) -
-              ignoreSomaCMVrray.reduce(somaArray, 0)) /
-            (somaCMVrray.length - unidadesIgnore.length);
-          if (!this.cmvPerc) {
-            prepareRealCMV =
-              somaCMVrray.reduce(somaArray, 0) -
-              ignoreSomaCMVrray.reduce(somaArray, 0);
-          }
-          if (this.mask === true) {
-            this.somaFatTotal = prepareRealFat.toLocaleString('pt-br', {
-              style: 'currency',
-              currency: 'BRL',
-            });
-            this.somaMargemTotal = prepareRealMargem.toLocaleString('pt-br', {
-              style: 'currency',
-              currency: 'BRL',
-            });
-            if (this.cmvPerc === true) {
-              if (isNaN(prepareRealCMV)) {
-                prepareRealCMV = 0;
-                this.somaCMVTotal = prepareRealCMV.toString();
-              } else {
-                this.somaCMVTotal = prepareRealCMV.toFixed(2).toString();
-              }
-            } else if (this.cmvPerc === false) {
-              this.somaCMVTotal = prepareRealCMV.toLocaleString('pt-br', {
-                style: 'currency',
-                currency: 'BRL',
-              });
-            }
-            this.contentLoader = true;
-            this.dateLoader = false;
-            this.dateLoaderTotal = false;
-          } else {
-            this.somaFatTotal = this.formatReall(
-              prepareRealFat.toFixed(2)
-            ).toString();
-            this.somaMargemTotal = this.formatReall(
-              prepareRealMargem.toFixed(2)
-            ).toString();
-            if (this.cmvPerc === true) {
-              if (isNaN(prepareRealCMV)) {
-                prepareRealCMV = 0;
-                this.somaCMVTotal = prepareRealCMV.toString();
-              } else {
-                this.somaCMVTotal = prepareRealCMV.toFixed(2).toString();
-              }
-            } else if (this.cmvPerc === false) {
-              this.somaCMVTotal = this.formatReall(
-                prepareRealCMV.toFixed(2)
-              ).toString();
-            }
-            this.contentLoader = true;
-            this.dateLoader = false;
-            this.dateLoaderTotal = false;
-          }
+
+    const response: any = await this.lojas.faturamento(dayFat, this.valTokenUsuario).toPromise();
+
+    if (response.connection.status === 'success') {
+      const unidades = response;
+      this.unidadesFat = Object.values(response['totalBilling']);
+      const unidadesFat = this.unidadesFat;
+
+      let somaFatArray = [];
+      let somaMargemArray = [];
+      let somaCMVrray = [];
+      const unidadesCheck = {};
+      const multiempresa = {};
+
+      if (
+        !this.unidadesCheck.hasOwnProperty(this.valIdToken) ||
+        Object.values(this.unidadesCheck[this.valIdToken]).length !== unidadesFat.length
+      ) {
+        for (const unidade of unidadesFat) {
+          const somaFat = parseFloat(unidade['somaFat']);
+          const somaMargem = parseFloat(unidade['somaMargem']);
+          const somaCMV = parseFloat(unidade['cmv_vlr']);
+
+          somaFatArray.push(somaFat);
+          somaMargemArray.push(somaMargem);
+          somaCMVrray.push(somaCMV);
+
+          unidadesCheck[unidade['idCentroCusto']] = {
+            unidade: unidade['unidade'],
+            check: true,
+            display: 'block',
+          };
+
+          this.unidadesCheck[this.valIdToken] = unidadesCheck;
+          this.faturamentoStorage.unidadesCheck = this.unidadesCheck;
+          await this.storage.set('faturamento', this.faturamentoStorage);
         }
-      },
-      async (error) => {}
-    );
+      } else {
+        let n = 1;
+        for (const unidade of unidadesFat) {
+          n = n - 0.15;
+          const color = 'rgba(255, 159, 25,' + n + ')';
+
+          const somaFat = parseFloat(unidade['somaFat']);
+          const somaMargem = parseFloat(unidade['somaMargem']);
+          const somaCMV = parseFloat(unidade['cmv_vlr']);
+
+          somaFatArray.push(somaFat);
+          somaMargemArray.push(somaMargem);
+          somaCMVrray.push(somaCMV);
+        }
+      }
+
+      if (
+        !this.multiempresa.hasOwnProperty(this.valIdToken) ||
+        unidadesFat[0]['ultimaExportacao'] !==
+          Object.values(this.multiempresa[this.valIdToken])[0]['ultimaExportacao']
+      ) {
+        somaFatArray = [];
+        somaMargemArray = [];
+        somaCMVrray = [];
+        for (const unidade of unidadesFat) {
+          const somaFat = parseFloat(unidade['somaFat']);
+          const somaMargem = parseFloat(unidade['somaMargem']);
+          const somaCMV = parseFloat(unidade['cmv_vlr']);
+
+          somaFatArray.push(somaFat);
+          somaMargemArray.push(somaMargem);
+          somaCMVrray.push(somaCMV);
+
+          multiempresa[unidade['idCentroCusto']] = {
+            unidade: unidade['unidade'],
+            idCentroCusto: unidade['idCentroCusto'],
+            idEmpBird: unidade['idEmpBird'],
+            idCcBird: unidade['idCcBird'],
+            telefone: unidade['telefone'],
+            cep: unidade['cep'],
+            endereco: unidade['endereco'],
+            bairro: unidade['bairro'],
+            cidade: unidade['cidade'],
+            uf: unidade['uf'],
+            ultimaExportacao: unidade['ultimaExportacao'],
+            check: true,
+            display: 'block',
+            servidorLocal: unidade['servidorLocal'],
+          };
+
+          this.multiempresa.empresas[this.valIdToken].centrodecustos = multiempresa;
+          await this.storage.set('multiEmpresa', this.multiempresa);
+        }
+      }
+
+      const unidadesTotalBillingId = {};
+      const unidadesIgnore = [];
+      const ignoreSomaFatArray = [];
+      const ignoreSomaMargemArray = [];
+      const ignoreSomaCMVrray = [];
+
+      for (const unidId of Object.values(unidades['totalBilling'])) {
+        unidadesTotalBillingId[unidId['idCentroCusto']] = unidId;
+      }
+
+      for (const unidadegIgnore of Object.values(this.unidadesCheck[this.valIdToken])) {
+        if (unidadegIgnore['check'] === false) {
+          unidadesIgnore.push(unidadegIgnore['unidade']);
+
+          const somaFat = parseFloat(
+            unidadesTotalBillingId[unidadesIgnore[unidadesIgnore.length - 1]]['somaFat']
+          );
+          const somaMargem = parseFloat(
+            unidadesTotalBillingId[unidadesIgnore[unidadesIgnore.length - 1]]['somaMargem']
+          );
+          const somaCMV = parseFloat(
+            unidadesTotalBillingId[unidadesIgnore[unidadesIgnore.length - 1]]['cmv_vlr']
+          );
+
+          ignoreSomaFatArray.push(somaFat);
+          ignoreSomaMargemArray.push(somaMargem);
+          ignoreSomaCMVrray.push(somaCMV);
+        }
+      }
+
+      const prepareRealFat =
+        somaFatArray.reduce((total, numero) => total + numero, 0) -
+        ignoreSomaFatArray.reduce((total, numero) => total + numero, 0);
+      const prepareRealMargem =
+        somaMargemArray.reduce((total, numero) => total + numero, 0) -
+        ignoreSomaMargemArray.reduce((total, numero) => total + numero, 0);
+
+      let prepareRealCMV =
+        (somaCMVrray.reduce((total, numero) => total + numero, 0) -
+          ignoreSomaCMVrray.reduce((total, numero) => total + numero, 0)) /
+        (somaCMVrray.length - unidadesIgnore.length);
+
+      if (!this.cmvPerc) {
+        prepareRealCMV =
+          somaCMVrray.reduce((total, numero) => total + numero, 0) -
+          ignoreSomaCMVrray.reduce((total, numero) => total + numero, 0);
+      }
+
+      if (this.mask === true) {
+        this.somaFatTotal = prepareRealFat.toLocaleString('pt-br', {
+          style: 'currency',
+          currency: 'BRL',
+        });
+        this.somaMargemTotal = prepareRealMargem.toLocaleString('pt-br', {
+          style: 'currency',
+          currency: 'BRL',
+        });
+        if (this.cmvPerc === true) {
+          if (isNaN(prepareRealCMV)) {
+            prepareRealCMV = 0;
+            this.somaCMVTotal = prepareRealCMV.toString();
+          } else {
+            this.somaCMVTotal = prepareRealCMV.toFixed(2).toString();
+          }
+        } else if (this.cmvPerc === false) {
+          this.somaCMVTotal = prepareRealCMV.toLocaleString('pt-br', {
+            style: 'currency',
+            currency: 'BRL',
+          });
+        }
+        this.contentLoader = true;
+        this.dateLoader = false;
+        this.dateLoaderTotal = false;
+      } else {
+        this.somaFatTotal = this.formatReall(prepareRealFat.toFixed(2)).toString();
+        this.somaMargemTotal = this.formatReall(prepareRealMargem.toFixed(2)).toString();
+        if (this.cmvPerc === true) {
+          if (isNaN(prepareRealCMV)) {
+            prepareRealCMV = 0;
+            this.somaCMVTotal = prepareRealCMV.toString();
+          } else {
+            this.somaCMVTotal = prepareRealCMV.toFixed(2).toString();
+          }
+        } else if (this.cmvPerc === false) {
+          this.somaCMVTotal = this.formatReall(prepareRealCMV.toFixed(2)).toString();
+        }
+        this.contentLoader = true;
+        this.dateLoader = false;
+        this.dateLoaderTotal = false;
+      }
+    }
   }
+
   async dateChangeInit(value) {
     this.dateValueInitFormat = format(parseISO(value), 'dd/MM/yyyy');
     this.dateValueInit = value;
@@ -679,20 +664,21 @@ export class FaturamentoPage implements OnInit {
       this.displayInterval = 'none';
     }
   }
-  async unidadesChangeCheck(event, id) {
-    let display = 'block';
-    if (!event) {
-      display = 'none';
-    }
-    this.unidadesCheck[this.valIdToken][id]['unidade'] = id;
-    this.unidadesCheck[this.valIdToken][id]['check'] = event;
-    this.unidadesCheck[this.valIdToken][id]['display'] = display;
+  async unidadesChangeCheck(event: boolean, id: number) {
+    const display = event ? 'block' : 'none';
+
+    this.unidadesCheck[this.valIdToken][id] = {
+      unidade: id,
+      check: event,
+      display: display
+    };
+
     this.faturamentoStorage.unidadesCheck = this.unidadesCheck;
     await this.storage.set('faturamento', this.faturamentoStorage);
+
     this.dateLoaderTotal = true;
     this.unidadeFatTotal();
   }
-
   //Usuario
   async logOut(): Promise<void> {
     if (this.auth.hasOwnProperty('usuario')) {
