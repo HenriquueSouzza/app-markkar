@@ -165,6 +165,7 @@ export class FaturamentoPage implements OnInit {
   }
 
   async ionViewWillEnter() {
+    this.menu.enable(true, 'homeMenu');
     // Load storage
     this.auth = await this.storage.get('auth');
 
