@@ -6,16 +6,12 @@ import {
   LoadingController,
   MenuController,
   AlertController,
-  PopoverController,
-  isPlatform,
   ToastController,
   NavController,
 } from '@ionic/angular';
 import { format, parseISO } from 'date-fns';
 import { ChartDataset, ChartOptions, ChartType, Color } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
-import { timeout } from 'rxjs/operators';
-import { LoginService } from 'src/app/login/services/login/login.service';
 import { StorageService } from 'src/app/services/storage/storage.service';
 import { FaturamentoService } from 'src/app/home/services/faturamento/faturamento.service';
 import { RateApp } from 'capacitor-rate-app';
@@ -150,7 +146,6 @@ export class FaturamentoPage implements OnInit {
   constructor(
     private lojas: FaturamentoService,
     private navCtrl: NavController,
-    private service: LoginService,
     public loadingController: LoadingController,
     private menu: MenuController,
     private storage: Storage,
