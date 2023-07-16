@@ -85,6 +85,7 @@ export class FaturamentoPage implements OnInit {
   indexDetalhes = 0;
   tryies = 0;
   contentLoader: boolean;
+  contentLoaderGRA: boolean;
   dateLoader: boolean;
   dateLoaderTotal: boolean;
   mask: boolean;
@@ -181,6 +182,7 @@ export class FaturamentoPage implements OnInit {
     this.dateLoader = false;
     this.dateLoaderTotal = false;
     this.contentLoader = false;
+    this.contentLoaderGRA = false;
 
     // Error Prevention
     if (!this.faturamentoStorage.configuracoes.unidadesCheck) {
@@ -272,6 +274,12 @@ export class FaturamentoPage implements OnInit {
     }
   }
 
+  //Grafico
+  refreshChangeCentroCustoDisplay(display){
+    if(!display){
+      this.doRefresh(null, false);
+    }
+  }
 
   //Faturamento
   headerFat(interval) {
@@ -315,13 +323,16 @@ export class FaturamentoPage implements OnInit {
             const data = Object.values(grafico[unidade['unidade']])
               .map(faturamento => faturamento['faturamento']);
 
-            this.chartData.push({
-              data,
-              label: unidade['unidade'],
-              backgroundColor: color,
-              borderColor: color,
-              hoverBackgroundColor: 'rgba(255, 159, 25, 1)',
-            });
+            if(this.unidadesCheck[this.valIdToken][unidade['idCentroCusto']]['display'] === 'block'){
+
+              this.chartData.push({
+                data,
+                label: unidade['unidade'],
+                backgroundColor: color,
+                borderColor: color,
+                hoverBackgroundColor: 'rgba(255, 159, 25, 1)',
+              });
+            }
           }
 
           if (this.valueGraficoInterval === 'lastFourMonths') {
@@ -374,6 +385,7 @@ export class FaturamentoPage implements OnInit {
           }
 
           this.contentLoader = true;
+          this.contentLoaderGRA = true;
         } else {
           this.error('');
         }
@@ -560,6 +572,7 @@ export class FaturamentoPage implements OnInit {
           });
         }
         this.contentLoader = true;
+        this.contentLoaderGRA = true;
         this.dateLoader = false;
         this.dateLoaderTotal = false;
       } else {
@@ -576,6 +589,7 @@ export class FaturamentoPage implements OnInit {
           this.somaCMVTotal = this.formatReall(prepareRealCMV.toFixed(2)).toString();
         }
         this.contentLoader = true;
+        this.contentLoaderGRA = true;
         this.dateLoader = false;
         this.dateLoaderTotal = false;
       }
@@ -673,7 +687,8 @@ export class FaturamentoPage implements OnInit {
     await this.storage.set('faturamento', this.faturamentoStorage);
 
     this.dateLoaderTotal = true;
-    this.unidadeFatTotal();
+    this.contentLoaderGRA = false;
+    //this.unidadeFatTotal();
   }
   //Usuario
   async logOut(): Promise<void> {
@@ -846,7 +861,7 @@ export class FaturamentoPage implements OnInit {
     });
     await alert.present();
   }
-  async doRefresh(event) {
+  async doRefresh(event, ion = true) {
     this.unidadesFat = [];
     this.unidadesHeader = [];
     this.somaFatHeader = '';
@@ -859,11 +874,20 @@ export class FaturamentoPage implements OnInit {
       if (
         this.unidadesFat.length !== 0 &&
         this.unidadesHeader.length !== 0 &&
-        this.somaMargemTotal !== ''
+        this.somaMargemTotal !== '' &&
+        ion === true
       ) {
         this.contentLoader = true;
+        this.contentLoaderGRA = true;
         event.target.complete();
         clearInterval(verfyComplete);
+      } else if (this.unidadesFat.length !== 0 &&
+        this.unidadesHeader.length !== 0 &&
+        this.somaMargemTotal !== '' &&
+        ion === false){
+          this.contentLoader = true;
+          this.contentLoaderGRA = true;
+          clearInterval(verfyComplete);
       }
     }, 300);
   }
